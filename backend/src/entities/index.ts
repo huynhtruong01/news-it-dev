@@ -1,0 +1,5 @@
+export * from '@/entities/comment.entity'
+export * from '@/entities/user.entity'
+export * from '@/entities/news.entity'
+export * from '@/entities/hashTag.entity'
+export * from '@/entities/role.entity'
