@@ -124,7 +124,7 @@ class NewsController {
         }
     }
 
-    // create POST
+    // create (POST)
     async createNews(req: RequestUser, res: Response) {
         try {
             // check hash tag ids
@@ -170,7 +170,7 @@ class NewsController {
         }
     }
 
-    // update PUT
+    // update (PUT)
     async updateNews(req: RequestUser, res: Response) {
         try {
             const newNews = await newsService.update(Number(req.params.newsId), req.body)
@@ -199,7 +199,7 @@ class NewsController {
         }
     }
 
-    // delete DELETE
+    // delete (DELETE)
     async deleteNews(req: RequestUser, res: Response) {
         try {
             const news = await newsService.delete(Number(req.params.newsId))
@@ -226,7 +226,7 @@ class NewsController {
         }
     }
 
-    // TODO: count news view when user access that news
+    // TODO: count news view when user access that news (GET)
     async countViewsNews(req: RequestUser, res: Response) {
         try {
             if (req.params.newsId) {

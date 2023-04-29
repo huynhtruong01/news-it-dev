@@ -15,6 +15,5 @@ router.route('/check-email').post(authController.checkEmail)
 router.use(authMiddleware.getUser)
 
 router.route('/delete-your-self').delete(authController.deleteYourSelf)
-router.route('/profile').get(authController.getProfile)
 
 export default router

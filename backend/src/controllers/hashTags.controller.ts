@@ -22,7 +22,7 @@ const checkDuplicateName = async (
 }
 
 class HashTagController {
-    // GET
+    // (GET)
     async getAllHashTag(req: RequestUser, res: Response) {
         try {
             const hashTags = await hashTagService.getAll()
@@ -43,7 +43,7 @@ class HashTagController {
         }
     }
 
-    // GET
+    // (GET)
     async getHashTag(req: RequestUser, res: Response) {
         try {
             const hashTag = await hashTagService.getById(Number(req.params.hashTagId))
@@ -73,7 +73,7 @@ class HashTagController {
         }
     }
 
-    // create POST
+    // create (POST)
     async createHashTag(req: RequestUser, res: Response) {
         try {
             if (!(await checkDuplicateName(req.body.name, res))) return
@@ -96,7 +96,7 @@ class HashTagController {
         }
     }
 
-    // update PUT
+    // update (PUT)
     async updateHashTag(req: RequestUser, res: Response) {
         try {
             if (!(await checkDuplicateName(req.body.name, res))) return
@@ -127,7 +127,7 @@ class HashTagController {
         }
     }
 
-    // delete DELETE
+    // delete (DELETE)
     async deleteHashTag(req: RequestUser, res: Response) {
         try {
             const hashTag = await hashTagService.delete(Number(req.params.hashTagId))
@@ -155,6 +155,68 @@ class HashTagController {
     }
 
     // TODO: user follow hash tag
+    async followHashTag(req: RequestUser, res: Response) {
+        try {
+            if (req.user?.id) {
+                const { hashTagId } = req.params
+                await hashTagService.follow(Number(req.user.id), Number(hashTagId))
+
+                res.status(StatusCode.SUCCESS).json({
+                    results: Results.SUCCESS,
+                    status: StatusText.SUCCESS,
+                    data: {
+                        message: 'Follow hash tag success.',
+                    },
+                })
+                return
+            }
+
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.FAILED,
+                data: {
+                    message: 'Follow hash tag failed.',
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // TODO: unfollow hash tag
+    async unFollowHashTag(req: RequestUser, res: Response) {
+        try {
+            if (req.user?.id) {
+                const { hashTagId } = req.params
+                await hashTagService.unfollow(Number(req.user.id), Number(hashTagId))
+
+                res.status(StatusCode.SUCCESS).json({
+                    results: Results.SUCCESS,
+                    status: StatusText.SUCCESS,
+                    data: {
+                        message: 'Unfollow hash tag success.',
+                    },
+                })
+                return
+            }
+
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.FAILED,
+                message: 'Unfollow hash tag failed.',
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
 }
 
 export const hashTagController = new HashTagController()

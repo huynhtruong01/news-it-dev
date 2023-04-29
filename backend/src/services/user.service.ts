@@ -1,11 +1,10 @@
 import { AppDataSource } from '@/config'
-import { User } from '@/entities'
-import { createUserData } from '@/utils'
-import { commonService } from '@/services/common.service'
 import { relationDataUser, selectUserData } from '@/data'
-import { roleService } from '@/services/role.service'
+import { User } from '@/entities'
 import { authService } from '@/services/auth.service'
-import circularJson from 'circular-json'
+import { commonService } from '@/services/common.service'
+import { roleService } from '@/services/role.service'
+import { createUserData } from '@/utils'
 
 interface ICheckUser {
     user: User
@@ -102,14 +101,18 @@ class UserService {
             if (!user) return null
 
             const checkUsername = await authService.checkEmailOrUsername(data.username)
-            const checkEmail = await authService.checkEmailOrUsername(data.username)
+            const checkEmail = await authService.checkEmailOrUsername(data.emailAddress)
 
-            if (checkUsername && checkUsername.id !== data.id) {
-                throw new Error(`${data.username} is exits. Choose another username.`)
+            if (checkUsername && checkUsername.id !== userId) {
+                throw new Error(
+                    `'${checkUsername.username}' is exits. Choose another username.`
+                )
             }
 
-            if (checkEmail && checkEmail.id !== data.id) {
-                throw new Error(`${data.emailAddress} is exits. Choose another email.`)
+            if (checkEmail && checkEmail.id !== userId) {
+                throw new Error(
+                    `'${checkEmail.emailAddress}' is exits. Choose another email.`
+                )
             }
 
             if (data.username) {
@@ -186,6 +189,19 @@ class UserService {
 
             await this.userRepository.delete(id)
             return user
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // TODO: edit profile
+    async updateProfile(userId: number, data: User) {
+        try {
+            const user = await this.getById(userId)
+            if (!user) throw new Error('Not found this user to update profile.')
+
+            const newUser = await this.update(userId, data)
+            return newUser
         } catch (error) {
             throw new Error(error as string)
         }

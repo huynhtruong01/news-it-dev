@@ -1,10 +1,14 @@
+import { AppDataSource } from '@/config'
 import { MAX_AGE_ACCESS_TOKEN } from '@/consts'
+import { User } from '@/entities'
 import { Results, StatusCode, StatusText } from '@/enums'
 import { RequestUser } from '@/models'
 import { authService, commonService, userService } from '@/services'
 import { Request, Response } from 'express'
 
 class AuthController {
+    constructor(private userRepository = AppDataSource.getRepository(User)) {}
+
     // signup (POST)
     async signup(req: Request, res: Response) {
         try {
@@ -287,37 +291,6 @@ class AuthController {
         }
     }
 
-    // get profile (GET)
-    async getProfile(req: RequestUser, res: Response) {
-        try {
-            if (req.user?.id) {
-                const user = await userService.getById(req.user?.id)
-
-                res.status(StatusCode.SUCCESS).json({
-                    results: Results.SUCCESS,
-                    status: StatusText.SUCCESS,
-                    data: {
-                        user,
-                    },
-                })
-
-                return
-            }
-
-            res.status(StatusCode.NOT_FOUND).json({
-                results: Results.ERROR,
-                status: StatusText.FAILED,
-                message: 'Not founded this user.',
-            })
-        } catch (error) {
-            res.status(StatusCode.ERROR).json({
-                results: Results.ERROR,
-                status: StatusText.ERROR,
-                message: (error as Error).message,
-            })
-        }
-    }
-
     // delete your self (DELETE)
     async deleteYourSelf(req: RequestUser, res: Response) {
         try {
@@ -348,7 +321,6 @@ class AuthController {
         }
     }
 
-    // TODO: update profile user
     // TODO: change password
 }
 

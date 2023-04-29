@@ -84,3 +84,48 @@ src
         |__index.ts
 server.ts
 ```
+
+2. TODO
+
+- **Auth**:
+    ✅ Signup
+    ✅ Login
+    ✅ Logout
+    ✅ Refresh token when access token expires
+    ❌ Send mail when sign up by email
+    
+- **Users**:
+    ✅ CRUD User
+    ✅ Follow/Unfollow User of User
+    ✅ Get profile
+    ✅ Reset password when forgot password
+    ✅ Get profile
+    ✅ Edit profile
+    ❌ Change password when user want to
+    ❌ Sort and Filter User
+
+- **News**:
+    ✅ CRUD News
+    ✅ **Get** News by Public
+    ✅ Count views
+    ✅ Like/Dislike News
+    ✅ Save/UnSave News of User
+    ❌ Sort and filter News
+
+- **Roles**:
+    ✅ CRUD role
+
+- **Hash tags**:
+    ✅ CRUD hash tag
+    ✅ Follow/Unfollow Hash tag by User
+
+- **Comments**:
+    ✅ CRUD comments
+        ❌ Add comment 
+        ❌ Edit comment by self User
+        ❌ Delete comment by self User
+        ❌ Mention User when user Comment
+
+- **Recommend System**: ❌ 
+
+

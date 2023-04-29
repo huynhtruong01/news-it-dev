@@ -5,6 +5,11 @@ const router = express.Router()
 
 router.use(authMiddleware.getUser)
 
+router
+    .route('/profile')
+    .get(userController.getProfile)
+    .put(userController.updateProfileUser)
+
 router.route('/').get(userController.getAllUser)
 router
     .route('/:userId')
@@ -14,4 +19,5 @@ router
 
 router.route('/follow/:userId').get(userController.followUser)
 router.route('/unfollow/:userId').get(userController.unfollowUser)
+
 export default router

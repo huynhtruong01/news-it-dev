@@ -1,10 +1,39 @@
 import { AppDataSource } from '@/config'
-import { HashTag } from '@/entities'
+import { HashTag, User } from '@/entities'
 import { createHashTag } from '@/utils'
 import { commonService } from './common.service'
+import { userService } from './user.service'
+
+interface ICheckHashTag {
+    user: User
+    hashTag: HashTag
+}
 
 class HashTagService {
     constructor(private hashTagRepository = AppDataSource.getRepository(HashTag)) {}
+
+    // ------------------------------- CHECK -------------------------------------
+    async checkIdAndHashTagId(
+        id: number,
+        hashTagId: number
+    ): Promise<ICheckHashTag | void> {
+        const self = await userService.getById(id)
+        const hashTag = await this.getById(hashTagId)
+
+        if (!self || !hashTag) return
+
+        return {
+            user: self,
+            hashTag,
+        }
+    }
+
+    checkFollows(users: User[] | HashTag[] = [], userId: number) {
+        if (!Array.isArray(users)) return
+
+        const newFollows = users.map((user) => user.id)
+        return newFollows.includes(userId)
+    }
 
     // check name hash tag exits?
     async checkNameHashTag(name: string): Promise<boolean> {
@@ -100,6 +129,7 @@ class HashTagService {
         }
     }
 
+    // update (PUT)
     async update(data: HashTag): Promise<HashTag | null> {
         try {
             const hashTag = await this.hashTagRepository.findOne({
@@ -126,6 +156,32 @@ class HashTagService {
         }
     }
 
+    // update all (PUT)
+    async updateAll(hashTagId: number, data: HashTag): Promise<HashTag | null> {
+        try {
+            const hashTag = await this.hashTagRepository.findOne({
+                where: {
+                    id: hashTagId,
+                },
+            })
+            if (!hashTag) return null
+
+            if (data.name) {
+                data.slug = commonService.generateSlug(data.name)
+            }
+
+            const newHashTag = await this.hashTagRepository.save({
+                ...hashTag,
+                ...data,
+            })
+
+            return newHashTag
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // delete (DELETE)
     async delete(id: number): Promise<HashTag | null> {
         try {
             const hashTag = await this.hashTagRepository.findOne({
@@ -137,6 +193,76 @@ class HashTagService {
 
             await this.hashTagRepository.delete(id)
             return hashTag
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // follow (GET)
+    async follow(id: number, hashTagId: number): Promise<HashTag | unknown> {
+        try {
+            // check id and userId
+            const checkHashTags = await this.checkIdAndHashTagId(id, hashTagId)
+            if (!checkHashTags)
+                throw new Error('Unauthorized or this hash tag is not exits.')
+            const { user, hashTag } = checkHashTags
+
+            // check hash tags of user include hash tag id
+            if (this.checkFollows(user.hashTags, hashTagId))
+                throw new Error(`'${user.username}' is following '${hashTag.name}'.`)
+            if (this.checkFollows(hashTag.users, id))
+                throw new Error(`'${hashTag.name}' has follower '${user.username}'.`)
+
+            // add hashTagId into hashTags of User
+            user.hashTags?.push(hashTag)
+            const newUser = (await userService.updateAll(id, user)) as User
+
+            // add id into users of HashTag
+            hashTag.users?.push(newUser)
+            await this.hashTagRepository.save(hashTag)
+
+            return newUser
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // unfollow (GET)
+    async unfollow(id: number, hashTagId: number): Promise<void> {
+        try {
+            // check id and userId
+            const checkHashTags = await this.checkIdAndHashTagId(id, hashTagId)
+            if (!checkHashTags)
+                throw new Error('Unauthorized or this hash tag is not exits.')
+            const { user, hashTag } = checkHashTags
+
+            // check hash tags of user include hash tag id
+            if (!this.checkFollows(user.hashTags, hashTagId))
+                throw new Error(
+                    `'${user.username}' is not following ${hashTag.name} to unfollow.`
+                )
+            if (!this.checkFollows(hashTag.users, id))
+                throw new Error(
+                    `'${hashTag.name}' doesn't have follower '${user.username}'.`
+                )
+
+            // remove hashTagId into hashTags of User
+            const idx = user.hashTags?.findIndex(
+                (hashTagFollowed) => hashTagFollowed.id === hashTagId
+            )
+            if (typeof idx === 'number' && idx >= 0) {
+                user.hashTags?.splice(idx, 1)
+                await userService.updateAll(id, user)
+            }
+
+            // remove user id into users of HashTag
+            const userHashTagIdx = hashTag.users?.findIndex(
+                (userFollow) => userFollow.id === id
+            )
+            if (typeof userHashTagIdx === 'number' && userHashTagIdx >= 0) {
+                hashTag.users?.splice(userHashTagIdx, 1)
+                await this.updateAll(hashTag.id, hashTag)
+            }
         } catch (error) {
             throw new Error(error as string)
         }

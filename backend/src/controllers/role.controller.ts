@@ -4,7 +4,7 @@ import { roleService } from '@/services'
 import { Response } from 'express'
 
 class RoleController {
-    // GET
+    // (GET)
     async getAllRoles(req: RequestUser, res: Response) {
         try {
             const roles = await roleService.getAll()
@@ -25,7 +25,7 @@ class RoleController {
         }
     }
 
-    // GET by id
+    // (GET) by id
     async getRole(req: RequestUser, res: Response) {
         try {
             const role = await roleService.getById(Number(req.params.roleId))
@@ -76,7 +76,7 @@ class RoleController {
         }
     }
 
-    // update PUT
+    // update (PUT)
     async updateRole(req: RequestUser, res: Response) {
         try {
             const newRole = await roleService.update(req.body)
@@ -105,7 +105,7 @@ class RoleController {
         }
     }
 
-    // delete DELETE
+    // delete (DELETE)
     async deleteRole(req: RequestUser, res: Response) {
         try {
             const role = await roleService.delete(Number(req.params.roleId))

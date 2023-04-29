@@ -112,6 +112,71 @@ class UserController {
         }
     }
 
+    // TODO: get profile user (GET)
+    async getProfile(req: RequestUser, res: Response) {
+        try {
+            if (req.user?.id) {
+                const user = await userService.getById(req.user?.id)
+
+                res.status(StatusCode.SUCCESS).json({
+                    results: Results.SUCCESS,
+                    status: StatusText.SUCCESS,
+                    data: {
+                        user,
+                    },
+                })
+
+                return
+            }
+
+            res.status(StatusCode.NOT_FOUND).json({
+                results: Results.ERROR,
+                status: StatusText.FAILED,
+                message: 'Not founded this user.',
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // TODO: update profile user (PUT)
+    async updateProfileUser(req: RequestUser, res: Response) {
+        try {
+            if (req.user?.id) {
+                const user = await userService.updateProfile(
+                    Number(req.user.id),
+                    req.body
+                )
+                if (!user) {
+                    res.status(StatusCode.NOT_FOUND).json({
+                        results: Results.ERROR,
+                        status: StatusText.FAILED,
+                        message: 'Not found this user to update profile.',
+                    })
+                    return
+                }
+
+                res.status(StatusCode.SUCCESS).json({
+                    results: Results.SUCCESS,
+                    status: StatusText.SUCCESS,
+                    data: {
+                        user,
+                    },
+                })
+            }
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
     // TODO: follow user
     async followUser(req: RequestUser, res: Response) {
         try {

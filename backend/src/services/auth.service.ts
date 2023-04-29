@@ -12,6 +12,8 @@ class AuthService {
     // check email or username exits
     async checkEmailOrUsername(usernameOrEmail: string): Promise<User | null> {
         try {
+            if (!usernameOrEmail) return null
+
             const emailUser = await this.userRepository.findOne({
                 where: {
                     emailAddress: usernameOrEmail,
@@ -81,7 +83,6 @@ class AuthService {
         })
     }
 
-    // TODO: update profile user
     // TODO: change password
 }
 
