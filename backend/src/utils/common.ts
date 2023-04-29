@@ -1,5 +1,7 @@
+import { MAX_AGE_REFRESH_TOKEN } from '@/consts'
 import { HashTag, News, Role, User, Comment } from '@/entities'
 import { NewsStatus } from '@/enums'
+import { CookieOptions } from 'express'
 
 export const createUserData = (data: User): User => {
     const user = new User()
@@ -23,7 +25,7 @@ export const createRoleData = (data: Role): Role => {
 export const createHashTag = (data: HashTag): HashTag => {
     const hashTag = new HashTag()
     hashTag.name = data.name
-    hashTag.desciption = data.desciption || ''
+    hashTag.description = data.description || ''
 
     return hashTag
 }
@@ -37,6 +39,7 @@ export const createNews = (data: News): News => {
     news.thumbnailImage = data.thumbnailImage
     news.coverImage = data.coverImage
     news.readTimes = data.readTimes
+    news.userId = data.userId
 
     return news
 }
@@ -49,4 +52,16 @@ export const createComment = (data: Comment): Comment => {
     comment.userId = data.userId
 
     return comment
+}
+
+export const optionCookies = (options?: CookieOptions): CookieOptions => {
+    return {
+        httpOnly: true,
+        maxAge: Number(options?.maxAge) || MAX_AGE_REFRESH_TOKEN,
+        expires: new Date(
+            Date.now() + (Number(options?.maxAge) || MAX_AGE_REFRESH_TOKEN)
+        ),
+        secure: false,
+        sameSite: 'strict',
+    }
 }

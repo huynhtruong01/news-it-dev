@@ -5,15 +5,15 @@ import { createComment } from '@/utils'
 class CommentService {
     constructor(private commentRepository = AppDataSource.getRepository(Comment)) {}
 
-    async getAll(): Promise<Comment[]> {
-        try {
-            const comments = await this.commentRepository.find()
+    // async getAll(newsId: number): Promise<Comment[]> {
+    //     try {
+    //         const comments = await this.commentRepository.createQueryBuilder('comment').
 
-            return comments
-        } catch (error) {
-            throw new Error(error as string)
-        }
-    }
+    //         return comments
+    //     } catch (error) {
+    //         throw new Error(error as string)
+    //     }
+    // }
 
     async create(data: Comment): Promise<Comment> {
         try {

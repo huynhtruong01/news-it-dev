@@ -1,14 +1,13 @@
+import { User } from '@/entities/user.entity'
 import {
-    Entity,
     BaseEntity,
     Column,
+    CreateDateColumn,
+    Entity,
+    ManyToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    CreateDateColumn,
-    ManyToMany,
-    JoinTable,
 } from 'typeorm'
-import { User } from '@/entities/user.entity'
 
 @Entity('roles')
 export class Role extends BaseEntity {
@@ -17,11 +16,13 @@ export class Role extends BaseEntity {
 
     @Column({
         type: 'text',
+        unique: true,
     })
     name: string
 
-    @ManyToMany(() => User, (user) => user)
-    @JoinTable()
+    @ManyToMany(() => User, (user) => user.roles, {
+        onDelete: 'CASCADE',
+    })
     users?: User[]
 
     @Column({

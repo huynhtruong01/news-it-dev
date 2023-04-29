@@ -23,7 +23,7 @@ export class News extends BaseEntity {
     id: number
 
     @Column({
-        type: 'int',
+        type: 'number',
     })
     userId: number
 
@@ -36,7 +36,7 @@ export class News extends BaseEntity {
         type: 'text',
         default: '',
     })
-    sapo: string
+    sapo?: string
 
     @Column({
         type: 'text',
@@ -72,11 +72,13 @@ export class News extends BaseEntity {
     })
     coverImage: string
 
-    @ManyToOne(() => User, (user) => user.news)
+    @ManyToOne(() => User, (user) => user.news, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({
         name: 'userId',
     })
-    user?: User
+    user: User
 
     @ManyToMany(() => HashTag, (hashTag) => hashTag.news)
     @JoinTable()
@@ -94,6 +96,8 @@ export class News extends BaseEntity {
         type: 'text',
     })
     slug: string
+
+    hashTagIds: number[]
 
     @CreateDateColumn()
     createdAt: string

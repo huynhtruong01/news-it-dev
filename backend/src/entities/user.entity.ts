@@ -44,7 +44,7 @@ export class User extends BaseEntity {
     @Column({
         type: 'text',
     })
-    password: string
+    password?: string
 
     // @Column({
     //     type: 'datetime',
@@ -114,35 +114,61 @@ export class User extends BaseEntity {
     })
     work?: string
 
-    @ManyToMany(() => Role, (role) => role.users)
-    @JoinTable()
+    @ManyToMany(() => Role, (role) => role.users, {
+        cascade: true,
+    })
+    @JoinTable({
+        name: 'users_roles_roles',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'roleId', referencedColumnName: 'id' },
+    })
     roles: Role[]
 
-    @ManyToMany(() => User, (user) => user.followers)
+    @ManyToMany(() => User, (user) => user.followers, {
+        onDelete: 'CASCADE',
+    })
+    @JoinTable()
     followers?: User[]
 
-    @ManyToMany(() => User, (user) => user.following)
+    @ManyToMany(() => User, (user) => user.following, {
+        onDelete: 'CASCADE',
+    })
+    @JoinTable()
     following?: User[]
 
-    @ManyToMany(() => News, (news) => news.likes)
+    @ManyToMany(() => News, (news) => news.likes, {
+        cascade: true,
+    })
+    @JoinTable()
     newsLikes?: News[]
 
-    @ManyToMany(() => News, (news) => news.saveUsers)
+    @ManyToMany(() => News, (news) => news.saveUsers, {
+        cascade: true,
+    })
+    @JoinTable()
     saves?: News[]
 
-    @OneToMany(() => News, (news) => news.user)
+    @OneToMany(() => News, (news) => news.user, {
+        cascade: true,
+    })
     news?: News[]
 
     @OneToMany(() => Comment, (comment) => comment.user)
     comments?: Comment[]
 
-    @ManyToMany(() => HashTag, (hashTag) => hashTag.users)
-    @JoinTable()
+    @ManyToMany(() => HashTag, (hashTag) => hashTag.users, {
+        cascade: true,
+    })
+    @JoinTable({
+        name: 'hash_tags_users_users',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'hashTagId', referencedColumnName: 'id' },
+    })
     hashTags?: HashTag[]
 
     @Column({
         type: 'boolean',
-        default: false,
+        default: true,
     })
     isActive: boolean
 
@@ -156,6 +182,8 @@ export class User extends BaseEntity {
         type: 'text',
     })
     slug: string
+
+    roleIds?: number[]
 
     @CreateDateColumn()
     createdAt?: string

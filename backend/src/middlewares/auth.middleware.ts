@@ -12,7 +12,7 @@ class AuthMiddleware {
                 res.status(StatusCode.FORBIDDEN).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
-                    message: "You don't have permission.",
+                    message: "You don't login.",
                 })
                 return
             }

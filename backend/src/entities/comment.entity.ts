@@ -49,4 +49,6 @@ export class Comment extends BaseEntity {
         type: 'text',
     })
     comment: string
+
+    // TODO: like comment
 }

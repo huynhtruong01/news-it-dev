@@ -16,8 +16,9 @@ export class HashTag extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToMany(() => User, (user) => user.hashTags)
-    @JoinTable()
+    @ManyToMany(() => User, (user) => user.hashTags, {
+        onDelete: 'CASCADE',
+    })
     users?: User[]
 
     @ManyToMany(() => News, (news) => news.hashTags)
@@ -26,6 +27,7 @@ export class HashTag extends BaseEntity {
 
     @Column({
         type: 'text',
+        unique: true,
     })
     name: string
 
@@ -33,7 +35,7 @@ export class HashTag extends BaseEntity {
         type: 'text',
         default: '',
     })
-    desciption: string
+    description: string
 
     @Column({
         type: 'text',

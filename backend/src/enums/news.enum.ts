@@ -1,5 +1,5 @@
 export enum NewsStatus {
-    DRAFT,
-    PUBLIC,
-    UNPUBLIC,
+    DRAFT = 'draft',
+    PUBLIC = 'public',
+    UNPUBLIC = 'unpublic',
 }

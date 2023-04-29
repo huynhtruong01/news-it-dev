@@ -1,13 +1,16 @@
 import { AppDataSource } from '@/config'
+import { MAX_AGE_REFRESH_TOKEN } from '@/consts'
 import { User } from '@/entities'
 import { JwtPayloadUser } from '@/models'
+import { optionCookies } from '@/utils'
+import { Response } from 'express'
 import jwt from 'jsonwebtoken'
 
 class AuthService {
     constructor(private userRepository = AppDataSource.getRepository(User)) {}
 
     // check email or username exits
-    async checkEmail(usernameOrEmail: string): Promise<boolean> {
+    async checkEmailOrUsername(usernameOrEmail: string): Promise<User | null> {
         try {
             const emailUser = await this.userRepository.findOne({
                 where: {
@@ -21,9 +24,27 @@ class AuthService {
                 },
             })
 
-            if (usernameUser || emailUser) return true
+            if (usernameUser) return usernameUser
+            if (emailUser) return emailUser
 
-            return false
+            return null
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // check email
+    async getByEmail(emailAddress: string): Promise<User | null> {
+        try {
+            const user = await this.userRepository.findOne({
+                where: {
+                    emailAddress,
+                },
+            })
+
+            if (!user) return null
+
+            return user
         } catch (error) {
             throw new Error(error as string)
         }
@@ -47,6 +68,21 @@ class AuthService {
     verifyToken(token: string): JwtPayloadUser {
         return jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayloadUser
     }
+
+    // set token cookies
+    setCookieToken(
+        res: Response,
+        key: string,
+        value: string,
+        maxAge: number = MAX_AGE_REFRESH_TOKEN
+    ) {
+        res.cookie(key, value, {
+            ...optionCookies({ maxAge }),
+        })
+    }
+
+    // TODO: update profile user
+    // TODO: change password
 }
 
 export const authService = new AuthService()

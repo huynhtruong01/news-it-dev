@@ -1,13 +1,64 @@
 import { AppDataSource } from '@/config'
 import { HashTag } from '@/entities'
 import { createHashTag } from '@/utils'
+import { commonService } from './common.service'
 
 class HashTagService {
     constructor(private hashTagRepository = AppDataSource.getRepository(HashTag)) {}
 
+    // check name hash tag exits?
+    async checkNameHashTag(name: string): Promise<boolean> {
+        try {
+            const hashTag = await this.hashTagRepository.findOne({
+                where: {
+                    name,
+                },
+            })
+
+            if (hashTag) return true
+
+            return false
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // check hash tags ids
+    checkHashTagIds(hashTagIds: number[]): boolean | void {
+        try {
+            if (!Array.isArray(hashTagIds)) return
+            if (hashTagIds.length === 0) return
+
+            return true
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     async getAll(): Promise<HashTag[]> {
         try {
-            const hashTags = await this.hashTagRepository.find()
+            const hashTags = await this.hashTagRepository.find({
+                relations: {
+                    news: true,
+                    users: true,
+                },
+            })
+
+            return hashTags
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get all hash tag by id
+    async getAllByIds(hashTagIds: number[] = []) {
+        try {
+            const hashTags = await this.hashTagRepository
+                .createQueryBuilder('hashTag')
+                .where('hashTag.id IN (:...ids)', {
+                    ids: hashTagIds,
+                })
+                .getMany()
 
             return hashTags
         } catch (error) {
@@ -19,7 +70,8 @@ class HashTagService {
         try {
             const hashTag = createHashTag(data)
 
-            // TODO: create slug
+            // create slug
+            hashTag.slug = commonService.generateSlug(data.name)
 
             const newHashTag = await this.hashTagRepository.save(hashTag)
 
@@ -34,6 +86,10 @@ class HashTagService {
             const hashTag = await this.hashTagRepository.findOne({
                 where: {
                     id,
+                },
+                relations: {
+                    users: true,
+                    news: true,
                 },
             })
             if (!hashTag) return null
@@ -53,7 +109,16 @@ class HashTagService {
             })
             if (!hashTag) return null
 
-            const newHashTag = await this.hashTagRepository.save({ ...hashTag, ...data })
+            if (data.name) {
+                data.slug = commonService.generateSlug(data.name)
+            }
+
+            const newHashTag = await this.hashTagRepository.save({
+                ...hashTag,
+                name: data.name || hashTag.name,
+                description: data.description || hashTag.description,
+                slug: data.slug || hashTag.slug,
+            })
 
             return newHashTag
         } catch (error) {
@@ -61,7 +126,7 @@ class HashTagService {
         }
     }
 
-    async delete(id: number): Promise<void | null> {
+    async delete(id: number): Promise<HashTag | null> {
         try {
             const hashTag = await this.hashTagRepository.findOne({
                 where: {
@@ -71,6 +136,7 @@ class HashTagService {
             if (!hashTag) return null
 
             await this.hashTagRepository.delete(id)
+            return hashTag
         } catch (error) {
             throw new Error(error as string)
         }
