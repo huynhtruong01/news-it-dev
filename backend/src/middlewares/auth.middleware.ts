@@ -7,7 +7,19 @@ class AuthMiddleware {
     async getUser(req: RequestUser, res: Response, next: NextFunction) {
         try {
             // get token
-            const token = req.cookies[process.env.ACCESS_TOKEN_KEY as string]
+            const bearer: string = req.headers['authorization'] as string
+
+            if (!bearer) {
+                res.status(StatusCode.FORBIDDEN).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: "You don't login.",
+                })
+                return
+            }
+
+            const token = bearer.split(' ')[1]
+
             if (!token) {
                 res.status(StatusCode.FORBIDDEN).json({
                     results: Results.ERROR,

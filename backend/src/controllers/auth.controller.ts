@@ -321,6 +321,52 @@ class AuthController {
         }
     }
 
+    // verify user (GET)
+    async verifyUser(req: RequestUser, res: Response) {
+        try {
+            const bearer: string = req.headers['authorization'] as string
+
+            if (!bearer) {
+                res.status(StatusCode.FORBIDDEN).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: "You don't login.",
+                })
+                return
+            }
+
+            const token = bearer.split(' ')[1]
+
+            // verify token
+            const { id } = authService.verifyToken(token)
+
+            // check user
+            const user = await userService.getById(Number(id))
+            if (!user) {
+                res.status(StatusCode.UNAUTHORIZED).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Unauthorized.',
+                })
+                return
+            }
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    user,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
     // TODO: change password
 }
 
