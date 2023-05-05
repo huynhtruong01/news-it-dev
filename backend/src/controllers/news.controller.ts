@@ -48,7 +48,8 @@ class NewsController {
     // get all news (GET)
     async getAllNews(req: RequestUser, res: Response) {
         try {
-            const news = await newsService.getAll()
+            const query: IObjectCommon = req.query as IObjectCommon
+            const news = await newsService.getAll(query)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,

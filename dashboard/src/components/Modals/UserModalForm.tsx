@@ -1,4 +1,4 @@
-import { InputField, CheckBoxField } from '../FormFields'
+import { InputField, CheckBoxField, PasswordField } from '../FormFields'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IUserData } from '../../models'
@@ -7,24 +7,60 @@ import { useForm } from 'react-hook-form'
 import { Box, Button, Modal } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { Dispatch, SetStateAction, useEffect } from 'react'
+import { connect } from 'react-redux'
+import { AppDispatch } from '../../store'
+import { addUser, updateUser } from '../../store/user/thunkApi'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useToast } from '../../hooks'
+import EditIcon from '@mui/icons-material/Edit'
+import { BoxForm } from '../Common'
+import { usersApi } from '../../api'
 
 export interface IUserModalFormProps {
     initValues: IUserData
     open: boolean
     setOpen: Dispatch<SetStateAction<boolean>>
+    pAddUser: (data: IUserData) => Promise<PayloadAction<unknown>>
+    pUpdateUser: (data: IUserData) => Promise<PayloadAction<unknown>>
 }
 
-const schema = yup.object().shape({
-    username: yup.string().required('Please enter username.'),
-    firstName: yup.string().required('Please enter first name.'),
-    lastName: yup.string().required('Please enter last name.'),
-    emailAddress: yup.string().required('Please enter email.').email('Invalid email.'),
-    isAdmin: yup.boolean(),
-})
+function UserModalForm({
+    initValues,
+    open,
+    setOpen,
+    pAddUser,
+    pUpdateUser,
+}: IUserModalFormProps) {
+    const { toastSuccess, toastError } = useToast()
 
-export function UserModalForm({ initValues, open, setOpen }: IUserModalFormProps) {
+    const schema = yup.object().shape({
+        username: yup.string().required('Please enter username.'),
+        firstName: yup.string().required('Please enter first name.'),
+        lastName: yup.string().required('Please enter last name.'),
+        emailAddress: yup
+            .string()
+            .required('Please enter email.')
+            .email('Invalid email.'),
+        isAdmin: yup.boolean(),
+        password: yup.string().when(['id'], {
+            is: (val: number) => !initValues.id,
+            then: (schema) =>
+                schema
+                    .required('Please enter password.')
+                    .min(6, 'Password must be at least 6 characters.'),
+        }),
+        confirmPassword: yup.string().when(['id'], {
+            is: (val: number) => !initValues.id,
+            then: (schema) =>
+                schema
+                    .required('Please enter confirm password.')
+                    .min(6, 'Password must be at least 6 characters.')
+                    .oneOf([yup.ref('password')], "Confirm password don't match."),
+        }),
+    })
+
     const form = useForm<IUserData>({
-        defaultValues: initValues,
+        defaultValues: { ...initValues, password: '', confirmPassword: '' },
         resolver: yupResolver(schema),
     })
 
@@ -43,14 +79,53 @@ export function UserModalForm({ initValues, open, setOpen }: IUserModalFormProps
         setValue('isAdmin', initValues.isAdmin)
     }, [initValues, setValue])
 
-    const handleFormSubmit = (values: IUserData) => {
-        console.log(values)
+    const resetModal = () => {
+        reset()
         setOpen(false)
     }
 
+    const handleUpdate = async (values: IUserData) => {
+        try {
+            const { password, confirmPassword, ...rest } = values
+            // await pUpdateUser({ ...values, id: initValues.id })
+            await usersApi.updateUser({ ...rest, id: initValues.id })
+
+            toastSuccess(`Update user '${values.username}' successfully.`)
+        } catch (error) {
+            console.log(error)
+            throw new Error(error.message as string)
+        }
+    }
+
+    const handleAdd = async (values: IUserData) => {
+        try {
+            const { confirmPassword, ...rest } = values
+            // await pAddUser(rest)
+            const res = await usersApi.addUser(rest)
+
+            toastSuccess(`Add user '${res.data.user.username}' successfully.`)
+        } catch (error) {
+            throw new Error(error.message as string)
+        }
+    }
+
+    const handleFormSubmit = async (values: IUserData) => {
+        try {
+            if (initValues.id) {
+                await handleUpdate(values)
+            } else {
+                await handleAdd(values)
+            }
+
+            resetModal()
+        } catch (error) {
+            console.log(error)
+            toastError((error as Error).message)
+        }
+    }
+
     const handleClose = () => {
-        setOpen(false)
-        reset()
+        resetModal()
     }
 
     return (
@@ -68,9 +143,9 @@ export function UserModalForm({ initValues, open, setOpen }: IUserModalFormProps
                 sx={{
                     margin: 'auto',
                     width: 500,
-                    bgcolor: 'background.paper',
+                    backgroundColor: 'background.paper',
                     boxShadow: 24,
-                    p: 4,
+                    padding: 4,
                     borderRadius: 0.5,
                 }}
             >
@@ -114,6 +189,22 @@ export function UserModalForm({ initValues, open, setOpen }: IUserModalFormProps
                         disabled={isSubmitting}
                         placeholder={'Enter email'}
                     />
+                    {!initValues.id && (
+                        <>
+                            <PasswordField
+                                form={form}
+                                name={'password'}
+                                label={'Password'}
+                                disabled={isSubmitting}
+                            />
+                            <PasswordField
+                                form={form}
+                                name={'confirmPassword'}
+                                label={'Confirm Password'}
+                                disabled={isSubmitting}
+                            />
+                        </>
+                    )}
                     <CheckBoxField
                         form={form}
                         name={'isAdmin'}
@@ -121,35 +212,21 @@ export function UserModalForm({ initValues, open, setOpen }: IUserModalFormProps
                         disabled={isSubmitting}
                     />
                 </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
-                    }}
-                >
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        onClick={handleClose}
-                        sx={{
-                            backgroundColor: theme.palette.grey[500],
-                            '&:hover': {
-                                backgroundColor: theme.palette.grey[700],
-                            },
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                    >
-                        Add
-                    </Button>
-                </Box>
+                <BoxForm<IUserData>
+                    initValues={initValues}
+                    disabled={isSubmitting}
+                    onClose={handleClose}
+                />
             </Box>
         </Modal>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pAddUser: (data: IUserData) => dispatch(addUser(data)),
+        pUpdateUser: (data: IUserData) => dispatch(updateUser(data)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(UserModalForm)

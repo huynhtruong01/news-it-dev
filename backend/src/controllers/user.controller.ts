@@ -1,18 +1,21 @@
 import { Results, StatusCode } from '@/enums'
-import { RequestUser } from '@/models'
-import { userService } from '@/services'
+import { IObjectCommon, RequestUser } from '@/models'
+import { userService, authService } from '@/services'
 import { Request, Response } from 'express'
 import { StatusText } from '../enums/common.enum'
 
 class UserController {
     async getAllUser(req: RequestUser, res: Response) {
         try {
-            const users = await userService.getAll()
+            const query: IObjectCommon = req.query as IObjectCommon
+
+            const [users, count] = await userService.getAll(query)
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
                 status: StatusText.SUCCESS,
                 data: {
                     users,
+                    total: count,
                 },
             })
         } catch (error) {
@@ -38,6 +41,45 @@ class UserController {
             }
 
             res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    user,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // add user (POST)
+    async addUser(req: RequestUser, res: Response) {
+        try {
+            // check email has exits
+            const { emailAddress, username } = req.body
+
+            const isEmailExits = await authService.checkEmailOrUsername(emailAddress)
+            const isUsernameExits = await authService.checkEmailOrUsername(username)
+
+            // check username has exits
+            if (isEmailExits || isUsernameExits) {
+                res.status(StatusCode.BAD_REQUEST).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Email or username already exits.',
+                })
+                return
+            }
+
+            // create user
+            const user = await userService.create(req.body)
+            user.password = undefined
+
+            res.status(StatusCode.CREATED).json({
                 results: Results.SUCCESS,
                 status: StatusText.SUCCESS,
                 data: {

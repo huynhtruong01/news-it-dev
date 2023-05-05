@@ -11,6 +11,7 @@ export const createUserData = (data: User): User => {
     user.emailAddress = data.emailAddress
     user.password = data.password
     user.dateJoined = new Date()
+    user.isAdmin = data.isAdmin
 
     return user
 }

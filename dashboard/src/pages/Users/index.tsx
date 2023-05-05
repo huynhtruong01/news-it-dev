@@ -1,48 +1,66 @@
 import AddIcon from '@mui/icons-material/Add'
 import { Box, Button } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { useState, useEffect } from 'react'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import { SearchFilter, SelectFilter } from '../../components/Filters'
-import { UserModalForm } from '../../components/Modals'
-import { UserTable } from '../../components/Users'
-import { initUserFormValues, selectActive, selectsRole, users } from '../../data'
+import { UserModalForm, ModalDelete } from '../../components/Modals'
+import { UserFilters, UserTable } from '../../components/Users'
+import { initUserFormValues, selectActive, selectsRole } from '../../data'
 import { ActiveSelectValue, RoleSelectValue } from '../../enums'
 import { IFilters, IUser, IUserData } from '../../models'
-import { theme } from '../../utils'
-import { connect } from 'react-redux'
 import { AppDispatch, AppState } from '../../store'
 import { getUsers } from '../../store/user/thunkApi'
-import { PayloadAction } from '@reduxjs/toolkit'
+import { theme } from '../../utils'
+import { useToast } from '../../hooks'
+import { usersApi } from '../../api'
 
 interface IUsersProps {
     pUsers: IUser[]
-    pGetUsers: () => Promise<PayloadAction<unknown>>
+    pTotal: number
+    pGetUsers: (params: IFilters) => Promise<PayloadAction<unknown>>
 }
 
-function Users({ pUsers, pGetUsers }: IUsersProps) {
+function Users({ pUsers, pTotal, pGetUsers }: IUsersProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
     })
     const [open, setOpen] = useState<boolean>(false)
+    const [openDelete, setOpenDelete] = useState<boolean>(false)
     const [initValues, setInitValues] = useState<IUserData>(initUserFormValues)
+    const { toastSuccess, toastError } = useToast()
 
     useEffect(() => {
         document.title = 'Users | Dashboard'
-        pGetUsers()
     }, [])
 
     useEffect(() => {
-        console.log('filters home: ', filters)
-    }, [filters])
+        if (open || openDelete) return
+
+        pGetUsers(filters)
+    }, [filters, open, openDelete])
 
     const handleSearchChange = (value: string) => {
-        console.log(value)
+        setFilters((prev) => ({ ...prev, search: value }))
     }
 
     const handleOpen = () => {
         setInitValues(initUserFormValues)
         setOpen(true)
+    }
+
+    const handleDeleteUser = async () => {
+        try {
+            if (initValues.id) {
+                await usersApi.deleteUser(initValues.id)
+                toastSuccess(`Delete user ${initValues.username} successfully.`)
+                setInitValues(initUserFormValues)
+            }
+        } catch (error) {
+            toastError((error as Error).message)
+        }
     }
 
     return (
@@ -84,17 +102,7 @@ function Users({ pUsers, pGetUsers }: IUsersProps) {
                     </Box>
 
                     <Box>
-                        <SelectFilter
-                            selects={selectActive}
-                            initValue={ActiveSelectValue.ALL}
-                            label={'Active'}
-                            marginRight={2}
-                        />
-                        <SelectFilter
-                            selects={selectsRole}
-                            initValue={RoleSelectValue.ALL}
-                            label={'Role'}
-                        />
+                        <UserFilters filters={filters} setFilters={setFilters} />
                     </Box>
                 </Box>
 
@@ -105,15 +113,24 @@ function Users({ pUsers, pGetUsers }: IUsersProps) {
                 >
                     <UserTable
                         users={pUsers}
+                        total={pTotal}
                         filters={filters}
                         setFilters={setFilters}
                         setInitValues={setInitValues}
                         setOpen={setOpen}
+                        setOpenDelete={setOpenDelete}
                     />
                 </Box>
             </Box>
 
             <UserModalForm initValues={initValues} open={open} setOpen={setOpen} />
+            <ModalDelete
+                title={'Delete user?'}
+                message={`Are you sure delete user ${initValues.username}?`}
+                open={openDelete}
+                setOpen={setOpenDelete}
+                onDelete={handleDeleteUser}
+            />
         </Box>
     )
 }
@@ -121,12 +138,13 @@ function Users({ pUsers, pGetUsers }: IUsersProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pUsers: state.user.users,
+        pTotal: state.user.total,
     }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pGetUsers: () => dispatch(getUsers()),
+        pGetUsers: (params: IFilters) => dispatch(getUsers(params)),
     }
 }
 

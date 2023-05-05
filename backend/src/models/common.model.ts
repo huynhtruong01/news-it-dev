@@ -1,3 +1,5 @@
+import { FindOperator } from 'typeorm'
+
 export interface IObjectCommon {
-    [k: string]: string | number
+    [k: string]: string | number | boolean | FindOperator<string>
 }

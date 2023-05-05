@@ -9,23 +9,29 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { ISelectValue } from '../../models'
+import { ALL } from '../../consts'
 
 export interface ISelectFilterProps extends BoxProps {
     label: string
     selects: ISelectValue[]
     initValue?: string | number
+    onFilterChange: (value: string | number) => void
 }
 
 export function SelectFilter({
     selects,
     label,
     initValue = '',
+    onFilterChange,
     ...rest
 }: ISelectFilterProps) {
     const [value, setValue] = useState<string>(String(initValue))
 
     const handleSelectChange = (e: SelectChangeEvent) => {
-        setValue(String(e.target.value))
+        const { value } = e.target
+
+        onFilterChange(value)
+        setValue(String(value))
     }
 
     return (
@@ -46,6 +52,14 @@ export function SelectFilter({
                         textTransform: 'capitalize',
                     }}
                 >
+                    <MenuItem
+                        value={ALL}
+                        sx={{
+                            textTransform: 'capitalize',
+                        }}
+                    >
+                        All
+                    </MenuItem>
                     {selects.map((select) => (
                         <MenuItem
                             key={select.name}

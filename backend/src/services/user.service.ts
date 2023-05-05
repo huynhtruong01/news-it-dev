@@ -1,10 +1,17 @@
 import { AppDataSource } from '@/config'
 import { relationDataUser, selectUserData } from '@/data'
 import { User } from '@/entities'
+import { IObjectCommon, IUserRes } from '@/models'
 import { authService } from '@/services/auth.service'
 import { commonService } from '@/services/common.service'
 import { roleService } from '@/services/role.service'
-import { createUserData } from '@/utils'
+import {
+    createUserData,
+    filtersQuery,
+    paginationQuery,
+    sortQuery,
+    searchQuery,
+} from '@/utils'
 
 interface ICheckUser {
     user: User
@@ -34,17 +41,34 @@ class UserService {
         return newFollows.includes(userId)
     }
 
-    async getAll() {
+    async getAll(query: IObjectCommon): Promise<IUserRes> {
         try {
-            const users = await this.userRepository.find({
+            const newFiltersQuery = filtersQuery(query)
+            console.log('filters: ', newFiltersQuery)
+            const newSortQuery = sortQuery(query)
+            const newPaginationQuery = paginationQuery(query)
+
+            const searchUserName = searchQuery(query, 'username')
+            // const searchFirstName = searchQuery(query, 'firstName')
+            // const searchLastName = searchQuery(query, 'lastName')
+
+            const [users, count] = await this.userRepository.findAndCount({
                 order: {
-                    createdAt: 'DESC',
+                    ...newSortQuery,
                 },
+                where: {
+                    ...newFiltersQuery,
+                    ...searchUserName,
+                    // ...searchFirstName,
+                    // ...searchLastName,
+                    // isAdmin: true,
+                },
+                ...newPaginationQuery,
                 relations: relationDataUser,
                 select: selectUserData,
             })
 
-            return users
+            return [users, count]
         } catch (error) {
             throw new Error(error as string)
         }

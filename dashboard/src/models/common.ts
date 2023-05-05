@@ -18,6 +18,9 @@ export interface ISelectValue {
 export interface IFilters {
     limit: number
     page: number
+    isActive?: boolean
+    isAdmin?: boolean
+    search?: string
 }
 
 export type IDebounceCallback =
@@ -27,7 +30,11 @@ export type IDebounceCallback =
 export interface ITableHeader {
     id: string
     label: string
-    isSort?: boolean
+    isSort: boolean
 }
 
 export type IOrder = Order.ASC | Order.DESC
+
+export interface IObjectQuery {
+    [k: string]: string | number
+}

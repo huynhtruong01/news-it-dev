@@ -17,7 +17,7 @@ const onRequestConfig = (config: InternalAxiosRequestConfig) => {
 }
 
 const onError = (error: AxiosError): Promise<AxiosError> => {
-    return Promise.reject(error)
+    return Promise.reject(error.response?.data)
 }
 
 const onResponseConfig = (res: AxiosResponse): AxiosResponse => {

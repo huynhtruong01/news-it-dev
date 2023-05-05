@@ -5,43 +5,61 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { SearchFilter } from '../../components/Filters/SearchFilter'
-import { RoleModalForm } from '../../components/Modals'
+import { RoleModalForm, ModalDelete } from '../../components/Modals'
 import { RoleTable } from '../../components/Roles'
 import { initRoleFormValues } from '../../data'
 import { IFilters, IRole, IRoleData } from '../../models'
 import { AppDispatch, AppState } from '../../store'
 import { getRoles } from '../../store/role/thunkApi'
 import { theme } from '../../utils'
+import { useToast } from '../../hooks'
+import { rolesApi } from '../../api'
 
 export interface IRolesProps {
     pRoles: IRole[]
-    pGetRoles: () => Promise<PayloadAction<unknown>>
+    pTotal: number
+    pGetRoles: (params: IFilters) => Promise<PayloadAction<unknown>>
 }
 
-function Roles({ pRoles, pGetRoles }: IRolesProps) {
+function Roles({ pRoles, pTotal, pGetRoles }: IRolesProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
     })
     const [open, setOpen] = useState<boolean>(false)
+    const [openDelete, setOpenDelete] = useState<boolean>(false)
     const [initValues, setInitValues] = useState<IRoleData>(initRoleFormValues)
+    const { toastError, toastSuccess } = useToast()
 
     useEffect(() => {
         document.title = 'Roles | Dashboard'
-        pGetRoles()
     }, [])
 
     useEffect(() => {
-        console.log('filters home: ', filters)
-    }, [filters])
+        if (open || openDelete) return
+
+        pGetRoles(filters)
+    }, [filters, open, openDelete])
 
     const handleSearchChange = (value: string) => {
-        console.log(value)
+        setFilters({ ...filters, search: value })
     }
 
     const handleOpen = () => {
         setInitValues(initRoleFormValues)
         setOpen(true)
+    }
+
+    const handleDeleteRole = async () => {
+        try {
+            if (initValues.id) {
+                await rolesApi.deleteRole(initValues.id)
+                toastSuccess(`Delete role ${initValues.name} successfully.`)
+                setInitValues(initRoleFormValues)
+            }
+        } catch (error) {
+            toastError((error as Error).message)
+        }
     }
 
     return (
@@ -90,15 +108,24 @@ function Roles({ pRoles, pGetRoles }: IRolesProps) {
                 >
                     <RoleTable
                         roles={pRoles}
+                        total={pTotal}
                         filters={filters}
                         setFilters={setFilters}
                         setInitValues={setInitValues}
                         setOpen={setOpen}
+                        setOpenDelete={setOpenDelete}
                     />
                 </Box>
             </Box>
 
             <RoleModalForm initValues={initValues} open={open} setOpen={setOpen} />
+            <ModalDelete
+                title={'Delete role?'}
+                message={`Are you sure delete role ${initValues.name}?`}
+                open={openDelete}
+                setOpen={setOpenDelete}
+                onDelete={handleDeleteRole}
+            />
         </Box>
     )
 }
@@ -106,12 +133,13 @@ function Roles({ pRoles, pGetRoles }: IRolesProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pRoles: state.role.roles,
+        pTotal: state.role.total,
     }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pGetRoles: () => dispatch(getRoles()),
+        pGetRoles: (params: IFilters) => dispatch(getRoles(params)),
     }
 }
 

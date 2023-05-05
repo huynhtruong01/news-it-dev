@@ -17,7 +17,6 @@ export function NavBar() {
     const [navLink, setNavLink] = useState<string>('')
     const location = useLocation()
     const navigate = useNavigate()
-    console.log('location: ', location)
 
     useEffect(() => {
         const firstPath = location.pathname.split('/')[1]

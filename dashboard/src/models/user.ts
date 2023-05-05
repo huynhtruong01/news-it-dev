@@ -5,6 +5,8 @@ export interface IUserData {
     lastName: string
     emailAddress: string
     isAdmin: boolean
+    password?: string
+    confirmPassword?: string
 }
 
 export interface IUserTable extends IUserData {
@@ -22,4 +24,9 @@ export interface IUser extends IUserData {
     newsLikes: number
     isActive: boolean
     createdAt: Date
+}
+
+export interface IUserRes {
+    users: IUser[]
+    total: number
 }

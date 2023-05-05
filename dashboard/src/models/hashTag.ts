@@ -11,3 +11,8 @@ export interface IHashTagTable extends IHashTagData {
 export interface IHashTag extends IHashTagData {
     createdAt: Date
 }
+
+export interface IHashTagRes {
+    hashTags: IHashTag[]
+    total: number
+}

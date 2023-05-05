@@ -1,18 +1,18 @@
 import AxiosClient from '.'
-import { IUserData } from '../models'
+import { IFilters, IUserData } from '../models'
 
 const BASE_URL = '/users'
 
-export const getUsers = () => {
-    return AxiosClient.get(`${BASE_URL}`).then((res) => res.data)
+export const getUsers = (params: IFilters) => {
+    return AxiosClient.get(`${BASE_URL}`, { params }).then((res) => res.data)
 }
 
 export const addUser = (data: IUserData) => {
-    return AxiosClient.post(`${BASE_URL}`, data)
+    return AxiosClient.post(`${BASE_URL}`, data).then((res) => res.data)
 }
 
 export const updateUser = (data: IUserData) => {
-    return AxiosClient.post(`${BASE_URL}/${data.id}`, data)
+    return AxiosClient.put(`${BASE_URL}/${data.id}`, data)
 }
 
 export const deleteUser = (id: number) => {

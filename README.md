@@ -114,10 +114,12 @@ server.ts
 
 - **Roles**:
     - ✅ CRUD role
+    - ❌ Add Entity color
 
 - **Hash tags**:
     - ✅ CRUD hash tag
     - ✅ Follow/Unfollow Hash tag by User
+    - ❌ Add Entity color, icon(img)
 
 - **Comments**:
     - ✅ CRUD comments

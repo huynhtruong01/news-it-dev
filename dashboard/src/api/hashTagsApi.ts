@@ -1,14 +1,16 @@
 import AxiosClient from '.'
-import { IHashTag } from '../models'
+import { IFilters, IHashTag } from '../models'
 
 const BASE_URL = '/hash-tags'
 
-export const getHashTags = () => {
-    return AxiosClient.get(`${BASE_URL}`).then((res) => res.data)
+export const getHashTags = (params: IFilters) => {
+    return AxiosClient.get(`${BASE_URL}`, {
+        params,
+    }).then((res) => res.data)
 }
 
 export const addHashTag = (data: IHashTag) => {
-    return AxiosClient.post(`${BASE_URL}`, data)
+    return AxiosClient.post(`${BASE_URL}`, data).then((res) => res.data)
 }
 
 export const updateHashTag = (data: IHashTag) => {

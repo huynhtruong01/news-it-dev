@@ -1,10 +1,10 @@
 import AxiosClient from '.'
-import { INews } from '../models'
+import { IFilters, INews } from '../models'
 
 const BASE_URL = '/news'
 
-export const getNews = () => {
-    return AxiosClient.get(`${BASE_URL}`).then((res) => res.data)
+export const getNews = (params: IFilters) => {
+    return AxiosClient.get(`${BASE_URL}`, { params }).then((res) => res.data)
 }
 
 export const addNews = (data: INews) => {

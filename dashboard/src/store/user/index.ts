@@ -4,12 +4,14 @@ import { extraReducers } from './thunkApi'
 
 export interface IUserStore {
     users: IUser[]
+    total: number
     accessToken: string
     refreshToken: string
 }
 
 const initialState: IUserStore = {
     users: [],
+    total: 0,
     accessToken: '',
     refreshToken: '',
 }

@@ -16,7 +16,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 
 export interface INewsProps {
     pNews: INews[]
-    pGetNews: () => Promise<PayloadAction<unknown>>
+    pGetNews: (params: IFilters) => Promise<PayloadAction<unknown>>
 }
 
 function News({ pNews, pGetNews }: INewsProps) {
@@ -29,11 +29,11 @@ function News({ pNews, pGetNews }: INewsProps) {
 
     useEffect(() => {
         document.title = 'News | Dashboard'
-        pGetNews()
     }, [])
 
     useEffect(() => {
         console.log('filters home: ', filters)
+        pGetNews(filters)
     }, [filters])
 
     const handleSearchChange = (value: string) => {
@@ -120,7 +120,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pGetNews: () => dispatch(getNews()),
+        pGetNews: (params: IFilters) => dispatch(getNews(params)),
     }
 }
 

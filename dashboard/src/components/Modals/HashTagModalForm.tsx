@@ -7,6 +7,9 @@ import { useForm } from 'react-hook-form'
 import { Box, Button, Modal } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { Dispatch, SetStateAction, useEffect } from 'react'
+import { hashTagsApi } from '../../api'
+import { useToast } from '../../hooks'
+import { BoxForm } from '../Common'
 
 export interface IHashTagModalFormProps {
     initValues: IHashTagData
@@ -20,6 +23,7 @@ const schema = yup.object().shape({
 })
 
 export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFormProps) {
+    const { toastSuccess, toastError } = useToast()
     const form = useForm<IHashTagData>({
         defaultValues: initValues,
         resolver: yupResolver(schema),
@@ -37,14 +41,48 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
         setValue('description', initValues.description)
     }, [initValues, setValue])
 
-    const handleFormSubmit = (values: IHashTagData) => {
-        console.log(values)
+    const resetModal = () => {
+        reset()
         setOpen(false)
     }
 
+    const handleUpdate = async (values: IHashTagData) => {
+        try {
+            await hashTagsApi.updateHashTag({ ...values, id: initValues.id })
+
+            toastSuccess(`Update tag '${values.name}' successfully.`)
+        } catch (error) {
+            console.log(error)
+            throw new Error(error.message as string)
+        }
+    }
+
+    const handleAdd = async (values: IHashTagData) => {
+        try {
+            const res = await hashTagsApi.addHashTag(values)
+
+            toastSuccess(`Add tag '${res.data.hashTag.name}' successfully.`)
+        } catch (error) {
+            throw new Error(error.message as string)
+        }
+    }
+
+    const handleFormSubmit = async (values: IHashTagData) => {
+        try {
+            if (initValues.id) {
+                await handleUpdate(values)
+            } else {
+                await handleAdd(values)
+            }
+
+            resetModal()
+        } catch (error) {
+            toastError((error as Error).message)
+        }
+    }
+
     const handleClose = () => {
-        setOpen(false)
-        reset()
+        resetModal()
     }
 
     return (
@@ -90,34 +128,11 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
                         multiline
                     />
                 </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
-                    }}
-                >
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        onClick={handleClose}
-                        sx={{
-                            backgroundColor: theme.palette.grey[500],
-                            '&:hover': {
-                                backgroundColor: theme.palette.grey[700],
-                            },
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                    >
-                        Add
-                    </Button>
-                </Box>
+                <BoxForm<IHashTagData>
+                    initValues={initValues}
+                    disabled={isSubmitting}
+                    onClose={handleClose}
+                />
             </Box>
         </Modal>
     )

@@ -10,3 +10,8 @@ export interface IRoleTable extends IRoleData {
 export interface IRole extends IRoleData {
     createdAt: Date
 }
+
+export interface IRoleRes {
+    roles: IRole[]
+    total: number
+}

@@ -5,10 +5,10 @@ import {
 } from '@reduxjs/toolkit'
 import { INewsStore } from '.'
 import { newsApi } from '../../api'
-import { INews } from '../../models'
+import { IFilters, INews } from '../../models'
 
-export const getNews = createAsyncThunk('news/getNews', async () => {
-    const result = await newsApi.getNews()
+export const getNews = createAsyncThunk('news/getNews', async (params: IFilters) => {
+    const result = await newsApi.getNews(params)
     return result.data.news
 })
 

@@ -7,6 +7,9 @@ import { useForm } from 'react-hook-form'
 import { Box, Button, Modal } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { Dispatch, SetStateAction, useEffect } from 'react'
+import { useToast } from '../../hooks'
+import { rolesApi } from '../../api'
+import { BoxForm } from '../Common'
 
 export interface IRoleModalFormProps {
     initValues: IRoleData
@@ -23,6 +26,7 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
         defaultValues: initValues,
         resolver: yupResolver(schema),
     })
+    const { toastSuccess, toastError } = useToast()
 
     const {
         formState: { isSubmitting },
@@ -35,14 +39,48 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
         setValue('name', initValues.name)
     }, [initValues, setValue])
 
-    const handleFormSubmit = (values: IRoleData) => {
-        console.log(values)
+    const resetModal = () => {
+        reset()
         setOpen(false)
     }
 
+    const handleUpdate = async (values: IRoleData) => {
+        try {
+            await rolesApi.updateRole({ ...values, id: initValues.id })
+
+            toastSuccess(`Update role '${values.name}' successfully.`)
+        } catch (error) {
+            console.log(error)
+            throw new Error(error.message as string)
+        }
+    }
+
+    const handleAdd = async (values: IRoleData) => {
+        try {
+            const res = await rolesApi.addRole(values)
+
+            toastSuccess(`Add role '${res.data.role.name}' successfully.`)
+        } catch (error) {
+            throw new Error(error.message as string)
+        }
+    }
+
+    const handleFormSubmit = async (values: IRoleData) => {
+        try {
+            if (initValues.id) {
+                await handleUpdate(values)
+            } else {
+                await handleAdd(values)
+            }
+
+            resetModal()
+        } catch (error) {
+            toastError((error as Error).message)
+        }
+    }
+
     const handleClose = () => {
-        setOpen(false)
-        reset()
+        resetModal()
     }
 
     return (
@@ -79,34 +117,11 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
                         placeholder={'Enter name'}
                     />
                 </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
-                    }}
-                >
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        onClick={handleClose}
-                        sx={{
-                            backgroundColor: theme.palette.grey[500],
-                            '&:hover': {
-                                backgroundColor: theme.palette.grey[700],
-                            },
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                    >
-                        Add
-                    </Button>
-                </Box>
+                <BoxForm<IRoleData>
+                    initValues={initValues}
+                    disabled={isSubmitting}
+                    onClose={handleClose}
+                />
             </Box>
         </Modal>
     )

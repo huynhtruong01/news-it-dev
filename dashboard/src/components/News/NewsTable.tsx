@@ -50,7 +50,7 @@ export function NewsTable({
 
     return (
         <TableWrapper<INews>
-            listBody={news}
+            total={0}
             listHead={newsHeaders}
             filters={filters}
             onFiltersChange={handleFiltersChange}

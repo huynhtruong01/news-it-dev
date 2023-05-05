@@ -83,10 +83,6 @@ export const users: IUserTable[] = [
 
 export const selectsRole: ISelectValue[] = [
     {
-        name: RoleSelectName.ALL,
-        value: RoleSelectValue.ALL,
-    },
-    {
         name: RoleSelectName.ADMIN,
         value: RoleSelectValue.ADMIN,
     },
@@ -97,10 +93,6 @@ export const selectsRole: ISelectValue[] = [
 ]
 
 export const selectActive: ISelectValue[] = [
-    {
-        name: ActiveSelectName.ALL,
-        value: ActiveSelectValue.ALL,
-    },
     {
         name: ActiveSelectName.ACTIVE,
         value: ActiveSelectValue.ACTIVE,
@@ -165,10 +157,12 @@ export const userHeaders: readonly ITableHeader[] = [
     {
         id: '',
         label: 'Actions',
+        isSort: false,
     },
 ]
 
 export const initUserFormValues: IUserData = {
+    id: undefined,
     username: '',
     firstName: '',
     lastName: '',

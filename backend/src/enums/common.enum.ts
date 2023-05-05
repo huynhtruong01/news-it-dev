@@ -19,3 +19,18 @@ export enum Results {
     SUCCESS = 'true',
     ERROR = 'false',
 }
+
+export enum Status {
+    ASC = 'ASC',
+    DESC = 'DESC',
+}
+
+export enum IsAdmin {
+    ADMIN = 1,
+    USER = 0,
+}
+
+export enum IsActive {
+    ACTIVE = 1,
+    INACTIVE = 0,
+}

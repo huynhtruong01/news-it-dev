@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { AuthLayout, MainLayout } from './layouts'
 import { Dashboard, Users, Roles, HashTags, News, Login, Signup } from './pages'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
     return (

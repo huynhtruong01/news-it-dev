@@ -4,10 +4,12 @@ import { extraReducers } from './thunkApi'
 
 export interface IHashTagStore {
     hashTags: IHashTag[]
+    total: number
 }
 
 const initialState: IHashTagStore = {
     hashTags: [],
+    total: 0,
 }
 
 const hashTagSlice = createSlice({

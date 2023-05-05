@@ -1,23 +1,40 @@
 import { AppDataSource } from '@/config'
 import { Role } from '@/entities'
-import { createRoleData } from '@/utils'
+import {
+    createRoleData,
+    filtersQuery,
+    paginationQuery,
+    sortQuery,
+    searchQuery,
+} from '@/utils'
 import { commonService } from './common.service'
+import { IObjectCommon, IRoleRes } from '@/models'
 
 class RoleService {
     constructor(private roleRepository = AppDataSource.getRepository(Role)) {}
 
-    async getAll(): Promise<Role[]> {
+    async getAll(query: IObjectCommon): Promise<IRoleRes> {
         try {
-            const roles = await this.roleRepository.find({
+            const newFiltersQuery = filtersQuery(query)
+            const newSortQuery = sortQuery(query)
+            const newPaginationQuery = paginationQuery(query)
+            const nameSearchQuery = searchQuery(query, 'name')
+
+            const [roles, count] = await this.roleRepository.findAndCount({
                 order: {
-                    createdAt: 'ASC',
+                    ...newSortQuery,
                 },
+                where: {
+                    ...newFiltersQuery,
+                    ...nameSearchQuery,
+                },
+                ...newPaginationQuery,
                 relations: {
                     users: true,
                 },
             })
 
-            return roles
+            return [roles, count]
         } catch (error) {
             throw new Error(error as string)
         }

@@ -10,7 +10,7 @@ router
     .get(userController.getProfile)
     .put(userController.updateProfileUser)
 
-router.route('/').get(userController.getAllUser)
+router.route('/').get(userController.getAllUser).post(userController.addUser)
 router
     .route('/:userId')
     .get(userController.getUser)

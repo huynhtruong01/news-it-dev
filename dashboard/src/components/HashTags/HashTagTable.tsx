@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, MouseEvent } from 'react'
 import { tagHeaders } from '../../data'
 import { IFilters, IHashTag, IHashTagData, IHashTagTable } from '../../models'
 import { formatDate, theme } from '../../utils'
@@ -9,21 +9,26 @@ import { TableWrapper } from '../Common'
 
 export interface IHashTagTableProps {
     tags: IHashTag[]
+    total: number
     filters: IFilters
     setFilters: Dispatch<SetStateAction<IFilters>>
     setInitValues: Dispatch<SetStateAction<IHashTagData>>
     setOpen: Dispatch<SetStateAction<boolean>>
+    setOpenDelete: Dispatch<SetStateAction<boolean>>
 }
 
 export function HashTagTable({
     tags,
+    total,
     filters,
     setFilters,
     setInitValues,
     setOpen,
+    setOpenDelete,
 }: IHashTagTableProps) {
     const handleSetInitValues = (values: IHashTagTable) => {
         const newInitValues: IHashTagData = {
+            id: values.id,
             name: values.name,
             description: values.description,
         }
@@ -37,9 +42,21 @@ export function HashTagTable({
         setFilters(filters)
     }
 
+    const handleDelete = (e: MouseEvent, values: IHashTag) => {
+        e.stopPropagation()
+
+        const newInitValues: IHashTagData = {
+            id: values.id,
+            name: values.name,
+            description: values.description,
+        }
+        setInitValues(newInitValues)
+        setOpenDelete(true)
+    }
+
     return (
         <TableWrapper<IHashTag>
-            listBody={tags}
+            total={total}
             listHead={tagHeaders}
             filters={filters}
             onFiltersChange={handleFiltersChange}
@@ -81,10 +98,7 @@ export function HashTagTable({
                                     backgroundColor: red[900],
                                 },
                             }}
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                console.log('delete')
-                            }}
+                            onClick={(e) => handleDelete(e, tag)}
                         >
                             <DeleteIcon fontSize="small" />
                         </Button>

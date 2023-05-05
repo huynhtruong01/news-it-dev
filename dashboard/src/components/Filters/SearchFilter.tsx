@@ -24,7 +24,7 @@ export function SearchFilter({
     }
 
     const debounceSearch = useCallback(
-        debounceFunc((value: string) => handleSearchChange(value), 1000),
+        debounceFunc((value: string) => handleSearchChange(value), 800),
         []
     )
 

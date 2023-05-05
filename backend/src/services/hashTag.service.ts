@@ -1,8 +1,15 @@
 import { AppDataSource } from '@/config'
 import { HashTag, User } from '@/entities'
-import { createHashTag } from '@/utils'
+import {
+    createHashTag,
+    filtersQuery,
+    paginationQuery,
+    sortQuery,
+    searchQuery,
+} from '@/utils'
 import { commonService } from './common.service'
 import { userService } from './user.service'
+import { IObjectCommon, IHashTagRes } from '@/models'
 
 interface ICheckHashTag {
     user: User
@@ -64,16 +71,30 @@ class HashTagService {
         }
     }
 
-    async getAll(): Promise<HashTag[]> {
+    // get all
+    async getAll(query: IObjectCommon): Promise<IHashTagRes> {
         try {
-            const hashTags = await this.hashTagRepository.find({
+            const newFiltersQuery = filtersQuery(query)
+            const newSortQuery = sortQuery(query)
+            const newPaginationQuery = paginationQuery(query)
+            const nameSearchQuery = searchQuery(query, 'name')
+
+            const [hashTags, count] = await this.hashTagRepository.findAndCount({
+                where: {
+                    ...newFiltersQuery,
+                    ...nameSearchQuery,
+                },
                 relations: {
                     news: true,
                     users: true,
                 },
+                ...newPaginationQuery,
+                order: {
+                    ...newSortQuery,
+                },
             })
 
-            return hashTags
+            return [hashTags, count]
         } catch (error) {
             throw new Error(error as string)
         }

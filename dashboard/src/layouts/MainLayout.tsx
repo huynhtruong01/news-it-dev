@@ -11,11 +11,15 @@ export function MainLayout() {
         ;(async () => {
             try {
                 const user = await isAuthenticated()
+                console.log(user)
 
                 if (!user) {
                     navigate('/login')
                 }
             } catch (error) {
+                if (error) {
+                    navigate('/login')
+                }
                 throw new Error(error as string)
             }
         })()

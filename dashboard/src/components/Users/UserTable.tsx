@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, SetStateAction, SyntheticEvent } from 'react'
+import { Dispatch, SetStateAction, SyntheticEvent, MouseEvent } from 'react'
 import { userHeaders } from '../../data'
 import { ActiveSelectName, RoleSelectName } from '../../enums'
 import { IFilters, IUser, IUserData } from '../../models'
@@ -11,21 +11,26 @@ import { EMPTY_IMG } from '../../consts'
 
 export interface IUserTableProps {
     users: IUser[]
+    total: number
     filters: IFilters
     setFilters: Dispatch<SetStateAction<IFilters>>
     setInitValues: Dispatch<SetStateAction<IUserData>>
     setOpen: Dispatch<SetStateAction<boolean>>
+    setOpenDelete: Dispatch<SetStateAction<boolean>>
 }
 
 export function UserTable({
     users,
+    total,
     filters,
     setFilters,
     setInitValues,
     setOpen,
+    setOpenDelete,
 }: IUserTableProps) {
     const handleSetInitValues = (values: IUser) => {
         const newInitValues: IUserData = {
+            id: values.id,
             username: values.username,
             firstName: values.firstName,
             lastName: values.lastName,
@@ -46,9 +51,23 @@ export function UserTable({
         e.currentTarget.src = EMPTY_IMG
     }
 
+    const handleDelete = (e: MouseEvent, values: IUser) => {
+        e.stopPropagation()
+        const newInitValues: IUserData = {
+            id: values.id,
+            username: values.username,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            emailAddress: values.emailAddress,
+            isAdmin: values.isAdmin,
+        }
+        setInitValues(newInitValues)
+        setOpenDelete(true)
+    }
+
     return (
         <TableWrapper<IUser>
-            listBody={users}
+            total={total}
             listHead={userHeaders}
             filters={filters}
             onFiltersChange={handleFiltersChange}
@@ -113,10 +132,7 @@ export function UserTable({
                                     backgroundColor: red[900],
                                 },
                             }}
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                console.log('delete')
-                            }}
+                            onClick={(e) => handleDelete(e, user)}
                         >
                             <DeleteIcon fontSize="small" />
                         </Button>

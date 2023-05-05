@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, MouseEvent } from 'react'
 import { roleHeaders } from '../../data'
 import { IFilters, IRoleData, IRole } from '../../models'
 import { formatDate, theme } from '../../utils'
@@ -9,21 +9,27 @@ import { TableWrapper } from '../Common'
 
 export interface IRoleTableProps {
     roles: IRole[]
+    total: number
     filters: IFilters
     setFilters: Dispatch<SetStateAction<IFilters>>
     setInitValues: Dispatch<SetStateAction<IRoleData>>
     setOpen: Dispatch<SetStateAction<boolean>>
+    setOpenDelete: Dispatch<SetStateAction<boolean>>
 }
 
 export function RoleTable({
     roles,
+    total,
     filters,
     setFilters,
     setInitValues,
     setOpen,
+    setOpenDelete,
 }: IRoleTableProps) {
+    console.log(roles)
     const handleSetInitValues = (values: IRole) => {
         const newInitValues: IRoleData = {
+            id: values.id,
             name: values.name,
         }
 
@@ -36,9 +42,20 @@ export function RoleTable({
         setFilters(filters)
     }
 
+    const handleDelete = (e: MouseEvent, values: IRole) => {
+        e.stopPropagation()
+
+        const newInitValues: IRoleData = {
+            id: values.id,
+            name: values.name,
+        }
+        setInitValues(newInitValues)
+        setOpenDelete(true)
+    }
+
     return (
         <TableWrapper<IRole>
-            listBody={roles}
+            total={total}
             listHead={roleHeaders}
             filters={filters}
             onFiltersChange={handleFiltersChange}
@@ -72,10 +89,7 @@ export function RoleTable({
                                     backgroundColor: red[900],
                                 },
                             }}
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                console.log('delete')
-                            }}
+                            onClick={(e) => handleDelete(e, role)}
                         >
                             <DeleteIcon fontSize="small" />
                         </Button>

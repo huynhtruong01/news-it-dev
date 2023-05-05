@@ -13,6 +13,7 @@ import { News } from '@/entities/news.entity'
 import { Comment } from '@/entities/comment.entity'
 import { Role } from '@/entities/role.entity'
 import { HashTag } from '@/entities/hashTag.entity'
+import { IsActive, IsAdmin } from '@/enums'
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -174,7 +175,6 @@ export class User extends BaseEntity {
 
     @Column({
         type: 'boolean',
-        default: false,
     })
     isAdmin: boolean
 

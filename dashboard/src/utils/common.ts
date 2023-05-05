@@ -14,6 +14,9 @@ export const isAuthenticated = async () => {
         if (!accessToken || !refreshToken) return false
 
         const res = await authApi.verifyUser()
+
+        if (!res.data.user) return false
+
         return res.data.user
     } catch (error) {
         throw new Error(error as string)

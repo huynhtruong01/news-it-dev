@@ -36,5 +36,6 @@ export const roleHeaders: readonly ITableHeader[] = [
 ]
 
 export const initRoleFormValues: IRoleData = {
+    id: undefined,
     name: '',
 }

@@ -1,5 +1,5 @@
 import { Results, StatusCode, StatusText } from '@/enums'
-import { RequestUser } from '@/models'
+import { IObjectCommon, RequestUser } from '@/models'
 import { roleService } from '@/services'
 import { Response } from 'express'
 
@@ -7,13 +7,15 @@ class RoleController {
     // (GET)
     async getAllRoles(req: RequestUser, res: Response) {
         try {
-            const roles = await roleService.getAll()
+            const query: IObjectCommon = req.query as IObjectCommon
+            const [roles, count] = await roleService.getAll(query)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
                 status: StatusText.SUCCESS,
                 data: {
                     roles,
+                    total: count,
                 },
             })
         } catch (error) {

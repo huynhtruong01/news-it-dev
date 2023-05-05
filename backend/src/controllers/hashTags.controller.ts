@@ -1,5 +1,5 @@
 import { Results, StatusCode, StatusText } from '@/enums'
-import { RequestUser } from '@/models'
+import { IObjectCommon, RequestUser } from '@/models'
 import { hashTagService } from '@/services'
 import { Response } from 'express'
 
@@ -25,13 +25,15 @@ class HashTagController {
     // (GET)
     async getAllHashTag(req: RequestUser, res: Response) {
         try {
-            const hashTags = await hashTagService.getAll()
+            const query: IObjectCommon = req.query as IObjectCommon
+            const [hashTags, count] = await hashTagService.getAll(query)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
                 status: StatusText.SUCCESS,
                 data: {
                     hashTags,
+                    total: count,
                 },
             })
         } catch (error) {

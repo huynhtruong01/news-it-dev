@@ -6,7 +6,7 @@ import { TableHeader } from './TableHeader'
 import { PaginationTable } from '../Filters'
 
 export type ITableWrapperProps<ITableData> = {
-    listBody: ITableData[]
+    total: number
     listHead: readonly ITableHeader[]
     filters: IFilters
     onFiltersChange: (filters: IFilters) => void
@@ -14,7 +14,7 @@ export type ITableWrapperProps<ITableData> = {
 }
 
 export function TableWrapper<ITableData>({
-    listBody,
+    total,
     listHead,
     filters,
     onFiltersChange,
@@ -30,15 +30,13 @@ export function TableWrapper<ITableData>({
         const newFilters = {
             page: page + 1,
             limit: rowsPerPage,
-            [`${orderBy}`]: order,
+            [`${orderBy}`]: order.toUpperCase(),
         }
+
+        console.log('new filters: ', newFilters)
 
         onFiltersChange(newFilters)
     }, [page, rowsPerPage, order, orderBy])
-
-    const total = useMemo(() => {
-        return listBody.length
-    }, [listBody])
 
     const handleRequestSort = (event: MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === Order.ASC

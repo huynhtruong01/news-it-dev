@@ -1,7 +1,7 @@
 import { AppDataSource } from '@/config'
 import { relationNewsData } from '@/data'
 import { News, User } from '@/entities'
-import { createNews } from '@/utils'
+import { createNews, filtersQuery, paginationQuery, sortQuery } from '@/utils'
 import { commonService } from '@/services/common.service'
 import { hashTagService } from '@/services/hashTag.service'
 import { IObjectCommon } from '@/models'
@@ -40,9 +40,16 @@ class NewsService {
         }
     }
 
-    async getAll(): Promise<News[]> {
+    async getAll(query: IObjectCommon): Promise<News[]> {
         try {
+            const newFiltersQuery = filtersQuery(query)
+            const newSortQuery = sortQuery(query) || { createdAt: 'DESC' }
+            const newPaginationQuery = paginationQuery(query)
+
             const news = await this.newsRepository.find({
+                order: {
+                    ...newSortQuery,
+                },
                 relations: relationNewsData,
             })
 
