@@ -1,20 +1,23 @@
-import { InputField, CheckBoxField, PasswordField } from '../FormFields'
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IUserData } from '../../models'
-import { theme } from '../../utils'
-import { useForm } from 'react-hook-form'
-import { Box, Button, Modal } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
+import { Box, Modal } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { Dispatch, SetStateAction, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import { connect } from 'react-redux'
+import * as yup from 'yup'
+import { usersApi } from '../../api'
+import { roleOptions } from '../../data'
+import { useToast } from '../../hooks'
+import { IUserData } from '../../models'
 import { AppDispatch } from '../../store'
 import { addUser, updateUser } from '../../store/user/thunkApi'
-import { PayloadAction } from '@reduxjs/toolkit'
-import { useToast } from '../../hooks'
-import EditIcon from '@mui/icons-material/Edit'
-import { BoxForm } from '../Common'
-import { usersApi } from '../../api'
+import { ButtonForm } from '../Common'
+import {
+    AutoCompleteField,
+    CheckBoxField,
+    InputField,
+    PasswordField,
+} from '../FormFields'
 
 export interface IUserModalFormProps {
     initValues: IUserData
@@ -43,20 +46,21 @@ function UserModalForm({
             .email('Invalid email.'),
         isAdmin: yup.boolean(),
         password: yup.string().when(['id'], {
-            is: (val: number) => !initValues.id,
+            is: () => !initValues.id,
             then: (schema) =>
                 schema
                     .required('Please enter password.')
                     .min(6, 'Password must be at least 6 characters.'),
         }),
         confirmPassword: yup.string().when(['id'], {
-            is: (val: number) => !initValues.id,
+            is: () => !initValues.id,
             then: (schema) =>
                 schema
                     .required('Please enter confirm password.')
                     .min(6, 'Password must be at least 6 characters.')
                     .oneOf([yup.ref('password')], "Confirm password don't match."),
         }),
+        roleOptionIds: yup.array().min(1, 'Please choose role for user.'),
     })
 
     const form = useForm<IUserData>({
@@ -77,6 +81,7 @@ function UserModalForm({
         setValue('lastName', initValues.lastName)
         setValue('emailAddress', initValues.emailAddress)
         setValue('isAdmin', initValues.isAdmin)
+        setValue('roleOptionIds', initValues.roleOptionIds)
     }, [initValues, setValue])
 
     const resetModal = () => {
@@ -87,25 +92,23 @@ function UserModalForm({
     const handleUpdate = async (values: IUserData) => {
         try {
             const { password, confirmPassword, ...rest } = values
-            // await pUpdateUser({ ...values, id: initValues.id })
             await usersApi.updateUser({ ...rest, id: initValues.id })
 
             toastSuccess(`Update user '${values.username}' successfully.`)
         } catch (error) {
-            console.log(error)
-            throw new Error(error.message as string)
+            throw new Error((error as Error).message as string)
         }
     }
 
     const handleAdd = async (values: IUserData) => {
         try {
-            const { confirmPassword, ...rest } = values
-            // await pAddUser(rest)
-            const res = await usersApi.addUser(rest)
+            const { confirmPassword, roleOptionIds, ...rest } = values
+            const roleIds = roleOptionIds.map((role) => role.id)
+            const res = await usersApi.addUser({ ...rest, roleIds })
 
             toastSuccess(`Add user '${res.data.user.username}' successfully.`)
         } catch (error) {
-            throw new Error(error.message as string)
+            throw new Error((error as Error).message as string)
         }
     }
 
@@ -175,7 +178,7 @@ function UserModalForm({
                             placeholder={'Enter last name'}
                         />
                     </Box>
-                    <InputField
+                    <InputField<IUserData>
                         form={form}
                         name={'username'}
                         label={'Username'}
@@ -205,6 +208,14 @@ function UserModalForm({
                             />
                         </>
                     )}
+                    <AutoCompleteField<IUserData>
+                        form={form}
+                        name={'roleOptionIds'}
+                        label={'Roles'}
+                        disabled={isSubmitting}
+                        placeholder={'Choose roles'}
+                        list={roleOptions}
+                    />
                     <CheckBoxField
                         form={form}
                         name={'isAdmin'}
@@ -212,7 +223,7 @@ function UserModalForm({
                         disabled={isSubmitting}
                     />
                 </Box>
-                <BoxForm<IUserData>
+                <ButtonForm<IUserData>
                     initValues={initValues}
                     disabled={isSubmitting}
                     onClose={handleClose}

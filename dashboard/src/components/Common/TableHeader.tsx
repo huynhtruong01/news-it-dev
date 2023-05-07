@@ -28,14 +28,14 @@ export function TableHeader({ list, order, orderBy, onRequestSort }: ITableHeade
                     <TableCell key={item.id} align="center">
                         <TableSortLabel
                             active={orderBy === item.id}
-                            direction={orderBy === item.id ? order : Order.ASC}
+                            direction={orderBy === item.id ? order : Order.asc}
                             onClick={handleSortChange(item.isSort, item.id)}
                             hideSortIcon={!item.isSort}
                         >
                             {item.label}
                             {item.isSort && orderBy === item.id && (
                                 <Box component="span" sx={visuallyHidden}>
-                                    {order === Order.DESC
+                                    {order === Order.desc
                                         ? 'sorted descending'
                                         : 'sorted ascending'}
                                 </Box>

@@ -4,7 +4,7 @@ import {
     ActiveSelectName,
     ActiveSelectValue,
 } from '../enums'
-import { ISelectValue, IUserTable, IUserData, ITableHeader } from '../models'
+import { ISelectValue, IUserTable, IUserData, ITableHeader, IOptionItem } from '../models'
 
 export const users: IUserTable[] = [
     {
@@ -168,4 +168,16 @@ export const initUserFormValues: IUserData = {
     lastName: '',
     emailAddress: '',
     isAdmin: false,
+    roleOptionIds: [],
 }
+
+export const roleOptions: IOptionItem[] = [
+    {
+        id: 1,
+        name: 'admin',
+    },
+    {
+        id: 2,
+        name: 'user',
+    },
+]

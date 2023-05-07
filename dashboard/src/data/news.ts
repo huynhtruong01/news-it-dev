@@ -1,5 +1,5 @@
 import { Status } from '../enums'
-import { INewsData, INewsTable, ITableHeader, ISelectValue } from '../models'
+import { INewsData, INewsTable, ITableHeader, ISelectValue, IOptionItem } from '../models'
 
 export const news: INewsTable[] = [
     {
@@ -118,6 +118,7 @@ export const newsHeaders: readonly ITableHeader[] = [
     {
         id: '',
         label: 'Actions',
+        isSort: false,
     },
 ]
 
@@ -129,13 +130,10 @@ export const initNewsFormValues: INewsData = {
     coverImage: '',
     hashTags: ['HTML', 'CSS', 'Javascript'],
     readTimes: 1,
+    hashTagOptionIds: [],
 }
 
 export const selectStatus: ISelectValue[] = [
-    {
-        name: Status.ALL,
-        value: Status.ALL,
-    },
     {
         name: Status.DRAFT,
         value: Status.DRAFT,
@@ -147,5 +145,35 @@ export const selectStatus: ISelectValue[] = [
     {
         name: Status.UNPUBLIC,
         value: Status.UNPUBLIC,
+    },
+]
+
+export const selectTags: ISelectValue[] = [
+    {
+        name: 'HTML',
+        value: 1,
+    },
+    {
+        name: 'CSS',
+        value: 2,
+    },
+    {
+        name: 'Javascript',
+        value: 3,
+    },
+]
+
+export const hashTagOptions: IOptionItem[] = [
+    {
+        id: 1,
+        name: 'HTML',
+    },
+    {
+        id: 2,
+        name: 'CSS',
+    },
+    {
+        id: 3,
+        name: 'Javascript',
     },
 ]

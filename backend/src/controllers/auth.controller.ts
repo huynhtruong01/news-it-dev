@@ -154,11 +154,12 @@ class AuthController {
         }
     }
 
-    // refresh token (GET)
+    // refresh token (POST)
     async refreshToken(req: Request, res: Response) {
         try {
             // check freshToken
-            const token = req.cookies[process.env.REFRESH_TOKEN_KEY as string]
+            // const token = req.cookies[process.env.REFRESH_TOKEN_KEY as string]
+            const token = req.body.token
             if (!token) {
                 res.status(StatusCode.UNAUTHORIZED).json({
                     results: Results.ERROR,

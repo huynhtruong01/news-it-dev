@@ -1,6 +1,5 @@
 import { IFilters } from '../../models'
 import { selectActive, selectsRole } from '../../data'
-import { ActiveSelectValue, RoleSelectValue } from '../../enums'
 import { SelectFilter } from '../Filters'
 import { SetStateAction, Dispatch } from 'react'
 import { ALL } from '../../consts'

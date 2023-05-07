@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce'
-import { IDebounceCallback } from '../models'
+import { IDebounceCallback, IRole } from '../models'
 import { authApi } from '../api'
 import { getCookie } from './cookies'
 
@@ -21,4 +21,11 @@ export const isAuthenticated = async () => {
     } catch (error) {
         throw new Error(error as string)
     }
+}
+
+export const generateOptions = (options: IRole[]) => {
+    return options.map((option) => ({
+        id: option.id,
+        name: option.name,
+    }))
 }

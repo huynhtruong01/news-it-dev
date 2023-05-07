@@ -8,7 +8,7 @@ router.route('/verify').get(authController.verifyUser)
 router.route('/signup').post(authController.signup)
 router.route('/login').post(authController.login)
 router.route('/logout').get(authController.logout)
-router.route('/refresh-token').get(authController.refreshToken)
+router.route('/refresh-token').post(authController.refreshToken)
 router.route('/reset-password').post(authController.resetPassword)
 router.route('/check-email').post(authController.checkEmail)
 

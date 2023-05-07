@@ -1,2 +1,2 @@
-export * from './MainLayout'
+export { default as MainLayout } from './MainLayout'
 export * from './AuthLayout'

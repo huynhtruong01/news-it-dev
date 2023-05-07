@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ILoginValues } from '../../models'
+import { useToast } from '../../hooks'
 
 export interface ILoginFormProps {
     onLoginSubmit: (values: ILoginValues) => Promise<void>
@@ -18,9 +19,10 @@ const schema = yup.object().shape({
 })
 
 export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
+    const { toastError } = useToast()
     const form = useForm<ILoginValues>({
         defaultValues: {
-            emailAddress: '',
+            email: '',
             password: '',
         },
         resolver: yupResolver(schema),
@@ -37,7 +39,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
             await onLoginSubmit(values)
             reset()
         } catch (error) {
-            throw new Error(error as string)
+            toastError((error as Error).message)
         }
     }
 

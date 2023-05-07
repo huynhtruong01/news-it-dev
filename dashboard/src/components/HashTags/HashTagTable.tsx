@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, MouseEvent } from 'react'
 import { tagHeaders } from '../../data'
 import { IFilters, IHashTag, IHashTagData, IHashTagTable } from '../../models'
 import { formatDate, theme } from '../../utils'
-import { TableWrapper } from '../Common'
+import { TableWrapper, BoxColor, TableCellImage } from '../Common'
 
 export interface IHashTagTableProps {
     tags: IHashTag[]
@@ -31,6 +31,8 @@ export function HashTagTable({
             id: values.id,
             name: values.name,
             description: values.description,
+            color: values.color,
+            iconImage: values.iconImage,
         }
 
         setInitValues(newInitValues)
@@ -49,6 +51,8 @@ export function HashTagTable({
             id: values.id,
             name: values.name,
             description: values.description,
+            color: values.color,
+            iconImage: values.iconImage,
         }
         setInitValues(newInitValues)
         setOpenDelete(true)
@@ -77,6 +81,7 @@ export function HashTagTable({
                     onClick={() => handleSetInitValues(tag)}
                 >
                     <TableCell align="center">{tag.id}</TableCell>
+                    <TableCellImage src={tag.iconImage} alt={tag.name} />
                     <TableCell align="center">{tag.name}</TableCell>
                     <TableCell
                         align="left"
@@ -85,6 +90,9 @@ export function HashTagTable({
                         }}
                     >
                         <Typography noWrap>{tag.description}</Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                        <BoxColor color={tag.color} />
                     </TableCell>
                     <TableCell align="center">{formatDate(tag.createdAt)}</TableCell>
                     <TableCell align="center">

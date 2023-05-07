@@ -28,6 +28,11 @@ export class Role extends BaseEntity {
     @Column({
         type: 'text',
     })
+    color: string
+
+    @Column({
+        type: 'text',
+    })
     slug: string
 
     @CreateDateColumn()

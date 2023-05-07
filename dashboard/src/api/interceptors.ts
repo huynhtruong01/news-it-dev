@@ -4,7 +4,8 @@ import {
     AxiosResponse,
     InternalAxiosRequestConfig,
 } from 'axios'
-import { getCookie } from '../utils'
+import { authApi } from '.'
+import { getCookie, removeFullToken, setCookie } from '../utils'
 
 const onRequestConfig = (config: InternalAxiosRequestConfig) => {
     const token = getCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY)
@@ -24,7 +25,31 @@ const onResponseConfig = (res: AxiosResponse): AxiosResponse => {
     return res
 }
 
+const onResponseError = async (
+    err: AxiosError,
+    axiosInstance: AxiosInstance
+): Promise<AxiosError | undefined> => {
+    const originalConfig = err.config as InternalAxiosRequestConfig
+
+    if (err.response?.status === 401) {
+        const refreshToken = getCookie(import.meta.env.VITE_REFRESH_TOKEN_KEY)
+        removeFullToken()
+
+        const token = await authApi.refreshToken(refreshToken)
+
+        setCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY, token.data.accessToken)
+        setCookie(import.meta.env.VITE_REFRESH_TOKEN_KEY, token.data.accessToken)
+
+        originalConfig.headers.Authorization = `Bearer ${token.data.accessToken}`
+        return axiosInstance(originalConfig)
+    }
+
+    return Promise.reject(err?.response?.data)
+}
+
 export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     axiosInstance.interceptors.request.use(onRequestConfig, onError)
-    axiosInstance.interceptors.response.use(onResponseConfig, onError)
+    axiosInstance.interceptors.response.use(onResponseConfig, (err: AxiosError) =>
+        onResponseError(err, axiosInstance)
+    )
 }

@@ -1,6 +1,6 @@
 import { Status } from '@/enums'
 import { IObjectCommon } from '@/models'
-import { ILike } from 'typeorm'
+import { Any, ILike, In } from 'typeorm'
 
 export const covertObjectQuery = (query: IObjectCommon, queryKeys: string[]) => {
     const booleans = ['true', 'false']
@@ -19,7 +19,7 @@ export const covertObjectQuery = (query: IObjectCommon, queryKeys: string[]) => 
 }
 
 export const excludeQuery = (query: IObjectCommon) => {
-    const otherQuery = ['limit', 'page', 'search']
+    const otherQuery = ['limit', 'page', 'search', 'hashTag']
     const queryKeys = Object.keys(query).filter((q) => !otherQuery.includes(q))
 
     const newQuery = covertObjectQuery(query, queryKeys)
@@ -80,4 +80,14 @@ export const searchQuery = (query: IObjectCommon, key: string) => {
     }
 
     return newQuery
+}
+
+export const filtersArrQuery = (query: IObjectCommon) => {
+    const arrFilters = ['hashTag']
+
+    const queryKeys = Object.keys(query).filter((k) => arrFilters.includes(k))
+    return queryKeys.reduce((obj: IObjectCommon, k: string) => {
+        obj[`${k}Ids`] = In(query[k] as readonly string[])
+        return obj
+    }, {})
 }

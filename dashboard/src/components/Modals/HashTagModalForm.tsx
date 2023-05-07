@@ -1,4 +1,4 @@
-import { InputField } from '../FormFields'
+import { InputField, ColorField } from '../FormFields'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IHashTagData } from '../../models'
@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { hashTagsApi } from '../../api'
 import { useToast } from '../../hooks'
-import { BoxForm } from '../Common'
+import { ButtonForm } from '../Common'
 
 export interface IHashTagModalFormProps {
     initValues: IHashTagData
@@ -20,6 +20,8 @@ export interface IHashTagModalFormProps {
 const schema = yup.object().shape({
     name: yup.string().required('Please enter name.'),
     description: yup.string().required('Please enter description.'),
+    color: yup.string().required('Please enter color.'),
+    iconImage: yup.string().required('Please enter icon image.'),
 })
 
 export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFormProps) {
@@ -39,6 +41,8 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
     useEffect(() => {
         setValue('name', initValues.name)
         setValue('description', initValues.description)
+        setValue('iconImage', initValues.iconImage)
+        setValue('color', initValues.color)
     }, [initValues, setValue])
 
     const resetModal = () => {
@@ -127,8 +131,22 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
                         minRows={4}
                         multiline
                     />
+                    <InputField
+                        form={form}
+                        name={'iconImage'}
+                        label={'Icon Image'}
+                        disabled={isSubmitting}
+                        placeholder={'Enter icon image'}
+                    />
+                    <ColorField
+                        form={form}
+                        name={'color'}
+                        label={'Color'}
+                        disabled={isSubmitting}
+                        placeholder={'Enter color'}
+                    />
                 </Box>
-                <BoxForm<IHashTagData>
+                <ButtonForm<IHashTagData>
                     initValues={initValues}
                     disabled={isSubmitting}
                     onClose={handleClose}

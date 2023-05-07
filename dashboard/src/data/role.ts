@@ -25,6 +25,11 @@ export const roleHeaders: readonly ITableHeader[] = [
         isSort: false,
     },
     {
+        id: 'color',
+        label: 'Color',
+        isSort: false,
+    },
+    {
         id: 'createdAt',
         label: 'Date Created',
         isSort: true,
@@ -32,10 +37,12 @@ export const roleHeaders: readonly ITableHeader[] = [
     {
         id: '',
         label: 'Actions',
+        isSort: false,
     },
 ]
 
 export const initRoleFormValues: IRoleData = {
     id: undefined,
     name: '',
+    color: '#fff',
 }

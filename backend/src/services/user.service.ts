@@ -77,6 +77,7 @@ class UserService {
     // create
     async create(data: User): Promise<User> {
         try {
+            console.log('data: ', data)
             const user = createUserData(data)
 
             // TODO: add role when create user

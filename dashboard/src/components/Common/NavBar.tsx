@@ -11,12 +11,22 @@ import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { navList } from '../../data'
-import { theme } from '../../utils'
+import { removeCookie, theme } from '../../utils'
+import { authApi } from '../../api'
+import { useToast } from '../../hooks'
+import { connect } from 'react-redux'
+import { AppDispatch } from '../../store'
+import { saveUserLogin } from '../../store/user'
 
-export function NavBar() {
+export interface INavBarProps {
+    pSaveUserLogin: () => void
+}
+
+function NavBar({ pSaveUserLogin }: INavBarProps) {
     const [navLink, setNavLink] = useState<string>('')
     const location = useLocation()
     const navigate = useNavigate()
+    const { toastSuccess, toastError } = useToast()
 
     useEffect(() => {
         const firstPath = location.pathname.split('/')[1]
@@ -26,6 +36,21 @@ export function NavBar() {
     const handleNavChange = (link: string) => {
         setNavLink(link)
         navigate(link)
+    }
+
+    const handleLogout = async () => {
+        try {
+            removeCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+            removeCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+
+            await authApi.logout()
+            pSaveUserLogin()
+            navigate('/login')
+
+            toastSuccess('Logout successfully.')
+        } catch (error) {
+            toastError((error as Error).message)
+        }
     }
 
     return (
@@ -156,6 +181,7 @@ export function NavBar() {
                                     backgroundColor: red[900],
                                 },
                             }}
+                            onClick={handleLogout}
                         >
                             <ListItemIcon>
                                 <LogoutIcon />
@@ -173,3 +199,11 @@ export function NavBar() {
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSaveUserLogin: () => dispatch(saveUserLogin(null)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(NavBar)

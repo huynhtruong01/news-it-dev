@@ -1,6 +1,8 @@
 export enum Order {
-    ASC = 'asc',
-    DESC = 'desc',
+    ASC = 'ASC',
+    DESC = 'DESC',
+    asc = 'asc',
+    desc = 'desc',
 }
 
 export enum Status {

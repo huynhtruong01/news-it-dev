@@ -167,6 +167,8 @@ export class User extends BaseEntity {
     })
     hashTags?: HashTag[]
 
+    // TODO: add column role names
+
     @Column({
         type: 'boolean',
         default: true,

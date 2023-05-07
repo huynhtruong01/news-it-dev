@@ -14,6 +14,7 @@ import { getRoles } from '../../store/role/thunkApi'
 import { theme } from '../../utils'
 import { useToast } from '../../hooks'
 import { rolesApi } from '../../api'
+import { Order } from '../../enums'
 
 export interface IRolesProps {
     pRoles: IRole[]
@@ -25,6 +26,7 @@ function Roles({ pRoles, pTotal, pGetRoles }: IRolesProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
+        createdAt: Order.ASC,
     })
     const [open, setOpen] = useState<boolean>(false)
     const [openDelete, setOpenDelete] = useState<boolean>(false)

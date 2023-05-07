@@ -1,9 +1,11 @@
 import { IUser } from './../../models'
 import { createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from './thunkApi'
+import { reducers } from './reducer'
 
 export interface IUserStore {
     users: IUser[]
+    userLogin: IUser | null
     total: number
     accessToken: string
     refreshToken: string
@@ -11,6 +13,7 @@ export interface IUserStore {
 
 const initialState: IUserStore = {
     users: [],
+    userLogin: null,
     total: 0,
     accessToken: '',
     refreshToken: '',
@@ -19,8 +22,9 @@ const initialState: IUserStore = {
 const userSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
+    reducers,
     extraReducers,
 })
 
+export const { saveUserLogin } = userSlice.actions
 export default userSlice.reducer

@@ -1,10 +1,18 @@
 import { AppDataSource } from '@/config'
 import { relationNewsData } from '@/data'
 import { News, User } from '@/entities'
-import { createNews, filtersQuery, paginationQuery, sortQuery } from '@/utils'
+import {
+    createNews,
+    filtersQuery,
+    paginationQuery,
+    sortQuery,
+    searchQuery,
+    filtersArrQuery,
+} from '@/utils'
 import { commonService } from '@/services/common.service'
 import { hashTagService } from '@/services/hashTag.service'
 import { IObjectCommon } from '@/models'
+import { In } from 'typeorm'
 
 class NewsService {
     constructor(private newsRepository = AppDataSource.getRepository(News)) {}
@@ -43,18 +51,30 @@ class NewsService {
     async getAll(query: IObjectCommon): Promise<News[]> {
         try {
             const newFiltersQuery = filtersQuery(query)
-            const newSortQuery = sortQuery(query) || { createdAt: 'DESC' }
+            const newSortQuery = sortQuery(query)
             const newPaginationQuery = paginationQuery(query)
+            const titleSearchQuery = searchQuery(query, 'title')
+            const newFilterArrQuery = filtersArrQuery(query)
+
+            // console.log('filters: ', newFilterArrQuery)
 
             const news = await this.newsRepository.find({
                 order: {
                     ...newSortQuery,
                 },
+                where: {
+                    ...titleSearchQuery,
+                    ...newFiltersQuery,
+                    // hashTagIds: In([1]),
+                    ...newFilterArrQuery,
+                },
+                ...newPaginationQuery,
                 relations: relationNewsData,
             })
 
             return news
         } catch (error) {
+            console.log('error: ', error)
             throw new Error(error as string)
         }
     }

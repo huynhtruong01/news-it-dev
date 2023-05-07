@@ -1,13 +1,22 @@
-import { Box, Typography, Paper } from '@mui/material'
-import { LoginForm } from '../../components/Auth'
-import { ILoginValues } from '../../models'
-import { authApi } from '../../api'
-import { useNavigate } from 'react-router-dom'
-import { setCookie } from '../../utils'
+import { Box, Paper, Typography } from '@mui/material'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { authApi } from '../../api'
+import { LoginForm } from '../../components/Auth'
+import { useToast } from '../../hooks'
+import { ILoginValues, IUser } from '../../models'
+import { saveUserLogin } from '../../store/user'
+import { setCookie } from '../../utils'
+import { AppDispatch } from '../../store'
+import { connect } from 'react-redux'
 
-export function Login() {
+export interface ILoginProps {
+    pSaveUserLogin: (user: IUser) => void
+}
+
+export function Login({ pSaveUserLogin }: ILoginProps) {
     const navigate = useNavigate()
+    const { toastSuccess } = useToast()
 
     useEffect(() => {
         document.title = 'Login'
@@ -19,9 +28,13 @@ export function Login() {
             setCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY, res.data.accessToken)
             setCookie(import.meta.env.VITE_REFRESH_TOKEN_KEY, res.data.refreshToken)
 
+            // save user in redux
+            pSaveUserLogin(res.data.user)
+
             navigate('/')
+            toastSuccess('Login successfully.')
         } catch (error) {
-            console.log(error)
+            throw new Error((error as Error).message)
         }
     }
 
@@ -55,3 +68,11 @@ export function Login() {
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSaveUserLogin: (user: IUser) => dispatch(saveUserLogin(user)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Login)

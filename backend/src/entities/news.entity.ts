@@ -97,6 +97,9 @@ export class News extends BaseEntity {
     })
     slug: string
 
+    @Column({
+        type: 'simple-array',
+    })
     hashTagIds: number[]
 
     @CreateDateColumn()

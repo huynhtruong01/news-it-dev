@@ -59,6 +59,11 @@ export const tagHeaders: readonly ITableHeader[] = [
         isSort: false,
     },
     {
+        id: 'iconImage',
+        label: 'Icon',
+        isSort: false,
+    },
+    {
         id: 'name',
         label: 'Name',
         isSort: false,
@@ -69,6 +74,11 @@ export const tagHeaders: readonly ITableHeader[] = [
         isSort: false,
     },
     {
+        id: 'color',
+        label: 'Color',
+        isSort: false,
+    },
+    {
         id: 'createdAt',
         label: 'Date Created',
         isSort: true,
@@ -76,10 +86,14 @@ export const tagHeaders: readonly ITableHeader[] = [
     {
         id: '',
         label: 'Actions',
+        isSort: false,
     },
 ]
 
 export const initHashTagFormValues: IHashTagData = {
+    id: undefined,
     name: '',
     description: '',
+    color: '#fff',
+    iconImage: '',
 }

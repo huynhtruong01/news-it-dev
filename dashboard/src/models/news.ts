@@ -1,4 +1,5 @@
 import { Status } from '../enums'
+import { IOptionItem } from './common'
 
 export interface INewsData {
     id?: number
@@ -13,6 +14,7 @@ export interface INewsData {
     user?: string
     hashTags: string[]
     readTimes: number
+    hashTagOptionIds?: IOptionItem[]
 }
 
 export interface INewsTable extends INewsData {

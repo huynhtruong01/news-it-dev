@@ -1,13 +1,16 @@
-import { InputField, SelectField } from '../FormFields'
+import { InputField, SelectField, EditorField, AutoCompleteField } from '../FormFields'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { INewsData } from '../../models'
-import { selectStatus } from '../../data'
+import { selectStatus, hashTagOptions } from '../../data'
 import { theme } from '../../utils'
 import { useForm } from 'react-hook-form'
 import { Box, Button, Modal } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { Dispatch, SetStateAction, useEffect } from 'react'
+import { ButtonForm } from '../Common'
+import { useToast } from '../../hooks'
+import { newsApi } from '../../api'
 
 export interface INewsModalFormProps {
     initValues: INewsData
@@ -21,11 +24,11 @@ const schema = yup.object().shape({
     readTimes: yup.number(),
     thumbnailImage: yup.string().required('Please choose thumbnail image.'),
     coverImage: yup.string().required('Please choose cover image.'),
-    readTimes: yup.number(),
     content: yup.string().required('Please enter news content.'),
 })
 
 export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps) {
+    const { toastSuccess, toastError } = useToast()
     const form = useForm<INewsData>({
         defaultValues: initValues,
         resolver: yupResolver(schema),
@@ -47,16 +50,54 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
         setValue('status', initValues.status)
         setValue('coverImage', initValues.coverImage)
         setValue('thumbnailImage', initValues.thumbnailImage)
+        setValue('hashTagOptionIds', initValues.hashTagOptionIds)
     }, [initValues, setValue])
 
-    const handleFormSubmit = (values: INewsData) => {
-        console.log(values)
+    const resetModal = () => {
         setOpen(false)
+        reset()
+    }
+
+    const handleUpdate = async (values: INewsData) => {
+        try {
+            await newsApi.updateNews({ ...rest, id: initValues.id })
+
+            toastSuccess(`Update user '${values.title}' successfully.`)
+        } catch (error) {
+            throw new Error((error as Error).message as string)
+        }
+    }
+
+    const handleAdd = async (values: INewsData) => {
+        try {
+            const { hashTagOptionIds, ...rest } = values
+            const hashTagIds = hashTagOptionIds.map((item) => item.id)
+            const res = await newsApi.addNews({ ...rest, hashTagIds })
+
+            toastSuccess(`Add user '${res.data.news.title}' successfully.`)
+        } catch (error) {
+            throw new Error((error as Error).message as string)
+        }
+    }
+
+    const handleFormSubmit = async (values: INewsData) => {
+        try {
+            console.log('values submit: ', values.content)
+            return
+            if (initValues.id) {
+                await handleUpdate(values)
+            } else {
+                await handleAdd(values)
+            }
+
+            resetModal()
+        } catch (error) {
+            toastError((error as Error).message)
+        }
     }
 
     const handleClose = () => {
-        setOpen(false)
-        reset()
+        resetModal()
     }
 
     return (
@@ -72,7 +113,6 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
                 component="form"
                 onSubmit={handleSubmit(handleFormSubmit)}
                 sx={{
-                    margin: 'auto',
                     width: '100%',
                     minHeight: 'calc(100vh - 4rem)',
                     bgcolor: 'background.paper',
@@ -156,53 +196,27 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
                             />
                         </Box>
                     </Box>
-                    <InputField
+                    <AutoCompleteField
                         form={form}
-                        name={'hashTags'}
-                        label={'Hash Tags'}
+                        name={'hashTagOptionIds'}
+                        label={'Tags'}
                         disabled={isSubmitting}
-                        placeholder={'Enter hash tags'}
-                        minRows={4}
-                        multiline
+                        placeholder={'Choose tags'}
+                        list={hashTagOptions}
                     />
-                    <InputField
+                    <EditorField
                         form={form}
                         name={'content'}
                         label={'Content'}
                         disabled={isSubmitting}
                         placeholder={'Enter content'}
-                        minRows={8}
-                        multiline
                     />
                 </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
-                    }}
-                >
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        onClick={handleClose}
-                        sx={{
-                            backgroundColor: theme.palette.grey[500],
-                            '&:hover': {
-                                backgroundColor: theme.palette.grey[700],
-                            },
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                    >
-                        Add
-                    </Button>
-                </Box>
+                <ButtonForm<INewsData>
+                    initValues={initValues}
+                    disabled={isSubmitting}
+                    onClose={handleClose}
+                />
             </Box>
         </Modal>
     )

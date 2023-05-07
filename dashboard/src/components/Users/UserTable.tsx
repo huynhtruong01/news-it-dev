@@ -5,8 +5,8 @@ import { Dispatch, SetStateAction, SyntheticEvent, MouseEvent } from 'react'
 import { userHeaders } from '../../data'
 import { ActiveSelectName, RoleSelectName } from '../../enums'
 import { IFilters, IUser, IUserData } from '../../models'
-import { formatDate, theme } from '../../utils'
-import { TableWrapper } from '../Common/TableWrapper'
+import { formatDate, theme, generateOptions } from '../../utils'
+import { TableWrapper, TableCellImage } from '../Common'
 import { EMPTY_IMG } from '../../consts'
 
 export interface IUserTableProps {
@@ -29,6 +29,8 @@ export function UserTable({
     setOpenDelete,
 }: IUserTableProps) {
     const handleSetInitValues = (values: IUser) => {
+        const roleOptionIds = generateOptions(values.roles || [])
+
         const newInitValues: IUserData = {
             id: values.id,
             username: values.username,
@@ -36,6 +38,7 @@ export function UserTable({
             lastName: values.lastName,
             emailAddress: values.emailAddress,
             isAdmin: values.isAdmin,
+            roleOptionIds,
         }
 
         setInitValues(newInitValues)
@@ -45,10 +48,6 @@ export function UserTable({
     const handleFiltersChange = (filters: IFilters) => {
         console.log('filters: ', filters)
         setFilters(filters)
-    }
-
-    const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.src = EMPTY_IMG
     }
 
     const handleDelete = (e: MouseEvent, values: IUser) => {
@@ -88,25 +87,7 @@ export function UserTable({
                     onClick={() => handleSetInitValues(user)}
                 >
                     <TableCell align="center">{user.id}</TableCell>
-                    <TableCell
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-
-                            img: {
-                                width: 50,
-                                height: 50,
-                                margin: 'auto',
-                                borderRadius: 0.5,
-                            },
-                        }}
-                    >
-                        <img
-                            src={user.avatar}
-                            alt={user.username}
-                            onError={handleImageError}
-                        />
-                    </TableCell>
+                    <TableCellImage src={user.avatar} alt={user.username} />
                     <TableCell align="center">{user.username}</TableCell>
                     <TableCell align="center">{user.firstName}</TableCell>
                     <TableCell align="center">{user.lastName}</TableCell>

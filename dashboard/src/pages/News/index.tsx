@@ -3,10 +3,10 @@ import { Box, Button } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { SearchFilter, SelectFilter } from '../../components/Filters'
-import { NewsTable } from '../../components/News'
+import { NewsFilters, NewsTable } from '../../components/News'
 import { initNewsFormValues, news, selectStatus } from '../../data'
 import { IFilters, INews, INewsData } from '../../models'
-import { Status } from '../../enums'
+import { Order, Status } from '../../enums'
 import { theme } from '../../utils'
 import { NewsModalForm } from '../../components/Modals'
 import { connect } from 'react-redux'
@@ -23,6 +23,7 @@ function News({ pNews, pGetNews }: INewsProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
+        createdAt: Order.ASC,
     })
     const [open, setOpen] = useState<boolean>(false)
     const [initValues, setInitValues] = useState<INewsData>(initNewsFormValues)
@@ -84,11 +85,7 @@ function News({ pNews, pGetNews }: INewsProps) {
                     </Box>
 
                     <Box>
-                        <SelectFilter
-                            selects={selectStatus}
-                            initValue={Status.ALL}
-                            label={'Status'}
-                        />
+                        <NewsFilters filters={filters} setFilters={setFilters} />
                     </Box>
                 </Box>
 

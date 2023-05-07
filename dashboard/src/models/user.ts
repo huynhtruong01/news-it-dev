@@ -1,3 +1,8 @@
+import { IRole } from './role'
+import { IOptionItem } from './common'
+
+export type IRoleIds = IOptionItem[]
+
 export interface IUserData {
     id?: number
     username: string
@@ -7,6 +12,8 @@ export interface IUserData {
     isAdmin: boolean
     password?: string
     confirmPassword?: string
+    roleOptionIds?: IRoleIds
+    roleIds?: number[]
 }
 
 export interface IUserTable extends IUserData {
@@ -23,6 +30,7 @@ export interface IUser extends IUserData {
     newsCount: number
     newsLikes: number
     isActive: boolean
+    roles?: IRole[]
     createdAt: Date
 }
 

@@ -24,6 +24,10 @@ export function NewsTable({
     setOpen,
 }: INewsTableProps) {
     const handleSetInitValues = (values: INewsTable) => {
+        const hashTagOptionIds = values.hashTags.map((item) => ({
+            id: item.id,
+            name: item.name,
+        }))
         const newInitValues: INewsData = {
             title: values.title,
             sapo: values.sapo,
@@ -33,6 +37,7 @@ export function NewsTable({
             readTimes: values.readTimes,
             hashTags: values.hashTags,
             status: values.status,
+            hashTagOptionIds,
         }
 
         setInitValues(newInitValues)

@@ -15,12 +15,17 @@ export interface ISelectValue {
     value: any
 }
 
+export type IOrderReq = Order.ASC | Order.DESC
+
 export interface IFilters {
     limit: number
     page: number
     isActive?: boolean
     isAdmin?: boolean
     search?: string
+    createdAt?: IOrderReq
+    status?: string
+    hashTag?: number
 }
 
 export type IDebounceCallback =
@@ -33,8 +38,18 @@ export interface ITableHeader {
     isSort: boolean
 }
 
-export type IOrder = Order.ASC | Order.DESC
+export type IOrder = Order.asc | Order.desc
 
 export interface IObjectQuery {
     [k: string]: string | number
+}
+
+export interface IOptionItem {
+    id: number
+    name: string
+}
+
+export interface IUploadImg {
+    public_id: string
+    url: string
 }

@@ -1,4 +1,4 @@
-import { InputField } from '../FormFields'
+import { InputField, ColorField } from '../FormFields'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IRoleData } from '../../models'
@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useToast } from '../../hooks'
 import { rolesApi } from '../../api'
-import { BoxForm } from '../Common'
+import { ButtonForm } from '../Common'
 
 export interface IRoleModalFormProps {
     initValues: IRoleData
@@ -19,6 +19,7 @@ export interface IRoleModalFormProps {
 
 const schema = yup.object().shape({
     name: yup.string().required('Please enter name.'),
+    color: yup.string().required('Please enter color.'),
 })
 
 export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps) {
@@ -37,6 +38,7 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
 
     useEffect(() => {
         setValue('name', initValues.name)
+        setValue('color', initValues.color)
     }, [initValues, setValue])
 
     const resetModal = () => {
@@ -51,7 +53,7 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
             toastSuccess(`Update role '${values.name}' successfully.`)
         } catch (error) {
             console.log(error)
-            throw new Error(error.message as string)
+            throw new Error((error as Error).message as string)
         }
     }
 
@@ -61,7 +63,7 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
 
             toastSuccess(`Add role '${res.data.role.name}' successfully.`)
         } catch (error) {
-            throw new Error(error.message as string)
+            throw new Error((error as Error).message as string)
         }
     }
 
@@ -116,8 +118,15 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
                         disabled={isSubmitting}
                         placeholder={'Enter name'}
                     />
+                    <ColorField
+                        form={form}
+                        name={'color'}
+                        label={'Color'}
+                        disabled={isSubmitting}
+                        placeholder={'Enter color'}
+                    />
                 </Box>
-                <BoxForm<IRoleData>
+                <ButtonForm<IRoleData>
                     initValues={initValues}
                     disabled={isSubmitting}
                     onClose={handleClose}

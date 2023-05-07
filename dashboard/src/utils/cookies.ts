@@ -9,3 +9,12 @@ export const getCookie = (key: string) => {
 export const setCookie = (key: string, value: string) => {
     cookies.set(key, value)
 }
+
+export const removeCookie = (key: string) => {
+    cookies.remove(key)
+}
+
+export const removeFullToken = () => {
+    getCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+    getCookie(import.meta.env.VITE_REFRESH_TOKEN_KEY)
+}

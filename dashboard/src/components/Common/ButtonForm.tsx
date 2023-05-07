@@ -3,17 +3,17 @@ import AddIcon from '@mui/icons-material/Add'
 import { Box, Button } from '@mui/material'
 import { theme } from '../../utils'
 
-export type IBoxFormProps<InitValues> = {
+export type IButtonFormProps<InitValues> = {
     initValues: InitValues
     disabled: boolean
     onClose: () => void
 }
 
-export function BoxForm<InitValues>({
+export function ButtonForm<InitValues>({
     initValues,
     disabled,
     onClose,
-}: IBoxFormProps<InitValues>) {
+}: IButtonFormProps<InitValues>) {
     return (
         <Box
             sx={{

@@ -20,7 +20,7 @@ export function TableWrapper<ITableData>({
     onFiltersChange,
     children,
 }: ITableWrapperProps<ITableData>) {
-    const [order, setOrder] = useState<IOrder>(Order.ASC)
+    const [order, setOrder] = useState<IOrder>(Order.asc)
     const [orderBy, setOrderBy] = useState<string>('createdAt')
     const [page, setPage] = useState<number>(filters.page - 1)
     const [rowsPerPage, setRowsPerPage] = useState<number>(filters.limit)
@@ -30,7 +30,7 @@ export function TableWrapper<ITableData>({
         const newFilters = {
             page: page + 1,
             limit: rowsPerPage,
-            [`${orderBy}`]: order.toUpperCase(),
+            [`${orderBy}`]: order === Order.asc ? Order.ASC : Order.DESC,
         }
 
         console.log('new filters: ', newFilters)
@@ -39,9 +39,9 @@ export function TableWrapper<ITableData>({
     }, [page, rowsPerPage, order, orderBy])
 
     const handleRequestSort = (event: MouseEvent<unknown>, property: string) => {
-        const isAsc = orderBy === property && order === Order.ASC
+        const isAsc = orderBy === property && order === Order.asc
 
-        setOrder(isAsc ? Order.DESC : Order.ASC)
+        setOrder(isAsc ? Order.desc : Order.asc)
         setOrderBy(property)
     }
 

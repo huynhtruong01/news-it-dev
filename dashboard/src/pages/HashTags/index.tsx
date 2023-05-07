@@ -14,6 +14,7 @@ import { getHashTags } from '../../store/hashTag/thunkApi'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useToast } from '../../hooks'
 import { hashTagsApi } from '../../api'
+import { Order } from '../../enums'
 
 export interface IHashTagProps {
     pHashTags: IHashTag[]
@@ -25,6 +26,7 @@ function HashTags({ pHashTags, pTotal, pGetHashTags }: IHashTagProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
+        createdAt: Order.ASC,
     })
     const [open, setOpen] = useState<boolean>(false)
     const [initValues, setInitValues] = useState<IHashTagData>(initHashTagFormValues)
@@ -43,7 +45,7 @@ function HashTags({ pHashTags, pTotal, pGetHashTags }: IHashTagProps) {
     }, [filters, open, openDelete])
 
     const handleSearchChange = (value: string) => {
-        console.log(value)
+        setFilters({ ...filters, search: value })
     }
 
     const handleOpen = () => {

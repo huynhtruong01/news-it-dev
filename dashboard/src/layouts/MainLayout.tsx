@@ -3,19 +3,28 @@ import { Header, NavBar } from '../components/Common'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { isAuthenticated, theme } from '../utils'
 import { useEffect } from 'react'
+import { connect } from 'react-redux'
+import { AppDispatch } from '../store'
+import { saveUserLogin } from '../store/user'
+import { IUser } from '../models'
 
-export function MainLayout() {
+export interface IMainLayoutProps {
+    pSaveUserLogin: (user: IUser) => void
+}
+
+export function MainLayout({ pSaveUserLogin }: IMainLayoutProps) {
     const navigate = useNavigate()
 
     useEffect(() => {
         ;(async () => {
             try {
                 const user = await isAuthenticated()
-                console.log(user)
 
                 if (!user) {
                     navigate('/login')
                 }
+
+                pSaveUserLogin(user)
             } catch (error) {
                 if (error) {
                     navigate('/login')
@@ -67,3 +76,11 @@ export function MainLayout() {
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSaveUserLogin: (user: IUser) => dispatch(saveUserLogin(user)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(MainLayout)

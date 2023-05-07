@@ -1,7 +1,14 @@
 import { Avatar, Box, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
+import { connect } from 'react-redux'
+import { AppState } from '../../store'
+import { IUser, IRole } from '../../models'
 
-export function Header() {
+export interface IHeaderProps {
+    pUserLogin: IUser | null
+}
+
+function Header({ pUserLogin }: IHeaderProps) {
     return (
         <Box
             component="header"
@@ -41,15 +48,21 @@ export function Header() {
                                 fontSize: '14px',
                             }}
                         >
-                            Huynh Truong
+                            {pUserLogin?.username || 'Username'}
                         </Typography>
                         <Typography
                             component="span"
                             sx={{
                                 fontSize: '12px',
+                                span: {
+                                    textTransform: 'capitalize',
+                                },
                             }}
                         >
-                            Admin
+                            {pUserLogin?.roles?.length &&
+                                pUserLogin.roles.map((role: IRole) => (
+                                    <span key={role.id}>{role.name}</span>
+                                ))}
                         </Typography>
                     </Box>
                     <Box
@@ -67,3 +80,11 @@ export function Header() {
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUserLogin: state.user.userLogin,
+    }
+}
+
+export default connect(mapStateToProps, null)(Header)

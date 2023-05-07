@@ -8,7 +8,7 @@ import { SearchFilter, SelectFilter } from '../../components/Filters'
 import { UserModalForm, ModalDelete } from '../../components/Modals'
 import { UserFilters, UserTable } from '../../components/Users'
 import { initUserFormValues, selectActive, selectsRole } from '../../data'
-import { ActiveSelectValue, RoleSelectValue } from '../../enums'
+import { ActiveSelectValue, Order, RoleSelectValue } from '../../enums'
 import { IFilters, IUser, IUserData } from '../../models'
 import { AppDispatch, AppState } from '../../store'
 import { getUsers } from '../../store/user/thunkApi'
@@ -26,6 +26,7 @@ function Users({ pUsers, pTotal, pGetUsers }: IUsersProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
+        createdAt: Order.ASC,
     })
     const [open, setOpen] = useState<boolean>(false)
     const [openDelete, setOpenDelete] = useState<boolean>(false)
