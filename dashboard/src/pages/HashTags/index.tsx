@@ -4,7 +4,7 @@ import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { SearchFilter } from '../../components/Filters/SearchFilter'
 import { HashTagTable } from '../../components/HashTags'
-import { initHashTagFormValues, hashTags } from '../../data'
+import { initHashTagFormValues } from '../../data'
 import { IFilters, IHashTag, IHashTagData } from '../../models'
 import { theme } from '../../utils'
 import { HashTagModalForm, ModalDelete } from '../../components/Modals'
@@ -124,7 +124,7 @@ function HashTags({ pHashTags, pTotal, pGetHashTags }: IHashTagProps) {
             <HashTagModalForm initValues={initValues} open={open} setOpen={setOpen} />
             <ModalDelete
                 title={'Delete tag?'}
-                message={`Are you sure delete tag ${initValues.name}?`}
+                message={`Are you sure delete tag "${initValues.name}"?`}
                 open={openDelete}
                 setOpen={setOpenDelete}
                 onDelete={handleDeleteHashTag}

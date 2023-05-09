@@ -123,7 +123,7 @@ function Roles({ pRoles, pTotal, pGetRoles }: IRolesProps) {
             <RoleModalForm initValues={initValues} open={open} setOpen={setOpen} />
             <ModalDelete
                 title={'Delete role?'}
-                message={`Are you sure delete role ${initValues.name}?`}
+                message={`Are you sure delete role "${initValues.name}"?`}
                 open={openDelete}
                 setOpen={setOpenDelete}
                 onDelete={handleDeleteRole}

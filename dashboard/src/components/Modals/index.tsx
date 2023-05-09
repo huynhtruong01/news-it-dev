@@ -1,5 +1,5 @@
 export { default as UserModalForm } from './UserModalForm'
 export * from './RoleModalForm'
 export * from './HashTagModalForm'
-export * from './NewsModalForm'
+export { default as NewsModalForm } from './NewsModalForm'
 export * from './ModalDelete'

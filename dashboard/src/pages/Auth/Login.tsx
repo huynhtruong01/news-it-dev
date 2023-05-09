@@ -6,7 +6,7 @@ import { LoginForm } from '../../components/Auth'
 import { useToast } from '../../hooks'
 import { ILoginValues, IUser } from '../../models'
 import { saveUserLogin } from '../../store/user'
-import { setCookie } from '../../utils'
+import { setLS } from '../../utils'
 import { AppDispatch } from '../../store'
 import { connect } from 'react-redux'
 
@@ -25,8 +25,8 @@ export function Login({ pSaveUserLogin }: ILoginProps) {
     const handleLogin = async (values: ILoginValues) => {
         try {
             const res = await authApi.login(values)
-            setCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY, res.data.accessToken)
-            setCookie(import.meta.env.VITE_REFRESH_TOKEN_KEY, res.data.refreshToken)
+            setLS(import.meta.env.VITE_ACCESS_TOKEN_KEY, res.data.accessToken)
+            setLS(import.meta.env.VITE_REFRESH_TOKEN_KEY, res.data.refreshToken)
 
             // save user in redux
             pSaveUserLogin(res.data.user)

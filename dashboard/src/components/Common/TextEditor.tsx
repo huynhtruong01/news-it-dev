@@ -4,7 +4,8 @@ import { Noop } from 'react-hook-form'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { toolbarOptions } from '../../data'
-import { uploadImage } from '../../utils'
+import { uploadImage, theme } from '../../utils'
+import { makeStyles } from '@mui/styles'
 
 export interface ITextEditorProps {
     value: string
@@ -18,6 +19,47 @@ const modules = {
     toolbar: toolbarOptions,
 }
 
+const useStyles = makeStyles({
+    root: {
+        '& .ql-container': {
+            borderRadius: theme.spacing(0, 0, 0.5, 0.5),
+        },
+        '& .ql-editor': {
+            fontFamily: 'Roboto, sans-serif',
+            fontSize: '16px',
+            lineHeight: '24px',
+            color: '#333',
+            minHeight: 200,
+
+            '&[data-placeholder]::before': {
+                fontStyle: 'normal',
+            },
+
+            '& span': {
+                lineHeight: 2,
+            },
+            '& p': {
+                margin: theme.spacing(1, 0),
+            },
+            '& img': {
+                borderRadius: theme.spacing(0.5),
+                margin: theme.spacing(1.5, 0),
+            },
+        },
+        '& .ql-toolbar': {
+            backgroundColor: '#fff',
+            borderRadius: theme.spacing(0.5, 0.5, 0, 0),
+            borderBottom: '1px solid #ccc',
+            padding: '8px',
+        },
+        '& .ql-toolbar button': {
+            fontFamily: 'Roboto, sans-serif',
+            fontSize: '16px',
+            color: '#333',
+        },
+    },
+})
+
 export function TextEditor({
     value,
     onChange,
@@ -25,6 +67,7 @@ export function TextEditor({
     disabled,
     placeholder = '',
 }: ITextEditorProps) {
+    const styles = useStyles()
     const quillRef = useRef<ReactQuill | null>(null)
 
     const handleImageChange = useCallback(() => {
@@ -75,6 +118,7 @@ export function TextEditor({
         >
             <ReactQuill
                 ref={quillRef}
+                className={styles.root}
                 value={value}
                 theme={'snow'}
                 onChange={onChange}

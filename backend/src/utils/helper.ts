@@ -87,7 +87,7 @@ export const filtersArrQuery = (query: IObjectCommon) => {
 
     const queryKeys = Object.keys(query).filter((k) => arrFilters.includes(k))
     return queryKeys.reduce((obj: IObjectCommon, k: string) => {
-        obj[`${k}Ids`] = In(query[k] as readonly string[])
+        obj[`${k}Ids`] = In([typeof +query[k] === 'number' ? +query[k] : query[k]])
         return obj
     }, {})
 }

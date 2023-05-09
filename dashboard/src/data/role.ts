@@ -1,17 +1,17 @@
-import { IRoleData, IRoleTable, ITableHeader } from '../models'
+import { IRoleData, ITableHeader } from '../models'
 
-export const roles: IRoleTable[] = [
-    {
-        id: 1,
-        name: 'Admin',
-        createdAt: new Date(),
-    },
-    {
-        id: 2,
-        name: 'User',
-        createdAt: new Date(),
-    },
-]
+// export const roles: IRoleTable[] = [
+//     {
+//         id: 1,
+//         name: 'Admin',
+//         createdAt: new Date(),
+//     },
+//     {
+//         id: 2,
+//         name: 'User',
+//         createdAt: new Date(),
+//     },
+// ]
 
 export const roleHeaders: readonly ITableHeader[] = [
     {
@@ -31,7 +31,7 @@ export const roleHeaders: readonly ITableHeader[] = [
     },
     {
         id: 'createdAt',
-        label: 'Date Created',
+        label: 'Created',
         isSort: true,
     },
     {
@@ -46,3 +46,5 @@ export const initRoleFormValues: IRoleData = {
     name: '',
     color: '#fff',
 }
+
+export const keyRoleInitValues = ['id', 'name', 'color']

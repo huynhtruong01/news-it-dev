@@ -1,11 +1,9 @@
-import { InputField, ColorField } from '../FormFields'
+import { InputField, ColorField, ImageField } from '../FormFields'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IHashTagData } from '../../models'
-import { theme } from '../../utils'
 import { useForm } from 'react-hook-form'
-import { Box, Button, Modal } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
+import { Box, Modal } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { hashTagsApi } from '../../api'
 import { useToast } from '../../hooks'
@@ -21,7 +19,10 @@ const schema = yup.object().shape({
     name: yup.string().required('Please enter name.'),
     description: yup.string().required('Please enter description.'),
     color: yup.string().required('Please enter color.'),
-    iconImage: yup.string().required('Please enter icon image.'),
+    iconImage: yup
+        .mixed<File>()
+        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file))
+        .test('size-img', 'Maximum 10MB.', (file) => checkSizeImg(file, SIZE_10_MB)),
 })
 
 export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFormProps) {
@@ -131,12 +132,13 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
                         minRows={4}
                         multiline
                     />
-                    <InputField
+                    <ImageField
                         form={form}
                         name={'iconImage'}
                         label={'Icon Image'}
                         disabled={isSubmitting}
-                        placeholder={'Enter icon image'}
+                        initValue={initValues.iconImage}
+                        placeholder={'Enter cover image'}
                     />
                     <ColorField
                         form={form}

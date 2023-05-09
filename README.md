@@ -102,7 +102,7 @@ server.ts
     - ✅ Get profile
     - ✅ Edit profile
     - ❌ Change password when user want to
-    - ❌ Sort and Filter User
+    - ✅ Sort and Filter User
 
 - **News**:
     - ✅ CRUD News
@@ -110,16 +110,16 @@ server.ts
     - ✅ Count views
     - ✅ Like/Dislike News
     - ✅ Save/UnSave News of User
-    - ❌ Sort and filter News
+    - ✅ Sort and filter News
 
 - **Roles**:
     - ✅ CRUD role
-    - ❌ Add Entity color
+    - ✅ Add Entity color
 
 - **Hash tags**:
     - ✅ CRUD hash tag
     - ✅ Follow/Unfollow Hash tag by User
-    - ❌ Add Entity color, icon(img)
+    - ✅ Add Entity color, icon(img)
 
 - **Comments**:
     - ✅ CRUD comments
@@ -127,6 +127,10 @@ server.ts
         - ❌ Edit comment by self User
         - ❌ Delete comment by self User
         - ❌ Mention User when user Comment
+
+- **Form**
+  - ✅ Form Image:
+    - ❌ Drag & Drag img from outside (ImageField)
 
 - **Recommend System**: ❌ 
 

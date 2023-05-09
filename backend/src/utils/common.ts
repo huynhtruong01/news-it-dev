@@ -44,6 +44,7 @@ export const createNews = (data: News): News => {
     news.coverImage = data.coverImage
     news.readTimes = data.readTimes
     news.userId = data.userId
+    news.hashTagIds = data.hashTagIds
 
     return news
 }

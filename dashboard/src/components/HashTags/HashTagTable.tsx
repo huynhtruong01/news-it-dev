@@ -2,9 +2,9 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { Dispatch, SetStateAction, MouseEvent } from 'react'
-import { tagHeaders } from '../../data'
+import { keyInitValues, tagHeaders } from '../../data'
 import { IFilters, IHashTag, IHashTagData, IHashTagTable } from '../../models'
-import { formatDate, theme } from '../../utils'
+import { formatDate, setNewValues, theme } from '../../utils'
 import { TableWrapper, BoxColor, TableCellImage } from '../Common'
 
 export interface IHashTagTableProps {
@@ -27,13 +27,10 @@ export function HashTagTable({
     setOpenDelete,
 }: IHashTagTableProps) {
     const handleSetInitValues = (values: IHashTagTable) => {
-        const newInitValues: IHashTagData = {
-            id: values.id,
-            name: values.name,
-            description: values.description,
-            color: values.color,
-            iconImage: values.iconImage,
-        }
+        const newInitValues: IHashTagData = setNewValues<IHashTagData>(
+            values,
+            keyInitValues
+        )
 
         setInitValues(newInitValues)
         setOpen(true)
@@ -47,13 +44,10 @@ export function HashTagTable({
     const handleDelete = (e: MouseEvent, values: IHashTag) => {
         e.stopPropagation()
 
-        const newInitValues: IHashTagData = {
-            id: values.id,
-            name: values.name,
-            description: values.description,
-            color: values.color,
-            iconImage: values.iconImage,
-        }
+        const newInitValues: IHashTagData = setNewValues<IHashTagData>(
+            values,
+            keyInitValues
+        )
         setInitValues(newInitValues)
         setOpenDelete(true)
     }

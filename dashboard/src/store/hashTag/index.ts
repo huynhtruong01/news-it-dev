@@ -1,14 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { IHashTag } from './../../models'
+import { IHashTag, IOptionItem } from './../../models'
 import { extraReducers } from './thunkApi'
 
 export interface IHashTagStore {
     hashTags: IHashTag[]
+    hashTagSelects: IOptionItem[]
     total: number
 }
 
 const initialState: IHashTagStore = {
     hashTags: [],
+    hashTagSelects: [],
     total: 0,
 }
 

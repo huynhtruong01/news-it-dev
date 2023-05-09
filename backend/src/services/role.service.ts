@@ -13,7 +13,23 @@ import { IObjectCommon, IRoleRes } from '@/models'
 class RoleService {
     constructor(private roleRepository = AppDataSource.getRepository(Role)) {}
 
-    async getAll(query: IObjectCommon): Promise<IRoleRes> {
+    // get all
+    async getAll() {
+        try {
+            const roles = await this.roleRepository.find({
+                relations: {
+                    users: true,
+                },
+            })
+
+            return roles
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get all by params
+    async getAllByParams(query: IObjectCommon): Promise<IRoleRes> {
         try {
             const newFiltersQuery = filtersQuery(query)
             const newSortQuery = sortQuery(query)

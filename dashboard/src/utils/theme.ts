@@ -71,9 +71,3 @@ let theme = createTheme({
 theme = responsiveFontSizes(theme)
 
 export { theme }
-// theme.typography.h3 = {
-//     fontSize: '2rem',
-//     [theme.breakpoints.up('md')]: {
-//         fontSize: '44px'
-//     }
-// }

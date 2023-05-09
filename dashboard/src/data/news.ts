@@ -1,68 +1,68 @@
 import { Status } from '../enums'
-import { INewsData, INewsTable, ITableHeader, ISelectValue, IOptionItem } from '../models'
+import { INewsData, IOptionItem, ISelectValue, ITableHeader } from '../models'
 
-export const news: INewsTable[] = [
-    {
-        id: 1,
-        title: 'How to learn English?',
-        sapo: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-        content:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-        newsViews: 23,
-        status: Status.DRAFT,
-        likes: 12,
-        coverImage: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        user: 'Huynh Truong',
-        hashTags: ['HTML', 'CSS', 'Javascript'],
-        readTimes: 6,
-        createdAt: new Date(),
-    },
-    {
-        id: 2,
-        title: 'Making Website Portfolio with me.',
-        sapo: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-        content:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-        newsViews: 21,
-        status: Status.DRAFT,
-        likes: 15,
-        coverImage: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        user: 'Huynh Truong',
-        hashTags: ['HTML', 'CSS', 'Javascript'],
-        readTimes: 5,
-        createdAt: new Date(),
-    },
-    {
-        id: 3,
-        title: 'Learning HTML in an hour.',
-        sapo: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-        content:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-        newsViews: 65,
-        status: Status.DRAFT,
-        likes: 45,
-        coverImage: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        user: 'Huynh Truong',
-        hashTags: ['HTML', 'CSS', 'Javascript'],
-        readTimes: 7,
-        createdAt: new Date(),
-    },
-    {
-        id: 4,
-        title: 'Make website by ReactJS',
-        sapo: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-        content:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
-        newsViews: 23,
-        status: Status.DRAFT,
-        likes: 12,
-        coverImage: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        user: 'Huynh Truong',
-        hashTags: ['HTML', 'CSS', 'Javascript'],
-        readTimes: 6,
-        createdAt: new Date(),
-    },
-]
+// export const news: INewsTable[] = [
+//     {
+//         id: 1,
+//         title: 'How to learn English?',
+//         sapo: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+//         content:
+//             'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+//         newsViews: 23,
+//         status: Status.DRAFT,
+//         likes: 12,
+//         coverImage: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
+//         user: 'Huynh Truong',
+//         hashTags: ['HTML', 'CSS', 'Javascript'],
+//         readTimes: 6,
+//         createdAt: new Date(),
+//     },
+//     {
+//         id: 2,
+//         title: 'Making Website Portfolio with me.',
+//         sapo: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+//         content:
+//             'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+//         newsViews: 21,
+//         status: Status.DRAFT,
+//         likes: 15,
+//         coverImage: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
+//         user: 'Huynh Truong',
+//         hashTags: ['HTML', 'CSS', 'Javascript'],
+//         readTimes: 5,
+//         createdAt: new Date(),
+//     },
+//     {
+//         id: 3,
+//         title: 'Learning HTML in an hour.',
+//         sapo: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+//         content:
+//             'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+//         newsViews: 65,
+//         status: Status.DRAFT,
+//         likes: 45,
+//         coverImage: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
+//         user: 'Huynh Truong',
+//         hashTags: ['HTML', 'CSS', 'Javascript'],
+//         readTimes: 7,
+//         createdAt: new Date(),
+//     },
+//     {
+//         id: 4,
+//         title: 'Make website by ReactJS',
+//         sapo: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+//         content:
+//             'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+//         newsViews: 23,
+//         status: Status.DRAFT,
+//         likes: 12,
+//         coverImage: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
+//         user: 'Huynh Truong',
+//         hashTags: ['HTML', 'CSS', 'Javascript'],
+//         readTimes: 6,
+//         createdAt: new Date(),
+//     },
+// ]
 
 export const newsHeaders: readonly ITableHeader[] = [
     {
@@ -79,11 +79,13 @@ export const newsHeaders: readonly ITableHeader[] = [
         id: 'title',
         label: 'Title',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'sapo',
         label: 'Sapo',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'newsViews',
@@ -113,7 +115,7 @@ export const newsHeaders: readonly ITableHeader[] = [
     {
         id: 'createdAt',
         label: 'Created',
-        isSort: false,
+        isSort: true,
     },
     {
         id: '',
@@ -127,8 +129,22 @@ export const initNewsFormValues: INewsData = {
     sapo: '',
     content: '',
     status: Status.DRAFT,
-    coverImage: '',
-    hashTags: ['HTML', 'CSS', 'Javascript'],
+    coverImage: undefined,
+    thumbnailImage: undefined,
+    hashTags: [
+        {
+            id: 1,
+            name: 'HTML',
+        },
+        {
+            id: 2,
+            name: 'CSS',
+        },
+        {
+            id: 3,
+            name: 'Javascript',
+        },
+    ],
     readTimes: 1,
     hashTagOptionIds: [],
 }
@@ -176,4 +192,17 @@ export const hashTagOptions: IOptionItem[] = [
         id: 3,
         name: 'Javascript',
     },
+]
+
+export const keyNewsInitValues = [
+    'id',
+    'title',
+    'sapo',
+    'content',
+    'coverImage',
+    'thumbnailImage',
+    'readTimes',
+    'hashTags',
+    'status',
+    'hashTagOptionIds',
 ]

@@ -5,6 +5,7 @@ const router = express.Router()
 
 router.use(authMiddleware.getUser)
 
+router.route('/get-all').get(roleController.getAll)
 router.route('/').get(roleController.getAllRoles).post(roleController.createRole)
 router
     .route('/:roleId')

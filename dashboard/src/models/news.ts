@@ -1,5 +1,5 @@
 import { Status } from '../enums'
-import { IOptionItem } from './common'
+import { IOptionItem, IImgType } from './common'
 
 export interface INewsData {
     id?: number
@@ -9,10 +9,11 @@ export interface INewsData {
     newsViews?: number
     status: Status.DRAFT | Status.PUBLIC | Status.UNPUBLIC
     likes?: number
-    coverImage: string
-    thumbnailImage?: string
+    coverImage?: IImgType
+    thumbnailImage?: IImgType
     user?: string
-    hashTags: string[]
+    numLikes?: number
+    hashTags: IOptionItem[]
     readTimes: number
     hashTagOptionIds?: IOptionItem[]
 }

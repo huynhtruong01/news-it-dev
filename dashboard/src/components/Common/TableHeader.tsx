@@ -25,7 +25,7 @@ export function TableHeader({ list, order, orderBy, onRequestSort }: ITableHeade
         <TableHead>
             <TableRow>
                 {list.map((item) => (
-                    <TableCell key={item.id} align="center">
+                    <TableCell key={item.id} align={item.align ? item.align : 'center'}>
                         <TableSortLabel
                             active={orderBy === item.id}
                             direction={orderBy === item.id ? order : Order.asc}

@@ -3,6 +3,10 @@ import { IFilters, IHashTag } from '../models'
 
 const BASE_URL = '/hash-tags'
 
+export const getAll = () => {
+    return AxiosClient.get(`${BASE_URL}/get-all`).then((res) => res.data)
+}
+
 export const getHashTags = (params: IFilters) => {
     return AxiosClient.get(`${BASE_URL}`, {
         params,

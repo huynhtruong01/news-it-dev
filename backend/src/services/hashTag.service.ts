@@ -72,7 +72,23 @@ class HashTagService {
     }
 
     // get all
-    async getAll(query: IObjectCommon): Promise<IHashTagRes> {
+    async getAll(): Promise<HashTag[]> {
+        try {
+            const hashTags = await this.hashTagRepository.find({
+                relations: {
+                    news: true,
+                    users: true,
+                },
+            })
+
+            return hashTags
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get all by params
+    async getAllByParams(query: IObjectCommon): Promise<IHashTagRes> {
         try {
             const newFiltersQuery = filtersQuery(query)
             const newSortQuery = sortQuery(query)

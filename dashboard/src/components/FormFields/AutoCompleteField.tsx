@@ -28,7 +28,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
     } = form
     const error = errors[name]
 
-    const handleFilters = (values: IOptionItem[]) => {
+    const handleFilters = () => {
         const ids = getValues(name).map((val) => val.id)
         return list.filter((option) => !ids.includes(option.id))
     }
@@ -40,7 +40,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
             render={({ field: { onChange, onBlur, value } }) => (
                 <Autocomplete
                     multiple
-                    options={handleFilters(value)}
+                    options={handleFilters()}
                     disabled={disabled}
                     value={watch(name)}
                     filterSelectedOptions

@@ -22,11 +22,33 @@ const checkDuplicateName = async (
 }
 
 class HashTagController {
+    async getAll(req: RequestUser, res: Response) {
+        try {
+            console.log('get all')
+            const hashTags = await hashTagService.getAll()
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    hashTags,
+                },
+            })
+        } catch (error) {
+            console.log('error: ', error)
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
     // (GET)
     async getAllHashTag(req: RequestUser, res: Response) {
         try {
             const query: IObjectCommon = req.query as IObjectCommon
-            const [hashTags, count] = await hashTagService.getAll(query)
+            const [hashTags, count] = await hashTagService.getAllByParams(query)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,

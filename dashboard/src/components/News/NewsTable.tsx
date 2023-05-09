@@ -1,12 +1,11 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow, Typography, Box } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, SetStateAction, SyntheticEvent } from 'react'
-import { newsHeaders } from '../../data'
-import { IFilters, INews, INewsData, INewsTable } from '../../models'
-import { formatDate, theme } from '../../utils'
-import { TableWrapper } from '../Common'
-import { EMPTY_IMG } from '../../consts'
+import { Dispatch, SetStateAction, MouseEvent } from 'react'
+import { keyNewsInitValues, newsHeaders } from '../../data'
+import { IFilters, INews, INewsData, INewsTable, IOptionItem } from '../../models'
+import { formatDate, setNewValues, theme } from '../../utils'
+import { TableWrapper, TableCellImage } from '../Common'
 
 export interface INewsTableProps {
     news: INews[]
@@ -14,6 +13,7 @@ export interface INewsTableProps {
     setFilters: Dispatch<SetStateAction<IFilters>>
     setInitValues: Dispatch<SetStateAction<INewsData>>
     setOpen: Dispatch<SetStateAction<boolean>>
+    setOpenDelete: Dispatch<SetStateAction<boolean>>
 }
 
 export function NewsTable({
@@ -22,23 +22,20 @@ export function NewsTable({
     setFilters,
     setInitValues,
     setOpen,
+    setOpenDelete,
 }: INewsTableProps) {
     const handleSetInitValues = (values: INewsTable) => {
-        const hashTagOptionIds = values.hashTags.map((item) => ({
-            id: item.id,
-            name: item.name,
-        }))
-        const newInitValues: INewsData = {
-            title: values.title,
-            sapo: values.sapo,
-            content: values.content,
-            coverImage: values.coverImage,
-            thumbnailImage: values.thumbnailImage,
-            readTimes: values.readTimes,
-            hashTags: values.hashTags,
-            status: values.status,
-            hashTagOptionIds,
-        }
+        const hashTagOptionIds: IOptionItem[] = values.hashTags.map(
+            (item) =>
+                ({
+                    id: item.id,
+                    name: item.name,
+                } as IOptionItem)
+        )
+        const newInitValues: INewsData = setNewValues<INewsData>(
+            { ...values, hashTagOptionIds },
+            keyNewsInitValues
+        )
 
         setInitValues(newInitValues)
         setOpen(true)
@@ -49,8 +46,15 @@ export function NewsTable({
         setFilters(filters)
     }
 
-    const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.src = EMPTY_IMG
+    const handleDelete = (e: MouseEvent, values: INews) => {
+        e.stopPropagation()
+
+        const newInitValues: INewsData = setNewValues<INewsData>(
+            values,
+            keyNewsInitValues
+        )
+        setInitValues(newInitValues)
+        setOpenDelete(true)
     }
 
     return (
@@ -76,27 +80,7 @@ export function NewsTable({
                     onClick={() => handleSetInitValues(item)}
                 >
                     <TableCell align="center">{item.id}</TableCell>
-                    <TableCell align="center">
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-
-                                img: {
-                                    width: 50,
-                                    height: 50,
-                                    margin: 'auto',
-                                    borderRadius: 0.5,
-                                },
-                            }}
-                        >
-                            <img
-                                src={item.coverImage}
-                                alt={item.title}
-                                onError={handleImageError}
-                            />
-                        </Box>
-                    </TableCell>
+                    <TableCellImage src={item.coverImage} alt={item.title} />
                     <TableCell
                         align="left"
                         sx={{
@@ -114,12 +98,12 @@ export function NewsTable({
                         <Typography noWrap>{item.sapo}</Typography>
                     </TableCell>
                     <TableCell align="center">{item.newsViews}</TableCell>
-                    <TableCell align="center">{item.likes}</TableCell>
+                    <TableCell align="center">{item.numLikes || 0}</TableCell>
                     <TableCell align="center">{item.readTimes}</TableCell>
                     <TableCell
                         align="center"
                         sx={{
-                            maxWidth: 150,
+                            minWidth: 100,
                         }}
                     >
                         <Box
@@ -132,12 +116,12 @@ export function NewsTable({
                             {item.hashTags.map((tag) => (
                                 <Typography
                                     component="span"
-                                    key={tag}
+                                    key={tag.id}
                                     sx={{
                                         fontSize: '14px',
                                     }}
                                 >
-                                    {tag}
+                                    {tag.name}
                                 </Typography>
                             ))}
                         </Box>
@@ -163,8 +147,7 @@ export function NewsTable({
                                 },
                             }}
                             onClick={(e) => {
-                                e.stopPropagation()
-                                console.log('delete')
+                                handleDelete(e, item)
                             }}
                         >
                             <DeleteIcon fontSize="small" />

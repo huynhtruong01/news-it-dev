@@ -1,16 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Modal } from '@mui/material'
-import { PayloadAction } from '@reduxjs/toolkit'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { connect } from 'react-redux'
 import * as yup from 'yup'
 import { usersApi } from '../../api'
-import { roleOptions } from '../../data'
 import { useToast } from '../../hooks'
-import { IUserData } from '../../models'
-import { AppDispatch } from '../../store'
-import { addUser, updateUser } from '../../store/user/thunkApi'
+import { IUserData, IOptionItem } from '../../models'
+import { AppState } from '../../store'
 import { ButtonForm } from '../Common'
 import {
     AutoCompleteField,
@@ -23,17 +20,10 @@ export interface IUserModalFormProps {
     initValues: IUserData
     open: boolean
     setOpen: Dispatch<SetStateAction<boolean>>
-    pAddUser: (data: IUserData) => Promise<PayloadAction<unknown>>
-    pUpdateUser: (data: IUserData) => Promise<PayloadAction<unknown>>
+    pRoleSelects: IOptionItem[]
 }
 
-function UserModalForm({
-    initValues,
-    open,
-    setOpen,
-    pAddUser,
-    pUpdateUser,
-}: IUserModalFormProps) {
+function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFormProps) {
     const { toastSuccess, toastError } = useToast()
 
     const schema = yup.object().shape({
@@ -214,7 +204,7 @@ function UserModalForm({
                         label={'Roles'}
                         disabled={isSubmitting}
                         placeholder={'Choose roles'}
-                        list={roleOptions}
+                        list={pRoleSelects}
                     />
                     <CheckBoxField
                         form={form}
@@ -233,11 +223,10 @@ function UserModalForm({
     )
 }
 
-const mapDispatchToProps = (dispatch: AppDispatch) => {
+const mapStateToProps = (state: AppState) => {
     return {
-        pAddUser: (data: IUserData) => dispatch(addUser(data)),
-        pUpdateUser: (data: IUserData) => dispatch(updateUser(data)),
+        pRoleSelects: state.role.roleSelects,
     }
 }
 
-export default connect(null, mapDispatchToProps)(UserModalForm)
+export default connect(mapStateToProps, null)(UserModalForm)

@@ -2,48 +2,66 @@ import AddIcon from '@mui/icons-material/Add'
 import { Box, Button } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
-import { SearchFilter, SelectFilter } from '../../components/Filters'
+import { SearchFilter } from '../../components/Filters'
 import { NewsFilters, NewsTable } from '../../components/News'
-import { initNewsFormValues, news, selectStatus } from '../../data'
+import { initNewsFormValues } from '../../data'
 import { IFilters, INews, INewsData } from '../../models'
-import { Order, Status } from '../../enums'
+import { Order } from '../../enums'
 import { theme } from '../../utils'
-import { NewsModalForm } from '../../components/Modals'
+import { NewsModalForm, ModalDelete } from '../../components/Modals'
 import { connect } from 'react-redux'
 import { AppDispatch, AppState } from '../../store'
 import { getNews } from '../../store/news/thunkApi'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { newsApi } from '../../api'
+import { useToast } from '../../hooks'
+import { getAllHashTags } from '../../store/hashTag/thunkApi'
 
 export interface INewsProps {
     pNews: INews[]
     pGetNews: (params: IFilters) => Promise<PayloadAction<unknown>>
+    pGetHashTagSelects: () => Promise<PayloadAction<unknown>>
 }
 
-function News({ pNews, pGetNews }: INewsProps) {
+function News({ pNews, pGetNews, pGetHashTagSelects }: INewsProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
         createdAt: Order.ASC,
     })
     const [open, setOpen] = useState<boolean>(false)
+    const [openDelete, setOpenDelete] = useState<boolean>(false)
     const [initValues, setInitValues] = useState<INewsData>(initNewsFormValues)
+    const { toastSuccess, toastError } = useToast()
 
     useEffect(() => {
         document.title = 'News | Dashboard'
+        pGetHashTagSelects()
     }, [])
 
     useEffect(() => {
-        console.log('filters home: ', filters)
         pGetNews(filters)
     }, [filters])
 
     const handleSearchChange = (value: string) => {
-        console.log(value)
+        setFilters({ ...filters, search: value })
     }
 
     const handleOpen = () => {
         setInitValues(initNewsFormValues)
         setOpen(true)
+    }
+
+    const handleDeleteNews = async () => {
+        try {
+            if (initValues.id) {
+                await newsApi.deleteNews(initValues.id)
+                toastSuccess(`Delete news ${initValues.title} successfully.`)
+                setInitValues(initNewsFormValues)
+            }
+        } catch (error) {
+            toastError((error as Error).message)
+        }
     }
 
     return (
@@ -100,11 +118,19 @@ function News({ pNews, pGetNews }: INewsProps) {
                         setFilters={setFilters}
                         setInitValues={setInitValues}
                         setOpen={setOpen}
+                        setOpenDelete={setOpenDelete}
                     />
                 </Box>
             </Box>
 
             <NewsModalForm initValues={initValues} open={open} setOpen={setOpen} />
+            <ModalDelete
+                title={'Delete news?'}
+                message={`Are you sure delete news "${initValues.title}"?`}
+                open={openDelete}
+                setOpen={setOpenDelete}
+                onDelete={handleDeleteNews}
+            />
         </Box>
     )
 }
@@ -118,6 +144,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetNews: (params: IFilters) => dispatch(getNews(params)),
+        pGetHashTagSelects: () => dispatch(getAllHashTags()),
     }
 }
 

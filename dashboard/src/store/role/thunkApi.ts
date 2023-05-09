@@ -6,6 +6,12 @@ import {
 } from '@reduxjs/toolkit'
 import { IRoleStore } from '.'
 import { rolesApi } from '../../api'
+import { generateOptions } from '../../utils'
+
+export const getAllRoles = createAsyncThunk('role/getAllRoles', async () => {
+    const result = await rolesApi.getAllRoles()
+    return result.data.roles
+})
 
 export const getRoles = createAsyncThunk('role/getRoles', async (params: IFilters) => {
     const result = await rolesApi.getRoles(params)
@@ -30,6 +36,13 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IRoleStore>) => 
         (state: IRoleStore, action: PayloadAction<IRoleRes>) => {
             state.roles = action.payload.roles
             state.total = action.payload.total
+        }
+    )
+    builders.addCase(
+        getAllRoles.fulfilled,
+        (state: IRoleStore, action: PayloadAction<IRole[]>) => {
+            const newRoleSelects = generateOptions<IRole>(action.payload)
+            state.roleSelects = newRoleSelects
         }
     )
 }

@@ -36,12 +36,13 @@ export interface ITableHeader {
     id: string
     label: string
     isSort: boolean
+    align?: string
 }
 
 export type IOrder = Order.asc | Order.desc
 
 export interface IObjectQuery {
-    [k: string]: string | number
+    [k: string]: string | number | undefined
 }
 
 export interface IOptionItem {
@@ -53,3 +54,5 @@ export interface IUploadImg {
     public_id: string
     url: string
 }
+
+export type IImgType = string | File

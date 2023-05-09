@@ -24,7 +24,7 @@ export function NewsFilters({ filters, setFilters }: INewsFiltersProps) {
     const handleFilterTag = (value: string | number) => {
         if (typeof value !== 'number' || +value < 0) {
             const newFilters = { ...filters }
-            delete newFilters.status
+            delete newFilters.hashTag
             setFilters(newFilters)
             return
         }

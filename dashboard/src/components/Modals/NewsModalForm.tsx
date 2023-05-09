@@ -1,33 +1,73 @@
-import { InputField, SelectField, EditorField, AutoCompleteField } from '../FormFields'
+import {
+    InputField,
+    SelectField,
+    EditorField,
+    AutoCompleteField,
+    ImageField,
+} from '../FormFields'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { INewsData } from '../../models'
-import { selectStatus, hashTagOptions } from '../../data'
-import { theme } from '../../utils'
+import { INewsData, IOptionItem } from '../../models'
+import { selectStatus } from '../../data'
+import { generateIds, checkTypeImg, checkSizeImg } from '../../utils'
+import { SIZE_10_MB, SIZE_4_MB } from '../../consts'
 import { useForm } from 'react-hook-form'
-import { Box, Button, Modal } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
+import { Box, Modal } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { ButtonForm } from '../Common'
 import { useToast } from '../../hooks'
 import { newsApi } from '../../api'
+import { connect } from 'react-redux'
+import { AppState } from '../../store'
 
 export interface INewsModalFormProps {
     initValues: INewsData
     open: boolean
     setOpen: Dispatch<SetStateAction<boolean>>
+    pHashTagSelects: IOptionItem[]
 }
 
 const schema = yup.object().shape({
     title: yup.string().required('Please enter name.'),
     sapo: yup.string(),
     readTimes: yup.number(),
-    thumbnailImage: yup.string().required('Please choose thumbnail image.'),
-    coverImage: yup.string().required('Please choose cover image.'),
+    thumbnailImage: yup
+        .mixed<File>()
+        .test('is-nullable-thumbnail', 'Please choose thumbnail image.', function (file) {
+            const { thumbnailImage, coverImage } = this.parent
+            if (!((thumbnailImage && coverImage) || file?.name)) return
+            if (file?.name) return true
+        })
+        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file))
+        .test('size-img', 'Maximum 4MB.', (file) => checkSizeImg(file, SIZE_4_MB)),
+    coverImage: yup
+        .mixed<File>()
+        .test('is-nullable-cover', 'Please choose cover image.', function (file) {
+            const { thumbnailImage, coverImage } = this.parent
+            if (!((thumbnailImage && coverImage) || file?.name)) return
+            if (file?.name) return true
+        })
+        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file))
+        .test('size-img', 'Maximum 10MB.', (file) => checkSizeImg(file, SIZE_10_MB)),
     content: yup.string().required('Please enter news content.'),
 })
 
-export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps) {
+const generateNewValues = (values: INewsData) => {
+    const { hashTagOptionIds, ...rest } = values
+    const ids = generateIds(hashTagOptionIds)
+
+    return {
+        newValues: rest,
+        ids,
+    }
+}
+
+function NewsModalForm({
+    initValues,
+    open,
+    setOpen,
+    pHashTagSelects,
+}: INewsModalFormProps) {
     const { toastSuccess, toastError } = useToast()
     const form = useForm<INewsData>({
         defaultValues: initValues,
@@ -60,9 +100,10 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
 
     const handleUpdate = async (values: INewsData) => {
         try {
-            await newsApi.updateNews({ ...rest, id: initValues.id })
+            const { newValues, ids } = generateNewValues(values)
+            await newsApi.updateNews({ ...newValues, hashTagIds: ids, id: initValues.id })
 
-            toastSuccess(`Update user '${values.title}' successfully.`)
+            toastSuccess(`Update user '${newsValue.title}' successfully.`)
         } catch (error) {
             throw new Error((error as Error).message as string)
         }
@@ -70,9 +111,8 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
 
     const handleAdd = async (values: INewsData) => {
         try {
-            const { hashTagOptionIds, ...rest } = values
-            const hashTagIds = hashTagOptionIds.map((item) => item.id)
-            const res = await newsApi.addNews({ ...rest, hashTagIds })
+            const { newValues, ids } = generateNewValues(values)
+            const res = await newsApi.addNews({ ...newValues, hashTagIds: ids })
 
             toastSuccess(`Add user '${res.data.news.title}' successfully.`)
         } catch (error) {
@@ -82,8 +122,6 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
 
     const handleFormSubmit = async (values: INewsData) => {
         try {
-            console.log('values submit: ', values.content)
-            return
             if (initValues.id) {
                 await handleUpdate(values)
             } else {
@@ -135,7 +173,7 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
                     >
                         <Box
                             sx={{
-                                width: '65%',
+                                flex: 1,
                             }}
                         >
                             <InputField
@@ -174,36 +212,39 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
                                     selects={selectStatus}
                                 />
                             </Box>
+                            <AutoCompleteField
+                                form={form}
+                                name={'hashTagOptionIds'}
+                                label={'Tags'}
+                                disabled={isSubmitting}
+                                placeholder={'Choose tags'}
+                                list={pHashTagSelects}
+                            />
                         </Box>
                         <Box
                             sx={{
-                                width: '35%',
+                                width: '25%',
                             }}
                         >
-                            <InputField
+                            <ImageField
                                 form={form}
                                 name={'thumbnailImage'}
                                 label={'Thumbnail Image'}
                                 disabled={isSubmitting}
+                                initValue={initValues.thumbnailImage}
                                 placeholder={'Enter thumbnail image'}
                             />
-                            <InputField
+                            <ImageField
                                 form={form}
                                 name={'coverImage'}
                                 label={'Cover Image'}
                                 disabled={isSubmitting}
+                                initValue={initValues.coverImage}
                                 placeholder={'Enter cover image'}
                             />
                         </Box>
                     </Box>
-                    <AutoCompleteField
-                        form={form}
-                        name={'hashTagOptionIds'}
-                        label={'Tags'}
-                        disabled={isSubmitting}
-                        placeholder={'Choose tags'}
-                        list={hashTagOptions}
-                    />
+
                     <EditorField
                         form={form}
                         name={'content'}
@@ -221,3 +262,11 @@ export function NewsModalForm({ initValues, open, setOpen }: INewsModalFormProps
         </Modal>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pHashTagSelects: state.hashTag.hashTagSelects,
+    }
+}
+
+export default connect(mapStateToProps, null)(NewsModalForm)

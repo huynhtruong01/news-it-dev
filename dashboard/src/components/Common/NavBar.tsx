@@ -11,7 +11,7 @@ import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { navList } from '../../data'
-import { removeCookie, theme } from '../../utils'
+import { removeLS, theme } from '../../utils'
 import { authApi } from '../../api'
 import { useToast } from '../../hooks'
 import { connect } from 'react-redux'
@@ -40,8 +40,8 @@ function NavBar({ pSaveUserLogin }: INavBarProps) {
 
     const handleLogout = async () => {
         try {
-            removeCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY)
-            removeCookie(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+            removeLS(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+            removeLS(import.meta.env.VITE_ACCESS_TOKEN_KEY)
 
             await authApi.logout()
             pSaveUserLogin()

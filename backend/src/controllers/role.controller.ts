@@ -4,11 +4,32 @@ import { roleService } from '@/services'
 import { Response } from 'express'
 
 class RoleController {
-    // (GET)
+    // get all
+    async getAll(req: RequestUser, res: Response) {
+        try {
+            const roles = await roleService.getAll()
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    roles,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // get all by params (GET)
     async getAllRoles(req: RequestUser, res: Response) {
         try {
             const query: IObjectCommon = req.query as IObjectCommon
-            const [roles, count] = await roleService.getAll(query)
+            const [roles, count] = await roleService.getAllByParams(query)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,

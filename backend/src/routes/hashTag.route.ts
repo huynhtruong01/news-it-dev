@@ -3,6 +3,8 @@ import { authMiddleware } from '@/middlewares'
 import express from 'express'
 const router = express.Router()
 
+router.route('/get-all').get(hashTagController.getAll)
+
 router
     .route('/')
     .get(hashTagController.getAllHashTag)

@@ -141,7 +141,7 @@ export const userHeaders: readonly ITableHeader[] = [
     },
     {
         id: 'createdAt',
-        label: 'Date Created',
+        label: 'Created',
         isSort: true,
     },
     {
