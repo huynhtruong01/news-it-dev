@@ -12,6 +12,22 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/formFields/*": ["src/components/FormFields/index"],
+      "@components/common/*": ["src/components/Common/index"],
+      "@components/forms/*": ["src/components/Forms/index"],
+      "@components/*": ["src/components/index"],
+      "@api/*": ["src/api/index"],
+      "@utils/*": ["src/utils/index"],
+      "@hooks/*": ["src/hooks/index"],
+      "@pages/*": ["src/pages/index"],
+      "@models/*": ["src/models/index"],
+      "@data/*": ["src/data/index"],
+      "@layouts/*": ["src/layouts/index"],
+      "@features/*": ["src/features/index"],
+    },
 
     /* Linting */
     "strict": true,

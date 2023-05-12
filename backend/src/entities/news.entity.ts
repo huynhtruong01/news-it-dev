@@ -55,6 +55,18 @@ export class News extends BaseEntity {
     })
     numLikes: number
 
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    numComments: number
+
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    numSaves: number
+
     @ManyToMany(() => User, (user) => user.newsLikes)
     likes?: User[]
 

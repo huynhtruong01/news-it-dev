@@ -6,6 +6,7 @@ import {
     InputAdornment,
     IconButton,
     FormHelperText,
+    TextFieldProps,
 } from '@mui/material'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import Visibility from '@mui/icons-material/Visibility'
@@ -16,7 +17,7 @@ export type IPasswordFieldProps<TFormValues> = {
     name: Path<TFormValues>
     label: string
     disabled: boolean
-}
+} & TextFieldProps
 
 export function PasswordField<TFormValues extends FieldValues = FieldValues>({
     form,

@@ -135,3 +135,27 @@ server.ts
 - **Recommend System**: ❌ 
 
 
+3. **FRONT-END TODO**
+
+- **USER INTERFACE:**
+  - ✅ List News
+  - ✅ News Detail
+  - ✅ Login
+  - ✅ Sign up
+  - ❌ List Tags
+  - ❌ Tag Detail: Get all news by tagId
+
+  - ❌ Profile:
+    - ✅ Profile
+    - ❌ Setting
+  - ❌ Detail User
+
+  - ❌ Search page
+
+  - ❌ Create News
+
+  - ❌ Dashboard:
+    - ❌ News List
+    - ❌ Following List
+    - ❌ Followers List
+    - ❌ Tags List Follow
