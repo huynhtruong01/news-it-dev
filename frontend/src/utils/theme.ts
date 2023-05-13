@@ -28,15 +28,15 @@ let theme = createTheme({
             },
             styleOverrides: {
                 maxWidthSm: {
-                    maxWidth: '680px',
+                    maxWidth: 680,
                     '@media (min-width: 600px)': {
-                        maxWidth: '680px',
+                        maxWidth: 680,
                     },
                 },
                 maxWidthMd: {
-                    maxWidth: '1280px',
+                    maxWidth: 1264,
                     '@media (min-width: 900px)': {
-                        maxWidth: '1280px',
+                        maxWidth: 1264,
                     },
                 },
             },
@@ -56,6 +56,8 @@ let theme = createTheme({
                         whiteSpace: 'nowrap',
                         minWidth: 'auto',
                         boxShadow: 'none',
+                        fontWeight: 400,
+                        fontSize: '16px',
                         '&:hover': {
                             boxShadow: 'none',
                         },
@@ -68,6 +70,7 @@ let theme = createTheme({
                 {
                     props: {},
                     style: {
+                        borderRadius: '6px',
                         svg: {
                             color: '#404040',
                         },
@@ -128,6 +131,7 @@ let theme = createTheme({
             styleOverrides: {
                 elevation1: {
                     boxShadow: '0 0 1px 1px rgba(0,0,0,0.1)',
+                    borderRadius: '6px',
                 },
             },
         },

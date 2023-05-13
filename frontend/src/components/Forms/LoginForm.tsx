@@ -54,7 +54,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     label="Email"
                     name="email"
                     disabled={isSubmitting}
-                    placeholder={'Enter email'}
+                    placeholder={'john.doe@example.com'}
                 />
                 <PasswordField
                     form={form}

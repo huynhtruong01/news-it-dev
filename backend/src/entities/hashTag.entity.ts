@@ -33,6 +33,12 @@ export class HashTag extends BaseEntity {
 
     @Column({
         type: 'text',
+        unique: true,
+    })
+    title: string
+
+    @Column({
+        type: 'text',
         default: '',
     })
     description: string

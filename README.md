@@ -142,20 +142,27 @@ server.ts
   - ✅ News Detail
   - ✅ Login
   - ✅ Sign up
-  - ❌ List Tags
-  - ❌ Tag Detail: Get all news by tagId
+  - ✅ List Tags
+  - ✅ Tag Detail: Get all news by tagId
 
-  - ❌ Profile:
+  - ✅ Profile:
     - ✅ Profile
-    - ❌ Setting
-  - ❌ Detail User
+    - ✅ Setting
+  - ✅ Detail User
+
+  - ✅ Reading list (Save)
 
   - ❌ Search page
 
   - ❌ Create News
 
-  - ❌ Dashboard:
-    - ❌ News List
-    - ❌ Following List
-    - ❌ Followers List
-    - ❌ Tags List Follow
+  - ✅ Dashboard:
+    - ✅ News List
+    - ✅ Following List
+    - ✅ Followers List
+    - ✅ Tags List Follow
+
+
+- **Features**:
+  - **Reading List Page**:
+    - ❌ **Archive & Unarchive** for news `saves` of this user.

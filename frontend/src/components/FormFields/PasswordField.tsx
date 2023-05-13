@@ -1,16 +1,16 @@
-import { Path, FieldValues, Controller } from 'react-hook-form'
-import {
-    FormControl,
-    InputLabel,
-    OutlinedInput,
-    InputAdornment,
-    IconButton,
-    FormHelperText,
-    FormControlProps,
-} from '@mui/material'
-import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { theme } from '@/utils'
 import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import {
+    Box,
+    FormControlProps,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    TextField,
+} from '@mui/material'
 import { useState } from 'react'
+import { Controller, FieldValues, Path } from 'react-hook-form'
 
 export type IPasswordFieldProps<TFormValues> = {
     form: TFormValues
@@ -40,38 +40,48 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
             control={control}
             name={name}
             render={({ field: { onChange, value, onBlur } }) => (
-                <FormControl
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    size="small"
-                    {...rest}
-                >
-                    <InputLabel error={!!error?.message}>{label}</InputLabel>
-                    <OutlinedInput
+                <Box margin={theme.spacing(2, 0, 1)} width={'100%'}>
+                    <InputLabel
+                        error={!!error?.message}
+                        sx={{
+                            fontWeight: 500,
+                            color: '#000',
+                        }}
+                    >
+                        {label}
+                    </InputLabel>
+                    <TextField
+                        fullWidth
                         type={showPassword ? 'text' : 'password'}
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleShowPasswordClick}
-                                    edge="end"
-                                >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                        label={label}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleShowPasswordClick}
+                                        edge="end"
+                                    >
+                                        {showPassword ? (
+                                            <VisibilityOff />
+                                        ) : (
+                                            <Visibility />
+                                        )}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                         error={!!error?.message}
+                        helperText={error?.message || ''}
                         disabled={disabled}
+                        size="small"
+                        sx={{
+                            marginTop: 1,
+                        }}
                     />
-                    <FormHelperText error={!!error?.message}>
-                        {error?.message || ''}
-                    </FormHelperText>
-                </FormControl>
+                </Box>
             )}
         />
     )

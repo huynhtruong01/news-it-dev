@@ -22,8 +22,8 @@ export function ArticleItem({ article }: IArticleItemProps) {
         >
             <Box component="article">
                 <Box>
-                    <Link to={'/detail'}>
-                        <img src={article.coverImage} alt="" />
+                    <Link to={`/news/${article.title}`}>
+                        <img src={article.coverImage} alt={article.title} />
                     </Link>
                 </Box>
                 <Box padding={2.5}>
@@ -31,7 +31,8 @@ export function ArticleItem({ article }: IArticleItemProps) {
                         avatar={avatar as string}
                         username={username}
                         createdAtNews={article?.createdAt || new Date()}
-                        link="/"
+                        // TODO: MAKE LINK USER PROFILE HERE
+                        link={`/news/${article.title}`}
                     />
                     <ArticleIntro article={article} />
                 </Box>

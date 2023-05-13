@@ -2,7 +2,7 @@ import { Box, Avatar, Button, Typography, Paper, Divider, Stack } from '@mui/mat
 import { theme, formatDate } from '@/utils'
 import { user } from '@/data'
 import ArticleIcon from '@mui/icons-material/Article'
-import { ProfileInfoItem, ProfileNews } from '@/pages/Profile/components'
+import { ProfileInfoItem, ProfileNews, ProfileLeftItem } from '@/pages/Profile/components'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import TagIcon from '@mui/icons-material/Tag'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +17,7 @@ export function Profile() {
         dateJoined,
         work,
         skillLanguages,
+        currentlyLearning,
         newsCount,
         comments,
         hashTags,
@@ -106,6 +107,9 @@ export function Profile() {
                             <Typography
                                 fontSize={'18px'}
                                 sx={{
+                                    width: '100%',
+                                    maxWidth: '80%',
+                                    margin: 'auto',
                                     marginBottom: 2,
                                 }}
                             >
@@ -151,19 +155,17 @@ export function Profile() {
                 >
                     <Stack gap={2}>
                         {skillLanguages && (
-                            <Box component={Paper} elevation={1}>
-                                <Typography
-                                    component="h3"
-                                    variant="body1"
-                                    padding={theme.spacing(1.5, 2)}
-                                    fontWeight={700}
-                                >
-                                    Skills/Languages
-                                </Typography>
-                                <Typography padding={theme.spacing(2)}>
-                                    {skillLanguages}
-                                </Typography>
-                            </Box>
+                            <ProfileLeftItem
+                                title={'Skills/Languages'}
+                                value={skillLanguages}
+                            />
+                        )}
+
+                        {currentlyLearning && (
+                            <ProfileLeftItem
+                                title={'Currently Learning'}
+                                value={currentlyLearning}
+                            />
                         )}
 
                         <Box component={Paper} elevation={1} padding={2}>

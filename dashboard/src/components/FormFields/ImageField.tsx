@@ -171,7 +171,6 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
                                 type="file"
                                 id={name}
                                 onChange={(e) => {
-                                    console.log('event: ', e.target.files)
                                     if (e.target.files?.[0]) {
                                         const url = generateLinkImg(e.target.files?.[0])
                                         onChange(e.target.files[0])

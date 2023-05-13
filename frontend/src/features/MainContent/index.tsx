@@ -1,7 +1,12 @@
 import { Box, Grid } from '@mui/material'
 import { ArticleContainer, Sidebar } from '..'
+import { useEffect } from 'react'
 
 export function MainContent() {
+    useEffect(() => {
+        document.title = 'DEV Community'
+    }, [])
+
     return (
         <Box component="section" width={'100%'}>
             <Grid

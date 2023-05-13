@@ -24,7 +24,7 @@ export interface IUserData {
     followers?: IUser[]
     following?: IUser[]
     newsLikes?: IUser[]
-    save?: IUser[]
+    saves?: INews[]
     news?: INews[]
     comments?: IComment[]
     hashTags?: IHashTag[]

@@ -24,7 +24,8 @@ export function MainLayout({ children }: IMainLayoutProps) {
         >
             <Container
                 sx={{
-                    padding: 2,
+                    paddingTop: 2,
+                    paddingBottom: 2,
                 }}
             >
                 {children}

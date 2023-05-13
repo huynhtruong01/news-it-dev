@@ -21,7 +21,7 @@ export function ArticleIntro({ article }: IArticleIntroProps) {
     }, [article])
 
     const handleNavClick = () => {
-        navigate('/')
+        navigate(`/news/${title}#comments`)
     }
 
     return (
@@ -39,7 +39,7 @@ export function ArticleIntro({ article }: IArticleIntroProps) {
                         },
                     }}
                 >
-                    <Link to={'/detail'}>{title}</Link>
+                    <Link to={`/news/${title}`}>{title}</Link>
                 </Typography>
                 {sapo && <Typography>{sapo}</Typography>}
             </Box>

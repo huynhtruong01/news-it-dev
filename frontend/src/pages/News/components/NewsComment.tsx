@@ -16,7 +16,7 @@ export function NewsComment({ ...rest }: INewsCommentProps) {
     }, [comments])
 
     return (
-        <Box {...rest} padding={theme.spacing(4, 8)}>
+        <Box {...rest} component="section" id="comments" padding={theme.spacing(4, 8)}>
             <Box component="header" marginBottom={3}>
                 <Typography component="h2" variant="h5" fontWeight={700}>
                     Comments ({commentLength})

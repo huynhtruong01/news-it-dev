@@ -1,11 +1,25 @@
 import { articleHeader } from '@/data'
+import { Order } from '@/enums'
+import { NewsFilters } from '@/enums/news'
+import { IFilters } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Dispatch, SetStateAction } from 'react'
 
-export type IArticleHeaderProps = BoxProps
+export interface IArticleHeaderProps extends BoxProps {
+    setFilters: Dispatch<SetStateAction<IFilters>>
+}
 
-export function ArticleHeader({ ...rest }: IArticleHeaderProps) {
+export function ArticleHeader({ setFilters, ...rest }: IArticleHeaderProps) {
+    const handleNewsFilters = (valFilter: string) => {
+        if (valFilter === NewsFilters.LATEST) {
+            setFilters((prev: IFilters) => ({ ...prev, createdAt: Order.ASC }))
+            return
+        }
+
+        setFilters((prev: IFilters) => ({ ...prev, numLikes: Order.ASC }))
+    }
+
     return (
         <Box component="header" {...rest}>
             <Stack gap={1} flexDirection={'row'} alignItems={'center'}>
@@ -26,8 +40,9 @@ export function ArticleHeader({ ...rest }: IArticleHeaderProps) {
                                 backgroundColor: theme.palette.primary.contrastText,
                             },
                         }}
+                        onClick={() => handleNewsFilters(item.value as string)}
                     >
-                        <Link to={item.link as string}>{item.name}</Link>
+                        {item.name}
                     </Box>
                 ))}
             </Stack>

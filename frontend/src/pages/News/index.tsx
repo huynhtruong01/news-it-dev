@@ -1,10 +1,18 @@
 import { Box } from '@mui/material'
 import { NewsDetail, NewsSideLeft, NewsSideRight } from '@/pages/News/components'
 import { newsDetail } from '@/data'
+import { useEffect } from 'react'
 
 // export interface INewsProps {}
 
 export function News() {
+    useEffect(() => {
+        // TODO: UPDATE NEWS TITLE HERE
+        document.title = newsDetail.title
+    }, [])
+
+    // TODO: FETCH NEWS DETAIL
+
     return (
         <Box minHeight={'100vh'}>
             <Box

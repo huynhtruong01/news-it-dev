@@ -61,7 +61,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     label="Username"
                     name="username"
                     disabled={isSubmitting}
-                    placeholder={'Enter username'}
+                    placeholder={'john.doe'}
                 />
                 <Box
                     sx={{
@@ -74,14 +74,14 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                         label="First Name"
                         name="firstName"
                         disabled={isSubmitting}
-                        placeholder={'Enter first name'}
+                        placeholder={'Doe'}
                     />
                     <InputField
                         form={form}
                         label="Last Name"
                         name="lastName"
                         disabled={isSubmitting}
-                        placeholder={'Enter last name'}
+                        placeholder={'John'}
                     />
                 </Box>
                 <InputField
@@ -89,7 +89,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     label="Email"
                     name="email"
                     disabled={isSubmitting}
-                    placeholder={'Enter email'}
+                    placeholder={'john.doe@example.com'}
                 />
                 <PasswordField
                     form={form}
