@@ -19,7 +19,7 @@ router.route('/detail/:newsSlug').get(newsController.getNewsBySlug)
 router.route('/count-views/:newsId').get(newsController.countViewsNews)
 
 router.route('/like/:newsId').get(newsController.likeNews)
-router.route('/dislike/:newsId').get(newsController.dislikeNews)
+router.route('/unlike/:newsId').get(newsController.dislikeNews)
 
 router.route('/save/:newsId').get(newsController.saveNews)
 router.route('/unsave/:newsId').get(newsController.unsaveNews)

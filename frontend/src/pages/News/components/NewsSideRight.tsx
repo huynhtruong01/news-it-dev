@@ -1,18 +1,18 @@
-import { IUser } from '@/models'
+import { INews, IUser } from '@/models'
 import { Box, BoxProps, Stack } from '@mui/material'
 import { NewsSideRightRelation, NewsSideRightRelationUser, NewsSideRightUser } from '.'
 
 export interface INewsSideRightProps extends BoxProps {
-    user: IUser | null
+    news: INews | null
 }
 
-export function NewsSideRight({ user, ...rest }: INewsSideRightProps) {
+export function NewsSideRight({ news, ...rest }: INewsSideRightProps) {
     return (
-        user && (
+        news && (
             <Box component={Stack} gap={2} {...rest}>
-                <NewsSideRightUser user={user} />
-                <NewsSideRightRelationUser user={user} />
-                <NewsSideRightRelation hashTagIds={[1, 2, 3]} />
+                <NewsSideRightUser user={news.user as IUser} />
+                <NewsSideRightRelationUser news={news} user={news.user as IUser} />
+                <NewsSideRightRelation hashTagIds={news.hashTagIds as number[]} />
             </Box>
         )
     )

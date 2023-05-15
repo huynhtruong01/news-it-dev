@@ -38,7 +38,9 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
             await onLoginSubmit(values)
             reset()
         } catch (error) {
-            toastError((error as Error).message)
+            enqueueSnackbar(error.message, {
+                variant: 'error',
+            })
         }
     }
 

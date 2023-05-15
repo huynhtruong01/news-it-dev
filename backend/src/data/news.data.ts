@@ -1,7 +1,11 @@
 export const relationNewsData = {
     likes: true,
     saveUsers: true,
-    user: true,
+    user: {
+        news: {
+            hashTags: true,
+        },
+    },
     hashTags: true,
     comments: true,
 }

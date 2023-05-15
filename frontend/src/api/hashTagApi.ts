@@ -28,3 +28,11 @@ export const updateHashTag = (data: IHashTag) => {
 export const deleteHashTag = (id: number) => {
     return AxiosClient.delete(`${BASE_URL}/${id}`)
 }
+
+export const followHashTag = (id: number) => {
+    return AxiosClient.get(`${BASE_URL}/follow/${id}`)
+}
+
+export const unfollowHashTag = (id: number) => {
+    return AxiosClient.get(`${BASE_URL}/unfollow/${id}`)
+}

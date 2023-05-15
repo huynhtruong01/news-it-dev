@@ -1,6 +1,6 @@
 import { Status } from '@/enums'
 import { IObjectCommon } from '@/models'
-import { Any, ILike, In } from 'typeorm'
+import { ILike, In } from 'typeorm'
 
 export const covertObjectQuery = (query: IObjectCommon, queryKeys: string[]) => {
     const booleans = ['true', 'false']
@@ -87,7 +87,8 @@ export const filtersArrQuery = (query: IObjectCommon) => {
 
     const queryKeys = Object.keys(query).filter((k) => arrFilters.includes(k))
     return queryKeys.reduce((obj: IObjectCommon, k: string) => {
-        obj[`${k}Ids`] = In([typeof +query[k] === 'number' ? +query[k] : query[k]])
+        const checkQuery: any = typeof +query[k] === 'number' ? [+query[k]] : query[k]
+        obj[`${k}Ids`] = In(checkQuery)
         return obj
     }, {})
 }

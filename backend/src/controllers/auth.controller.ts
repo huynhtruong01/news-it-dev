@@ -51,6 +51,7 @@ class AuthController {
     // login (POST)
     async login(req: Request, res: Response) {
         try {
+            console.log(req.body)
             // check email and password
             const { email, password } = req.body
             if (!email || !password) {

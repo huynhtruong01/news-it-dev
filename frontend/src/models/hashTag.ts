@@ -1,4 +1,4 @@
-import { INews } from '.'
+import { INews, IObjectCommon } from '.'
 
 export interface IHashTagData {
     id?: number

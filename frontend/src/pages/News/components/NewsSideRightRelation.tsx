@@ -2,6 +2,10 @@ import { newsList } from '@/data'
 import { theme } from '@/utils'
 import { Box, BoxProps, Button, Divider, Paper, Stack, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { IFilters, INews } from '@/models'
+import { Order } from '@/enums'
+import { newsApi } from '@/api'
 
 export interface INewsSideRightRelationProps extends BoxProps {
     hashTagIds: number[]
@@ -11,8 +15,26 @@ export function NewsSideRightRelation({
     hashTagIds,
     ...rest
 }: INewsSideRightRelationProps) {
-    // TODO: CREATE STATE SAVE NEWS LIST
-    // TODO: FETCH NEWS BY HASH TAGS IDS FOR RELATIONS
+    const [newsTagsList, setNewsTagsList] = useState<INews[]>([])
+    // CREATE STATE SAVE NEWS LIST
+    // FETCH NEWS BY HASH TAGS IDS FOR RELATIONS
+
+    useEffect(() => {
+        ;(async () => {
+            try {
+                const filters: IFilters = {
+                    page: 1,
+                    limit: 5,
+                    createdAt: Order.DESC,
+                    hashTagIds: hashTagIds.join(','),
+                }
+                const res = await newsApi.getAllNews(filters)
+                setNewsTagsList(res.data.news)
+            } catch (error) {
+                throw new Error(error as string)
+            }
+        })()
+    }, [hashTagIds])
 
     return (
         <Box {...rest} component={Paper} borderRadius={theme.spacing(0.75)}>
@@ -34,7 +56,7 @@ export function NewsSideRightRelation({
             </Typography>
 
             <Stack component="ul">
-                {newsList.map((news, index) => (
+                {newsTagsList.map((news, index) => (
                     <Box key={news.id} component="li" padding={theme.spacing(2, 2, 0)}>
                         <Box paddingBottom={2}>
                             <Box
@@ -46,8 +68,8 @@ export function NewsSideRightRelation({
                                     },
                                 }}
                             >
-                                {/* TODO: WRITE LINK HERE */}
-                                <Link to={'/'}>
+                                {/* WRITE LINK HERE */}
+                                <Link to={`/news/${news.slug}`}>
                                     <img src={news.coverImage} alt={news.title} />
                                 </Link>
                             </Box>
@@ -66,8 +88,8 @@ export function NewsSideRightRelation({
                                         },
                                     }}
                                 >
-                                    {/* TODO: WRITE LINK HERE */}
-                                    <Link to={'/'}>{news.title}</Link>
+                                    {/* WRITE LINK HERE */}
+                                    <Link to={`/news/${news.slug}`}>{news.title}</Link>
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -92,8 +114,8 @@ export function NewsSideRightRelation({
                                         },
                                     }}
                                 >
-                                    {/* TODO: WRITE LINK HERE */}
-                                    <Link to={'/'}>Read full news</Link>
+                                    {/* WRITE LINK HERE */}
+                                    <Link to={`/news/${news.slug}`}>Read full news</Link>
                                 </Box>
                             </Box>
                         </Box>

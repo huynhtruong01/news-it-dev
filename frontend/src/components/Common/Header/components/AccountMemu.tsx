@@ -66,7 +66,6 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                 open={open}
                 onClose={handleCloseClick}
                 onClick={handleCloseClick}
-                disablePortal
                 PaperProps={{
                     elevation: 1,
                     sx: {
@@ -149,10 +148,14 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                 </MenuItem>
                 <Divider />
                 <MenuItem>
-                    <ListItemIcon>
-                        <Logout fontSize="small" />
-                    </ListItemIcon>
-                    Logout
+                    <Link to={'/signout-confirm'}>
+                        <Stack direction={'row'} alignItems={'center'}>
+                            <ListItemIcon>
+                                <Logout fontSize="small" />
+                            </ListItemIcon>
+                            <span>Sign out</span>
+                        </Stack>
+                    </Link>
                 </MenuItem>
             </Menu>
         </Box>

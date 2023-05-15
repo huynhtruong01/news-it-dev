@@ -1,17 +1,55 @@
-import { IHashTag } from '@/models'
+import { hashTagApi } from '@/api'
+import { IsFollow } from '@/enums'
+import { IFollow, IHashTag, IUser } from '@/models'
+import { AppDispatch, AppState } from '@/store'
+import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import { Box, Button, Paper, Typography, alpha } from '@mui/material'
-import { useMemo } from 'react'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useMemo, useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 export interface ITagsItemProps {
+    pUser: IUser | null
+    pGetProfile: () => Promise<PayloadAction<unknown>>
     tag: IHashTag
 }
 
-export function TagsItem({ tag }: ITagsItemProps) {
+function TagsItem({ tag, pUser, pGetProfile }: ITagsItemProps) {
+    const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
     const color = useMemo(() => {
         return tag.color === '#ffffff' ? theme.palette.primary.dark : tag.color
     }, [tag])
+
+    useEffect(() => {
+        if (Array.isArray(pUser?.hashTags)) {
+            const isFollowed = pUser?.hashTags.find((t) => t.id === tag.id)
+            if (isFollowed) {
+                setFollowed(IsFollow.FOLLOWING)
+                return
+            }
+
+            setFollowed(IsFollow.FOLLOW)
+            return
+        }
+    }, [pUser])
+
+    const handleFollowClick = async () => {
+        try {
+            if (followed === IsFollow.FOLLOW && tag.id) {
+                await hashTagApi.followHashTag(tag.id)
+                setFollowed(IsFollow.FOLLOWING)
+            } else {
+                await hashTagApi.unfollowHashTag(tag.id)
+                setFollowed(IsFollow.FOLLOW)
+            }
+
+            await pGetProfile()
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
 
     return (
         <Box
@@ -74,15 +112,31 @@ export function TagsItem({ tag }: ITagsItemProps) {
                         padding: theme.spacing(0.75, 1.75),
                         fontSize: theme.typography.body1,
                         fontWeight: 500,
+                        transition: '.2s ease-in-out',
                         '&:hover': {
                             backgroundColor: alpha(theme.palette.grey[700], 0.05),
                             borderColor: theme.palette.grey[700],
                         },
                     }}
+                    onClick={handleFollowClick}
                 >
-                    Follow
+                    {followed === IsFollow.FOLLOW ? 'Follow' : 'Following'}
                 </Button>
             </Box>
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pGetProfile: () => dispatch(getProfile()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TagsItem)

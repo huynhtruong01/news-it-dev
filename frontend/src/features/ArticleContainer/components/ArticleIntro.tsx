@@ -1,5 +1,5 @@
 import { ButtonIconForm, HashTagList } from '@/components/Common'
-import { INews } from '@/models'
+import { INews, IUser } from '@/models'
 import { theme } from '@/utils'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
@@ -7,15 +7,37 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
+import { connect } from 'react-redux'
+import { AppDispatch, AppState } from '@/store'
+import { indigo } from '@mui/material/colors'
+import { newsApi } from '@/api'
+import { getProfile } from '@/store/user/thunkApi'
+import { PayloadAction } from '@reduxjs/toolkit'
 
 export interface IArticleIntroProps {
     article: INews
+    pUser: IUser | null
+    pGetProfile: () => Promise<PayloadAction<unknown>>
 }
 
-export function ArticleIntro({ article }: IArticleIntroProps) {
+function ArticleIntro({ article, pUser, pGetProfile }: IArticleIntroProps) {
+    const [saved, setSaved] = useState<boolean>(false)
     const navigate = useNavigate()
 
     const { title, sapo, hashTags, readTimes, numLikes, numComments, slug } = article
+
+    useEffect(() => {
+        if (pUser?.id) {
+            const isLiked = pUser?.saves?.find((n) => n.id === article.id)
+            if (isLiked) {
+                setSaved(true)
+            } else {
+                setSaved(false)
+            }
+        }
+    }, [pUser, article])
 
     const tags = useMemo(() => {
         return Array.isArray(hashTags) && hashTags.length ? hashTags : []
@@ -27,6 +49,24 @@ export function ArticleIntro({ article }: IArticleIntroProps) {
 
     const handleCommentClick = () => {
         navigate(`/news/${slug}#comments`)
+    }
+
+    const handleSaveNews = async () => {
+        try {
+            if (article.id) {
+                if (saved) {
+                    await newsApi.unsaveNews(article.id)
+                    setSaved(false)
+                } else {
+                    await newsApi.saveNews(article.id)
+                    setSaved(true)
+                }
+
+                await pGetProfile()
+            }
+        } catch (error) {
+            throw new Error(error as string)
+        }
     }
 
     return (
@@ -103,11 +143,34 @@ export function ArticleIntro({ article }: IArticleIntroProps) {
                                 backgroundColor: '#3b49df1a',
                             },
                         }}
+                        onClick={handleSaveNews}
                     >
-                        <BookmarkBorderIcon />
+                        {saved ? (
+                            <BookmarkIcon
+                                sx={{
+                                    color: `${indigo[500]} !important`,
+                                }}
+                            />
+                        ) : (
+                            <BookmarkBorderIcon />
+                        )}
                     </IconButton>
                 </Stack>
             </Stack>
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pGetProfile: () => dispatch(getProfile()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleIntro)

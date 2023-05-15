@@ -4,3 +4,8 @@ export enum Order {
     asc = 'asc',
     desc = 'desc',
 }
+
+export enum IsFollow {
+    FOLLOW = 'follow',
+    FOLLOWING = 'following',
+}

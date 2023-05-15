@@ -31,8 +31,8 @@ export function ArticleItem({ article }: IArticleItemProps) {
                         avatar={avatar as string}
                         username={username}
                         createdAtNews={article?.createdAt || new Date()}
-                        // TODO: MAKE LINK USER PROFILE HERE
-                        link={`/news/${article.user?.username}`}
+                        // MAKE LINK USER PROFILE HERE
+                        link={`/profile/${article.user?.username}`}
                     />
                     <ArticleIntro article={article} />
                 </Box>

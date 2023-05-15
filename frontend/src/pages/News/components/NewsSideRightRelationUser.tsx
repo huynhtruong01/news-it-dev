@@ -1,17 +1,43 @@
 import { HashTagList } from '@/components/Common'
-import { IUser } from '@/models'
+import { INews, IUser } from '@/models'
+import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Box, BoxProps, Paper, Stack, Typography } from '@mui/material'
+import { useMemo } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 export interface INewsSideRightRelationUserProps extends BoxProps {
+    news: INews
     user: IUser | null
+    pUser: IUser | null
 }
 
-export function NewsSideRightRelationUser({
+function NewsSideRightRelationUser({
+    news,
     user,
+    pUser,
     ...rest
 }: INewsSideRightRelationUserProps) {
+    const newsList = useMemo(() => {
+        if (user?.news?.length) {
+            return user?.news
+                ?.sort((a, b) => {
+                    return (
+                        new Date(b.createdAt as Date).getTime() -
+                        new Date(a.createdAt as Date).getTime()
+                    )
+                })
+                .filter((n) => n.id !== news.id)
+                .slice(0, 3)
+        }
+        return []
+    }, [user])
+
+    const link = useMemo(() => {
+        return user?.id === pUser?.id ? '/profile' : `/profile/${user?.username}`
+    }, [user, pUser])
+
     return (
         user && (
             <Box
@@ -34,11 +60,11 @@ export function NewsSideRightRelationUser({
                         },
                     }}
                 >
-                    More from <Link to={`/profile/${user.slug}`}>{user.username}</Link>
+                    More from <Link to={link}>{user.username}</Link>
                 </Typography>
 
                 <Stack component="ul" gap={2}>
-                    {user.news?.map((newsItem) => (
+                    {newsList.map((newsItem) => (
                         <Box
                             key={newsItem.id}
                             component="li"
@@ -50,7 +76,7 @@ export function NewsSideRightRelationUser({
                                 },
                             }}
                         >
-                            <Link to={'/'}>
+                            <Link to={`/news/${newsItem.slug}`}>
                                 <Typography
                                     component="h6"
                                     variant="body1"
@@ -74,3 +100,11 @@ export function NewsSideRightRelationUser({
         )
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(NewsSideRightRelationUser)

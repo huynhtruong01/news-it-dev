@@ -1,6 +1,8 @@
+import { IRole } from './../../../dashboard/src/models/role'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 import { SvgIconProps, SvgIconTypeMap } from '@mui/material'
-import { Order } from '@/enums'
+import { IsFollow, Order } from '@/enums'
+import { IHashTag, INews, IUser } from '.'
 
 export type IIcon = OverridableComponent<SvgIconTypeMap<SvgIconProps, 'svg'>> & {
     muiName?: string
@@ -32,9 +34,14 @@ export interface IFilters {
     hashTag?: number
     numLikes?: IOrderReq
     numNews?: IOrderReq
+    hashTagIds?: string
 }
 
 export interface IUploadImg {
     public_id: string
     url: string
 }
+
+export type IFollow = IsFollow.FOLLOW | IsFollow.FOLLOWING
+
+export type ISynthetic = INews | IHashTag | IUser | IRole

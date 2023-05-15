@@ -56,6 +56,35 @@ class UserController {
         }
     }
 
+    // get by slug
+    async getUserByUsername(req: Request, res: Response) {
+        try {
+            const user = await userService.getByUsername(req.params.userSlug)
+            if (!user) {
+                res.status(StatusCode.NOT_FOUND).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Not found this user by slug.',
+                })
+                return
+            }
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    user,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
     // add user (POST)
     async addUser(req: RequestUser, res: Response) {
         try {
@@ -98,13 +127,11 @@ class UserController {
     // update user by id (PUT)
     async updateUserById(req: Request, res: Response) {
         try {
-            console.log(req.body)
             const newUser = await userService.update(Number(req.params.userId), {
                 ...req.body,
                 id: Number(req.params.userId),
             })
 
-            console.log(newUser)
             if (!newUser) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,

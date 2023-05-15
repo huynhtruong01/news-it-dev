@@ -166,3 +166,12 @@ server.ts
 - **Features**:
   - **Reading List Page**:
     - ❌ **Archive & Unarchive** for news `saves` of this user.
+    - ❌ **Filter** news into user by `hash tag` and `search`.
+  - **Make profile for user**
+
+
+- **Skeleton**:
+  - ❌ **News list**
+  - ❌ **News detail**
+  - ❌ **Hash tag list**
+  - ❌ **Hash tag detail**

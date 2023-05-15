@@ -1,27 +1,30 @@
 import { IUser } from '@/models'
 import { ProfileInfoItem, ProfileLeftItem, ProfileNews } from '@/pages/Profile/components'
-import { AppState } from '@/store'
+import { AppDispatch, AppState } from '@/store'
+import { getProfile } from '@/store/user/thunkApi'
 import { formatDate, theme } from '@/utils'
 import ArticleIcon from '@mui/icons-material/Article'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import TagIcon from '@mui/icons-material/Tag'
 import { Avatar, Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 export interface IProfileProps {
     pUser: IUser | null
+    pGetProfile: () => Promise<PayloadAction<unknown>>
 }
 
-function Profile({ pUser }: IProfileProps) {
+function Profile({ pUser, pGetProfile }: IProfileProps) {
     const navigate = useNavigate()
 
     useEffect(() => {
         document.title = `${pUser?.username} - DEV Community`
-    })
-
-    // TODO: GET PROFILE HERE
+        // GET PROFILE HERE
+        pGetProfile()
+    }, [])
 
     const newNews = useMemo(() => {
         return pUser?.news?.length ? pUser.news : []
@@ -204,4 +207,10 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-export default connect(mapStateToProps, null)(Profile)
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pGetProfile: () => dispatch(getProfile()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

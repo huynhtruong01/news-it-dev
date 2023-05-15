@@ -46,7 +46,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                         }}
                     >
                         {/* TODO: WRITE LINK HERE */}
-                        <Link to={`/news/${article.title}`}>{article.title}</Link>
+                        <Link to={`/news/${article.slug}`}>{article.title}</Link>
                     </Typography>
                     <Typography
                         sx={{
@@ -72,7 +72,9 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                                 },
                             }}
                         >
-                            <Link to={`/`}>{article.user?.username}</Link>
+                            <Link to={`/profile/${article?.user?.username}`}>
+                                {article.user?.username}
+                            </Link>
                         </Typography>
                         <span> • </span>
                         <span>
@@ -103,7 +105,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                                         }}
                                     >
                                         {/* TODO: WRITE LINK HERE */}
-                                        <Link to={`/tags/${tag.name}`}>#{tag.name}</Link>
+                                        <Link to={`/tags/${tag.slug}`}>#{tag.name}</Link>
                                     </Typography>
                                 ))}
                         </Stack>

@@ -96,11 +96,29 @@ class UserService {
         }
     }
 
+    // get by id
     async getById(id: number): Promise<User | null> {
         try {
             const user = await this.userRepository.findOne({
                 where: {
                     id,
+                },
+                select: selectUserData,
+                relations: relationDataUser,
+            })
+            if (!user) return null
+
+            return user
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    async getByUsername(username: string): Promise<User | null> {
+        try {
+            const user = await this.userRepository.findOne({
+                where: {
+                    username,
                 },
                 select: selectUserData,
                 relations: relationDataUser,

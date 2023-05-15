@@ -1,18 +1,15 @@
-import { tagList } from '@/data'
-import { IFilters } from '@/models'
+import { IFilters, IHashTag } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack, Typography, alpha } from '@mui/material'
 import { Dispatch, SetStateAction, useState } from 'react'
 
 export interface IReadingListTagsProps extends BoxProps {
-    hashTagIds: number[]
+    hashTags: IHashTag[]
     setFilters: Dispatch<SetStateAction<IFilters>>
 }
 
-export function ReadingListTags({ hashTagIds, ...rest }: IReadingListTagsProps) {
+export function ReadingListTags({ hashTags, ...rest }: IReadingListTagsProps) {
     const [activeTag, setActiveTag] = useState<string>('')
-
-    // TODO: FETCH TAGS HERE
 
     const handleFilters = (tag: string) => {
         // TODO: SET TAG AND FILTERS TAGS, NEWS BY TAG
@@ -57,7 +54,7 @@ export function ReadingListTags({ hashTagIds, ...rest }: IReadingListTagsProps) 
                 >
                     <Typography component="span">All tags</Typography>
                 </Box>
-                {tagList.map((tag) => (
+                {hashTags.map((tag) => (
                     <Box
                         key={tag.id}
                         component="li"

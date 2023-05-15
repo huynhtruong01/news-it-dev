@@ -12,7 +12,6 @@ import {
 import { commonService } from '@/services/common.service'
 import { hashTagService } from '@/services/hashTag.service'
 import { IObjectCommon } from '@/models'
-import { In } from 'typeorm'
 
 class NewsService {
     constructor(private newsRepository = AppDataSource.getRepository(News)) {}
@@ -74,7 +73,6 @@ class NewsService {
 
             return news
         } catch (error) {
-            console.log('error: ', error)
             throw new Error(error as string)
         }
     }
@@ -180,7 +178,7 @@ class NewsService {
             if (!news) return null
 
             // generate new slug
-            if (data.title) {
+            if (data.title !== news.title) {
                 data.slug = commonService.generateSlug(data.title)
             }
 
@@ -243,6 +241,8 @@ class NewsService {
 
             // add user into likes
             news.likes?.push(user)
+            news.numLikes++
+
             const newNews = await this.updateAll(newsId, news)
 
             return newNews
@@ -260,6 +260,8 @@ class NewsService {
             const idx = news.likes?.findIndex((user) => user.id === user.id)
             if (typeof idx === 'number' && idx >= 0) {
                 news.likes?.splice(idx, 1)
+                news.numLikes--
+                if (news.numLikes < 0) news.numLikes = 0
 
                 const newNews = await this.updateAll(newsId, news)
                 return newNews
@@ -281,6 +283,8 @@ class NewsService {
                 throw new Error(`'${news.title}' has been exits in your saves.`)
 
             news.saveUsers?.push(user)
+            news.numSaves++
+
             const newNews = await this.updateAll(newsId, news)
 
             return newNews
@@ -301,6 +305,8 @@ class NewsService {
             const idx = news.saveUsers?.findIndex((userSave) => userSave.id === user.id)
             if (typeof idx === 'number' && idx >= 0) {
                 news.saveUsers?.splice(idx, 1)
+                if (news.numSaves > 0) news.numSaves--
+
                 const newNews = await this.updateAll(newsId, news)
 
                 return newNews

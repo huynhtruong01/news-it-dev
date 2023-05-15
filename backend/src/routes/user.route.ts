@@ -11,6 +11,8 @@ router
     .put(userController.updateProfileUser)
 
 router.route('/').get(userController.getAllUser).post(userController.addUser)
+router.route('/slug/:userSlug').get(userController.getUserByUsername)
+
 router
     .route('/:userId')
     .get(userController.getUser)

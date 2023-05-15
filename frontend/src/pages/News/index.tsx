@@ -11,6 +11,7 @@ export function News() {
     const [news, setNews] = useState<INews | null>(null)
     const params = useParams()
 
+    // FETCH NEWS DETAIL
     useEffect(() => {
         if (params.slug) {
             ;(async () => {
@@ -25,8 +26,6 @@ export function News() {
         }
     }, [params])
 
-    // TODO: FETCH NEWS DETAIL
-
     return (
         news && (
             <Box minHeight={'100vh'}>
@@ -37,13 +36,9 @@ export function News() {
                         gap: 2,
                     }}
                 >
-                    <NewsSideLeft
-                        likes={news.numLikes as number}
-                        comments={news.numComments as number}
-                        saves={news.numSaves as number}
-                    />
+                    <NewsSideLeft news={news} />
                     <NewsDetail news={news} />
-                    <NewsSideRight user={news.user || null} />
+                    <NewsSideRight news={news} />
                 </Box>
             </Box>
         )

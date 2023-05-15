@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import { saveUserLogin } from '@/store/user'
 import { AppDispatch } from '@/store'
 import { setLs } from '@/utils'
+import { enqueueSnackbar } from 'notistack'
 
 export interface ILoginProps {
     pSaveUserLogin: (user: IUser) => void
@@ -31,10 +32,12 @@ function Login({ pSaveUserLogin }: ILoginProps) {
             setLs(import.meta.env.VITE_ACCESS_TOKEN_KEY, res.data.accessToken)
             setLs(import.meta.env.VITE_REFRESH_TOKEN_KEY, res.data.refreshToken)
 
-            toastSuccess('Login successfully.')
+            enqueueSnackbar('Log in successfully.', {
+                variant: 'success',
+            })
             navigate(-1)
         } catch (error) {
-            throw new Error(error as string)
+            throw new Error(error.message as string)
         }
     }
 

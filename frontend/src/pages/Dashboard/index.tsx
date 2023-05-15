@@ -1,38 +1,30 @@
-import { user } from '@/data'
+import { IUser } from '@/models'
 import {
     DashboardLeftList,
     DashboardNews,
     DashboardReadingList,
     DashboardTags,
 } from '@/pages/Dashboard/components'
+import { AppDispatch, AppState } from '@/store'
+import { getProfile } from '@/store/user/thunkApi'
 import { Box, Typography } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
+import { connect } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import { DashboardFollow } from './components/DashboardFollow'
 
-export function Dashboard() {
-    const {
-        avatar,
-        username,
-        bio,
-        dateJoined,
-        work,
-        skillLanguages,
-        currentlyLearning,
-        newsCount,
-        comments,
-        hashTags,
-        followers,
-        following,
-        saves,
-        news,
-    } = user
+export interface IDashboardProps {
+    pUser: IUser | null
+    pGetProfile: () => Promise<PayloadAction<unknown>>
+}
 
+function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
     useEffect(() => {
         document.title = 'Dashboard - DEV Community'
+        // FETCH USER PROFILE
+        pGetProfile()
     }, [])
-
-    // TODO: FETCH USER PROFILE
 
     return (
         <Box>
@@ -50,32 +42,59 @@ export function Dashboard() {
                         gap: 2,
                     }}
                 >
-                    <Box>
-                        <DashboardLeftList user={user} />
-                    </Box>
-                    <Box>
-                        <Routes>
-                            <Route index element={<DashboardNews newsList={news} />} />
-                            <Route
-                                path="followers"
-                                element={<DashboardFollow follows={followers} />}
-                            />
-                            <Route
-                                path="following"
-                                element={<DashboardFollow follows={following} />}
-                            />
-                            <Route
-                                path="tags"
-                                element={<DashboardTags tags={hashTags} />}
-                            />
-                            <Route
-                                path="reading-list"
-                                element={<DashboardReadingList saves={saves} />}
-                            />
-                        </Routes>
-                    </Box>
+                    {pUser && (
+                        <>
+                            <Box>
+                                <DashboardLeftList user={pUser} />
+                            </Box>
+                            <Box>
+                                <Routes>
+                                    <Route
+                                        index
+                                        element={<DashboardNews newsList={pUser.news} />}
+                                    />
+                                    <Route
+                                        path="followers"
+                                        element={
+                                            <DashboardFollow follows={pUser.followers} />
+                                        }
+                                    />
+                                    <Route
+                                        path="following"
+                                        element={
+                                            <DashboardFollow follows={pUser.following} />
+                                        }
+                                    />
+                                    <Route
+                                        path="tags"
+                                        element={<DashboardTags tags={pUser.hashTags} />}
+                                    />
+                                    <Route
+                                        path="reading-list"
+                                        element={
+                                            <DashboardReadingList saves={pUser.saves} />
+                                        }
+                                    />
+                                </Routes>
+                            </Box>
+                        </>
+                    )}
                 </Box>
             </Box>
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pGetProfile: () => dispatch(getProfile()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

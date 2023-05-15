@@ -1,12 +1,78 @@
-import { IUser } from '@/models'
+import { userApi } from '@/api'
+import { IsFollow } from '@/enums'
+import { IFollow, IUser } from '@/models'
+import { AppDispatch, AppState } from '@/store'
+import { setShowModalAuth } from '@/store/common'
+import { getProfile } from '@/store/user/thunkApi'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, BoxProps, Button, Paper, Stack, Typography } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useMemo, useState, useEffect } from 'react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 export interface INewsSideRightUserProps extends BoxProps {
+    pUser: IUser | null
+    pGetProfile: () => Promise<PayloadAction<unknown>>
     user: IUser | null
+    pSetShowModalAuth: (isShow: boolean) => void
 }
 
-export function NewsSideRightUser({ user, ...rest }: INewsSideRightUserProps) {
+function NewsSideRightUser({
+    pUser,
+    user,
+    pGetProfile,
+    pSetShowModalAuth,
+    ...rest
+}: INewsSideRightUserProps) {
+    const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
+
+    const checkSelf = useMemo(() => {
+        if (pUser?.id) {
+            return pUser.id !== user?.id ? true : false
+        }
+        return true
+    }, [pUser])
+
+    useEffect(() => {
+        if (Array.isArray(pUser?.following)) {
+            const isFollowed = pUser?.following.find((t) => t.id === user?.id)
+            if (isFollowed) {
+                setFollowed(IsFollow.FOLLOWING)
+                return
+            }
+
+            setFollowed(IsFollow.FOLLOW)
+            return
+        }
+
+        setFollowed(IsFollow.FOLLOW)
+        return
+    }, [pUser, user])
+
+    const handleFollowClick = async () => {
+        try {
+            if (!pUser?.id) {
+                pSetShowModalAuth(true)
+                return
+            }
+
+            if (user?.id) {
+                if (followed === IsFollow.FOLLOW) {
+                    await userApi.followUser(user.id)
+                    setFollowed(IsFollow.FOLLOWING)
+                } else {
+                    await userApi.unfollowUser(user.id)
+                    setFollowed(IsFollow.FOLLOW)
+                }
+
+                await pGetProfile()
+            }
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     return (
         user && (
             <Box
@@ -28,31 +94,47 @@ export function NewsSideRightUser({ user, ...rest }: INewsSideRightUserProps) {
                         }}
                     >
                         <Box>
-                            <Avatar
-                                src={user.avatar}
-                                alt={user.username}
-                                sx={{
-                                    width: 48,
-                                    height: 48,
-                                }}
-                            />
+                            <Link to={`/profile/${user.username}`}>
+                                <Avatar
+                                    src={user.avatar}
+                                    alt={user.username}
+                                    sx={{
+                                        width: 48,
+                                        height: 48,
+                                    }}
+                                />
+                            </Link>
                         </Box>
-                        <Typography component="span" fontSize={'20px'} fontWeight={700}>
-                            {user.username}
+                        <Typography
+                            component="span"
+                            fontSize={'20px'}
+                            fontWeight={700}
+                            sx={{
+                                a: {
+                                    '&:hover': {
+                                        color: theme.palette.primary.main,
+                                    },
+                                },
+                            }}
+                        >
+                            <Link to={`/profile/${user.username}`}>{user.username}</Link>
                         </Typography>
                     </Stack>
-                    <Button
-                        variant="contained"
-                        fullWidth
-                        sx={{
-                            backgroundColor: theme.palette.primary.light,
-                            '&:hover': {
-                                backgroundColor: theme.palette.primary.dark,
-                            },
-                        }}
-                    >
-                        Follow
-                    </Button>
+                    {checkSelf && (
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            sx={{
+                                backgroundColor: theme.palette.primary.light,
+                                '&:hover': {
+                                    backgroundColor: theme.palette.primary.dark,
+                                },
+                            }}
+                            onClick={handleFollowClick}
+                        >
+                            {followed === IsFollow.FOLLOW ? 'Follow' : 'Following'}
+                        </Button>
+                    )}
                 </Box>
 
                 <Box
@@ -68,6 +150,12 @@ export function NewsSideRightUser({ user, ...rest }: INewsSideRightUserProps) {
                         },
                     }}
                 >
+                    {user.bio && (
+                        <Box component="li">
+                            <Box>Bio</Box>
+                            <Typography>{user.bio}</Typography>
+                        </Box>
+                    )}
                     {user.skillLanguages && (
                         <Box component="li">
                             <Box>Skill Languages</Box>
@@ -91,3 +179,18 @@ export function NewsSideRightUser({ user, ...rest }: INewsSideRightUserProps) {
         )
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pGetProfile: () => dispatch(getProfile()),
+        pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewsSideRightUser)

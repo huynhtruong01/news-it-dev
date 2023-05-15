@@ -7,6 +7,8 @@ import {
     Dashboard,
     Tags,
     ReadingList,
+    Signout,
+    ProfileUser,
 } from '@/pages'
 import { Header } from '@components/common/index'
 import { MainLayout } from '@layouts/index'
@@ -25,10 +27,12 @@ function App() {
                     <Route path={'/signup'} element={<Signup />} />
                     <Route path={'/news/:slug'} element={<News />} />
                     <Route path={'/profile'} element={<Profile />} />
+                    <Route path={'/profile/:username'} element={<ProfileUser />} />
                     <Route path={'/settings'} element={<Settings />} />
                     <Route path={'/dashboard/*'} element={<Dashboard />} />
                     <Route path={'/tags/*'} element={<Tags />} />
                     <Route path={'/reading-list'} element={<ReadingList />} />
+                    <Route path={'/signout-confirm'} element={<Signout />} />
                 </Routes>
             </MainLayout>
         </Box>

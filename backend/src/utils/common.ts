@@ -1,4 +1,4 @@
-import { MAX_AGE_REFRESH_TOKEN } from '@/consts'
+import { AVATAR, MAX_AGE_REFRESH_TOKEN } from '@/consts'
 import { HashTag, News, Role, User, Comment } from '@/entities'
 import { NewsStatus } from '@/enums'
 import { CookieOptions } from 'express'
@@ -12,6 +12,7 @@ export const createUserData = (data: User): User => {
     user.password = data.password
     user.dateJoined = new Date()
     user.isAdmin = data.isAdmin
+    user.avatar = !data.avatar ? AVATAR : data.avatar
 
     return user
 }
