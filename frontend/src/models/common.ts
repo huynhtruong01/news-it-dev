@@ -11,8 +11,8 @@ export interface IObjectCommon {
 }
 
 export interface IOptionItem {
-    name: string
-    value: number | string
+    id: number
+    name: number | string
 }
 
 export type IDebounceCallback =
@@ -31,4 +31,10 @@ export interface IFilters {
     status?: string
     hashTag?: number
     numLikes?: IOrderReq
+    numNews?: IOrderReq
+}
+
+export interface IUploadImg {
+    public_id: string
+    url: string
 }

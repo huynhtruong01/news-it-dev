@@ -1,3 +1,4 @@
+import { NewsFilters } from '@/enums'
 import { IHashTag, IUser } from '.'
 
 export interface INewsData {
@@ -27,3 +28,5 @@ export interface INewsData {
 export interface INews extends INewsData {
     id: number
 }
+
+export type INewsStatus = NewsFilters.LATEST | NewsFilters.TOP

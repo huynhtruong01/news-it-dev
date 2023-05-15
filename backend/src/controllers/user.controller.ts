@@ -98,10 +98,13 @@ class UserController {
     // update user by id (PUT)
     async updateUserById(req: Request, res: Response) {
         try {
+            console.log(req.body)
             const newUser = await userService.update(Number(req.params.userId), {
                 ...req.body,
                 id: Number(req.params.userId),
             })
+
+            console.log(newUser)
             if (!newUser) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,

@@ -9,6 +9,9 @@ router
     .route('/')
     .get(hashTagController.getAllHashTag)
     .post(hashTagController.createHashTag)
+
+router.route('/slug/:hashTagSlug').get(hashTagController.getHashTagBySlug)
+
 router
     .route('/:hashTagId')
     .get(hashTagController.getHashTag)

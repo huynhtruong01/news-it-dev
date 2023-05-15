@@ -10,6 +10,7 @@ import {
 import { commonService } from './common.service'
 import { userService } from './user.service'
 import { IObjectCommon, IHashTagRes } from '@/models'
+import { relationDataHashTag } from '@/data'
 
 interface ICheckHashTag {
     user: User
@@ -100,10 +101,7 @@ class HashTagService {
                     ...newFiltersQuery,
                     ...nameSearchQuery,
                 },
-                relations: {
-                    news: true,
-                    users: true,
-                },
+                relations: relationDataHashTag,
                 ...newPaginationQuery,
                 order: {
                     ...newSortQuery,
@@ -153,10 +151,24 @@ class HashTagService {
                 where: {
                     id,
                 },
-                relations: {
-                    users: true,
-                    news: true,
+                relations: relationDataHashTag,
+            })
+            if (!hashTag) return null
+
+            return hashTag
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get by slug (GET)
+    async getBySlug(slug: string): Promise<HashTag | null> {
+        try {
+            const hashTag = await this.hashTagRepository.findOne({
+                where: {
+                    slug,
                 },
+                relations: relationDataHashTag,
             })
             if (!hashTag) return null
 

@@ -24,7 +24,6 @@ const checkDuplicateName = async (
 class HashTagController {
     async getAll(req: RequestUser, res: Response) {
         try {
-            console.log('get all')
             const hashTags = await hashTagService.getAll()
 
             res.status(StatusCode.SUCCESS).json({
@@ -35,7 +34,6 @@ class HashTagController {
                 },
             })
         } catch (error) {
-            console.log('error: ', error)
             res.status(StatusCode.ERROR).json({
                 results: Results.ERROR,
                 status: StatusText.ERROR,
@@ -71,6 +69,35 @@ class HashTagController {
     async getHashTag(req: RequestUser, res: Response) {
         try {
             const hashTag = await hashTagService.getById(Number(req.params.hashTagId))
+
+            if (!hashTag) {
+                res.status(StatusCode.NOT_FOUND).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Not found this hash tag.',
+                })
+                return
+            }
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    hashTag,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    async getHashTagBySlug(req: RequestUser, res: Response) {
+        try {
+            const hashTag = await hashTagService.getBySlug(req.params.hashTagSlug)
 
             if (!hashTag) {
                 res.status(StatusCode.NOT_FOUND).json({

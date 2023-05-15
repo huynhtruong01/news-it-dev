@@ -19,14 +19,15 @@ import {
 import { MouseEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleIcon from '@mui/icons-material/Article'
+import { connect } from 'react-redux'
+import { AppState } from '@/store'
+import { IUser } from '@/models'
 
 export interface IAccountMemuProps extends BoxProps {
-    avatar: string
-    username: string
-    name: string
+    pUser: IUser | null
 }
 
-export function AccountMemu({ avatar, username, name }: IAccountMemuProps) {
+function AccountMemu({ pUser }: IAccountMemuProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
 
@@ -40,14 +41,14 @@ export function AccountMemu({ avatar, username, name }: IAccountMemuProps) {
 
     return (
         <Box>
-            <Tooltip title={username}>
+            <Tooltip title={pUser?.username}>
                 <IconButton
                     onClick={handleOpenClick}
                     size="small"
                     sx={{ borderRadius: '50% !important' }}
                 >
                     <Avatar
-                        src={avatar}
+                        src={pUser?.avatar}
                         sx={{
                             width: 44,
                             height: 44,
@@ -56,7 +57,7 @@ export function AccountMemu({ avatar, username, name }: IAccountMemuProps) {
                                 borderColor: theme.palette.grey[200],
                             },
                         }}
-                        alt={username}
+                        alt={pUser?.username}
                     />
                 </IconButton>
             </Tooltip>
@@ -107,10 +108,10 @@ export function AccountMemu({ avatar, username, name }: IAccountMemuProps) {
                     <Link to={'/profile'}>
                         <Stack alignItems={'flex-start'}>
                             <Typography component="span" fontWeight={500}>
-                                {name}
+                                {pUser?.lastName} {pUser?.firstName}
                             </Typography>
                             <Typography component="small" fontSize={'14px'}>
-                                @{username}
+                                @{pUser?.username}
                             </Typography>
                         </Stack>
                     </Link>
@@ -157,3 +158,11 @@ export function AccountMemu({ avatar, username, name }: IAccountMemuProps) {
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(AccountMemu)

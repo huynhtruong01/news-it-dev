@@ -1,22 +1,27 @@
-import { Box, Stack, Typography } from '@mui/material'
-import { TagsFilters, TagsList } from '@/pages/Tags/components'
-import { tagList } from '@/data'
-import { useEffect, useState } from 'react'
-import { IFilters } from '@/models'
 import { Order } from '@/enums'
+import { IFilters, IHashTag } from '@/models'
+import { TagsFilters, TagsList } from '@/pages/Tags/components'
+import { AppDispatch, AppState } from '@/store'
+import { getHashTags } from '@/store/hashTag/thunkApi'
+import { Box, Stack, Typography } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 
-// export interface ITagsProps {}
+export interface ITagsProps {
+    pTags: IHashTag[]
+    pGetAllTags: (params: IFilters) => Promise<PayloadAction<unknown>>
+}
 
-export function TagsHome() {
+function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
     const [filters, setFilters] = useState<IFilters>({
-        limit: 10,
+        limit: 100,
         page: 1,
         createdAt: Order.ASC,
     })
 
-    // TODO: FETCH ALL TAGS
     useEffect(() => {
-        // TODO: FETCH TAG HERE.
+        pGetAllTags(filters)
     }, [filters])
 
     return (
@@ -36,8 +41,23 @@ export function TagsHome() {
             </Stack>
 
             <Box>
-                <TagsList tags={tagList} />
+                <TagsList tags={pTags} />
             </Box>
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pTags: state.hashTag.hashTags,
+        total: state.hashTag.total,
+    }
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pGetAllTags: (params: IFilters) => dispatch(getHashTags(params)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TagsHome)

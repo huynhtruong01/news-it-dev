@@ -8,7 +8,7 @@ export const articleHeader: IObjectCommon[] = [
     },
     {
         name: 'Top',
-        value: NewsFilters.LATEST,
+        value: NewsFilters.TOP,
     },
 ]
 

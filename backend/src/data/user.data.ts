@@ -30,7 +30,9 @@ export const relationDataUser = {
     followers: true,
     following: true,
     hashTags: true,
-    news: true,
+    news: {
+        user: true,
+    },
     newsLikes: true,
     saves: true,
     comments: true,

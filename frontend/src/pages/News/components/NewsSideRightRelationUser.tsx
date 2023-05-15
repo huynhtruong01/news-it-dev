@@ -34,7 +34,7 @@ export function NewsSideRightRelationUser({
                         },
                     }}
                 >
-                    More from <Link to={'/'}>{user.username}</Link>
+                    More from <Link to={`/profile/${user.slug}`}>{user.username}</Link>
                 </Typography>
 
                 <Stack component="ul" gap={2}>

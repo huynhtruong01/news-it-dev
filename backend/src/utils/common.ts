@@ -19,6 +19,7 @@ export const createUserData = (data: User): User => {
 export const createRoleData = (data: Role): Role => {
     const role = new Role()
     role.name = data.name
+    role.description = data.description
     role.color = data.color
 
     return role
@@ -27,6 +28,7 @@ export const createRoleData = (data: Role): Role => {
 export const createHashTag = (data: HashTag): HashTag => {
     const hashTag = new HashTag()
     hashTag.name = data.name
+    hashTag.title = data.title
     hashTag.description = data.description || ''
     hashTag.color = data.color
     hashTag.iconImage = data.iconImage

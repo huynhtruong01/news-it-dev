@@ -1,6 +1,7 @@
 import { INews } from '.'
 
 export interface IHashTagData {
+    id?: number
     name: string
     description?: string
     color?: string
@@ -11,11 +12,11 @@ export interface IHashTagData {
     updatedAt?: Date
 }
 
-export interface IHashTag extends IHashTagData {
+export interface IHashTag extends Omit<IHashTagData, 'id'> {
     id: number
 }
 
-export interface IHashTagFilters {
-    createdAt: Date
-    search?: string
+export interface IHashTagRes {
+    hashTags: IHashTag[]
+    total: number
 }

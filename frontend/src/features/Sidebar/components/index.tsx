@@ -1,3 +1,3 @@
 export * from '@/features/Sidebar/components/SidebarHeader'
 export * from '@/features/Sidebar/components/SidebarNav'
-export * from '@/features/Sidebar/components/SidebarTag'
+export { default as SidebarTag } from '@/features/Sidebar/components/SidebarTag'

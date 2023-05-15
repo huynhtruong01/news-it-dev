@@ -1,12 +1,12 @@
 import { ButtonIconForm, HashTagList } from '@/components/Common'
 import { INews } from '@/models'
 import { theme } from '@/utils'
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import ThumbUpIcon from '@mui/icons-material/ThumbUp'
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 
 export interface IArticleIntroProps {
     article: INews
@@ -14,14 +14,19 @@ export interface IArticleIntroProps {
 
 export function ArticleIntro({ article }: IArticleIntroProps) {
     const navigate = useNavigate()
-    const { title, sapo, hashTags, readTimes, numLikes, numComments } = article
+
+    const { title, sapo, hashTags, readTimes, numLikes, numComments, slug } = article
 
     const tags = useMemo(() => {
         return Array.isArray(hashTags) && hashTags.length ? hashTags : []
     }, [article])
 
-    const handleNavClick = () => {
-        navigate(`/news/${title}#comments`)
+    const handleLikeClick = () => {
+        navigate(`/news/${slug}`)
+    }
+
+    const handleCommentClick = () => {
+        navigate(`/news/${slug}#comments`)
     }
 
     return (
@@ -39,7 +44,7 @@ export function ArticleIntro({ article }: IArticleIntroProps) {
                         },
                     }}
                 >
-                    <Link to={`/news/${title}`}>{title}</Link>
+                    <Link to={`/news/${slug}`}>{title}</Link>
                 </Typography>
                 {sapo && <Typography>{sapo}</Typography>}
             </Box>
@@ -76,14 +81,14 @@ export function ArticleIntro({ article }: IArticleIntroProps) {
                     }}
                 >
                     <ButtonIconForm
-                        text={`${numLikes || 0} likes`}
+                        text={`${numLikes} likes`}
                         icon={ThumbUpIcon}
-                        onButtonClick={handleNavClick}
+                        onButtonClick={handleLikeClick}
                     />
                     <ButtonIconForm
-                        text={`${numComments || 0} comments`}
+                        text={`${numComments} comments`}
                         icon={ChatBubbleOutlineOutlinedIcon}
-                        onButtonClick={handleNavClick}
+                        onButtonClick={handleCommentClick}
                     />
                 </Stack>
 

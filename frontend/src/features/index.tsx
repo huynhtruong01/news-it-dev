@@ -1,3 +1,3 @@
-export * from '@/features/Sidebar'
+export { default as Sidebar } from '@/features/Sidebar'
 export * from '@/features/ArticleContainer'
-export * from '@/features/MainContent'
+export { default as MainContent } from '@/features/MainContent'

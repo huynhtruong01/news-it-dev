@@ -1,15 +1,17 @@
 import { AVATAR } from '@/data'
 import { theme } from '@/utils'
 import { Avatar, Box, Button, Stack, TextField, BoxProps } from '@mui/material'
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import { Dispatch, FormEvent, MutableRefObject, SetStateAction, useState } from 'react'
 
 export interface ICommentInputProps extends BoxProps {
+    commentInputRef: MutableRefObject<HTMLInputElement | null>
     onCommentChange: ((value: string) => Promise<void>) | ((value: string) => void)
     isReply?: boolean
     setIsReply?: Dispatch<SetStateAction<boolean>>
 }
 
 export function CommentInput({
+    commentInputRef,
     onCommentChange,
     isReply = false,
     setIsReply,
@@ -27,7 +29,6 @@ export function CommentInput({
     }
 
     const handleCancelReply = () => {
-        console.log('click')
         if (setIsReply) {
             setIsReply(false)
         }
@@ -48,6 +49,7 @@ export function CommentInput({
                 <Box component="form" onSubmit={handleCommentSubmit} flex={1}>
                     <Box marginBottom={2}>
                         <TextField
+                            inputRef={commentInputRef}
                             value={value}
                             fullWidth
                             onChange={(e) => setValue(e.target.value)}

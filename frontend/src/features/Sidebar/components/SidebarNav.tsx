@@ -1,18 +1,31 @@
 import { Icon } from '@/components/Common'
+import { IObjectCommon } from '@/models'
 import { theme } from '@/utils'
 import { Box, Paper } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 export function SidebarNav() {
-    const lists = [
-        'Home',
-        'Reading List',
-        'Listings',
-        'Tags',
-        'Video',
-        'About',
-        'Contact',
-        'Guides',
+    const lists: IObjectCommon[] = [
+        // 'Home',
+        // 'Reading List',
+        // 'Listings',
+        // 'Tags',
+        // 'Video',
+        // 'About',
+        // 'Contact',
+        // 'Guides',
+        {
+            name: 'Home',
+            link: '/',
+        },
+        {
+            name: 'Reading List',
+            link: '/reading-list',
+        },
+        {
+            name: 'Tags',
+            link: '/tags',
+        },
     ]
 
     return (
@@ -28,14 +41,18 @@ export function SidebarNav() {
                 {lists.map((item) => (
                     <Box
                         component="li"
-                        key={item}
+                        key={item.name}
                         sx={{
-                            display: 'flex',
+                            width: '100%',
+                            display: 'inline-flex',
                             alignItems: 'center',
                             gap: 1,
                             padding: theme.spacing(0.75),
                             cursor: 'pointer',
                             borderRadius: theme.spacing(0.75),
+                            a: {
+                                flex: 1,
+                            },
                             '&:hover': {
                                 backgroundColor: '#3b49df1a',
                                 a: {
@@ -48,7 +65,7 @@ export function SidebarNav() {
                         <Box>
                             <Icon />
                         </Box>
-                        <Link to={'/'}>{item}</Link>
+                        <Link to={`${item.link}`}>{item.name}</Link>
                     </Box>
                 ))}
             </Box>

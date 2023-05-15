@@ -7,7 +7,7 @@ export default defineConfig(() => {
     const aliases = {
         '@': path.resolve(__dirname, './src/'),
         '@components': `${path.resolve(__dirname, './src/components/')}`,
-        '@components/formFields': `${path.resolve(
+        '@components/FormFields': `${path.resolve(
             __dirname,
             './src/components/FormFields/'
         )}`,
@@ -21,6 +21,7 @@ export default defineConfig(() => {
         '@pages': path.resolve(__dirname, './src/pages/'),
         '@layouts': path.resolve(__dirname, './src/layouts/'),
         '@features': path.resolve(__dirname, './src/features'),
+        '@store': path.resolve(__dirname, './src/store'),
     }
 
     return {

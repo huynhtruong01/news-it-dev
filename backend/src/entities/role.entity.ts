@@ -20,15 +20,26 @@ export class Role extends BaseEntity {
     })
     name: string
 
-    @ManyToMany(() => User, (user) => user.roles, {
-        onDelete: 'CASCADE',
-    })
-    users?: User[]
-
     @Column({
         type: 'text',
     })
     color: string
+
+    @Column({
+        type: 'text',
+    })
+    description: string
+
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    numUsers: number
+
+    @ManyToMany(() => User, (user) => user.roles, {
+        onDelete: 'CASCADE',
+    })
+    users?: User[]
 
     @Column({
         type: 'text',

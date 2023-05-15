@@ -1,33 +1,28 @@
 import { InputField, ImageField } from '@/components/FormFields'
 import { initUserProfileValues } from '@/data'
 import { IUser, IUserData } from '@/models'
-import { Box, BoxProps, Paper, Typography, Stack, Button } from '@mui/material'
+import { Box, BoxProps, Paper, Typography, Stack } from '@mui/material'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { theme, checkTypeImg, checkSizeImg } from '@/utils'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SIZE_10_MB } from '@/consts'
+import { userApi } from '@/api'
+import { saveUserLogin } from '@/store/user'
+import { AppDispatch } from '@/store'
+import { connect } from 'react-redux'
+import { uploadImage } from '@/utils'
+import { useSnackbar } from 'notistack'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 export interface ISettingsFormProps extends BoxProps {
-    user: IUser
+    user: IUser | null
+    pSaveUserLogin: (data: IUser) => void
 }
 
-export function SettingsForm({ user, ...rest }: ISettingsFormProps) {
-    const {
-        avatar,
-        username,
-        lastName,
-        firstName,
-        emailAddress,
-        websiteUrl,
-        bio,
-        currentlyLearning,
-        education,
-        work,
-        skillLanguages,
-    } = user
-
+export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormProps) {
+    const { enqueueSnackbar } = useSnackbar()
     const schema = yup.object().shape({
         username: yup.string().required('Please enter username.'),
         lastName: yup.string().required('Please enter last name.'),
@@ -40,16 +35,12 @@ export function SettingsForm({ user, ...rest }: ISettingsFormProps) {
         skillLanguages: yup.string(),
         avatar: yup
             .mixed()
-            .test('is-required', 'Choose avatar image.', (value) => {
-                if (!avatar || !value) return
-                return true
-            })
             .test('type-img', 'Invalid type image.', (file) => {
-                if (avatar) return true
+                if (user.avatar) return true
                 return checkTypeImg(file)
             })
             .test('size-img', 'Maximum 10MB.', (file) => {
-                if (avatar) return true
+                if (user.avatar) return true
                 return checkSizeImg(file, SIZE_10_MB)
             }),
     })
@@ -68,24 +59,39 @@ export function SettingsForm({ user, ...rest }: ISettingsFormProps) {
     useEffect(() => {
         reset(initUserProfileValues)
 
-        setValue('username', username)
-        setValue('lastName', lastName)
-        setValue('firstName', firstName)
-        setValue('emailAddress', emailAddress)
-        setValue('websiteUrl', websiteUrl)
-        setValue('bio', bio)
-        setValue('currentlyLearning', currentlyLearning)
-        setValue('skillLanguages', skillLanguages)
-        setValue('education', education)
-        setValue('work', work)
-        setValue('avatar', avatar)
+        if (user) {
+            setValue('username', user?.username)
+            setValue('lastName', user?.lastName)
+            setValue('firstName', user?.firstName)
+            setValue('emailAddress', user?.emailAddress)
+            setValue('websiteUrl', user?.websiteUrl)
+            setValue('bio', user?.bio)
+            setValue('currentlyLearning', user?.currentlyLearning)
+            setValue('skillLanguages', user?.skillLanguages)
+            setValue('education', user?.education)
+            setValue('work', user?.work)
+            setValue('avatar', user?.avatar)
+        }
     }, [user])
 
     const handleSaveInfoSubmit = async (values: IUserData) => {
         try {
-            // TODO: covert img by cloudinary
-            // TODO: FETCH API TO UPDATE PROFILE
-            console.log('values: ', values)
+            if (user.id) {
+                const newValues: IUser = { ...values, id: user.id }
+                if (newValues.avatar instanceof File) {
+                    // covert img by cloudinary
+                    const { url } = await uploadImage(newValues.avatar)
+                    newValues.avatar = url
+                }
+
+                // FETCH API TO UPDATE PROFILE
+                const res = await userApi.updateUser(newValues)
+                pSaveUserLogin(res.data.user)
+
+                enqueueSnackbar('Update profile successfully.', {
+                    variant: 'success',
+                })
+            }
         } catch (error) {
             throw new Error(error as string)
         }
@@ -132,7 +138,7 @@ export function SettingsForm({ user, ...rest }: ISettingsFormProps) {
                             name="avatar"
                             label="Profile Image"
                             disabled={isSubmitting}
-                            initValue={avatar}
+                            initValue={user?.avatar}
                         />
                     </Box>
                 </Box>
@@ -193,10 +199,13 @@ export function SettingsForm({ user, ...rest }: ISettingsFormProps) {
                 </Box>
 
                 <Box component={Paper} elevation={1} padding={3}>
-                    <Button
+                    <LoadingButton
                         type="submit"
-                        variant="contained"
                         fullWidth
+                        loading={isSubmitting}
+                        loadingPosition="start"
+                        variant="contained"
+                        disabled={isSubmitting}
                         sx={{
                             backgroundColor: theme.palette.primary.light,
                             '&:hover': {
@@ -205,9 +214,17 @@ export function SettingsForm({ user, ...rest }: ISettingsFormProps) {
                         }}
                     >
                         Save Profile Information
-                    </Button>
+                    </LoadingButton>
                 </Box>
             </Stack>
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSaveUserLogin: (data: IUser) => dispatch(saveUserLogin(data)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(SettingsForm)

@@ -68,14 +68,18 @@ export function NewsSideRightUser({ user, ...rest }: INewsSideRightUserProps) {
                         },
                     }}
                 >
-                    <Box component="li">
-                        <Box>Skill Languages</Box>
-                        <Typography>{user.skillLanguages}</Typography>
-                    </Box>
-                    <Box component="li">
-                        <Box>Work</Box>
-                        <Typography>{user.work}</Typography>
-                    </Box>
+                    {user.skillLanguages && (
+                        <Box component="li">
+                            <Box>Skill Languages</Box>
+                            <Typography>{user.skillLanguages}</Typography>
+                        </Box>
+                    )}
+                    {user.work && (
+                        <Box component="li">
+                            <Box>Work</Box>
+                            <Typography>{user.work}</Typography>
+                        </Box>
+                    )}
                     <Box component="li">
                         <Box>Date Joined</Box>
                         <Typography>

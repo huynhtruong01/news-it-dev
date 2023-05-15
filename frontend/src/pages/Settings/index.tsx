@@ -1,28 +1,17 @@
-// export interface ISettingsProps  {}
-
-import { user } from '@/data'
 import { Box, Stack, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { SettingsForm } from '@/pages/Settings/components'
 import { theme } from '@/utils'
+import { IUser } from '@/models'
+import { connect } from 'react-redux'
+import { AppState } from '@/store'
 
-export function Settings() {
-    const {
-        avatar,
-        username,
-        bio,
-        dateJoined,
-        work,
-        skillLanguages,
-        newsCount,
-        comments,
-        hashTags,
-        news,
-    } = user
+export interface ISettingsProps {
+    pUser: IUser | null
+}
 
-    // TODO: FETCH PROFILE USER TO EDIT
-
+function Settings({ pUser }: ISettingsProps) {
     useEffect(() => {
         document.title = 'Settings - DEV Community'
     }, [])
@@ -51,14 +40,21 @@ export function Settings() {
                         },
                     }}
                 >
-                    {/* TODO: WRITE LINK HERE */}
-                    Settings for <Link to={'/profile'}>@{username}</Link>
+                    Settings for <Link to={'/profile'}>@{pUser?.username}</Link>
                 </Typography>
 
                 <Box marginTop={2}>
-                    <SettingsForm user={user} />
+                    <SettingsForm user={pUser} />
                 </Box>
             </Stack>
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(Settings)

@@ -11,6 +11,6 @@ export const removeLs = (key: string) => {
 }
 
 export const removeFullToken = () => {
-    removeLS(import.meta.env.VITE_ACCESS_TOKEN_KEY)
-    removeLS(import.meta.env.VITE_REFRESH_TOKEN_KEY)
+    removeLs(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+    removeLs(import.meta.env.VITE_REFRESH_TOKEN_KEY)
 }

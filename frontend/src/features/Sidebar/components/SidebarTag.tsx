@@ -1,12 +1,16 @@
-import { tags } from '@/data'
+import { IHashTag } from '@/models'
+import { AppState } from '@/store'
 import { theme } from '@/utils'
-import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
-import { Link } from 'react-router-dom'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-export function SidebarTag() {
-    // TODO: FETCH ALL TAG WITH MOST FOLLOW
+export interface ISidebarTagProps {
+    pTags: IHashTag[]
+}
 
+function SidebarTag({ pTags }: ISidebarTagProps) {
     return (
         <Box>
             <Stack
@@ -40,10 +44,10 @@ export function SidebarTag() {
                     marginTop: 2,
                 }}
             >
-                {tags.map((tag) => (
+                {pTags.map((tag) => (
                     <Box
                         component="li"
-                        key={tag.value}
+                        key={tag.id}
                         sx={{
                             padding: theme.spacing(1, 2),
                             borderRadius: theme.spacing(0.75),
@@ -63,10 +67,18 @@ export function SidebarTag() {
                         }}
                     >
                         {/* TODO: WRITE LINK HERE */}
-                        <Link to={`/tags/${tag.name}`}># {tag.name}</Link>
+                        <Link to={`/tags/${tag.slug}`}># {tag.name}</Link>
                     </Box>
                 ))}
             </Box>
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pTags: state.hashTag.hashTagsPopular || [],
+    }
+}
+
+export default connect(mapStateToProps, null)(SidebarTag)

@@ -20,6 +20,7 @@ export function SidebarHeader() {
             <Box
                 sx={{
                     button: {
+                        display: 'block',
                         padding: 0,
                         backgroundColor: 'transparent',
                         boxShadow: 'none',
@@ -34,7 +35,7 @@ export function SidebarHeader() {
                         },
 
                         a: {
-                            display: 'inline-block',
+                            display: 'block',
 
                             fontSize: '1rem',
                             padding: theme.spacing(0.75, 1.75),

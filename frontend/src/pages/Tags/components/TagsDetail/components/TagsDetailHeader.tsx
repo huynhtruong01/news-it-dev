@@ -36,7 +36,7 @@ export function TagsDetailHeader({ tag, ...rest }: ITagsDetailHeaderProps) {
                                 },
                             }}
                         >
-                            Following
+                            Follow
                         </Button>
                     </Stack>
 

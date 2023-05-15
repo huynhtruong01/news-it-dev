@@ -13,7 +13,6 @@ import { News } from '@/entities/news.entity'
 import { Comment } from '@/entities/comment.entity'
 import { Role } from '@/entities/role.entity'
 import { HashTag } from '@/entities/hashTag.entity'
-import { IsActive, IsAdmin } from '@/enums'
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -114,6 +113,30 @@ export class User extends BaseEntity {
         default: '',
     })
     work?: string
+
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    numFollowers: number
+
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    numFollowing: number
+
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    numNewsLike: number
+
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    numNewsSaves: number
 
     @ManyToMany(() => Role, (role) => role.users, {
         cascade: true,

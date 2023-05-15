@@ -35,6 +35,6 @@ export interface IUserData {
     updatedAt?: Date
 }
 
-export interface IUser extends IUserData {
+export interface IUser extends Omit<IUserData, 'id'> {
     id: number
 }

@@ -1,14 +1,16 @@
 import { HashTagList } from '@/components/Common'
-import { AVATAR, IMAGE, newsDetail } from '@/data'
+import { INews } from '@/models'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, BoxProps, Paper, Stack, Typography } from '@mui/material'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { NewsComment } from '.'
 
-export type INewsDetailProps = BoxProps
+export interface INewsDetailProps extends BoxProps {
+    news: INews
+}
 
-export function NewsDetail({ ...rest }: INewsDetailProps) {
+export function NewsDetail({ news, ...rest }: INewsDetailProps) {
     const {
         user,
         title,
@@ -20,11 +22,11 @@ export function NewsDetail({ ...rest }: INewsDetailProps) {
         numSaves,
         thumbnailImage,
         createdAt,
-    } = newsDetail
+    } = news
 
     const newTags = useMemo(() => {
         return hashTags?.length ? hashTags : []
-    }, [newsDetail])
+    }, [news])
 
     return (
         <Box

@@ -1,10 +1,19 @@
 import { Box, Grid } from '@mui/material'
 import { ArticleContainer, Sidebar } from '..'
 import { useEffect } from 'react'
+import { connect } from 'react-redux'
+import { AppDispatch } from '@/store'
+import { getAllHashTagsPopular } from '@/store/hashTag/thunkApi'
+import { PayloadAction } from '@reduxjs/toolkit'
 
-export function MainContent() {
+export interface IMainContentProps {
+    pGetAllTagsPopular: () => Promise<PayloadAction<unknown>>
+}
+
+function MainContent({ pGetAllTagsPopular }: IMainContentProps) {
     useEffect(() => {
         document.title = 'DEV Community'
+        pGetAllTagsPopular()
     }, [])
 
     return (
@@ -30,3 +39,11 @@ export function MainContent() {
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pGetAllTagsPopular: () => dispatch(getAllHashTagsPopular()),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(MainContent)

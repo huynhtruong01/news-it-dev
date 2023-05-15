@@ -1,5 +1,5 @@
 import { LoginForm } from '@components/forms/index'
-import { ILoginValues } from '@models/index'
+import { ILoginValues, IUser } from '@/models'
 import { Box, Typography } from '@mui/material'
 import { theme } from '@utils/index'
 import { authApi } from '@/api'
@@ -7,14 +7,29 @@ import { useToast } from '@hooks/index'
 import { Link } from 'react-router-dom'
 import { AuthContainer } from '@/pages/Auth/AuthContainer'
 import { useNavigate } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { saveUserLogin } from '@/store/user'
+import { AppDispatch } from '@/store'
+import { setLs } from '@/utils'
 
-export function Login() {
+export interface ILoginProps {
+    pSaveUserLogin: (user: IUser) => void
+}
+
+function Login({ pSaveUserLogin }: ILoginProps) {
     const { toastSuccess } = useToast()
     const navigate = useNavigate()
 
     const handleLoginSubmit = async (values: ILoginValues) => {
         try {
-            await authApi.login(values)
+            const res = await authApi.login(values)
+
+            // set user
+            pSaveUserLogin(res.data.user)
+
+            // set accessToken & refreshToken
+            setLs(import.meta.env.VITE_ACCESS_TOKEN_KEY, res.data.accessToken)
+            setLs(import.meta.env.VITE_REFRESH_TOKEN_KEY, res.data.refreshToken)
 
             toastSuccess('Login successfully.')
             navigate(-1)
@@ -70,7 +85,26 @@ export function Login() {
                         sx={{
                             fontSize: theme.typography.body2,
                             color: theme.palette.secondary.main,
-                            margin: theme.spacing(2, 0),
+                            margin: theme.spacing(2, 0, 1),
+                            textAlign: 'center',
+
+                            a: {
+                                color: theme.palette.primary.main,
+
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                },
+                            },
+                        }}
+                    >
+                        {/* TODO: WRITE LINK HERE */}
+                        <Link to={'/forgot-password'}>Forgot password?</Link>
+                    </Typography>
+                    <Typography
+                        sx={{
+                            fontSize: theme.typography.body2,
+                            color: theme.palette.secondary.main,
+                            margin: theme.spacing(1, 0),
                             textAlign: 'center',
 
                             a: {
@@ -89,3 +123,11 @@ export function Login() {
         </AuthContainer>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSaveUserLogin: (user: IUser) => dispatch(saveUserLogin(user)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Login)

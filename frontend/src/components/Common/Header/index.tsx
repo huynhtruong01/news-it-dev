@@ -17,8 +17,15 @@ import {
 import { ChangeEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AccountMemu } from './components'
+import { connect } from 'react-redux'
+import { IUser } from '@/models'
+import { AppState } from '@/store'
 
-export function Header() {
+export interface IHeaderProps {
+    pUser: IUser | null
+}
+
+function Header({ pUser }: IHeaderProps) {
     const [showClearIcon, setShowClearIcon] = useState<boolean>(false)
     const [searchVal, setSearchVal] = useState<string>('')
 
@@ -133,7 +140,7 @@ export function Header() {
                             },
                         }}
                     >
-                        {false && (
+                        {!pUser && (
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -180,69 +187,75 @@ export function Header() {
                             </Box>
                         )}
 
-                        <Stack direction={'row'} gap={1.5} alignItems={'center'}>
-                            <Button
-                                variant="contained"
-                                sx={{
-                                    border: `1px solid ${theme.palette.primary.main}`,
-
-                                    a: {
-                                        color: theme.palette.primary.main,
-                                    },
-
-                                    '&:hover': {
-                                        backgroundColor: theme.palette.primary.main,
-                                        '& a': {
-                                            color: theme.palette.primary.contrastText,
-                                        },
-                                    },
-                                }}
-                            >
-                                <Link to={'/create-news'}>Create News</Link>
-                            </Button>
-                            <Box
-                                padding={1}
-                                sx={{
-                                    borderRadius: theme.spacing(0.75),
-                                    cursor: 'pointer',
-                                    transition: '.2s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor: alpha(
-                                            theme.palette.primary.dark,
-                                            0.1
-                                        ),
-                                        svg: {
-                                            color: theme.palette.primary.dark,
-                                        },
-                                    },
-                                }}
-                            >
-                                <Badge
-                                    color="error"
-                                    badgeContent={2}
+                        {pUser && (
+                            <Stack direction={'row'} gap={1.5} alignItems={'center'}>
+                                <Button
+                                    variant="contained"
                                     sx={{
-                                        '& .MuiBadge-badge': {
-                                            border: `1px solid ${theme.palette.primary.contrastText}`,
+                                        border: `1px solid ${theme.palette.primary.main}`,
+
+                                        a: {
+                                            color: theme.palette.primary.main,
+                                        },
+
+                                        '&:hover': {
+                                            backgroundColor: theme.palette.primary.main,
+                                            '& a': {
+                                                color: theme.palette.primary.contrastText,
+                                            },
                                         },
                                     }}
                                 >
-                                    <NotificationsNoneOutlinedIcon
+                                    <Link to={'/create-news'}>Create News</Link>
+                                </Button>
+                                <Box
+                                    padding={1}
+                                    sx={{
+                                        borderRadius: theme.spacing(0.75),
+                                        cursor: 'pointer',
+                                        transition: '.2s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: alpha(
+                                                theme.palette.primary.dark,
+                                                0.1
+                                            ),
+                                            svg: {
+                                                color: theme.palette.primary.dark,
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <Badge
+                                        color="error"
+                                        badgeContent={2}
                                         sx={{
-                                            fontSize: '30px',
-                                            color: theme.palette.secondary.light,
+                                            '& .MuiBadge-badge': {
+                                                border: `1px solid ${theme.palette.primary.contrastText}`,
+                                            },
                                         }}
-                                    />
-                                </Badge>
-                            </Box>
-                            <AccountMemu
-                                avatar={user.avatar as string}
-                                username={user.username as string}
-                                name={`${user.firstName} ${user.lastName}`}
-                            />
-                        </Stack>
+                                    >
+                                        <NotificationsNoneOutlinedIcon
+                                            sx={{
+                                                fontSize: '30px',
+                                                color: theme.palette.secondary.light,
+                                            }}
+                                        />
+                                    </Badge>
+                                </Box>
+                                <AccountMemu />
+                            </Stack>
+                        )}
                     </Stack>
                 </Box>
             </Container>
         </Paper>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(Header)

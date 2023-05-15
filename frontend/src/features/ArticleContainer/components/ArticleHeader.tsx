@@ -1,23 +1,38 @@
 import { articleHeader } from '@/data'
 import { Order } from '@/enums'
 import { NewsFilters } from '@/enums/news'
-import { IFilters } from '@/models'
+import { IFilters, INewsStatus } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
 
 export interface IArticleHeaderProps extends BoxProps {
+    filters: IFilters
+    status: INewsStatus
+    setStatus: Dispatch<SetStateAction<INewsStatus>>
     setFilters: Dispatch<SetStateAction<IFilters>>
 }
 
-export function ArticleHeader({ setFilters, ...rest }: IArticleHeaderProps) {
+export function ArticleHeader({
+    filters,
+    status,
+    setStatus,
+    setFilters,
+    ...rest
+}: IArticleHeaderProps) {
     const handleNewsFilters = (valFilter: string) => {
+        const newFilters = { ...filters }
         if (valFilter === NewsFilters.LATEST) {
-            setFilters((prev: IFilters) => ({ ...prev, createdAt: Order.ASC }))
+            delete newFilters.numLikes
+
+            setStatus(NewsFilters.LATEST)
+            setFilters({ ...newFilters, createdAt: Order.DESC })
             return
         }
 
-        setFilters((prev: IFilters) => ({ ...prev, numLikes: Order.ASC }))
+        delete newFilters.createdAt
+        setStatus(NewsFilters.TOP)
+        setFilters({ ...newFilters, numLikes: Order.ASC })
     }
 
     return (
@@ -28,12 +43,19 @@ export function ArticleHeader({ setFilters, ...rest }: IArticleHeaderProps) {
                         key={item.value}
                         component="li"
                         sx={{
-                            backgroundColor: 'transparent',
+                            backgroundColor:
+                                status === item.value
+                                    ? theme.palette.primary.contrastText
+                                    : 'transparent',
                             padding: theme.spacing(1, 1.25),
-                            color: theme.palette.secondary.main,
+                            color:
+                                status === item.value
+                                    ? theme.palette.primary.dark
+                                    : theme.palette.secondary.main,
                             fontSize: '18px',
                             cursor: 'pointer',
                             borderRadius: theme.spacing(1),
+                            fontWeight: status === item.value ? 600 : 400,
 
                             '&:hover': {
                                 color: theme.palette.primary.main,

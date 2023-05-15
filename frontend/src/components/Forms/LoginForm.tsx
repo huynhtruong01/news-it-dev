@@ -1,11 +1,11 @@
-import { InputField, PasswordField, CheckBoxField } from '@components/formFields'
+import { InputField, PasswordField, CheckBoxField } from '@/components/FormFields'
 import { useToast } from '@/hooks'
 import { ILoginValues } from '@/models'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import { initLoginValues } from '@data'
+import { initLoginValues } from '@/data'
 
 export interface ILoginFormProps {
     onLoginSubmit: (values: ILoginValues) => Promise<void>

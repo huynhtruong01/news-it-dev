@@ -1,6 +1,7 @@
 import { IHashTag } from '@/models'
 import { theme } from '@/utils'
 import { Box, Button, Paper, Typography, alpha } from '@mui/material'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 
 export interface ITagsItemProps {
@@ -8,12 +9,16 @@ export interface ITagsItemProps {
 }
 
 export function TagsItem({ tag }: ITagsItemProps) {
+    const color = useMemo(() => {
+        return tag.color === '#ffffff' ? theme.palette.primary.dark : tag.color
+    }, [tag])
+
     return (
         <Box
             component={Paper}
             elevation={1}
             sx={{
-                borderTop: `1rem solid ${tag.color}`,
+                borderTop: `1rem solid ${color}`,
                 borderRadius: theme.spacing(0.75),
             }}
         >
@@ -29,7 +34,7 @@ export function TagsItem({ tag }: ITagsItemProps) {
                     sx={{
                         marginLeft: -1,
                         span: {
-                            color: tag.color,
+                            color: color,
                         },
                         a: {
                             fontWeight: 600,
@@ -37,14 +42,14 @@ export function TagsItem({ tag }: ITagsItemProps) {
                             borderRadius: theme.spacing(0.75),
                             transition: '.2s ease-in-out',
                             '&:hover': {
-                                boxShadow: `0 0 0 1px ${tag.color}`,
-                                backgroundColor: alpha(tag.color as string, 0.1),
+                                boxShadow: `0 0 0 1px ${color}`,
+                                backgroundColor: alpha(color as string, 0.1),
                             },
                         },
                     }}
                 >
                     {/* TODO: WRITE LINK HERE */}
-                    <Link to={`/tags/${tag.name}`}>
+                    <Link to={`/tags/${tag.slug}`}>
                         <span>#</span>
                         {tag.name}
                     </Link>
@@ -58,6 +63,7 @@ export function TagsItem({ tag }: ITagsItemProps) {
                 >
                     {tag.news?.length || 0} news published
                 </Typography>
+                {/* TODO: CHECK FOLLOW & FOLLOWING */}
                 <Button
                     variant="contained"
                     sx={{
@@ -74,7 +80,7 @@ export function TagsItem({ tag }: ITagsItemProps) {
                         },
                     }}
                 >
-                    Following
+                    Follow
                 </Button>
             </Box>
         </Box>

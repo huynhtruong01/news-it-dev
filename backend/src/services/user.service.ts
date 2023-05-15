@@ -44,7 +44,6 @@ class UserService {
     async getAll(query: IObjectCommon): Promise<IUserRes> {
         try {
             const newFiltersQuery = filtersQuery(query)
-            console.log('filters: ', newFiltersQuery)
             const newSortQuery = sortQuery(query)
             const newPaginationQuery = paginationQuery(query)
 
@@ -77,7 +76,6 @@ class UserService {
     // create
     async create(data: User): Promise<User> {
         try {
-            console.log('data: ', data)
             const user = createUserData(data)
 
             // TODO: add role when create user
@@ -157,6 +155,7 @@ class UserService {
                 education: data.education || user.education,
                 work: data.work || user.work,
                 slug: data.slug || user.slug,
+                avatar: data.avatar || user.avatar,
             })
 
             return newUser
