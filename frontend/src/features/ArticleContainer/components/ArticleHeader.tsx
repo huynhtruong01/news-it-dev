@@ -26,48 +26,50 @@ export function ArticleHeader({
             delete newFilters.numLikes
 
             setStatus(NewsFilters.LATEST)
-            setFilters({ ...newFilters, createdAt: Order.DESC })
+            setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
             return
         }
 
         delete newFilters.createdAt
         setStatus(NewsFilters.TOP)
-        setFilters({ ...newFilters, numLikes: Order.ASC })
+        setFilters({ ...newFilters, numLikes: Order.DESC, page: 1 })
     }
 
     return (
         <Box component="header" {...rest}>
-            <Stack gap={1} flexDirection={'row'} alignItems={'center'}>
-                {articleHeader.map((item) => (
-                    <Box
-                        key={item.value}
-                        component="li"
-                        sx={{
-                            backgroundColor:
-                                status === item.value
-                                    ? theme.palette.primary.contrastText
-                                    : 'transparent',
-                            padding: theme.spacing(1, 1.25),
-                            color:
-                                status === item.value
-                                    ? theme.palette.primary.dark
-                                    : theme.palette.secondary.main,
-                            fontSize: '18px',
-                            cursor: 'pointer',
-                            borderRadius: theme.spacing(1),
-                            fontWeight: status === item.value ? 600 : 400,
+            {
+                <Stack gap={1} flexDirection={'row'} alignItems={'center'}>
+                    {articleHeader.map((item) => (
+                        <Box
+                            key={item.value}
+                            component="li"
+                            sx={{
+                                backgroundColor:
+                                    status === item.value
+                                        ? theme.palette.primary.contrastText
+                                        : 'transparent',
+                                padding: theme.spacing(1, 1.25),
+                                color:
+                                    status === item.value
+                                        ? theme.palette.primary.dark
+                                        : theme.palette.secondary.main,
+                                fontSize: '18px',
+                                cursor: 'pointer',
+                                borderRadius: theme.spacing(1),
+                                fontWeight: status === item.value ? 600 : 400,
 
-                            '&:hover': {
-                                color: theme.palette.primary.main,
-                                backgroundColor: theme.palette.primary.contrastText,
-                            },
-                        }}
-                        onClick={() => handleNewsFilters(item.value as string)}
-                    >
-                        {item.name}
-                    </Box>
-                ))}
-            </Stack>
+                                '&:hover': {
+                                    color: theme.palette.primary.main,
+                                    backgroundColor: theme.palette.primary.contrastText,
+                                },
+                            }}
+                            onClick={() => handleNewsFilters(item.value as string)}
+                        >
+                            {item.name}
+                        </Box>
+                    ))}
+                </Stack>
+            }
         </Box>
     )
 }

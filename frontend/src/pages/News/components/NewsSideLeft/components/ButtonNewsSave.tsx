@@ -1,6 +1,7 @@
 import { newsApi } from '@/api'
 import { INews, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
+import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
@@ -15,9 +16,16 @@ export interface IButtonNewsSaveProps extends BoxProps {
     news: INews
     pUser: IUser | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
+    pSetShowModalAuth: (isShow: boolean) => void
 }
 
-function ButtonNewsSave({ news, pUser, pGetProfile, ...rest }: IButtonNewsSaveProps) {
+function ButtonNewsSave({
+    news,
+    pUser,
+    pGetProfile,
+    pSetShowModalAuth,
+    ...rest
+}: IButtonNewsSaveProps) {
     const [numSaves, setNumSaves] = useState<number>(news.numSaves || 0)
     const [saved, setSaved] = useState<boolean>(false)
 
@@ -34,15 +42,20 @@ function ButtonNewsSave({ news, pUser, pGetProfile, ...rest }: IButtonNewsSavePr
 
     const handleSaveNews = async () => {
         try {
+            if (!pUser?.id) {
+                pSetShowModalAuth(true)
+                return
+            }
+
             if (news.id) {
                 if (saved) {
-                    await newsApi.unsaveNews(news.id)
                     setSaved(false)
                     setNumSaves(numSaves <= 0 ? 0 : numSaves - 1)
+                    await newsApi.unsaveNews(news.id)
                 } else {
-                    await newsApi.saveNews(news.id)
                     setSaved(true)
                     setNumSaves(numSaves + 1)
+                    await newsApi.saveNews(news.id)
                 }
 
                 await pGetProfile()
@@ -100,6 +113,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
+        pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
     }
 }
 

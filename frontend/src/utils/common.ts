@@ -9,10 +9,22 @@ export const debounceFunc = (callback: IDebounceCallback, times: number) =>
     debounce(callback, times)
 
 export const removeDuplicated = <T extends ISynthetic>(arr: T[]) => {
-    const uniqueIds = new Set<number>()
+    // const uniqueIds = new Set<number>()
+    // arr.forEach((item) => {
+    //     uniqueIds.add(item.id as number)
+    // })
+
+    // return arr.filter((item) => {
+    //     console.log(item.id, uniqueIds.has(item.id as number))
+    //     return uniqueIds.has(item.id as number)
+    // })
+
+    const newArr: T[] = []
     arr.forEach((item) => {
-        uniqueIds.add(item.id as number)
+        const idsNewArr = newArr.map((i) => i.id)
+        const checkExist = idsNewArr.includes(item.id)
+        if (!checkExist) newArr.push(item)
     })
 
-    return arr.filter((item) => uniqueIds.has(item.id as number))
+    return newArr
 }

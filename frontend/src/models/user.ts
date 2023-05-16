@@ -38,3 +38,9 @@ export interface IUserData {
 export interface IUser extends Omit<IUserData, 'id'> {
     id: number
 }
+export interface IFiltersNewsSave {
+    search: string
+    tag?: string
+}
+
+export type IFiltersUserNews = IFiltersNewsSave

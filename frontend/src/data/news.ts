@@ -1,5 +1,6 @@
-import { INews } from '@/models'
+import { INews, INewsForm, ISelectValue } from '@/models'
 import { AVATAR, IMAGE } from '.'
+import { Status } from '@/enums'
 
 export const newsList: INews[] = [
     {
@@ -304,3 +305,30 @@ export const newsDetail: INews = {
         },
     ],
 }
+
+export const initNewsFormValues: INewsForm = {
+    title: '',
+    sapo: '',
+    content: '',
+    status: Status.DRAFT,
+    coverImage: undefined,
+    thumbnailImage: undefined,
+    hashTags: [],
+    readTimes: 1,
+    hashTagOptionIds: [],
+}
+
+export const selectStatus: ISelectValue[] = [
+    {
+        name: Status.DRAFT,
+        value: Status.DRAFT,
+    },
+    {
+        name: Status.PUBLIC,
+        value: Status.PUBLIC,
+    },
+    {
+        name: Status.UNPUBLIC,
+        value: Status.UNPUBLIC,
+    },
+]

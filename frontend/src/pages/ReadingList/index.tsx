@@ -1,11 +1,11 @@
-import { IFilters, IHashTag, IUser } from '@/models'
+import { IFiltersNewsSave, IHashTag, IUser } from '@/models'
 import {
     ReadingListFilters,
     ReadingListNews,
     ReadingListTags,
 } from '@/pages/ReadingList/components'
 import { AppDispatch, AppState } from '@/store'
-import { getProfile } from '@/store/user/thunkApi'
+import { IProfileFilters, getProfileFilters } from '@/store/user/thunkApi'
 import { removeDuplicated } from '@/utils'
 import { Box, Stack, Typography } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -14,27 +14,42 @@ import { connect } from 'react-redux'
 
 export interface IReadingListProps {
     pUser: IUser | null
-    pGetProfile: () => Promise<PayloadAction<unknown>>
+    pUserProfileFilter: IUser | null
+    pGetProfile: (data: IProfileFilters) => Promise<PayloadAction<unknown>>
 }
 
-function ReadingList({ pUser, pGetProfile }: IReadingListProps) {
-    const [filters, setFilters] = useState<IFilters>({
-        page: 1,
-        limit: 10,
+function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListProps) {
+    const [filters, setFilters] = useState<IFiltersNewsSave>({
+        search: '',
     })
 
     useEffect(() => {
         document.title = 'Reading list - DEV Community'
-        pGetProfile()
     }, [])
 
+    useEffect(() => {
+        ;(async () => {
+            try {
+                if (pUser?.id) {
+                    const data: IProfileFilters = {
+                        id: pUser?.id,
+                        filters,
+                    }
+                    await pGetProfile(data)
+                }
+            } catch (error) {
+                throw new Error(error as string)
+            }
+        })()
+    }, [pUser, filters])
+
     const numSaves = useMemo(() => {
-        return pUser?.saves?.length || 0
-    }, [pUser])
+        return pUserProfileFilter?.saves?.length || 0
+    }, [pUserProfileFilter])
 
     const newsSaves = useMemo(() => {
-        return pUser?.saves?.length ? pUser.saves : []
-    }, [pUser])
+        return pUserProfileFilter?.saves?.length ? pUserProfileFilter.saves : []
+    }, [pUserProfileFilter])
 
     const hashTags = useMemo(() => {
         const hashTagSaves =
@@ -43,7 +58,7 @@ function ReadingList({ pUser, pGetProfile }: IReadingListProps) {
             }, []) || []
 
         return removeDuplicated<IHashTag>(hashTagSaves as IHashTag[]) || []
-    }, [])
+    }, [pUser])
 
     return (
         <Box>
@@ -79,12 +94,13 @@ function ReadingList({ pUser, pGetProfile }: IReadingListProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pUserProfileFilter: state.user.userProfileFilter,
     }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pGetProfile: () => dispatch(getProfile()),
+        pGetProfile: (data: IProfileFilters) => dispatch(getProfileFilters(data)),
     }
 }
 

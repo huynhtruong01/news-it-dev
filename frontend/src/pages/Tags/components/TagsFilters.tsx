@@ -1,24 +1,22 @@
 import { SearchFilter } from '@/components/Filters'
 import { IFilters } from '@/models'
 import { Box } from '@mui/material'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 
 export interface ITagsFiltersProps {
+    filters: IFilters
     setFilters: Dispatch<SetStateAction<IFilters>>
 }
 
-export function TagsFilters({ setFilters }: ITagsFiltersProps) {
-    const [searchVal, setSearchVal] = useState<string>('')
-
+export function TagsFilters({ filters, setFilters }: ITagsFiltersProps) {
     const handleSearchChange = (value: string) => {
-        setSearchVal(value)
         setFilters((prev: IFilters) => ({ ...prev, search: value }))
     }
 
     return (
         <Box>
             <SearchFilter
-                initValue={searchVal}
+                initValue={filters?.search as string}
                 onSearchChange={handleSearchChange}
                 placeholder="Search for tag"
             />

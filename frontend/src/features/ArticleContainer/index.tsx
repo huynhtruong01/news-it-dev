@@ -3,46 +3,69 @@ import { NewsFilters, Order } from '@/enums'
 import { ArticleHeader, ArticleList } from '@/features/ArticleContainer/components'
 import { IFilters, INews, INewsStatus } from '@/models'
 import { Box, BoxProps } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export type IArticleContainer = BoxProps
 
 export function ArticleContainer({ ...rest }: IArticleContainer) {
-    const [status, setStatus] = useState<INewsStatus>(NewsFilters.LATEST)
+    const listRef = useRef<HTMLElement | null>(null)
     const [filters, setFilters] = useState<IFilters>({
-        limit: 20,
+        limit: 5,
         page: 1,
         createdAt: Order.DESC,
     })
     const [newsList, setNewsList] = useState<INews[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
+    const [status, setStatus] = useState<INewsStatus>(NewsFilters.LATEST)
+    const [hasMore, setHasMore] = useState<boolean>(false)
 
-    // TODO: FETCH ALL NEWS HERE
+    // FETCH ALL NEWS HERE
     useEffect(() => {
         ;(async () => {
             try {
+                setLoading(!hasMore)
                 const res = await newsApi.getAllNews(filters)
-                setNewsList([...res.data.news])
+                if (filters.page === 1) {
+                    setNewsList(res.data.news)
+                } else {
+                    setNewsList((prev) => [...prev, ...res.data.news])
+                }
             } catch (error) {
                 throw new Error(error as string)
             }
+            setLoading(false)
         })()
     }, [filters])
 
-    // const handleLoadMore = () => {
-    //     console.log('loading')
-    //     setFilters((prev) => ({ ...prev, page: ++filters.page }))
-    // }
+    useEffect(() => {
+        const handleScrollList = async () => {
+            try {
+                if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+                    setFilters((prev) => ({ ...prev, page: prev.page + 1 }))
+                    setHasMore(true)
+                }
+            } catch (error) {
+                throw new Error(error as string)
+            }
+        }
+
+        window.addEventListener('scroll', handleScrollList)
+
+        return () => window.removeEventListener('scroll', handleScrollList)
+    }, [])
 
     return (
-        <Box {...rest}>
-            <ArticleHeader
-                filters={filters}
-                status={status}
-                setStatus={setStatus}
-                setFilters={setFilters}
-                marginBottom={1}
-            />
-            <ArticleList articleList={newsList} />
+        <Box {...rest} ref={listRef}>
+            {!!newsList?.length && (
+                <ArticleHeader
+                    filters={filters}
+                    status={status}
+                    setStatus={setStatus}
+                    setFilters={setFilters}
+                    marginBottom={1}
+                />
+            )}
+            <ArticleList loading={loading} articleList={newsList} />
         </Box>
     )
 }

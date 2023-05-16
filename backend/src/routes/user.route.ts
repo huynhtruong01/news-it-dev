@@ -3,6 +3,8 @@ import { authMiddleware } from '@/middlewares'
 import express from 'express'
 const router = express.Router()
 
+router.route('/name/:userName').get(userController.getUserByUsername)
+
 router.use(authMiddleware.getUser)
 
 router
@@ -11,7 +13,7 @@ router
     .put(userController.updateProfileUser)
 
 router.route('/').get(userController.getAllUser).post(userController.addUser)
-router.route('/slug/:userSlug').get(userController.getUserByUsername)
+router.route('/profile/:userId').get(userController.getProfileSaveFilters)
 
 router
     .route('/:userId')

@@ -13,8 +13,8 @@ export const getHashTags = (params: IFilters) => {
     }).then((res) => res.data)
 }
 
-export const getHashTag = (slug: string) => {
-    return AxiosClient.get(`${BASE_URL}/slug/${slug}`).then((res) => res.data)
+export const getHashTag = (name: string) => {
+    return AxiosClient.get(`${BASE_URL}/name/${name}`).then((res) => res.data)
 }
 
 export const addHashTag = (data: IHashTag) => {

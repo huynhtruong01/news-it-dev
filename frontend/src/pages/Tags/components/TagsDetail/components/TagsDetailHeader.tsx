@@ -8,18 +8,27 @@ import { Box, BoxProps, Paper, Stack, Typography, alpha, Button } from '@mui/mat
 import { useMemo, useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { COLOR_WHITE } from '@/consts'
+import { setShowModalAuth } from '@/store/common'
 
 export interface ITagsDetailHeaderProps extends BoxProps {
     pUser: IUser | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
     tag: IHashTag
+    pSetShowModalAuth: (isShow: boolean) => void
 }
 
-function TagsDetailHeader({ pUser, pGetProfile, tag, ...rest }: ITagsDetailHeaderProps) {
+function TagsDetailHeader({
+    pUser,
+    pGetProfile,
+    tag,
+    pSetShowModalAuth,
+    ...rest
+}: ITagsDetailHeaderProps) {
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
 
     const color = useMemo(() => {
-        return tag.color === '#ffffff' ? theme.palette.primary.dark : tag.color
+        return tag.color === COLOR_WHITE ? theme.palette.primary.dark : tag.color
     }, [tag])
 
     useEffect(() => {
@@ -40,12 +49,17 @@ function TagsDetailHeader({ pUser, pGetProfile, tag, ...rest }: ITagsDetailHeade
 
     const handleFollowClick = async () => {
         try {
+            if (!pUser?.id) {
+                pSetShowModalAuth(true)
+                return
+            }
+
             if (pUser?.id || tag.id) {
+                setFollowed(IsFollow.FOLLOWING)
                 // call api follow tag
                 await hashTagApi.followHashTag(tag.id)
                 // get profile
                 await pGetProfile()
-                setFollowed(IsFollow.FOLLOWING)
             }
         } catch (error) {
             throw new Error(error as string)
@@ -54,16 +68,25 @@ function TagsDetailHeader({ pUser, pGetProfile, tag, ...rest }: ITagsDetailHeade
 
     const handleUnfollowClick = async () => {
         try {
+            if (!pUser?.id) {
+                pSetShowModalAuth(true)
+                return
+            }
+
             if (pUser?.id || tag.id) {
+                setFollowed(IsFollow.FOLLOW)
                 // call api follow tag
                 await hashTagApi.unfollowHashTag(tag.id)
                 // get profile
                 await pGetProfile()
-                setFollowed(IsFollow.FOLLOW)
             }
         } catch (error) {
             throw new Error(error as string)
         }
+    }
+
+    const handleShowModal = () => {
+        pSetShowModalAuth(true)
     }
 
     return (
@@ -83,32 +106,58 @@ function TagsDetailHeader({ pUser, pGetProfile, tag, ...rest }: ITagsDetailHeade
                         <Box
                             sx={{
                                 button: {
-                                    backgroundColor: 'transparent',
-                                    border: `2px solid ${theme.palette.grey[500]}`,
+                                    backgroundColor:
+                                        followed === IsFollow.FOLLOWING
+                                            ? 'transparent'
+                                            : theme.palette.primary.light,
+                                    border: `2px solid ${
+                                        followed === IsFollow.FOLLOWING
+                                            ? theme.palette.grey[500]
+                                            : theme.palette.primary.light
+                                    }`,
                                     borderRadius: theme.spacing(0.75),
-                                    color: theme.palette.secondary.main,
+                                    color:
+                                        followed === IsFollow.FOLLOWING
+                                            ? theme.palette.secondary.main
+                                            : theme.palette.primary.contrastText,
                                     padding: theme.spacing(0.75, 1.75),
                                     fontSize: theme.typography.body1,
                                     fontWeight: 500,
+                                    transition: '.2s ease-in-out',
                                     '&:hover': {
-                                        backgroundColor: alpha(
-                                            theme.palette.grey[700],
-                                            0.05
-                                        ),
-                                        borderColor: theme.palette.grey[700],
+                                        backgroundColor:
+                                            followed === IsFollow.FOLLOWING
+                                                ? alpha(theme.palette.grey[700], 0.05)
+                                                : theme.palette.primary.dark,
+                                        borderColor:
+                                            followed === IsFollow.FOLLOWING
+                                                ? theme.palette.grey[700]
+                                                : theme.palette.primary.dark,
                                     },
                                 },
                             }}
                         >
-                            {followed === IsFollow.FOLLOWING ? (
-                                <Button variant="contained" onClick={handleUnfollowClick}>
-                                    Following
-                                </Button>
-                            ) : (
-                                <Button variant="contained" onClick={handleFollowClick}>
+                            {!pUser?.id && (
+                                <Button variant="contained" onClick={handleShowModal}>
                                     Follow
                                 </Button>
                             )}
+                            {pUser?.id &&
+                                (followed === IsFollow.FOLLOWING ? (
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleUnfollowClick}
+                                    >
+                                        Following
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleFollowClick}
+                                    >
+                                        Follow
+                                    </Button>
+                                ))}
                         </Box>
                     </Stack>
 
@@ -128,6 +177,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
+        pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
     }
 }
 

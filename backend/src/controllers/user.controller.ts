@@ -56,15 +56,15 @@ class UserController {
         }
     }
 
-    // get by slug
+    // get by username
     async getUserByUsername(req: Request, res: Response) {
         try {
-            const user = await userService.getByUsername(req.params.userSlug)
+            const user = await userService.getByUsername(req.params.userName)
             if (!user) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
-                    message: 'Not found this user by slug.',
+                    message: 'Not found this user by username.',
                 })
                 return
             }
@@ -189,6 +189,39 @@ class UserController {
         try {
             if (req.user?.id) {
                 const user = await userService.getById(req.user?.id)
+
+                res.status(StatusCode.SUCCESS).json({
+                    results: Results.SUCCESS,
+                    status: StatusText.SUCCESS,
+                    data: {
+                        user,
+                    },
+                })
+
+                return
+            }
+
+            res.status(StatusCode.NOT_FOUND).json({
+                results: Results.ERROR,
+                status: StatusText.FAILED,
+                message: 'Not founded this user.',
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    async getProfileSaveFilters(req: RequestUser, res: Response) {
+        try {
+            if (req.user?.id) {
+                const user = await userService.getFilterSaves(
+                    Number(req.params.userId),
+                    req.query as IObjectCommon
+                )
 
                 res.status(StatusCode.SUCCESS).json({
                     results: Results.SUCCESS,

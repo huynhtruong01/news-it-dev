@@ -1,5 +1,5 @@
-import { NewsFilters } from '@/enums'
-import { IHashTag, IUser } from '.'
+import { NewsFilters, Status } from '@/enums'
+import { IHashTag, IUser, IImgType } from '.'
 
 export interface INewsData {
     title: string
@@ -23,6 +23,18 @@ export interface INewsData {
     hashTagIds?: number[]
     createdAt?: Date
     updatedAt?: Date
+}
+
+export interface INewsForm {
+    title: string
+    sapo?: string
+    thumbnailImage?: IImgType
+    coverImage?: IImgType
+    content: string
+    status: Status.DRAFT | Status.PUBLIC | Status.UNPUBLIC
+    hashTags?: IHashTag[]
+    readTimes?: number
+    hashTagOptionIds?: number[]
 }
 
 export interface INews extends INewsData {

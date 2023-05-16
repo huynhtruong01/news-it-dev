@@ -10,14 +10,22 @@ import { newsApi } from '@/api'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import { red } from '@mui/material/colors'
+import { setShowModalAuth } from '@/store/common'
 
 export interface IButtonNewsIconProps extends BoxProps {
     news: INews
     pUser: IUser | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
+    pSetShowModalAuth: (isShow: boolean) => void
 }
 
-function ButtonNewsIcon({ news, pUser, pGetProfile, ...rest }: IButtonNewsIconProps) {
+function ButtonNewsIcon({
+    news,
+    pUser,
+    pGetProfile,
+    pSetShowModalAuth,
+    ...rest
+}: IButtonNewsIconProps) {
     const [numLikes, setNumLikes] = useState<number>(news.numLikes || 0)
     const [liked, setLiked] = useState<boolean>(false)
 
@@ -34,15 +42,20 @@ function ButtonNewsIcon({ news, pUser, pGetProfile, ...rest }: IButtonNewsIconPr
 
     const handleLikeNews = async () => {
         try {
+            if (!pUser?.id) {
+                pSetShowModalAuth(true)
+                return
+            }
+
             if (news.id) {
                 if (liked) {
-                    await newsApi.unlikeNews(news.id)
                     setLiked(false)
                     setNumLikes(numLikes <= 0 ? 0 : numLikes - 1)
+                    await newsApi.unlikeNews(news.id)
                 } else {
-                    await newsApi.likeNews(news.id)
                     setLiked(true)
                     setNumLikes(numLikes + 1)
+                    await newsApi.likeNews(news.id)
                 }
 
                 await pGetProfile()
@@ -100,6 +113,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
+        pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
     }
 }
 

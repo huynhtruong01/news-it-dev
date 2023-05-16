@@ -3,8 +3,6 @@ import { authMiddleware } from '@/middlewares'
 import express from 'express'
 const router = express.Router()
 
-router.use(authMiddleware.getUser)
-
 router.route('/').get(newsController.getAllNews).post(newsController.createNews)
 router.route('/get-all-public').get(newsController.getAllNewsPublic)
 
@@ -18,6 +16,7 @@ router.route('/detail/:newsSlug').get(newsController.getNewsBySlug)
 
 router.route('/count-views/:newsId').get(newsController.countViewsNews)
 
+router.use(authMiddleware.getUser)
 router.route('/like/:newsId').get(newsController.likeNews)
 router.route('/unlike/:newsId').get(newsController.dislikeNews)
 

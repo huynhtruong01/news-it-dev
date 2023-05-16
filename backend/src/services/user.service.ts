@@ -9,8 +9,8 @@ import {
     createUserData,
     filtersQuery,
     paginationQuery,
-    sortQuery,
     searchQuery,
+    sortQuery,
 } from '@/utils'
 
 interface ICheckUser {
@@ -114,6 +114,7 @@ class UserService {
         }
     }
 
+    // get by username
     async getByUsername(username: string): Promise<User | null> {
         try {
             const user = await this.userRepository.findOne({
@@ -124,6 +125,43 @@ class UserService {
                 relations: relationDataUser,
             })
             if (!user) return null
+
+            return user
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get user by filter saves
+    async getFilterSaves(id: number, filters: IObjectCommon): Promise<User | null> {
+        try {
+            const user = await this.getById(id)
+            if (!user) return null
+
+            // const hashTags = () => {
+            //     const hashTagSaves =
+            //         user?.saves?.reduce((tags: HashTag[], news) => {
+            //             return [...tags, ...(news.hashTags || [])]
+            //         }, []) || []
+
+            //     return removeDuplicated<HashTag>(hashTagSaves as HashTag[]) || []
+            // }
+
+            const newNews = user.saves?.filter((n) => {
+                const search = n.title
+                    .toLowerCase()
+                    .includes((filters.search as string).toLowerCase())
+                if (!filters.tag) return search
+
+                const hasIncludeTag = n.hashTags?.some(
+                    (tag) =>
+                        tag.name.toLowerCase() === (filters.tag as string).toLowerCase()
+                )
+
+                return search && hasIncludeTag
+            })
+
+            user.saves = newNews
 
             return user
         } catch (error) {

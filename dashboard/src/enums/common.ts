@@ -6,7 +6,6 @@ export enum Order {
 }
 
 export enum Status {
-    ALL = 'All',
     DRAFT = 'draft',
     PUBLIC = 'public',
     UNPUBLIC = 'unpublic',

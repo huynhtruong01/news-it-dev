@@ -9,3 +9,9 @@ export enum IsFollow {
     FOLLOW = 'follow',
     FOLLOWING = 'following',
 }
+
+export enum Status {
+    DRAFT = 'draft',
+    PUBLIC = 'public',
+    UNPUBLIC = 'unpublic',
+}

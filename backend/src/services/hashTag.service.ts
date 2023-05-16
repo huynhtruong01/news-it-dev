@@ -161,12 +161,12 @@ class HashTagService {
         }
     }
 
-    // get by slug (GET)
-    async getBySlug(slug: string): Promise<HashTag | null> {
+    // get by name (GET)
+    async getByName(name: string): Promise<HashTag | null> {
         try {
             const hashTag = await this.hashTagRepository.findOne({
                 where: {
-                    slug,
+                    name,
                 },
                 relations: relationDataHashTag,
             })

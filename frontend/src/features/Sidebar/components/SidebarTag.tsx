@@ -67,7 +67,7 @@ function SidebarTag({ pTags }: ISidebarTagProps) {
                         }}
                     >
                         {/* TODO: WRITE LINK HERE */}
-                        <Link to={`/tags/${tag.slug}`}># {tag.name}</Link>
+                        <Link to={`/tags/${tag.name}`}># {tag.name}</Link>
                     </Box>
                 ))}
             </Box>

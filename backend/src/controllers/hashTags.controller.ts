@@ -95,9 +95,9 @@ class HashTagController {
         }
     }
 
-    async getHashTagBySlug(req: RequestUser, res: Response) {
+    async getHashTagByName(req: RequestUser, res: Response) {
         try {
-            const hashTag = await hashTagService.getBySlug(req.params.hashTagSlug)
+            const hashTag = await hashTagService.getByName(req.params.hashTagName)
 
             if (!hashTag) {
                 res.status(StatusCode.NOT_FOUND).json({

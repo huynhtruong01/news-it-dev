@@ -15,14 +15,21 @@ import { indigo } from '@mui/material/colors'
 import { newsApi } from '@/api'
 import { getProfile } from '@/store/user/thunkApi'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { setShowModalAuth } from '@/store/common'
 
 export interface IArticleIntroProps {
     article: INews
     pUser: IUser | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
+    pSetShowModalAuth: (isShow: boolean) => void
 }
 
-function ArticleIntro({ article, pUser, pGetProfile }: IArticleIntroProps) {
+function ArticleIntro({
+    article,
+    pUser,
+    pGetProfile,
+    pSetShowModalAuth,
+}: IArticleIntroProps) {
     const [saved, setSaved] = useState<boolean>(false)
     const navigate = useNavigate()
 
@@ -53,13 +60,17 @@ function ArticleIntro({ article, pUser, pGetProfile }: IArticleIntroProps) {
 
     const handleSaveNews = async () => {
         try {
+            if (!pUser?.id) {
+                pSetShowModalAuth(true)
+                return
+            }
             if (article.id) {
                 if (saved) {
-                    await newsApi.unsaveNews(article.id)
                     setSaved(false)
+                    await newsApi.unsaveNews(article.id)
                 } else {
-                    await newsApi.saveNews(article.id)
                     setSaved(true)
+                    await newsApi.saveNews(article.id)
                 }
 
                 await pGetProfile()
@@ -71,7 +82,7 @@ function ArticleIntro({ article, pUser, pGetProfile }: IArticleIntroProps) {
 
     return (
         <Box width={'100%'} paddingLeft={5}>
-            <Box marginBottom={theme.spacing(1)}>
+            <Box marginBottom={1}>
                 <Typography
                     component="h2"
                     variant="h4"
@@ -170,6 +181,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
+        pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
     }
 }
 

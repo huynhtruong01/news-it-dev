@@ -17,7 +17,7 @@ export function SearchFilter({
     ...rest
 }: ISearchFilterProps) {
     const [value, setValue] = useState<string>(initValue)
-    const [showClearIcon, setShowClearIcon] = useState<boolean>(false)
+    const [showClearIcon, setShowClearIcon] = useState<boolean>(!!initValue)
 
     const handleSearchChange = (value: string) => {
         onSearchChange(value)
@@ -30,9 +30,9 @@ export function SearchFilter({
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target
-        debounceSearch(value)
         setValue(value)
         setShowClearIcon(!!value)
+        debounceSearch(value)
     }
 
     const handleClear = () => {

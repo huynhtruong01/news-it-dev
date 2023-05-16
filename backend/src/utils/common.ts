@@ -73,3 +73,14 @@ export const optionCookies = (options?: CookieOptions): CookieOptions => {
         sameSite: 'strict',
     }
 }
+
+export type ISynthetic = HashTag
+
+export const removeDuplicated = <T extends ISynthetic>(arr: T[]) => {
+    const uniqueIds = new Set<number>()
+    arr.forEach((item) => {
+        uniqueIds.add(item.id as number)
+    })
+
+    return arr.filter((item) => uniqueIds.has(item.id as number))
+}

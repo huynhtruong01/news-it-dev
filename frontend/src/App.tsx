@@ -9,6 +9,7 @@ import {
     ReadingList,
     Signout,
     ProfileUser,
+    CreateNews,
 } from '@/pages'
 import { Header } from '@components/common/index'
 import { MainLayout } from '@layouts/index'
@@ -33,6 +34,7 @@ function App() {
                     <Route path={'/tags/*'} element={<Tags />} />
                     <Route path={'/reading-list'} element={<ReadingList />} />
                     <Route path={'/signout-confirm'} element={<Signout />} />
+                    <Route path={'/create-news'} element={<CreateNews />} />
                 </Routes>
             </MainLayout>
         </Box>

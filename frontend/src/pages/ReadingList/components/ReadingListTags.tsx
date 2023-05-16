@@ -1,19 +1,33 @@
-import { IFilters, IHashTag } from '@/models'
+import { IFiltersNewsSave, IHashTag } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack, Typography, alpha } from '@mui/material'
 import { Dispatch, SetStateAction, useState } from 'react'
 
 export interface IReadingListTagsProps extends BoxProps {
     hashTags: IHashTag[]
-    setFilters: Dispatch<SetStateAction<IFilters>>
+    setFilters: Dispatch<SetStateAction<IFiltersNewsSave>>
 }
 
-export function ReadingListTags({ hashTags, ...rest }: IReadingListTagsProps) {
+export function ReadingListTags({
+    hashTags,
+    setFilters,
+    ...rest
+}: IReadingListTagsProps) {
     const [activeTag, setActiveTag] = useState<string>('')
 
     const handleFilters = (tag: string) => {
         // TODO: SET TAG AND FILTERS TAGS, NEWS BY TAG
+        if (!tag) {
+            setActiveTag('')
+            setFilters((prev: IFiltersNewsSave) => {
+                const newFilters = { ...prev }
+                delete newFilters.tag
+                return newFilters
+            })
+            return
+        }
         setActiveTag(tag)
+        setFilters((prev: IFiltersNewsSave) => ({ ...prev, tag }))
     }
 
     return (

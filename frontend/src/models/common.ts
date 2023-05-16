@@ -37,6 +37,11 @@ export interface IFilters {
     hashTagIds?: string
 }
 
+export interface ISelectValue {
+    name: string
+    value: any
+}
+
 export interface IUploadImg {
     public_id: string
     url: string
@@ -45,3 +50,5 @@ export interface IUploadImg {
 export type IFollow = IsFollow.FOLLOW | IsFollow.FOLLOWING
 
 export type ISynthetic = INews | IHashTag | IUser | IRole
+
+export type IImgType = string | File

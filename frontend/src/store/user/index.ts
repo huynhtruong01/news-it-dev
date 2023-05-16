@@ -6,6 +6,7 @@ import { reducers } from '@/store/user/reducers'
 export interface IUserStore {
     users: IUser[]
     user: IUser | null
+    userProfileFilter: IUser | null
     total: number
     accessToken: string
     refreshToken: string
@@ -14,6 +15,7 @@ export interface IUserStore {
 const initialState: IUserStore = {
     users: [],
     user: null,
+    userProfileFilter: null,
     total: 0,
     accessToken: '',
     refreshToken: '',

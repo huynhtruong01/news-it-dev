@@ -10,7 +10,7 @@ router
     .get(hashTagController.getAllHashTag)
     .post(hashTagController.createHashTag)
 
-router.route('/slug/:hashTagSlug').get(hashTagController.getHashTagBySlug)
+router.route('/name/:hashTagName').get(hashTagController.getHashTagByName)
 
 router
     .route('/:hashTagId')

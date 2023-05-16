@@ -33,7 +33,9 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
     }, [user])
 
     useEffect(() => {
-        pGetProfile()
+        if (pUser?.id) {
+            pGetProfile()
+        }
         if (params.username) {
             ;(async () => {
                 try {
@@ -59,7 +61,6 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
         }
 
         setFollowed(IsFollow.FOLLOW)
-        return
     }, [pUser, user])
 
     const newNews = useMemo(() => {
@@ -75,11 +76,9 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
 
             if (user?.id) {
                 if (followed === IsFollow.FOLLOW) {
-                    console.log('follow')
                     await userApi.followUser(user.id)
                     setFollowed(IsFollow.FOLLOWING)
                 } else {
-                    console.log('unfollow')
                     await userApi.unfollowUser(user.id)
                     setFollowed(IsFollow.FOLLOW)
                 }
@@ -91,7 +90,9 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
         }
     }
 
-    console.log(followed)
+    const handleShowModalAuth = () => {
+        pSetShowModalAuth(true)
+    }
 
     return user ? (
         <Box>
@@ -139,23 +140,44 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
                                 }}
                             />
                         </Box>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                position: 'absolute',
-                                top: '1.5rem',
-                                right: '1.5rem',
-                                borderRadius: theme.spacing(0.75),
-                                padding: theme.spacing(1, 2),
-                                backgroundColor: theme.palette.primary.light,
-                                '&:hover': {
-                                    backgroundColor: theme.palette.primary.dark,
-                                },
-                            }}
-                            onClick={handleFollowClick}
-                        >
-                            {followed === IsFollow.FOLLOWING ? 'Following' : 'Follow'}
-                        </Button>
+                        {!pUser?.id && (
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    position: 'absolute',
+                                    top: '1.5rem',
+                                    right: '1.5rem',
+                                    borderRadius: theme.spacing(0.75),
+                                    padding: theme.spacing(1, 2),
+                                    backgroundColor: theme.palette.primary.light,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.primary.dark,
+                                    },
+                                }}
+                                onClick={handleShowModalAuth}
+                            >
+                                Follow
+                            </Button>
+                        )}
+                        {pUser?.id && (
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    position: 'absolute',
+                                    top: '1.5rem',
+                                    right: '1.5rem',
+                                    borderRadius: theme.spacing(0.75),
+                                    padding: theme.spacing(1, 2),
+                                    backgroundColor: theme.palette.primary.light,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.primary.dark,
+                                    },
+                                }}
+                                onClick={handleFollowClick}
+                            >
+                                {followed === IsFollow.FOLLOWING ? 'Following' : 'Follow'}
+                            </Button>
+                        )}
                     </Box>
                     <Box padding={theme.spacing(8, 3, 3)} textAlign="center">
                         <Typography

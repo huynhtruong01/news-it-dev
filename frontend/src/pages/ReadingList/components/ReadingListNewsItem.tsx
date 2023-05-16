@@ -105,7 +105,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                                         }}
                                     >
                                         {/* TODO: WRITE LINK HERE */}
-                                        <Link to={`/tags/${tag.slug}`}>#{tag.name}</Link>
+                                        <Link to={`/tags/${tag.name}`}>#{tag.name}</Link>
                                     </Typography>
                                 ))}
                         </Stack>

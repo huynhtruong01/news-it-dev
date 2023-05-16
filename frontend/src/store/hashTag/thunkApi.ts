@@ -49,7 +49,7 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IHashTagStore>) 
                 (hashTag) =>
                     ({
                         id: hashTag.id,
-                        name: hashTag.name,
+                        name: hashTag.title,
                     } as IOptionItem)
             )
 
