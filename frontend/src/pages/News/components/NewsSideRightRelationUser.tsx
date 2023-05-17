@@ -2,7 +2,7 @@ import { HashTagList } from '@/components/Common'
 import { INews, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
-import { Box, BoxProps, Paper, Stack, Typography } from '@mui/material'
+import { Box, BoxProps, Paper, Stack, Typography, alpha } from '@mui/material'
 import { useMemo } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -45,6 +45,7 @@ function NewsSideRightRelationUser({
                 component={Paper}
                 elevation={1}
                 borderRadius={theme.spacing(0.75)}
+                overflow={'hidden'}
             >
                 <Typography
                     component="h3"
@@ -63,16 +64,38 @@ function NewsSideRightRelationUser({
                     More from <Link to={link}>{user.username}</Link>
                 </Typography>
 
-                <Stack component="ul" gap={2}>
+                <Stack component="ul">
                     {newsList.map((newsItem) => (
                         <Box
                             key={newsItem.id}
                             component="li"
-                            padding={theme.spacing(1.5, 2, 2)}
                             sx={{
-                                '&:hover h6': {
-                                    color: theme.palette.primary.main,
-                                    textDecoration: 'underline',
+                                '&:not(last-of-type)': {
+                                    borderBottom: `1px solid ${alpha(
+                                        theme.palette.secondary.main,
+                                        0.05
+                                    )}`,
+                                },
+
+                                '&:first-of-type': {
+                                    borderTop: `1px solid ${alpha(
+                                        theme.palette.secondary.main,
+                                        0.05
+                                    )}`,
+                                },
+
+                                '& > a': {
+                                    display: 'block',
+                                    padding: 2,
+                                },
+
+                                '&:hover': {
+                                    backgroundColor: theme.palette.grey['A100'],
+
+                                    h6: {
+                                        color: theme.palette.primary.main,
+                                        textDecoration: 'underline',
+                                    },
                                 },
                             }}
                         >

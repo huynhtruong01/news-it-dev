@@ -1,4 +1,4 @@
-import { IUser } from '@/models'
+import { INews, IUser } from '@/models'
 import {
     DashboardLeftList,
     DashboardNews,
@@ -51,7 +51,12 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
                                 <Routes>
                                     <Route
                                         index
-                                        element={<DashboardNews newsList={pUser.news} />}
+                                        element={
+                                            <DashboardNews
+                                                newsList={pUser.news as INews[]}
+                                                newsCount={pUser.newsCount as number}
+                                            />
+                                        }
                                     />
                                     <Route
                                         path="followers"

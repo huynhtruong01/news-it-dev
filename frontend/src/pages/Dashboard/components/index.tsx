@@ -1,7 +1,7 @@
 export * from '@/pages/Dashboard/components/DashboardNews'
 export * from '@/pages/Dashboard/components/DashboardLeftList'
 export * from '@/pages/Dashboard/components/DashboardNewsItem'
-export * from '@/pages/Dashboard/components/DashboardFollowItem'
+export { default as DashboardFollowItem } from '@/pages/Dashboard/components/DashboardFollowItem'
 export * from '@/pages/Dashboard/components/DashboardTag'
 export * from '@/pages/Dashboard/components/DashboardTags'
 export * from '@/pages/Dashboard/components/DashboardReadingList'

@@ -21,6 +21,7 @@ export function HashTagItem({ tag, fontText, ...rest }: IHashTagItemProps) {
             sx={{
                 borderRadius: theme.spacing(0.5),
                 cursor: 'pointer',
+                color: alpha(theme.palette.secondary.dark, 0.9),
                 transition: '0.2s ease-in-out',
 
                 '&:hover': {
@@ -34,7 +35,7 @@ export function HashTagItem({ tag, fontText, ...rest }: IHashTagItemProps) {
                     fontSize: fontText,
 
                     span: {
-                        color: color,
+                        color: alpha(theme.palette.secondary.dark, 0.6),
                     },
                 },
             }}

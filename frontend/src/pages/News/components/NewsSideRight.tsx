@@ -12,7 +12,10 @@ export function NewsSideRight({ news, ...rest }: INewsSideRightProps) {
             <Box component={Stack} gap={2} {...rest}>
                 <NewsSideRightUser user={news.user as IUser} />
                 <NewsSideRightRelationUser news={news} user={news.user as IUser} />
-                <NewsSideRightRelation hashTagIds={news.hashTagIds as number[]} />
+                <NewsSideRightRelation
+                    newsId={news.id}
+                    hashTagIds={news.hashTagIds as number[]}
+                />
             </Box>
         )
     )

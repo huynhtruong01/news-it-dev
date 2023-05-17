@@ -1,13 +1,23 @@
 import { userApi } from '@/api'
 import { IsFollow } from '@/enums'
+import { useCheckSelf, useLinkUser } from '@/hooks'
 import { IFollow, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
 import { formatDate, theme } from '@/utils'
-import { Avatar, Box, BoxProps, Button, Paper, Stack, Typography } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    BoxProps,
+    Button,
+    Paper,
+    Stack,
+    Typography,
+    alpha,
+} from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { useMemo, useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -27,12 +37,9 @@ function NewsSideRightUser({
 }: INewsSideRightUserProps) {
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
 
-    const checkSelf = useMemo(() => {
-        if (pUser?.id) {
-            return pUser.id !== user?.id ? true : false
-        }
-        return true
-    }, [pUser])
+    const checkSelf = useCheckSelf(user as IUser)
+
+    const linkUser = useLinkUser(user as IUser)
 
     useEffect(() => {
         if (Array.isArray(pUser?.following)) {
@@ -59,11 +66,11 @@ function NewsSideRightUser({
 
             if (user?.id) {
                 if (followed === IsFollow.FOLLOW) {
-                    await userApi.followUser(user.id)
                     setFollowed(IsFollow.FOLLOWING)
+                    await userApi.followUser(user.id)
                 } else {
-                    await userApi.unfollowUser(user.id)
                     setFollowed(IsFollow.FOLLOW)
+                    await userApi.unfollowUser(user.id)
                 }
 
                 await pGetProfile()
@@ -94,7 +101,7 @@ function NewsSideRightUser({
                         }}
                     >
                         <Box>
-                            <Link to={`/profile/${user.username}`}>
+                            <Link to={linkUser}>
                                 <Avatar
                                     src={user.avatar}
                                     alt={user.username}
@@ -117,7 +124,7 @@ function NewsSideRightUser({
                                 },
                             }}
                         >
-                            <Link to={`/profile/${user.username}`}>{user.username}</Link>
+                            <Link to={linkUser}>{user.username}</Link>
                         </Typography>
                     </Stack>
                     {checkSelf && (
@@ -125,9 +132,29 @@ function NewsSideRightUser({
                             variant="contained"
                             fullWidth
                             sx={{
-                                backgroundColor: theme.palette.primary.light,
+                                padding: theme.spacing(1.5, 0),
+                                backgroundColor:
+                                    followed === IsFollow.FOLLOW
+                                        ? theme.palette.primary.light
+                                        : alpha(theme.palette.secondary.dark, 0.05),
+                                fontWeight: 500,
+                                lineHeight: 1,
+                                borderRadius: theme.spacing(0.75),
+                                color:
+                                    followed === IsFollow.FOLLOW
+                                        ? theme.palette.primary.contrastText
+                                        : theme.palette.secondary.dark,
+                                boxShadow: `0 0 1px ${
+                                    followed === IsFollow.FOLLOW
+                                        ? 'transparent'
+                                        : theme.palette.secondary.main
+                                }`,
+
                                 '&:hover': {
-                                    backgroundColor: theme.palette.primary.dark,
+                                    backgroundColor:
+                                        followed === IsFollow.FOLLOW
+                                            ? theme.palette.primary.dark
+                                            : alpha(theme.palette.secondary.dark, 0.1),
                                 },
                             }}
                             onClick={handleFollowClick}

@@ -34,3 +34,8 @@ export enum IsActive {
     ACTIVE = 1,
     INACTIVE = 0,
 }
+
+export enum Order {
+    ASC = 'ASC',
+    DESC = 'DESC',
+}

@@ -19,7 +19,7 @@ export function HashTagList({
     }, [tags])
 
     return (
-        <Box component="nav" margin={'-4px'} marginBottom={theme.spacing(1.5)} {...rest}>
+        <Box component="nav" margin={'-8px'} marginBottom={theme.spacing(1.5)} {...rest}>
             <Stack component="ul" direction={'row'} gap={0.5}>
                 {newTags.map((tag) => (
                     <HashTagItem key={tag.id} tag={tag} fontText={fontText} />

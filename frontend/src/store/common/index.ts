@@ -3,10 +3,12 @@ import { reducers } from '@/store/common/reducers'
 
 export interface ICommonStore {
     isShowModalAuth: boolean
+    isShowModalDelete: boolean
 }
 
 const initialState: ICommonStore = {
     isShowModalAuth: false,
+    isShowModalDelete: false,
 }
 
 export const commonSlice = createSlice({
@@ -15,5 +17,5 @@ export const commonSlice = createSlice({
     reducers,
 })
 
-export const { setShowModalAuth } = commonSlice.actions
+export const { setShowModalAuth, setShowModalDelete } = commonSlice.actions
 export default commonSlice.reducer

@@ -1,21 +1,20 @@
+import { newsApi } from '@/api'
 import { ButtonIconForm, HashTagList } from '@/components/Common'
 import { INews, IUser } from '@/models'
+import { AppDispatch, AppState } from '@/store'
+import { setShowModalAuth } from '@/store/common'
+import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
-import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
-import { useMemo } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import BookmarkIcon from '@mui/icons-material/Bookmark'
-import { connect } from 'react-redux'
-import { AppDispatch, AppState } from '@/store'
 import { indigo } from '@mui/material/colors'
-import { newsApi } from '@/api'
-import { getProfile } from '@/store/user/thunkApi'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { setShowModalAuth } from '@/store/common'
+import { useEffect, useMemo, useState } from 'react'
+import { connect } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 
 export interface IArticleIntroProps {
     article: INews
@@ -82,12 +81,14 @@ function ArticleIntro({
 
     return (
         <Box width={'100%'} paddingLeft={5}>
-            <Box marginBottom={1}>
+            <Box marginBottom={2}>
                 <Typography
                     component="h2"
                     variant="h4"
                     fontWeight={'bold'}
                     sx={{
+                        marginBottom: 1,
+
                         '&:hover': {
                             a: {
                                 color: theme.palette.primary.main,
@@ -97,7 +98,16 @@ function ArticleIntro({
                 >
                     <Link to={`/news/${slug}`}>{title}</Link>
                 </Typography>
-                {sapo && <Typography>{sapo}</Typography>}
+                {sapo && (
+                    <Typography
+                        sx={{
+                            fontSize: theme.typography.body2,
+                            color: alpha(theme.palette.secondary.dark, 0.9),
+                        }}
+                    >
+                        {sapo}
+                    </Typography>
+                )}
             </Box>
 
             <HashTagList tags={tags} />
@@ -114,12 +124,15 @@ function ArticleIntro({
                     sx={{
                         marginLeft: theme.spacing(-0.5),
                         button: {
+                            alignItems: 'center',
                             padding: theme.spacing(0.75, 1.5),
                             borderRadius: theme.spacing(0.75),
                             backgroundColor: 'transparent',
                             boxShadow: 'none',
-                            color: theme.palette.secondary.light,
                             fontWeight: 400,
+                            color: alpha(theme.palette.secondary.dark, 0.8),
+                            fontSize: theme.typography.body2,
+                            lineHeight: 1,
 
                             '&:hover': {
                                 boxShadow: 'none',
@@ -132,12 +145,12 @@ function ArticleIntro({
                     }}
                 >
                     <ButtonIconForm
-                        text={`${numLikes} likes`}
-                        icon={ThumbUpIcon}
+                        text={`${numLikes} Likes`}
+                        icon={FavoriteBorderIcon}
                         onButtonClick={handleLikeClick}
                     />
                     <ButtonIconForm
-                        text={`${numComments} comments`}
+                        text={`${numComments} Comments`}
                         icon={ChatBubbleOutlineOutlinedIcon}
                         onButtonClick={handleCommentClick}
                     />

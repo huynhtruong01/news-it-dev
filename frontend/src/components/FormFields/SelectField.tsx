@@ -59,8 +59,18 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                             ul: {
                                 width: '100%',
                             },
+                            backgroundColor: '#fff',
                         }}
                         size="small"
+                        MenuProps={{
+                            classes: {
+                                paper: {
+                                    '& .MuiSelect-select': {
+                                        overflow: 'visible !important', // Override the overflow property for the select element
+                                    },
+                                },
+                            },
+                        }}
                     >
                         {selects.map((select) => (
                             <MenuItem

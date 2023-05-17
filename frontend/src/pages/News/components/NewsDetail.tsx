@@ -1,8 +1,9 @@
 import { HashTagList } from '@/components/Common'
-import { INews } from '@/models'
+import { useLinkUser } from '@/hooks'
+import { INews, IUser } from '@/models'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, BoxProps, Paper, Stack, Typography } from '@mui/material'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { NewsComment } from '.'
 
@@ -11,22 +12,13 @@ export interface INewsDetailProps extends BoxProps {
 }
 
 export function NewsDetail({ news, ...rest }: INewsDetailProps) {
-    const {
-        user,
-        title,
-        sapo,
-        content,
-        hashTags,
-        numLikes,
-        numComments,
-        numSaves,
-        thumbnailImage,
-        createdAt,
-    } = news
+    const { user, title, content, hashTags, thumbnailImage, createdAt } = news
 
     const newTags = useMemo(() => {
         return hashTags?.length ? hashTags : []
     }, [news])
+
+    const linkUser = useLinkUser(news.user as IUser)
 
     return (
         <Box
@@ -52,7 +44,7 @@ export function NewsDetail({ news, ...rest }: INewsDetailProps) {
                     <Box>
                         <Stack direction={'row'} alignItems={'center'} marginBottom={2.5}>
                             <Box>
-                                <Link to={'/'}>
+                                <Link to={linkUser}>
                                     <Avatar
                                         src={user?.avatar}
                                         alt={user?.username}
@@ -73,7 +65,7 @@ export function NewsDetail({ news, ...rest }: INewsDetailProps) {
                                         },
                                     }}
                                 >
-                                    <Link to={'/'}>{user?.username}</Link>
+                                    <Link to={linkUser}>{user?.username}</Link>
                                 </Typography>
 
                                 <Typography
@@ -111,6 +103,9 @@ export function NewsDetail({ news, ...rest }: INewsDetailProps) {
                             margin: theme.spacing(0, 0, 2.5, 0),
                             color: theme.palette.secondary.main,
                             fontWeight: 400,
+                        },
+                        span: {
+                            lineHeight: '30px',
                         },
                     }}
                 />

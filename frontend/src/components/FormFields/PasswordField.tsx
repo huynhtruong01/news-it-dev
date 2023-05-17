@@ -79,6 +79,7 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
                         size="small"
                         sx={{
                             marginTop: 1,
+                            backgroundColor: '#fff',
                         }}
                     />
                 </Box>

@@ -1,17 +1,17 @@
 import { AppDataSource } from '@/config'
 import { relationNewsData } from '@/data'
 import { News, User } from '@/entities'
-import {
-    createNews,
-    filtersQuery,
-    paginationQuery,
-    sortQuery,
-    searchQuery,
-    filtersArrQuery,
-} from '@/utils'
+import { IObjectCommon, IOrder } from '@/models'
 import { commonService } from '@/services/common.service'
 import { hashTagService } from '@/services/hashTag.service'
-import { IObjectCommon } from '@/models'
+import {
+    createNews,
+    filtersArrQuery,
+    filtersQuery,
+    paginationQuery,
+    searchQuery,
+    sortQuery,
+} from '@/utils'
 
 class NewsService {
     constructor(private newsRepository = AppDataSource.getRepository(News)) {}
@@ -55,8 +55,6 @@ class NewsService {
             const titleSearchQuery = searchQuery(query, 'title')
             const newFilterArrQuery = filtersArrQuery(query)
 
-            // console.log('filters: ', newFilterArrQuery)
-
             const news = await this.newsRepository.find({
                 order: {
                     ...newSortQuery,
@@ -70,6 +68,25 @@ class NewsService {
                 ...newPaginationQuery,
                 relations: relationNewsData,
             })
+
+            return news
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get news by hash tag ids
+    async getAllByTagIds(query: IObjectCommon): Promise<News[]> {
+        try {
+            const news = await this.newsRepository
+                .createQueryBuilder('news')
+                .leftJoinAndSelect('news.hashTags', 'hashTag')
+                .where('hashTag.id IN (:...hashTagIds)')
+                .orderBy('news.createdAt', query.createdAt as IOrder)
+                .setParameter('hashTagIds', query.hashTagIds as number[])
+                .skip((+query.page - 1) * +query.limit)
+                .take(+query.limit)
+                .getMany()
 
             return news
         } catch (error) {

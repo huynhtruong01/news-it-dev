@@ -1,6 +1,13 @@
-import { Autocomplete, TextField, AutocompleteProps } from '@mui/material'
+import {
+    Autocomplete,
+    TextField,
+    AutocompleteProps,
+    Box,
+    InputLabel,
+} from '@mui/material'
 import { Path, FieldValues, Controller } from 'react-hook-form'
 import { IOptionItem } from '@/models'
+import { theme } from '@/utils'
 
 export type IAutoCompleteFieldProps<TFormValues> = {
     form: TFormValues
@@ -53,14 +60,27 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
                         return option.name
                     }}
                     renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label={label}
-                            placeholder={placeholder}
-                            error={!!error?.message}
-                            helperText={error?.message || ''}
-                            margin="normal"
-                        />
+                        <Box margin={theme.spacing(2, 0, 1)} width={'100%'}>
+                            <InputLabel
+                                error={!!error?.message}
+                                sx={{
+                                    fontWeight: 500,
+                                    color: '#000',
+                                }}
+                            >
+                                {label}
+                            </InputLabel>
+                            <TextField
+                                {...params}
+                                placeholder={placeholder}
+                                error={!!error?.message}
+                                helperText={error?.message || ''}
+                                sx={{
+                                    marginTop: 1,
+                                    backgroundColor: '#fff',
+                                }}
+                            />
+                        </Box>
                     )}
                 />
             )}

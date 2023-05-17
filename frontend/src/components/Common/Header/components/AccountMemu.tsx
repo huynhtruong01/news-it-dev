@@ -103,7 +103,7 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                 disableScrollLock={true}
             >
                 <MenuItem>
-                    {/* TODO: WRITE LINK HERE */}
+                    {/* WRITE LINK HERE */}
                     <Link to={'/profile'}>
                         <Stack alignItems={'flex-start'}>
                             <Typography component="span" fontWeight={500}>

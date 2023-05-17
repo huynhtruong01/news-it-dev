@@ -1,4 +1,4 @@
-import { Box, Typography, Paper } from '@mui/material'
+import { Box, Typography, Paper, alpha } from '@mui/material'
 import { theme } from '@/utils'
 
 export interface IProfileLeftItemProps {
@@ -8,7 +8,15 @@ export interface IProfileLeftItemProps {
 
 export function ProfileLeftItem({ title, value }: IProfileLeftItemProps) {
     return (
-        <Box component={Paper} elevation={1}>
+        <Box
+            component={Paper}
+            elevation={1}
+            sx={{
+                p: {
+                    color: alpha(theme.palette.secondary.dark, 0.9),
+                },
+            }}
+        >
             <Typography
                 component="h3"
                 variant="body1"

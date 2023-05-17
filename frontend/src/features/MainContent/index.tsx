@@ -32,9 +32,8 @@ function MainContent({ pGetAllTagsPopular }: IMainContentProps) {
                 <Grid item>
                     <ArticleContainer />
                 </Grid>
-                <Grid item>
-                    <Box>Right sidebar</Box>
-                </Grid>
+                {/* TODO: ADD RIGHT SIDEBAR */}
+                <Grid item>{/* <Box>Right sidebar</Box> */}</Grid>
             </Grid>
         </Box>
     )

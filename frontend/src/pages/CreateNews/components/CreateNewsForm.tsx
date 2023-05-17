@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from '@mui/material'
+import { Box, Button, Stack, alpha } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { INewsForm, IOptionItem } from '@/models'
@@ -17,14 +17,36 @@ import { AppState, AppDispatch } from '@/store'
 import { connect } from 'react-redux'
 import { getAllHashTags } from '@/store/hashTag/thunkApi'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { theme, uploadImage, generateIds } from '@/utils'
+import { newsApi } from '@/api'
+import { enqueueSnackbar } from 'notistack'
+import { useNavigate } from 'react-router-dom'
 
 export interface ICreateNewsFormProps {
     pHashTagSelects: IOptionItem[]
+    pInitValuesForm: INewsForm
     pGetAllHashTags: () => Promise<PayloadAction<unknown>>
 }
 
-function CreateNewsForm({ pHashTagSelects, pGetAllHashTags }: ICreateNewsFormProps) {
+const generateNewValues = (values: INewsForm) => {
+    const { hashTagOptionIds, hashTags, ...rest } = values
+    const ids = generateIds(hashTagOptionIds)
+
+    return {
+        newValues: rest,
+        ids,
+    }
+}
+
+function CreateNewsForm({
+    pHashTagSelects,
+    pGetAllHashTags,
+    pInitValuesForm,
+}: ICreateNewsFormProps) {
+    const navigate = useNavigate()
+    const formRef = useRef<HTMLElement | null>(null)
+
     const schema = yup.object().shape({
         title: yup.string().required('Please enter name.'),
         sapo: yup.string(),
@@ -71,16 +93,57 @@ function CreateNewsForm({ pHashTagSelects, pGetAllHashTags }: ICreateNewsFormPro
         setValue,
     } = form
 
-    const handleNewsSubmit = (values: INewsForm) => {
+    useEffect(() => {
+        setValue('title', pInitValuesForm.title)
+        setValue('sapo', pInitValuesForm.sapo)
+        setValue('content', pInitValuesForm.content)
+        setValue('readTimes', pInitValuesForm.readTimes)
+        setValue('hashTags', pInitValuesForm.hashTags)
+        setValue('status', pInitValuesForm.status)
+        setValue('coverImage', pInitValuesForm.coverImage)
+        setValue('thumbnailImage', pInitValuesForm.thumbnailImage)
+        setValue('hashTagOptionIds', pInitValuesForm.hashTagOptionIds)
+    }, [pInitValuesForm])
+
+    const handleNewsSubmit = async (values: INewsForm) => {
         try {
-            console.log(values)
+            const { newValues, ids } = generateNewValues(values)
+            if (newValues.thumbnailImage instanceof File) {
+                const thumbnailImg = await uploadImage(
+                    newValues.thumbnailImage,
+                    import.meta.env.VITE_UPLOAD_PRESETS_NEWS_CLOUDINARY
+                )
+                newValues.thumbnailImage = thumbnailImg.url
+            }
+
+            if (newValues.coverImage instanceof File) {
+                const coverImg = await uploadImage(
+                    newValues.coverImage,
+                    import.meta.env.VITE_UPLOAD_PRESETS_NEWS_CLOUDINARY
+                )
+                newValues.coverImage = coverImg.url
+            }
+
+            await newsApi.addNews({ ...newValues, hashTagIds: ids })
+
+            reset()
+            enqueueSnackbar('Create News successfully.', {
+                variant: 'success',
+            })
+            navigate('/')
         } catch (error) {
-            throw new Error(error as string)
+            enqueueSnackbar(error.message, {
+                variant: 'error',
+            })
         }
     }
 
+    const handleCancel = () => {
+        navigate(-1)
+    }
+
     return (
-        <Box component="form" onSubmit={handleSubmit(handleNewsSubmit)}>
+        <Box component="form" ref={formRef} onSubmit={handleSubmit(handleNewsSubmit)}>
             <Box marginBottom={3}>
                 <Box
                     sx={{
@@ -95,14 +158,14 @@ function CreateNewsForm({ pHashTagSelects, pGetAllHashTags }: ICreateNewsFormPro
                             name={'title'}
                             label={'Title'}
                             disabled={isSubmitting}
-                            placeholder={'Enter title'}
+                            placeholder={'title news...'}
                         />
                         <InputField
                             form={form}
                             name={'sapo'}
                             label={'Sapo'}
                             disabled={isSubmitting}
-                            placeholder={'Enter sapo'}
+                            placeholder={'sub description news...'}
                         />
                         <Box
                             sx={{
@@ -131,7 +194,7 @@ function CreateNewsForm({ pHashTagSelects, pGetAllHashTags }: ICreateNewsFormPro
                             name={'hashTagOptionIds'}
                             label={'Tags'}
                             disabled={isSubmitting}
-                            placeholder={'Choose tags'}
+                            placeholder={'choose tags...'}
                             list={pHashTagSelects || []}
                         />
                     </Box>
@@ -160,15 +223,46 @@ function CreateNewsForm({ pHashTagSelects, pGetAllHashTags }: ICreateNewsFormPro
                     name={'content'}
                     label={'Content'}
                     disabled={isSubmitting}
-                    placeholder={'Enter content'}
+                    placeholder={'typing content...'}
                 />
             </Box>
 
-            <Stack direction="row" gap={2}>
-                <Button variant="contained" fullWidth>
+            <Stack
+                direction="row"
+                gap={2}
+                sx={{
+                    button: {
+                        fontWeight: 500,
+                    },
+                }}
+            >
+                <Button
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                        backgroundColor: alpha(theme.palette.secondary.main, 0.2),
+                        color: theme.palette.secondary.main,
+                        '&:hover': {
+                            backgroundColor: alpha(theme.palette.secondary.main, 0.5),
+                        },
+                    }}
+                    disabled={isSubmitting}
+                    onClick={handleCancel}
+                >
                     Cancel
                 </Button>
-                <Button type="submit" variant="contained" fullWidth>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                        backgroundColor: theme.palette.primary.light,
+                        '&:hover': {
+                            backgroundColor: theme.palette.primary.dark,
+                        },
+                    }}
+                    disabled={isSubmitting}
+                >
                     Create News
                 </Button>
             </Stack>
@@ -179,6 +273,7 @@ function CreateNewsForm({ pHashTagSelects, pGetAllHashTags }: ICreateNewsFormPro
 const mapStateToProps = (state: AppState) => {
     return {
         pHashTagSelects: state.hashTag.hashTagSelects,
+        pInitValuesForm: state.news.initValuesForm,
     }
 }
 

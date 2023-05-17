@@ -1,5 +1,5 @@
-export * from '@/models/auth'
-export * from '@/models/news'
+export * from '@/models/auth.model'
+export * from '@/models/news.model'
 export * from '@/models/common.model'
 export * from '@/models/role.model'
 export * from '@/models/user.model'

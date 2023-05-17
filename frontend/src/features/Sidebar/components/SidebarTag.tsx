@@ -41,17 +41,19 @@ function SidebarTag({ pTags }: ISidebarTagProps) {
                 sx={{
                     maxHeight: '42vh',
                     overflow: 'auto',
-                    marginTop: 2,
+                    marginTop: 0.5,
                 }}
             >
                 {pTags.map((tag) => (
                     <Box
                         component="li"
                         key={tag.id}
+                        title={tag.name as string}
                         sx={{
                             padding: theme.spacing(1, 2),
                             borderRadius: theme.spacing(0.75),
                             cursor: 'pointer',
+                            color: alpha(theme.palette.secondary.main, 0.9),
 
                             '&:hover': {
                                 backgroundColor: '#3b49df1a',
@@ -66,7 +68,7 @@ function SidebarTag({ pTags }: ISidebarTagProps) {
                             },
                         }}
                     >
-                        {/* TODO: WRITE LINK HERE */}
+                        {/* WRITE LINK HERE */}
                         <Link to={`/tags/${tag.name}`}># {tag.name}</Link>
                     </Box>
                 ))}

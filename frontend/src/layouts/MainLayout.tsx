@@ -2,7 +2,7 @@ import { Box, Container } from '@mui/material'
 import { ReactNode, useEffect } from 'react'
 import { theme } from '@utils/index'
 import { useNavigate } from 'react-router-dom'
-import { ModalAuth } from '@/components'
+import { ModalAuth, ModalDelete } from '@/components'
 
 export interface IMainLayoutProps {
     children: ReactNode
@@ -31,7 +31,10 @@ export function MainLayout({ children }: IMainLayoutProps) {
             >
                 {children}
             </Container>
+
+            {/* MODAL */}
             <ModalAuth />
+            <ModalDelete />
         </Box>
     )
 }

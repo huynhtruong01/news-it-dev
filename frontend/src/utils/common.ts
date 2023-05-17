@@ -1,4 +1,4 @@
-import { IDebounceCallback, ISynthetic } from '@/models'
+import { IDebounceCallback, ISynthetic, IOptionItem } from '@/models'
 import debounce from 'lodash.debounce'
 
 export const generateLinkImg = (file: File) => {
@@ -27,4 +27,8 @@ export const removeDuplicated = <T extends ISynthetic>(arr: T[]) => {
     })
 
     return newArr
+}
+
+export const generateIds = (options: IOptionItem[]) => {
+    return options.map((item) => item.id)
 }

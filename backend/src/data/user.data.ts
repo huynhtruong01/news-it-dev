@@ -15,6 +15,8 @@ export const selectUserData:
     'dateJoined',
     'education',
     'emailAddress',
+    'numFollowers',
+    'numFollowing',
     'isActive',
     'isAdmin',
     'newsCount',

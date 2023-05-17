@@ -4,7 +4,8 @@ import { useMemo } from 'react'
 import { DashboardNewsItem } from '.'
 
 export interface IDashboardNewsProps extends BoxProps {
-    newsList?: INews[]
+    newsList: INews[]
+    newsCount: number
 }
 
 export function DashboardNews({ newsList, ...rest }: IDashboardNewsProps) {
@@ -17,7 +18,7 @@ export function DashboardNews({ newsList, ...rest }: IDashboardNewsProps) {
     return (
         <Box {...rest}>
             <Typography component="h2" variant="h6" marginBottom={2} fontWeight={700}>
-                News
+                News {}
             </Typography>
 
             <Stack gap={2}>

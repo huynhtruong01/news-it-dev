@@ -1,19 +1,11 @@
-import { Icon } from '@/components/Common'
+import { Icon, ListingIcon, TagIcon } from '@/components/Common'
 import { IObjectCommon } from '@/models'
 import { theme } from '@/utils'
-import { Box, Paper } from '@mui/material'
+import { Box, Paper, alpha } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 export function SidebarNav() {
     const lists: IObjectCommon[] = [
-        // 'Home',
-        // 'Reading List',
-        // 'Listings',
-        // 'Tags',
-        // 'Video',
-        // 'About',
-        // 'Contact',
-        // 'Guides',
         {
             name: 'Home',
             link: '/',
@@ -41,6 +33,7 @@ export function SidebarNav() {
                 {lists.map((item) => (
                     <Box
                         component="li"
+                        title={item.name as string}
                         key={item.name}
                         sx={{
                             width: '100%',
@@ -50,9 +43,12 @@ export function SidebarNav() {
                             padding: theme.spacing(0.75),
                             cursor: 'pointer',
                             borderRadius: theme.spacing(0.75),
+                            color: alpha(theme.palette.secondary.main, 0.9),
+
                             a: {
                                 flex: 1,
                             },
+
                             '&:hover': {
                                 backgroundColor: '#3b49df1a',
                                 a: {
@@ -63,7 +59,9 @@ export function SidebarNav() {
                         }}
                     >
                         <Box>
-                            <Icon />
+                            {item.name === 'Home' && <Icon />}
+                            {item.name === 'Reading List' && <ListingIcon />}
+                            {item.name === 'Tags' && <TagIcon />}
                         </Box>
                         <Link to={`${item.link}`}>{item.name}</Link>
                     </Box>

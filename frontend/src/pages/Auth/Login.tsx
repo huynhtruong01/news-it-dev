@@ -3,7 +3,6 @@ import { ILoginValues, IUser } from '@/models'
 import { Box, Typography } from '@mui/material'
 import { theme } from '@utils/index'
 import { authApi } from '@/api'
-import { useToast } from '@hooks/index'
 import { Link } from 'react-router-dom'
 import { AuthContainer } from '@/pages/Auth/AuthContainer'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +17,6 @@ export interface ILoginProps {
 }
 
 function Login({ pSaveUserLogin }: ILoginProps) {
-    const { toastSuccess } = useToast()
     const navigate = useNavigate()
 
     const handleLoginSubmit = async (values: ILoginValues) => {

@@ -67,6 +67,31 @@ class NewsController {
         }
     }
 
+    async getNewsByHashTagIds(req: RequestUser, res: Response) {
+        try {
+            const query = req.query as IObjectCommon
+            query.hashTagIds = (query.hashTagIds as string)
+                .split(',')
+                .map((t) => Number(t))
+
+            const news = await newsService.getAllByTagIds(query)
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    news,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
     // get news by /detail/:slug (GET)
     async getNewsBySlug(req: RequestUser, res: Response) {
         try {
@@ -150,6 +175,10 @@ class NewsController {
                 return
             }
 
+            // count news
+            await userService.countNews(user)
+
+            // create news
             const newNews = await newsService.create({
                 ...req.body,
                 userId: req.user?.id,

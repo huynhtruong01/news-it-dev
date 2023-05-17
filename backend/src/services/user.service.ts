@@ -256,6 +256,17 @@ class UserService {
         }
     }
 
+    async countNews(user: User) {
+        try {
+            const newUser = user
+            newUser.newsCount = newUser.newsCount + 1
+
+            await this.userRepository.save({ ...newUser })
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     // delete
     async delete(id: number): Promise<User | null> {
         try {

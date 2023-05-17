@@ -9,11 +9,21 @@ import { formatDate, theme } from '@/utils'
 import ArticleIcon from '@mui/icons-material/Article'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import TagIcon from '@mui/icons-material/Tag'
-import { Avatar, Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    Button,
+    Divider,
+    Paper,
+    Stack,
+    Typography,
+    alpha,
+} from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { ProfileUserNumFollow } from '@/pages/ProfileUser/components'
 
 export interface IProfileUserProps {
     pUser: IUser | null
@@ -76,11 +86,11 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
 
             if (user?.id) {
                 if (followed === IsFollow.FOLLOW) {
-                    await userApi.followUser(user.id)
                     setFollowed(IsFollow.FOLLOWING)
+                    await userApi.followUser(user.id)
                 } else {
-                    await userApi.unfollowUser(user.id)
                     setFollowed(IsFollow.FOLLOW)
+                    await userApi.unfollowUser(user.id)
                 }
 
                 await pGetProfile()
@@ -166,11 +176,32 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
                                     position: 'absolute',
                                     top: '1.5rem',
                                     right: '1.5rem',
+                                    padding: theme.spacing(1.5, 2),
+                                    backgroundColor:
+                                        followed === IsFollow.FOLLOW
+                                            ? theme.palette.primary.light
+                                            : alpha(theme.palette.secondary.dark, 0.05),
+                                    fontWeight: 500,
+                                    lineHeight: 1,
                                     borderRadius: theme.spacing(0.75),
-                                    padding: theme.spacing(1, 2),
-                                    backgroundColor: theme.palette.primary.light,
+                                    color:
+                                        followed === IsFollow.FOLLOW
+                                            ? theme.palette.primary.contrastText
+                                            : theme.palette.secondary.dark,
+                                    boxShadow: `0 0 1px ${
+                                        followed === IsFollow.FOLLOW
+                                            ? 'transparent'
+                                            : theme.palette.secondary.main
+                                    }`,
+
                                     '&:hover': {
-                                        backgroundColor: theme.palette.primary.dark,
+                                        backgroundColor:
+                                            followed === IsFollow.FOLLOW
+                                                ? theme.palette.primary.dark
+                                                : alpha(
+                                                      theme.palette.secondary.dark,
+                                                      0.1
+                                                  ),
                                     },
                                 }}
                                 onClick={handleFollowClick}
@@ -239,6 +270,11 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
                     }}
                 >
                     <Stack gap={2}>
+                        <ProfileUserNumFollow
+                            numFollowed={user.numFollowers as number}
+                            numFollowing={user.numFollowing as number}
+                        />
+
                         {user.skillLanguages && (
                             <ProfileLeftItem
                                 title={'Skills/Languages'}

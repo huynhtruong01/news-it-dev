@@ -1,5 +1,6 @@
 import { IIcon } from '@/models'
-import { Box, BoxProps, Stack, Typography } from '@mui/material'
+import { theme } from '@/utils'
+import { Box, BoxProps, Stack, Typography, alpha } from '@mui/material'
 
 export interface IProfileInfoItemProps extends BoxProps {
     icon: IIcon
@@ -11,10 +12,20 @@ export function ProfileInfoItem({ icon, text, ...rest }: IProfileInfoItemProps) 
 
     return (
         <Box {...rest}>
-            <Stack direction={'row'} gap={1}>
-                <Box>
-                    <Icon />
-                </Box>
+            <Stack
+                direction={'row'}
+                alignItems={'center'}
+                gap={1.5}
+                sx={{
+                    span: {
+                        color: alpha(theme.palette.secondary.dark, 0.9),
+                    },
+                    svg: {
+                        color: alpha(theme.palette.secondary.dark, 0.7),
+                    },
+                }}
+            >
+                <Icon />
                 <Box>
                     <Typography component="span">{text}</Typography>
                 </Box>

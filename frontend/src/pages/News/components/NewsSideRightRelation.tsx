@@ -1,6 +1,6 @@
 import { newsList } from '@/data'
 import { theme } from '@/utils'
-import { Box, BoxProps, Button, Divider, Paper, Stack, Typography } from '@mui/material'
+import { Box, BoxProps, Divider, Paper, Stack, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { IFilters, INews } from '@/models'
@@ -8,11 +8,13 @@ import { Order } from '@/enums'
 import { newsApi } from '@/api'
 
 export interface INewsSideRightRelationProps extends BoxProps {
+    newsId: number
     hashTagIds: number[]
 }
 
 export function NewsSideRightRelation({
     hashTagIds,
+    newsId,
     ...rest
 }: INewsSideRightRelationProps) {
     const [newsTagsList, setNewsTagsList] = useState<INews[]>([])
@@ -28,8 +30,10 @@ export function NewsSideRightRelation({
                     createdAt: Order.DESC,
                     hashTagIds: hashTagIds.join(','),
                 }
-                const res = await newsApi.getAllNews(filters)
-                setNewsTagsList(res.data.news)
+                const res = await newsApi.getNewsByTagIds(filters)
+
+                const newNewsList = res.data.news.filter((n: INews) => n.id !== newsId)
+                setNewsTagsList(newNewsList)
             } catch (error) {
                 throw new Error(error as string)
             }

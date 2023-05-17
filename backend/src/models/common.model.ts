@@ -1,3 +1,4 @@
+import { Order } from '@/enums'
 import { FindOperator } from 'typeorm'
 
 export interface IObjectCommon {
@@ -9,3 +10,5 @@ export interface IObjectCommon {
         | readonly string[]
         | number[]
 }
+
+export type IOrder = Order.ASC | Order.DESC

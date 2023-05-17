@@ -15,12 +15,13 @@ export function DashboardNewsItem({ news, ...rest }: IDashboardNewsItemProps) {
 
     return (
         <Box component={Paper} elevation={1} {...rest}>
-            <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
+            <Box
                 sx={{
                     padding: 2,
+                    display: 'grid',
+                    gridTemplateColumns: '4fr 2fr 2fr',
+                    gap: 2,
+                    justifyContent: 'space-between',
                 }}
             >
                 <Typography
@@ -29,34 +30,43 @@ export function DashboardNewsItem({ news, ...rest }: IDashboardNewsItemProps) {
                     fontSize={'19px'}
                     sx={{
                         color: theme.palette.primary.light,
-                        '&:hover': {
-                            color: theme.palette.primary.dark,
-                            textDecoration: 'underline',
+
+                        a: {
+                            display: 'inline',
+
+                            '&:hover': {
+                                color: theme.palette.primary.dark,
+                                textDecoration: 'underline',
+                            },
                         },
                     }}
+                    noWrap
                 >
-                    {/* TODO: WRITE LINK HERE */}
-                    <Link to={'/'}>{news.title}</Link>
+                    {/* WRITE LINK HERE */}
+                    <Link to={`/news/${news.slug}`}>{news.title}</Link>
                 </Typography>
-                <Typography
-                    component="span"
-                    sx={{
-                        display: 'inline-block',
-                        textTransform: 'capitalize',
-                        padding: 0.5,
-                        backgroundColor: yellow[700],
-                        borderRadius: 1.5,
-                        fontSize: theme.typography.body2,
-                        color: '#78350f',
-                        lineHeight: 1.25,
-                        textAlign: 'center',
-                    }}
-                >
-                    {news.status}
-                </Typography>
+                <Stack alignItems={'center'}>
+                    <Typography
+                        component="span"
+                        sx={{
+                            textTransform: 'capitalize',
+                            padding: 0.5,
+                            backgroundColor: yellow[700],
+                            borderRadius: 1.5,
+                            fontSize: theme.typography.subtitle2,
+                            color: '#78350f',
+                            lineHeight: 1.25,
+                            textAlign: 'center',
+                            fontWeight: 400,
+                        }}
+                    >
+                        {news.status}
+                    </Typography>
+                </Stack>
                 <Stack
                     direction={'row'}
                     gap={1}
+                    justifyContent={'flex-end'}
                     sx={{
                         div: {
                             fontSize: theme.typography.body2,
@@ -85,7 +95,7 @@ export function DashboardNewsItem({ news, ...rest }: IDashboardNewsItemProps) {
                         Edit
                     </Box>
                 </Stack>
-            </Stack>
+            </Box>
         </Box>
     )
 }

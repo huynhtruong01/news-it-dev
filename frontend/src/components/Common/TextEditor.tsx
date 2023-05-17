@@ -35,6 +35,7 @@ const useStyles = makeStyles({
 
             '&[data-placeholder]::before': {
                 fontStyle: 'normal',
+                color: theme.palette.grey[400],
             },
 
             '& span': {
@@ -104,6 +105,12 @@ export function TextEditor({
         const quill = quillRef.current
         if (!quill) return
 
+        setTimeout(() => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth',
+            })
+        }, 800)
         const toolbar = quill.getEditor().getModule('toolbar')
         toolbar.addHandler('image', handleImageChange)
     }, [handleImageChange])
