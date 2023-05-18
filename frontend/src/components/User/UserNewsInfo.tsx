@@ -22,7 +22,13 @@ export function UserNewsInfo({ user, link }: IUserNewsInfoProps) {
     }
 
     return (
-        <Stack direction={'row'} gap={0.5} alignItems={'flexStart'} marginBottom={2}>
+        <Stack
+            direction={'row'}
+            gap={0.5}
+            alignItems={'flexStart'}
+            marginBottom={2}
+            position={'relative'}
+        >
             <Box>
                 <Link to={link}>
                     <Avatar
@@ -44,7 +50,6 @@ export function UserNewsInfo({ user, link }: IUserNewsInfoProps) {
                     onMouseEnter={handleHoverUser}
                     onMouseLeave={handleClose}
                     sx={{
-                        position: 'relative',
                         lineHeight: 1,
                         cursor: 'pointer',
 
@@ -70,9 +75,9 @@ export function UserNewsInfo({ user, link }: IUserNewsInfoProps) {
                             user={user as IUser}
                             sx={{
                                 position: 'absolute',
-                                top: 23,
-                                left: 0,
-                                width: 400,
+                                top: 20,
+                                left: 40,
+                                width: '70%',
                                 padding: 2,
                                 paddingTop: 0,
                                 zIndex: 10,

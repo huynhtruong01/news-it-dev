@@ -1,11 +1,11 @@
 import { AppDataSource } from '@/config'
 import { MAX_AGE_REFRESH_TOKEN } from '@/consts'
+import { relationDataUser } from '@/data'
 import { User } from '@/entities'
 import { JwtPayloadUser } from '@/models'
 import { optionCookies } from '@/utils'
 import { Response } from 'express'
 import jwt from 'jsonwebtoken'
-import { relationDataUser, selectUserData } from '@/data'
 
 class AuthService {
     constructor(private userRepository = AppDataSource.getRepository(User)) {}

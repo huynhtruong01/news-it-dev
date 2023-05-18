@@ -50,6 +50,7 @@ let theme = createTheme({
                         color: 'primary',
                     },
                     style: {
+                        lineHeight: 1,
                         color: '#fff',
                         textTransform: 'none',
                         padding: '8px',

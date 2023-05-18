@@ -4,6 +4,7 @@ export * as authApi from '@/api/authApi'
 export * as userApi from '@/api/userApi'
 export * as hashTagApi from '@/api/hashTagApi'
 export * as newsApi from '@/api/newsApi'
+export * as commentApi from '@/api/commentApi'
 
 const AxiosClient = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,

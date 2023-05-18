@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { INewsForm, IOptionItem } from '@/models'
 import { initNewsFormValues, selectStatus } from '@/data'
 import { SIZE_4_MB, SIZE_10_MB } from '@/consts'
-import { checkTypeImg, checkSizeImg } from '@/utils'
+import { checkTypeImg, checkSizeImg, theme } from '@/utils'
 import * as yup from 'yup'
 import {
     EditorField,
@@ -17,26 +17,15 @@ import { AppState, AppDispatch } from '@/store'
 import { connect } from 'react-redux'
 import { getAllHashTags } from '@/store/hashTag/thunkApi'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { useEffect, useRef } from 'react'
-import { theme, uploadImage, generateIds } from '@/utils'
-import { newsApi } from '@/api'
+import { useEffect } from 'react'
 import { enqueueSnackbar } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 
 export interface ICreateNewsFormProps {
+    onNewsSubmit: (values: INewsForm) => Promise<void>
     pHashTagSelects: IOptionItem[]
     pInitValuesForm: INewsForm
     pGetAllHashTags: () => Promise<PayloadAction<unknown>>
-}
-
-const generateNewValues = (values: INewsForm) => {
-    const { hashTagOptionIds, hashTags, ...rest } = values
-    const ids = generateIds(hashTagOptionIds)
-
-    return {
-        newValues: rest,
-        ids,
-    }
 }
 
 function CreateNewsForm({
@@ -45,7 +34,6 @@ function CreateNewsForm({
     pInitValuesForm,
 }: ICreateNewsFormProps) {
     const navigate = useNavigate()
-    const formRef = useRef<HTMLElement | null>(null)
 
     const schema = yup.object().shape({
         title: yup.string().required('Please enter name.'),
@@ -107,30 +95,9 @@ function CreateNewsForm({
 
     const handleNewsSubmit = async (values: INewsForm) => {
         try {
-            const { newValues, ids } = generateNewValues(values)
-            if (newValues.thumbnailImage instanceof File) {
-                const thumbnailImg = await uploadImage(
-                    newValues.thumbnailImage,
-                    import.meta.env.VITE_UPLOAD_PRESETS_NEWS_CLOUDINARY
-                )
-                newValues.thumbnailImage = thumbnailImg.url
-            }
-
-            if (newValues.coverImage instanceof File) {
-                const coverImg = await uploadImage(
-                    newValues.coverImage,
-                    import.meta.env.VITE_UPLOAD_PRESETS_NEWS_CLOUDINARY
-                )
-                newValues.coverImage = coverImg.url
-            }
-
-            await newsApi.addNews({ ...newValues, hashTagIds: ids })
+            await onNewsSubmit(values)
 
             reset()
-            enqueueSnackbar('Create News successfully.', {
-                variant: 'success',
-            })
-            navigate('/')
         } catch (error) {
             enqueueSnackbar(error.message, {
                 variant: 'error',
@@ -143,7 +110,7 @@ function CreateNewsForm({
     }
 
     return (
-        <Box component="form" ref={formRef} onSubmit={handleSubmit(handleNewsSubmit)}>
+        <Box component="form" onSubmit={handleSubmit(handleNewsSubmit)}>
             <Box marginBottom={3}>
                 <Box
                     sx={{

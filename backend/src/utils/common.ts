@@ -55,7 +55,7 @@ export const createNews = (data: News): News => {
 export const createComment = (data: Comment): Comment => {
     const comment = new Comment()
     comment.comment = data.comment
-    comment.parentCommentId = data.parentCommentId
+    comment.parentCommentId = data.parentCommentId || null
     comment.newsId = data.newsId
     comment.userId = data.userId
 

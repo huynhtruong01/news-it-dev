@@ -22,7 +22,7 @@ class NewsController {
     async getAllNewsPublic(req: Request, res: Response) {
         try {
             const sort: IObjectCommon = req.query as IObjectCommon
-            const news = await newsService.getAllByConditional(
+            const [news, count] = await newsService.getAllByConditional(
                 {
                     status: NewsStatus.PUBLIC,
                 },
@@ -34,6 +34,7 @@ class NewsController {
                 status: StatusText.SUCCESS,
                 data: {
                     news,
+                    total: count,
                 },
             })
         } catch (error) {
@@ -49,13 +50,14 @@ class NewsController {
     async getAllNews(req: RequestUser, res: Response) {
         try {
             const query: IObjectCommon = req.query as IObjectCommon
-            const news = await newsService.getAll(query)
+            const [news, count] = await newsService.getAll(query)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
                 status: StatusText.SUCCESS,
                 data: {
                     news,
+                    total: count,
                 },
             })
         } catch (error) {
@@ -67,6 +69,7 @@ class NewsController {
         }
     }
 
+    // get news by hash tag ids
     async getNewsByHashTagIds(req: RequestUser, res: Response) {
         try {
             const query = req.query as IObjectCommon

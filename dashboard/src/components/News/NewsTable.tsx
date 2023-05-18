@@ -42,7 +42,6 @@ export function NewsTable({
     }
 
     const handleFiltersChange = (filters: IFilters) => {
-        console.log('filters: ', filters)
         setFilters(filters)
     }
 
@@ -80,7 +79,7 @@ export function NewsTable({
                     onClick={() => handleSetInitValues(item)}
                 >
                     <TableCell align="center">{item.id}</TableCell>
-                    <TableCellImage src={item.coverImage} alt={item.title} />
+                    <TableCellImage src={item.coverImage as string} alt={item.title} />
                     <TableCell
                         align="left"
                         sx={{

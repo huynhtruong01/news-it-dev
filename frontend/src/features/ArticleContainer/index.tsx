@@ -10,26 +10,29 @@ export type IArticleContainer = BoxProps
 export function ArticleContainer({ ...rest }: IArticleContainer) {
     const listRef = useRef<HTMLElement | null>(null)
     const [filters, setFilters] = useState<IFilters>({
-        limit: 5,
+        limit: 6,
         page: 1,
         createdAt: Order.DESC,
     })
     const [newsList, setNewsList] = useState<INews[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [status, setStatus] = useState<INewsStatus>(NewsFilters.LATEST)
-    const [hasMore, setHasMore] = useState<boolean>(false)
+    const [total, setTotal] = useState<number>(0)
 
     // FETCH ALL NEWS HERE
     useEffect(() => {
         ;(async () => {
             try {
-                setLoading(!hasMore)
+                if (filters.page === 1) setLoading(true)
+
                 const res = await newsApi.getAllNews(filters)
                 if (filters.page === 1) {
                     setNewsList(res.data.news)
                 } else {
                     setNewsList((prev) => [...prev, ...res.data.news])
                 }
+
+                setTotal(res.data.total)
             } catch (error) {
                 throw new Error(error as string)
             }
@@ -40,9 +43,11 @@ export function ArticleContainer({ ...rest }: IArticleContainer) {
     useEffect(() => {
         const handleScrollList = async () => {
             try {
-                if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+                if (
+                    window.innerHeight + window.scrollY + 10 >=
+                    document.body.scrollHeight
+                ) {
                     setFilters((prev) => ({ ...prev, page: prev.page + 1 }))
-                    setHasMore(true)
                 }
             } catch (error) {
                 throw new Error(error as string)

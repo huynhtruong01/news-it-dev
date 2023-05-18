@@ -1,17 +1,21 @@
-import { AVATAR } from '@/data'
+import { IUser } from '@/models'
+import { AppState } from '@/store'
 import { theme } from '@/utils'
-import { Avatar, Box, Button, Stack, TextField, BoxProps } from '@mui/material'
-import { Dispatch, FormEvent, MutableRefObject, SetStateAction, useState } from 'react'
+import { Avatar, Box, BoxProps, Button, Stack, TextField } from '@mui/material'
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import { connect } from 'react-redux'
 
 export interface ICommentInputProps extends BoxProps {
-    commentInputRef: MutableRefObject<HTMLInputElement | null>
+    pUser: IUser | null
+    // commentInputRef: MutableRefObject<HTMLInputElement | null>
     onCommentChange: ((value: string) => Promise<void>) | ((value: string) => void)
     isReply?: boolean
     setIsReply?: Dispatch<SetStateAction<boolean>>
 }
 
-export function CommentInput({
-    commentInputRef,
+function CommentInput({
+    pUser,
+    // commentInputRef,
     onCommentChange,
     isReply = false,
     setIsReply,
@@ -39,7 +43,7 @@ export function CommentInput({
             <Stack direction={'row'} gap={2}>
                 <Box>
                     <Avatar
-                        src={AVATAR}
+                        src={pUser?.avatar}
                         sx={{
                             width: 32,
                             height: 32,
@@ -49,7 +53,7 @@ export function CommentInput({
                 <Box component="form" onSubmit={handleCommentSubmit} flex={1}>
                     <Box marginBottom={2}>
                         <TextField
-                            inputRef={commentInputRef}
+                            // inputRef={commentInputRef}
                             value={value}
                             fullWidth
                             onChange={(e) => setValue(e.target.value)}
@@ -69,10 +73,10 @@ export function CommentInput({
                         sx={{
                             button: {
                                 color: theme.palette.primary.contrastText,
-                                padding: theme.spacing(1, 2),
+                                padding: theme.spacing(1.25, 2),
                                 borderRadius: theme.spacing(0.75),
                                 fontWeight: 500,
-                                fontSize: '1rem',
+                                fontSize: theme.typography.body2,
                             },
                         }}
                     >
@@ -95,9 +99,9 @@ export function CommentInput({
                             type="button"
                             variant="contained"
                             sx={{
-                                backgroundColor: theme.palette.grey[500],
+                                backgroundColor: theme.palette.grey[700],
                                 '&:hover': {
-                                    backgroundColor: theme.palette.grey[700],
+                                    backgroundColor: theme.palette.grey[900],
                                 },
                             }}
                             onClick={() => setValue('')}
@@ -125,3 +129,11 @@ export function CommentInput({
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(CommentInput)

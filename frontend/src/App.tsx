@@ -35,6 +35,7 @@ function App() {
                     <Route path={'/reading-list'} element={<ReadingList />} />
                     <Route path={'/signout-confirm'} element={<Signout />} />
                     <Route path={'/create-news'} element={<CreateNews />} />
+                    <Route path={'/update-news'} element={<CreateNews />} />
                 </Routes>
             </MainLayout>
         </Box>

@@ -1,17 +1,60 @@
-import { INews } from '@/models'
+import { INews, INewsForm, IOptionItem, IStatus } from '@/models'
+import { AppDispatch } from '@/store'
+import { setShowModalDelete } from '@/store/common'
+import { setInitValueForm, setNews } from '@/store/news'
 import { theme } from '@/utils'
 import { Box, BoxProps, Paper, Stack, Typography } from '@mui/material'
 import { green, red, yellow } from '@mui/material/colors'
-import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 
 export interface IDashboardNewsItemProps extends BoxProps {
+    pSetInitValuesNewsForm: (values: INewsForm) => void
+    pSetShowModalDelete: (isShow: boolean) => void
+    pSetNews: (news: INews) => void
     news: INews
 }
 
-export function DashboardNewsItem({ news, ...rest }: IDashboardNewsItemProps) {
-    // TODO: DELETE NEWS
+function DashboardNewsItem({
+    news,
+    pSetInitValuesNewsForm,
+    pSetShowModalDelete,
+    pSetNews,
+    ...rest
+}: IDashboardNewsItemProps) {
+    const navigate = useNavigate()
 
-    // TODO: UPDATE NEWS
+    // TODO: DELETE NEWS
+    const handleDeleteNews = () => {
+        pSetShowModalDelete(true)
+        pSetNews(news)
+    }
+
+    // TODO: set init values form
+    const handleSetInitValueNewsForm = () => {
+        const hashTagOptionIds = news.hashTags?.map(
+            (item) =>
+                ({
+                    id: item.id,
+                    name: item.name,
+                } as IOptionItem)
+        )
+
+        const newNewsValues: INewsForm = {
+            id: news.id,
+            title: news.title,
+            sapo: news.sapo,
+            thumbnailImage: news.thumbnailImage,
+            coverImage: news.coverImage,
+            content: news.content,
+            status: news.status as IStatus,
+            hashTags: news.hashTags,
+            hashTagOptionIds,
+        }
+
+        pSetInitValuesNewsForm(newNewsValues)
+        navigate('/create-news')
+    }
 
     return (
         <Box component={Paper} elevation={1} {...rest}>
@@ -84,6 +127,7 @@ export function DashboardNewsItem({ news, ...rest }: IDashboardNewsItemProps) {
                         sx={{
                             color: red[700],
                         }}
+                        onClick={handleDeleteNews}
                     >
                         Delete
                     </Box>
@@ -91,6 +135,7 @@ export function DashboardNewsItem({ news, ...rest }: IDashboardNewsItemProps) {
                         sx={{
                             color: green[700],
                         }}
+                        onClick={handleSetInitValueNewsForm}
                     >
                         Edit
                     </Box>
@@ -99,3 +144,13 @@ export function DashboardNewsItem({ news, ...rest }: IDashboardNewsItemProps) {
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSetInitValuesNewsForm: (values: INewsForm) => dispatch(setInitValueForm(values)),
+        pSetShowModalDelete: (isShow: boolean) => dispatch(setShowModalDelete(isShow)),
+        pSetNews: (news: INews) => dispatch(setNews(news)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(DashboardNewsItem)

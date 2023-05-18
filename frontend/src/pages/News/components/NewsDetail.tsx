@@ -1,6 +1,6 @@
 import { HashTagList } from '@/components/Common'
 import { useLinkUser } from '@/hooks'
-import { INews, IUser } from '@/models'
+import { IComment, INews, IUser } from '@/models'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, BoxProps, Paper, Stack, Typography } from '@mui/material'
 import { useMemo } from 'react'
@@ -111,7 +111,7 @@ export function NewsDetail({ news, ...rest }: INewsDetailProps) {
                 />
             </Box>
 
-            <NewsComment />
+            <NewsComment newsId={news.id} comments={news.comments as IComment[]} />
         </Box>
     )
 }

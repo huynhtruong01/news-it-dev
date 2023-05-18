@@ -29,6 +29,6 @@ export const removeDuplicated = <T extends ISynthetic>(arr: T[]) => {
     return newArr
 }
 
-export const generateIds = (options: IOptionItem[]) => {
+export const generateIds = (options: IOptionItem[]): number[] => {
     return options.map((item) => item.id)
 }

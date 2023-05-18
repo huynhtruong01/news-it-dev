@@ -1,7 +1,7 @@
 import { AppDataSource } from '@/config'
 import { relationNewsData } from '@/data'
 import { News, User } from '@/entities'
-import { IObjectCommon, IOrder } from '@/models'
+import { INewsRes, IObjectCommon, IOrder } from '@/models'
 import { commonService } from '@/services/common.service'
 import { hashTagService } from '@/services/hashTag.service'
 import {
@@ -27,9 +27,12 @@ class NewsService {
         return newLikeUserIds.includes(userId)
     }
 
-    async getAllByConditional(conditional?: IObjectCommon, sort?: IObjectCommon) {
+    async getAllByConditional(
+        conditional?: IObjectCommon,
+        sort?: IObjectCommon
+    ): Promise<INewsRes> {
         try {
-            const news = await this.newsRepository.find({
+            const [news, count] = await this.newsRepository.findAndCount({
                 where: {
                     ...(conditional || {}),
                 },
@@ -41,13 +44,13 @@ class NewsService {
                 relations: relationNewsData,
             })
 
-            return news
+            return [news, count]
         } catch (error) {
             throw new Error(error as string)
         }
     }
 
-    async getAll(query: IObjectCommon): Promise<News[]> {
+    async getAll(query: IObjectCommon): Promise<INewsRes> {
         try {
             const newFiltersQuery = filtersQuery(query)
             const newSortQuery = sortQuery(query)
@@ -55,21 +58,20 @@ class NewsService {
             const titleSearchQuery = searchQuery(query, 'title')
             const newFilterArrQuery = filtersArrQuery(query)
 
-            const news = await this.newsRepository.find({
+            const [news, count] = await this.newsRepository.findAndCount({
                 order: {
                     ...newSortQuery,
                 },
                 where: {
                     ...titleSearchQuery,
                     ...newFiltersQuery,
-                    // hashTagIds: In([1]),
                     ...newFilterArrQuery,
                 },
                 ...newPaginationQuery,
                 relations: relationNewsData,
             })
 
-            return news
+            return [news, count]
         } catch (error) {
             throw new Error(error as string)
         }
@@ -120,6 +122,21 @@ class NewsService {
                     id,
                 },
                 relations: relationNewsData,
+            })
+            if (!news) return null
+
+            return news
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    async getByIdComment(id: number) {
+        try {
+            const news = await this.newsRepository.findOne({
+                where: {
+                    id,
+                },
             })
             if (!news) return null
 

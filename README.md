@@ -175,3 +175,13 @@ server.ts
   - ❌ **News detail**
   - ❌ **Hash tag list**
   - ❌ **Hash tag detail**
+
+### COMMENTS (TODO)
+
+- **Create Comment**:
+
+- **Delete Comment**:
+
+- **Update Comment**:
+
+- **Like Comment**:

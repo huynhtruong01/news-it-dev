@@ -7,5 +7,12 @@ export const relationNewsData = {
         },
     },
     hashTags: true,
-    comments: true,
+    comments: {
+        childrenComments: {
+            user: true,
+        },
+        user: true,
+        news: true,
+        parentComment: true,
+    },
 }

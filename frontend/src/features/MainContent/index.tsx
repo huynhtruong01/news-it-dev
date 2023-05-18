@@ -1,10 +1,10 @@
-import { Box, Grid } from '@mui/material'
-import { ArticleContainer, Sidebar } from '..'
-import { useEffect } from 'react'
-import { connect } from 'react-redux'
 import { AppDispatch } from '@/store'
 import { getAllHashTagsPopular } from '@/store/hashTag/thunkApi'
+import { Grid, Box } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { useEffect } from 'react'
+import { connect } from 'react-redux'
+import { ArticleContainer, Sidebar } from '..'
 
 export interface IMainContentProps {
     pGetAllTagsPopular: () => Promise<PayloadAction<unknown>>
@@ -17,23 +17,22 @@ function MainContent({ pGetAllTagsPopular }: IMainContentProps) {
     }, [])
 
     return (
-        <Box component="section" width={'100%'}>
+        <Box>
             <Grid
                 container
                 gap={2}
                 sx={{
                     display: 'grid',
-                    gridTemplateColumns: '240px 2fr 1fr',
+                    gridTemplateColumns: '240px 1fr',
                 }}
             >
                 <Grid item>
                     <Sidebar />
                 </Grid>
+
                 <Grid item>
                     <ArticleContainer />
                 </Grid>
-                {/* TODO: ADD RIGHT SIDEBAR */}
-                <Grid item>{/* <Box>Right sidebar</Box> */}</Grid>
             </Grid>
         </Box>
     )

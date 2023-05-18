@@ -19,4 +19,5 @@ const newsSlice = createSlice({
     reducers,
 })
 
+export const { setInitValueForm, setNews } = newsSlice.actions
 export default newsSlice.reducer

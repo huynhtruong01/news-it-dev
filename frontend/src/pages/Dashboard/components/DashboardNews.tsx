@@ -13,8 +13,6 @@ export function DashboardNews({ newsList, ...rest }: IDashboardNewsProps) {
         return newsList?.length ? newsList : []
     }, [newsList])
 
-    // TODO: FETCH NEWS BY ID USER
-
     return (
         <Box {...rest}>
             <Typography component="h2" variant="h6" marginBottom={2} fontWeight={700}>

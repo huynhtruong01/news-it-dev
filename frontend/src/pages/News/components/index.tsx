@@ -1,7 +1,7 @@
 export * from '@/pages/News/components/NewsDetail'
 export * from '@/pages/News/components/NewsSideLeft'
 export * from '@/pages/News/components/NewsSideRight'
-export * from '@/pages/News/components/NewsComment'
+export { default as NewsComment } from '@/pages/News/components/NewsComment'
 export { default as NewsSideRightUser } from '@/pages/News/components/NewsSideRightUser'
 export { default as NewsSideRightRelationUser } from '@/pages/News/components/NewsSideRightRelationUser'
 export * from '@/pages/News/components/NewsSideRightRelation'

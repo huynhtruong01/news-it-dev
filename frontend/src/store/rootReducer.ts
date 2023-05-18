@@ -3,6 +3,7 @@ import userSlice from '@/store/user'
 import hashTagSlice from '@/store/hashTag'
 import commonSlice from '@/store/common'
 import newsSlice from '@/store/news'
+import commentSlice from '@/store/comment'
 import { AppState } from '.'
 
 export const DESTROY_ACTION = 'DESTROY_STORE'
@@ -12,6 +13,7 @@ export const combinedReducer = combineReducers({
     hashTag: hashTagSlice,
     common: commonSlice,
     news: newsSlice,
+    comment: commentSlice,
 })
 
 const rootReducer: Reducer = (state: AppState, action: AnyAction) => {

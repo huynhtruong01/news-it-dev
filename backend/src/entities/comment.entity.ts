@@ -6,6 +6,9 @@ import {
     JoinColumn,
     OneToMany,
     BaseEntity,
+    CreateDateColumn,
+    UpdateDateColumn,
+    ManyToMany,
 } from 'typeorm'
 import { News } from '@/entities/news.entity'
 import { User } from '@/entities/user.entity'
@@ -26,7 +29,7 @@ export class Comment extends BaseEntity {
     newsId: number
 
     @Column({ nullable: true })
-    parentCommentId: number
+    parentCommentId: number | null
 
     @ManyToOne(() => Comment, (comment) => comment.childrenComments)
     @JoinColumn({ name: 'parentCommentId' })
@@ -50,5 +53,24 @@ export class Comment extends BaseEntity {
     })
     comment: string
 
-    // TODO: like comment
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    numLikes: number
+
+    // like comment
+    @ManyToMany(() => User, (user) => user.newsLikes)
+    likes?: User[]
+
+    @Column({
+        type: 'text',
+    })
+    slug: string
+
+    @CreateDateColumn()
+    createdAt: string
+
+    @UpdateDateColumn()
+    updatedAt: string
 }

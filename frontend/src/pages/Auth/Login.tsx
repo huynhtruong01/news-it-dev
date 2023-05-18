@@ -35,7 +35,9 @@ function Login({ pSaveUserLogin }: ILoginProps) {
             })
             navigate(-1)
         } catch (error) {
-            throw new Error(error.message as string)
+            enqueueSnackbar(`Log in error: ${(error as Error).message}`, {
+                variant: 'error',
+            })
         }
     }
 

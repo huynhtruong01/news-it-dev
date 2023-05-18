@@ -2,13 +2,13 @@ import { Results, StatusCode, StatusText } from '@/enums'
 import { RequestUser } from '@/models'
 import { authService, userService } from '@/services'
 import { NextFunction, Response } from 'express'
+import jwt from 'jsonwebtoken'
 
 class AuthMiddleware {
     async getUser(req: RequestUser, res: Response, next: NextFunction) {
         try {
             // get token
             const bearer: string = req.headers['authorization'] as string
-
             if (!bearer) {
                 res.status(StatusCode.FORBIDDEN).json({
                     results: Results.ERROR,
@@ -30,10 +30,10 @@ class AuthMiddleware {
             }
 
             // verify token
-            const { id } = authService.verifyToken(token)
+            const decode = authService.verifyToken(token)
 
             // check user
-            const user = await userService.getById(Number(id))
+            const user = await userService.getById(Number(decode.id))
             if (!user) {
                 res.status(StatusCode.UNAUTHORIZED).json({
                     results: Results.ERROR,
@@ -47,11 +47,19 @@ class AuthMiddleware {
             req.user = user
             next()
         } catch (error) {
-            res.status(StatusCode.ERROR).json({
-                results: Results.ERROR,
-                status: StatusText.ERROR,
-                message: (error as Error).message,
-            })
+            if (error instanceof jwt.TokenExpiredError) {
+                res.status(StatusCode.UNAUTHORIZED).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'JWT expired.',
+                })
+            } else {
+                res.status(StatusCode.ERROR).json({
+                    results: Results.ERROR,
+                    status: StatusText.ERROR,
+                    message: (error as Error).message,
+                })
+            }
         }
     }
 }

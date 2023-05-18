@@ -5,3 +5,5 @@ export const ALL = -1
 export const LOGO =
     'https://res.cloudinary.com/practicaldev/image/fetch/s--pcSkTMZL--/c_limit,f_auto,fl_progressive,q_80,w_190/https://practicaldev-herokuapp-com.freetls.fastly.net/assets/devlogo-pwa-512.png'
 export const COLOR_WHITE = '#ffffff'
+
+export const HEADER_HEIGHT = 54

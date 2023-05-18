@@ -114,6 +114,44 @@ class UserService {
         }
     }
 
+    async getByIdNoRelations(id: number): Promise<User | null> {
+        try {
+            const user = await this.userRepository.findOne({
+                where: {
+                    id,
+                },
+                select: selectUserData,
+                relations: {
+                    saves: {
+                        user: true,
+                        hashTags: true,
+                    },
+                },
+            })
+            if (!user) return null
+
+            return user
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get by id for comment
+    async getByIdComment(id: number) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: {
+                    id,
+                },
+            })
+            if (!user) return null
+
+            return user
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     // get by username
     async getByUsername(username: string): Promise<User | null> {
         try {
@@ -135,7 +173,7 @@ class UserService {
     // get user by filter saves
     async getFilterSaves(id: number, filters: IObjectCommon): Promise<User | null> {
         try {
-            const user = await this.getById(id)
+            const user = await this.getByIdNoRelations(id)
             if (!user) return null
 
             // const hashTags = () => {

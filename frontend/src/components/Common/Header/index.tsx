@@ -194,7 +194,9 @@ function Header({ pUser }: IHeaderProps) {
                                     sx={{
                                         border: `1px solid ${theme.palette.primary.main}`,
 
-                                        a: {
+                                        '& > a': {
+                                            display: 'block !important',
+                                            padding: '10px 14px !important',
                                             color: theme.palette.primary.main,
                                         },
 

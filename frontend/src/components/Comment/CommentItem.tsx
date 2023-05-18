@@ -1,26 +1,30 @@
 import { ButtonIconForm } from '@/components/Common'
-import { IComment } from '@/models'
+import { IComment, ICommentData, IUser } from '@/models'
 import { formatDate, theme } from '@/utils'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
-import { Avatar, Box, IconButton, Paper, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Paper, Stack, Typography } from '@mui/material'
 import { useMemo, useState } from 'react'
-import { CommentInput } from '.'
+import { CommentAction, CommentInput, CommentList } from '.'
+import { connect } from 'react-redux'
+import { AppDispatch, AppState } from '@/store'
+import { createComment, replyComment } from '@/store/comment/thunkApi'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { enqueueSnackbar } from 'notistack'
 
 export interface ICommentItemProps {
+    pUser: IUser | null
+    pReplyComment: (data: ICommentData) => Promise<PayloadAction<unknown>>
     comment: IComment
 }
 
-export function CommentItem({ comment }: ICommentItemProps) {
+function CommentItem({ pUser, comment, pReplyComment }: ICommentItemProps) {
     const [isReply, setIsReply] = useState<boolean>(false)
 
     const {
         comment: content,
         user,
         childrenComments,
-        parentCommentId,
-        id,
         newsId,
         numLikes,
         createdAt,
@@ -38,8 +42,23 @@ export function CommentItem({ comment }: ICommentItemProps) {
         setIsReply(true)
     }
 
-    const handleReplyComment = (value: string) => {
-        console.log('reply comment', value)
+    const handleReplyComment = async (value: string) => {
+        try {
+            setIsReply(false)
+            const newComment: ICommentData = {
+                userId: pUser?.id as number,
+                newsId,
+                comment: value,
+                parentCommentId: comment.id,
+            }
+
+            console.log('comment reply: ', newComment)
+            await pReplyComment(newComment)
+        } catch (error) {
+            enqueueSnackbar((error as Error).message, {
+                variant: 'error',
+            })
+        }
     }
 
     return (
@@ -57,7 +76,6 @@ export function CommentItem({ comment }: ICommentItemProps) {
                 </Box>
 
                 <Box flex={1}>
-                    {/* Comment */}
                     <Paper
                         elevation={1}
                         sx={{
@@ -67,7 +85,7 @@ export function CommentItem({ comment }: ICommentItemProps) {
                         <Stack
                             direction={'row'}
                             justifyContent={'space-between'}
-                            alignItems={'center'}
+                            alignItems={'flex-start'}
                         >
                             <Box>
                                 <Typography
@@ -82,9 +100,9 @@ export function CommentItem({ comment }: ICommentItemProps) {
                                     {formatDate(createdAt || new Date(), 'MMM DD')}
                                 </Box>
                             </Box>
-                            <IconButton>
-                                <MoreHorizIcon />
-                            </IconButton>
+                            {pUser?.id === comment.userId && (
+                                <CommentAction commentId={comment.id} />
+                            )}
                         </Stack>
                         <Box
                             dangerouslySetInnerHTML={{ __html: content }}
@@ -146,12 +164,24 @@ export function CommentItem({ comment }: ICommentItemProps) {
 
                     {/* Comment Children */}
                     <Box marginTop={4}>
-                        {newChildrenComments.map((comment) => (
-                            <CommentItem key={comment.id} comment={comment} />
-                        ))}
+                        <CommentList comments={newChildrenComments} />
                     </Box>
                 </Box>
             </Stack>
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+const mapDispatchProps = (dispatch: AppDispatch) => {
+    return {
+        pReplyComment: (data: ICommentData) => dispatch(replyComment(data)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchProps)(CommentItem)

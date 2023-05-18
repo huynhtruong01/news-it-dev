@@ -177,7 +177,9 @@ export class User extends BaseEntity {
     })
     news?: News[]
 
-    @OneToMany(() => Comment, (comment) => comment.user)
+    @OneToMany(() => Comment, (comment) => comment.user, {
+        cascade: true,
+    })
     comments?: Comment[]
 
     @ManyToMany(() => HashTag, (hashTag) => hashTag.users, {
@@ -189,6 +191,11 @@ export class User extends BaseEntity {
         inverseJoinColumn: { name: 'hashTagId', referencedColumnName: 'id' },
     })
     hashTags?: HashTag[]
+
+    @ManyToMany(() => Comment, (comment) => comment.likes, {
+        cascade: true,
+    })
+    commentLikes?: Comment[]
 
     // TODO: add column role names
 
