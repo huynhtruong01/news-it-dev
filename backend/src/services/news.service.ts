@@ -12,6 +12,7 @@ import {
     searchQuery,
     sortQuery,
 } from '@/utils'
+import { userService } from './user.service'
 
 class NewsService {
     constructor(private newsRepository = AppDataSource.getRepository(News)) {}
@@ -106,6 +107,12 @@ class NewsService {
 
             // create slug
             news.slug = commonService.generateSlug(news.title)
+            const user = await userService.getById(data.userId)
+
+            if (user) {
+                user.newsCount++
+                await userService.updateAll(user.id, user)
+            }
 
             const newNews = await this.newsRepository.save(news)
             return newNews

@@ -31,20 +31,26 @@ export class Comment extends BaseEntity {
     @Column({ nullable: true })
     parentCommentId: number | null
 
-    @ManyToOne(() => Comment, (comment) => comment.childrenComments)
+    @ManyToOne(() => Comment, (comment) => comment.childrenComments, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'parentCommentId' })
     parentComment?: Comment
 
     @OneToMany(() => Comment, (comment) => comment.parentComment, {
-        cascade: true,
+        onDelete: 'CASCADE',
     })
     childrenComments?: Comment[]
 
-    @ManyToOne(() => News, (news) => news.comments)
+    @ManyToOne(() => News, (news) => news.comments, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'newsId' })
     news?: News
 
-    @ManyToOne(() => User, (user) => user.comments)
+    @ManyToOne(() => User, (user) => user.comments, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'userId' })
     user: User
 
@@ -60,7 +66,7 @@ export class Comment extends BaseEntity {
     numLikes: number
 
     // like comment
-    @ManyToMany(() => User, (user) => user.newsLikes)
+    @ManyToMany(() => User, (user) => user.commentLikes)
     likes?: User[]
 
     @Column({

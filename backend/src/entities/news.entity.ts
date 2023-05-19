@@ -102,7 +102,9 @@ export class News extends BaseEntity {
     @JoinTable()
     hashTags?: HashTag[]
 
-    @OneToMany(() => Comment, (comment) => comment.news)
+    @OneToMany(() => Comment, (comment) => comment.news, {
+        onDelete: 'CASCADE',
+    })
     comments?: Comment[]
 
     @Column({

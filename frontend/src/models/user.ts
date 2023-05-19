@@ -29,6 +29,7 @@ export interface IUserData {
     saves?: INews[]
     news?: INews[]
     comments?: IComment[]
+    commentLikes?: IComment[]
     hashTags?: IHashTag[]
     isActive?: boolean
     slug?: string

@@ -34,6 +34,24 @@ export const replyComment = createAsyncThunk(
     }
 )
 
+export const updateComment = createAsyncThunk(
+    'comment/updateComment',
+    async (data: ICommentData) => {
+        const results = await commentApi.updateComment(data)
+
+        return results.data.comment
+    }
+)
+
+export const updateCommentReply = createAsyncThunk(
+    'comment/updateCommentReply',
+    async (data: ICommentData) => {
+        const results = await commentApi.updateCommentReply(data)
+
+        return results.data.comment
+    }
+)
+
 export const extraReducers = (builders: ActionReducerMapBuilder<ICommentStore>) => {
     builders.addCase(
         getAllCommentsById.fulfilled,
@@ -47,7 +65,7 @@ export const extraReducers = (builders: ActionReducerMapBuilder<ICommentStore>) 
         createComment.fulfilled,
         (state: ICommentStore, action: PayloadAction<IComment>) => {
             const newComments = [...state.comments]
-            newComments.push(action.payload)
+            newComments.unshift(action.payload)
             state.comments = newComments
         }
     )
@@ -63,6 +81,51 @@ export const extraReducers = (builders: ActionReducerMapBuilder<ICommentStore>) 
                 newComments[index] = action.payload
                 state.comments = newComments
             }
+        }
+    )
+
+    builders.addCase(
+        updateComment.fulfilled,
+        (state: ICommentStore, action: PayloadAction<IComment>) => {
+            const newComments = [...state.comments]
+            const index = newComments.findIndex(
+                (comment) => comment.id === action.payload.id
+            )
+            if (index > -1) {
+                newComments[index] = action.payload
+                state.comments = newComments
+            }
+        }
+    )
+
+    builders.addCase(
+        updateCommentReply.fulfilled,
+        (state: ICommentStore, action: PayloadAction<IComment>) => {
+            console.log('payload: ', action.payload)
+            const newComments = [...state.comments]
+            const index = newComments.findIndex((c) => c.id === action.payload.id)
+
+            if (index > -1) {
+                newComments[index] = action.payload
+
+                state.comments = newComments
+            }
+
+            // if (comment) {
+            //     const index = comment.childrenComments?.findIndex(
+            //         (c) => c.id === action.payload.id
+            //     ) as number
+            //     if (index > -1) {
+            //         ;(comment.childrenComments as IComment[])[index] = action.payload
+
+            //         const indexComment = newComments.findIndex(
+            //             (c) => c.id === action.payload.parentCommentId
+            //         )
+            //         if (indexComment > -1) {
+            //             newComments[indexComment] = comment
+            //         }
+            //     }
+            // }
         }
     )
 }

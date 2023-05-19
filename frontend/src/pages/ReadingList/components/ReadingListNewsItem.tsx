@@ -1,4 +1,5 @@
-import { INews } from '@/models'
+import { useLinkUser } from '@/hooks'
+import { INews, IUser } from '@/models'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, Button, Stack, Typography, alpha } from '@mui/material'
 import { Link } from 'react-router-dom'
@@ -8,6 +9,8 @@ export interface IReadingListNewsItemProps {
 }
 
 export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
+    const linkUser = useLinkUser(article?.user as IUser)
+
     return (
         <Stack
             direction={'row'}
@@ -21,7 +24,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
             <Stack direction={'row'} gap={2}>
                 <Box>
                     {/* TODO: WRITE LINK HERE */}
-                    <Link to={'/'}>
+                    <Link to={linkUser}>
                         <Avatar
                             src={article.user?.avatar as string}
                             alt={article.user?.username as string}
@@ -45,7 +48,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                             },
                         }}
                     >
-                        {/* TODO: WRITE LINK HERE */}
+                        {/* WRITE LINK HERE */}
                         <Link to={`/news/${article.slug}`}>{article.title}</Link>
                     </Typography>
                     <Typography
@@ -60,7 +63,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                             },
                         }}
                     >
-                        {/* TODO: WRITE LINK HERE */}
+                        {/* WRITE LINK HERE */}
                         <Typography
                             component="span"
                             sx={{
@@ -72,9 +75,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                                 },
                             }}
                         >
-                            <Link to={`/profile/${article?.user?.username}`}>
-                                {article.user?.username}
-                            </Link>
+                            <Link to={linkUser}>{article.user?.username}</Link>
                         </Typography>
                         <span> • </span>
                         <span>

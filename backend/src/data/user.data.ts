@@ -41,5 +41,6 @@ export const relationDataUser = {
         user: true,
         hashTags: true,
     },
-    // comments: true,
+    comments: true,
+    commentLikes: true,
 }
