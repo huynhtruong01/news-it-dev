@@ -1,4 +1,4 @@
-import { AppDataSource } from '@/config'
+import { AppDataSource, sendEmail } from '@/config'
 import { MAX_AGE_ACCESS_TOKEN } from '@/consts'
 import { User } from '@/entities'
 import { Results, StatusCode, StatusText } from '@/enums'
@@ -29,14 +29,20 @@ class AuthController {
             }
 
             // create user
-            const user = await userService.create(req.body)
-            user.password = undefined
+            // const user = await userService.create(req.body)
+            // user.password = undefined
+
+            const activeToken = authService.signActiveToken(emailAddress)
+            if (emailAddress) {
+                const url = `${process.env.BASE_URL}/active/${activeToken}`
+                sendEmail(emailAddress, url, 'Verify your email address.')
+            }
 
             res.status(StatusCode.CREATED).json({
                 results: Results.SUCCESS,
                 status: StatusText.SUCCESS,
                 data: {
-                    user,
+                    message: 'Sign up account success. Please check your email.',
                 },
             })
         } catch (error) {
@@ -51,7 +57,6 @@ class AuthController {
     // login (POST)
     async login(req: Request, res: Response) {
         try {
-            console.log(req.body)
             // check email and password
             const { email, password } = req.body
             if (!email || !password) {

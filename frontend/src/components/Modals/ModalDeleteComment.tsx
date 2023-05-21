@@ -1,7 +1,7 @@
 import { commentApi } from '@/api'
 import { IComment } from '@/models'
 import { AppDispatch, AppState } from '@/store'
-import { deleteComment, setComment } from '@/store/comment'
+import { setComment } from '@/store/comment'
 import { setShowModalDeleteComment } from '@/store/common'
 import { theme } from '@/utils'
 import { Box, Button, Modal, Paper, Stack, Typography, alpha } from '@mui/material'
@@ -22,7 +22,6 @@ function ModelDeleteComment({
     pComment,
     pSetComment,
     pSetShowModalDeleteComment,
-    pDeleteComment,
 }: IModelDeleteCommentProps) {
     const handleClose = () => {
         pSetShowModalDeleteComment(false)
@@ -33,7 +32,7 @@ function ModelDeleteComment({
             if (pComment?.id) {
                 pSetComment(null)
                 pSetShowModalDeleteComment(false)
-                pDeleteComment(pComment)
+                // pDeleteComment(pComment)
 
                 await commentApi.deleteComment(pComment.id)
             }
@@ -116,7 +115,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         pSetShowModalDeleteComment: (isShow: boolean) =>
             dispatch(setShowModalDeleteComment(isShow)),
         pSetComment: (comment: IComment | null) => dispatch(setComment(comment)),
-        pDeleteComment: (comment: IComment) => dispatch(deleteComment(comment)),
+        // pDeleteComment: (comment: IComment) => dispatch(deleteComment(comment)),
     }
 }
 

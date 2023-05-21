@@ -9,12 +9,14 @@ import { enqueueSnackbar } from 'notistack'
 import { newsApi } from '@/api'
 import { INews } from '@/models'
 import { setNews } from '@/store/news'
+import { deleteNewsUser } from '@/store/user'
 
 export interface IModelDeleteProps {
     pShowModalDelete: boolean
     pNews: INews | null
     pSetNews: (news: INews | null) => void
     pSetShowModalDelete: (isShow: boolean) => void
+    pDeleteNews: (id: number) => void
 }
 
 function ModelDelete({
@@ -22,6 +24,7 @@ function ModelDelete({
     pNews,
     pSetNews,
     pSetShowModalDelete,
+    pDeleteNews,
 }: IModelDeleteProps) {
     const handleClose = () => {
         pSetShowModalDelete(false)
@@ -30,6 +33,7 @@ function ModelDelete({
     const handleDeleteNews = async () => {
         try {
             if (pNews?.id) {
+                pDeleteNews(pNews.id)
                 await newsApi.deleteNews(pNews?.id)
             }
 
@@ -135,6 +139,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pSetShowModalDelete: (isShow: boolean) => dispatch(setShowModalDelete(isShow)),
         pSetNews: (news: INews | null) => dispatch(setNews(news)),
+        pDeleteNews: (id: number) => dispatch(deleteNewsUser(id)),
     }
 }
 

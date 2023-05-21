@@ -67,10 +67,14 @@ export class News extends BaseEntity {
     })
     numSaves: number
 
-    @ManyToMany(() => User, (user) => user.newsLikes)
+    @ManyToMany(() => User, (user) => user.newsLikes, {
+        onDelete: 'CASCADE',
+    })
     likes?: User[]
 
-    @ManyToMany(() => User, (user) => user.saves)
+    @ManyToMany(() => User, (user) => user.saves, {
+        onDelete: 'CASCADE',
+    })
     saveUsers?: User[]
 
     @Column({

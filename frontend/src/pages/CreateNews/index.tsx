@@ -5,6 +5,10 @@ import { newsApi } from '@/api'
 import { enqueueSnackbar } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 import { uploadImage, generateIds } from '@/utils'
+import { setInitValueForm } from '@/store/news'
+import { AppDispatch } from '@/store'
+import { initNewsFormValues } from '@/data'
+import { connect } from 'react-redux'
 
 const generateNewValues = (values: INewsForm) => {
     const { hashTagOptionIds, hashTags, ...rest } = values
@@ -16,7 +20,11 @@ const generateNewValues = (values: INewsForm) => {
     }
 }
 
-export function CreateNews() {
+export interface ICreateNewsProps {
+    pSetInitValuesNewsForm: (values: INewsForm) => void
+}
+
+function CreateNews({ pSetInitValuesNewsForm }: ICreateNewsProps) {
     const navigate = useNavigate()
 
     // create news
@@ -88,6 +96,8 @@ export function CreateNews() {
                 await handleCreateNews(values)
             }
 
+            pSetInitValuesNewsForm(initNewsFormValues)
+
             navigate('/')
         } catch (error) {
             throw new Error((error as Error).message)
@@ -100,3 +110,11 @@ export function CreateNews() {
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSetInitValuesNewsForm: (values: INewsForm) => dispatch(setInitValueForm(values)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(CreateNews)

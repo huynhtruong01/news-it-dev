@@ -6,12 +6,15 @@ import { Avatar, Box, BoxProps, Paper, Stack, Typography } from '@mui/material'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { NewsComment } from '.'
+import { connect } from 'react-redux'
+import { AppState } from '@/store'
 
 export interface INewsDetailProps extends BoxProps {
+    pUser: IUser | null
     news: INews
 }
 
-export function NewsDetail({ news, ...rest }: INewsDetailProps) {
+function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
     const { user, title, content, hashTags, thumbnailImage, createdAt } = news
 
     const newTags = useMemo(() => {
@@ -95,23 +98,47 @@ export function NewsDetail({ news, ...rest }: INewsDetailProps) {
 
             <Box component="article" padding={theme.spacing(4, 8)}>
                 <Box
-                    dangerouslySetInnerHTML={{ __html: content }}
                     sx={{
                         p: {
-                            lineHeight: '30px',
+                            lineHeight: '30px !important',
                             fontSize: '20px',
                             margin: theme.spacing(0, 0, 2.5, 0),
-                            color: theme.palette.secondary.main,
-                            fontWeight: 400,
+                            color: '#171717',
+                            overflowWrap: 'break-word',
                         },
                         span: {
-                            lineHeight: '30px',
+                            lineHeight: '30px !important',
                         },
                     }}
+                    dangerouslySetInnerHTML={{ __html: content }}
                 />
             </Box>
 
-            <NewsComment newsId={news.id} />
+            {/* COMMENT */}
+            {pUser && <NewsComment newsId={news.id} />}
+            {!pUser && (
+                <Typography
+                    sx={{
+                        padding: theme.spacing(2, 8, 8),
+                        a: {
+                            color: theme.palette.primary.main,
+                            '&:hover': {
+                                textDecoration: 'underline',
+                            },
+                        },
+                    }}
+                >
+                    Please <Link to={'/login'}>login</Link> to comment this news.
+                </Typography>
+            )}
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(NewsDetail)

@@ -22,5 +22,14 @@ const commentSlice = createSlice({
     extraReducers,
 })
 
-export const { setComment, deleteComment } = commentSlice.actions
+export const {
+    setComment,
+    createComment,
+    replyComment,
+    updateComment,
+    updateCommentReply,
+    deleteComment,
+    likeComment,
+    unlikeComment,
+} = commentSlice.actions
 export default commentSlice.reducer

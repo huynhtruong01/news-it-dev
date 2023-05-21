@@ -1,11 +1,11 @@
+import { commentApi } from '@/api'
 import { ButtonLikeComment, CommentAction } from '@/components/Comment/components'
 import { ButtonIconForm } from '@/components/Common'
 import { IComment, ICommentData, IUser } from '@/models'
-import { AppDispatch, AppState } from '@/store'
-import { replyComment, updateComment, updateCommentReply } from '@/store/comment/thunkApi'
+import { AppState } from '@/store'
 import { formatDate, theme } from '@/utils'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
-import { Avatar, Box, Paper, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Paper, Stack, Typography, alpha } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
 import { useMemo, useState } from 'react'
@@ -23,10 +23,10 @@ export interface ICommentItemProps {
 function CommentItem({
     pUser,
     comment,
-    pReplyComment,
-    pUpdateComment,
-    pUpdateCommentReply,
-}: ICommentItemProps) {
+}: // pReplyComment,
+// pUpdateComment,
+// pUpdateCommentReply,
+ICommentItemProps) {
     const [isReply, setIsReply] = useState<boolean>(false)
     const [initValue, setInitValue] = useState<string>('')
     const [edit, setEdit] = useState<IComment | null>(null)
@@ -57,7 +57,7 @@ function CommentItem({
                     : comment.id,
             }
 
-            await pReplyComment(newComment)
+            await commentApi.replyComment(newComment)
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',
@@ -77,9 +77,9 @@ function CommentItem({
             setLoadingUpdate(true)
 
             if (newValues?.parentCommentId) {
-                await pUpdateCommentReply(newValues)
+                await commentApi.updateCommentReply(newValues)
             } else {
-                await pUpdateComment(newValues)
+                await commentApi.updateComment(newValues)
             }
 
             setEdit(null)
@@ -206,10 +206,10 @@ function CommentItem({
                                 button: {
                                     width: 'auto',
                                     backgroundColor: 'transparent',
-                                    color: theme.palette.secondary.main,
+                                    color: alpha(theme.palette.secondary.main, 0.9),
                                     fontSize: theme.typography.body2,
-                                    fontWeight: 400,
                                     padding: theme.spacing(0.75, 1.5),
+
                                     '&:hover': {
                                         backgroundColor: 'rgba(0, 0, 0, 0.05)',
                                     },
@@ -248,12 +248,12 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-const mapDispatchProps = (dispatch: AppDispatch) => {
-    return {
-        pReplyComment: (data: ICommentData) => dispatch(replyComment(data)),
-        pUpdateComment: (data: ICommentData) => dispatch(updateComment(data)),
-        pUpdateCommentReply: (data: ICommentData) => dispatch(updateCommentReply(data)),
-    }
-}
+// const mapDispatchProps = (dispatch: AppDispatch) => {
+//     return {
+//         pReplyComment: (data: ICommentData) => dispatch(replyComment(data)),
+//         pUpdateComment: (data: ICommentData) => dispatch(updateComment(data)),
+//         pUpdateCommentReply: (data: ICommentData) => dispatch(updateCommentReply(data)),
+//     }
+// }
 
-export default connect(mapStateToProps, mapDispatchProps)(CommentItem)
+export default connect(mapStateToProps, null)(CommentItem)

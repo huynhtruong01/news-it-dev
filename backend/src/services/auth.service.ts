@@ -68,6 +68,13 @@ class AuthService {
         })
     }
 
+    // sign active token
+    signActiveToken(email: string) {
+        return jwt.sign({ email }, process.env.JWT_SECRET as string, {
+            expiresIn: process.env.JWT_ACTIVE_EXPIRES,
+        })
+    }
+
     // verify token
     verifyToken(token: string): JwtPayloadUser {
         return jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayloadUser

@@ -208,6 +208,8 @@ export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormPro
                         disabled={isSubmitting}
                         sx={{
                             backgroundColor: theme.palette.primary.light,
+                            padding: theme.spacing(1.5),
+                            fontWeight: 500,
                             '&:hover': {
                                 backgroundColor: theme.palette.primary.dark,
                             },

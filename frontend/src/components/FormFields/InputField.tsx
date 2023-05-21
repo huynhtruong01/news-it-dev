@@ -51,7 +51,9 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
                         size="small"
                         sx={{
                             marginTop: 1,
-                            backgroundColor: '#fff',
+                            input: {
+                                backgroundColor: theme.palette.primary.contrastText,
+                            },
                         }}
                         {...rest}
                     />

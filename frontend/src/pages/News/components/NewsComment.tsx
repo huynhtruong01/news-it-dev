@@ -1,10 +1,11 @@
+import { commentApi } from '@/api'
 import { CommentInput, CommentList } from '@/components'
 import { Order } from '@/enums'
 import { IComment, ICommentData, IFilters, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
-import { createComment, getAllCommentsById } from '@/store/comment/thunkApi'
+import { getAllCommentsById } from '@/store/comment/thunkApi'
 import { theme } from '@/utils'
-import { Box, BoxProps, Typography, Button, Stack } from '@mui/material'
+import { Box, BoxProps, Button, Stack, Typography } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -17,7 +18,6 @@ export interface INewsCommentProps extends BoxProps {
     pComments: IComment[]
     pTotal: number
     pGetAllComments: (params: IFilters) => Promise<PayloadAction<unknown>>
-    pCreateComment: (data: ICommentData) => Promise<PayloadAction<unknown>>
 }
 
 function NewsComment({
@@ -25,7 +25,6 @@ function NewsComment({
     pUser,
     pComments,
     pGetAllComments,
-    pCreateComment,
     pTotal,
     ...rest
 }: INewsCommentProps) {
@@ -36,6 +35,7 @@ function NewsComment({
     })
     const commentInputRef = useRef<HTMLInputElement | null>(null)
     const commentRef = useRef<HTMLDivElement | null>(null)
+    const [loadingComment, setLoadingComment] = useState<boolean>(true)
     const [loadMore, setLoadMore] = useState<boolean>(false)
 
     const location = useLocation()
@@ -50,6 +50,7 @@ function NewsComment({
 
         // get all comments by news id
         ;(async () => {
+            setLoadingComment(true)
             try {
                 const newFilters = { ...filters, newsId }
                 await pGetAllComments(newFilters)
@@ -58,6 +59,7 @@ function NewsComment({
                     variant: 'error',
                 })
             }
+            setLoadingComment(false)
         })()
     }, [])
 
@@ -89,7 +91,8 @@ function NewsComment({
                 newsId,
                 comment: value,
             }
-            await pCreateComment(newComment)
+
+            await commentApi.createComment(newComment)
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',
@@ -106,8 +109,8 @@ function NewsComment({
         if (pComments.length) {
             return pComments.reduce((quantities, c) => {
                 if (c.childrenComments?.length)
-                    return c.childrenComments?.length + quantities
-                return 1 + quantities
+                    return c.childrenComments?.length + quantities + 1
+                return quantities + 1
             }, 0)
         }
         return 0
@@ -129,7 +132,17 @@ function NewsComment({
                         marginBottom: 6,
                     }}
                 />
-                <CommentList comments={pComments} />
+                {loadingComment && (
+                    <Typography
+                        sx={{
+                            textAlign: 'center',
+                            color: theme.palette.primary.main,
+                        }}
+                    >
+                        Loading comment...
+                    </Typography>
+                )}
+                {!loadingComment && <CommentList comments={pComments} />}
 
                 {loadMore && (
                     <Typography
@@ -164,7 +177,6 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchProps = (dispatch: AppDispatch) => {
     return {
         pGetAllComments: (params: IFilters) => dispatch(getAllCommentsById(params)),
-        pCreateComment: (data: ICommentData) => dispatch(createComment(data)),
     }
 }
 

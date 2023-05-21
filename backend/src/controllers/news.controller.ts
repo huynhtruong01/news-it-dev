@@ -235,7 +235,10 @@ class NewsController {
     // delete (DELETE)
     async deleteNews(req: RequestUser, res: Response) {
         try {
-            const news = await newsService.delete(Number(req.params.newsId))
+            const news = await newsService.delete(
+                Number(req.params.newsId),
+                Number(req.user?.id)
+            )
             if (!news) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,

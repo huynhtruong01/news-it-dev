@@ -48,12 +48,13 @@ function DashboardNewsItem({
             coverImage: news.coverImage,
             content: news.content,
             status: news.status as IStatus,
+            readTimes: news.readTimes,
             hashTags: news.hashTags,
             hashTagOptionIds,
         }
 
         pSetInitValuesNewsForm(newNewsValues)
-        navigate('/create-news')
+        navigate('/update-news')
     }
 
     return (

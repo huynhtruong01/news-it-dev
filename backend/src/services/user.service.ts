@@ -352,12 +352,14 @@ class UserService {
                     `'${userFollower.username}' has follower '${user.username}'.`
                 )
 
-            user.following?.push(userFollower)
             // add userId into following
+            user.following?.push(userFollower)
+            user.numFollowing = user.numFollowing + 1
             const newUser = await this.userRepository.save(user)
 
             // add id into follower of this userId
             userFollower.followers?.push(newUser)
+            userFollower.numFollowers = userFollower.numFollowers + 1
             await this.userRepository.save(userFollower)
 
             return newUser
@@ -386,6 +388,7 @@ class UserService {
 
             // remove userId into following
             const idx = user.following?.findIndex((follow) => follow.id === userId)
+            user.numFollowing = user.numFollowing === 0 ? 0 : user.numFollowing - 1
             if (typeof idx === 'number' && idx >= 0) {
                 user.following?.splice(idx, 1)
                 const updateUser = await this.userRepository.save(user)
@@ -396,6 +399,8 @@ class UserService {
             const idxUser = userFollower.followers?.findIndex(
                 (follow) => follow.id === id
             )
+            userFollower.numFollowers =
+                userFollower.numFollowers === 0 ? 0 : userFollower.numFollowers - 1
             if (typeof idxUser === 'number' && idxUser >= 0) {
                 userFollower.followers?.splice(idxUser, 1)
                 await this.userRepository.save(userFollower)

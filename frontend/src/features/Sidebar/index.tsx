@@ -13,7 +13,7 @@ function Sidebar({ pUser, ...rest }: ISidebarProps) {
         <Box {...rest}>
             <Box component="aside">
                 <Stack direction={'column'} spacing={2}>
-                    {!pUser?.id && <SidebarHeader />}
+                    {!pUser && <SidebarHeader />}
                     <SidebarNav />
                     <SidebarTag />
                 </Stack>

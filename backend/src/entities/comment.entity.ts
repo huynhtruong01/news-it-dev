@@ -66,7 +66,9 @@ export class Comment extends BaseEntity {
     numLikes: number
 
     // like comment
-    @ManyToMany(() => User, (user) => user.commentLikes)
+    @ManyToMany(() => User, (user) => user.commentLikes, {
+        onDelete: 'CASCADE',
+    })
     likes?: User[]
 
     @Column({

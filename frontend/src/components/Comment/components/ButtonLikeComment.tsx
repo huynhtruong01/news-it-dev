@@ -1,38 +1,43 @@
-import { Button, ButtonProps } from '@mui/material'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import { useState, useEffect } from 'react'
-import { IComment, IUser } from '@/models'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import { red } from '@mui/material/colors'
-import { connect } from 'react-redux'
-import { AppDispatch } from '@/store'
-import { getProfile } from '@/store/user/thunkApi'
-import { PayloadAction } from '@reduxjs/toolkit'
 import { commentApi } from '@/api'
+import { IComment, IUser } from '@/models'
+import { AppDispatch } from '@/store'
+import { IActionComment } from '@/store/comment/reducers'
+import { getProfile } from '@/store/user/thunkApi'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import { Button, ButtonProps } from '@mui/material'
+import { red } from '@mui/material/colors'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
+import { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 
 export interface IButtonLikeCommentProps extends ButtonProps {
+    pGetProfile: () => Promise<PayloadAction<unknown>>
+    pLikeComment: (data: IActionComment) => void
+    pUnLikeComment: (data: IActionComment) => void
     comment: IComment
     user: IUser
-    pGetProfile: () => Promise<PayloadAction<unknown>>
 }
 
 function ButtonLikeComment({
+    pGetProfile,
     comment,
     user,
-    pGetProfile,
     ...rest
 }: IButtonLikeCommentProps) {
     const [isLike, setIsLike] = useState<boolean>(false)
-    const [numLikes, setNumLikes] = useState<number>(comment.numLikes || 0)
+    const [numLikes, setNumLikes] = useState<number>(comment.likes?.length || 0)
 
     useEffect(() => {
-        const isLike = comment.likes?.find((u) => u.id === user?.id)
+        const isLike = comment.likes?.some((u) => u.id === user?.id)
         if (isLike) {
             setIsLike(true)
         } else {
             setIsLike(false)
         }
+
+        setNumLikes(comment.likes?.length || 0)
     }, [user, comment])
 
     const handleLikeComment = async () => {
@@ -40,10 +45,12 @@ function ButtonLikeComment({
             if (isLike) {
                 setIsLike(false)
                 setNumLikes(numLikes - 1)
+                // pUnLikeComment({ comment, user })
                 await commentApi.unlikeComment(comment.id)
             } else {
                 setIsLike(true)
                 setNumLikes(numLikes + 1)
+                // pLikeComment({ comment, user })
                 await commentApi.likeComment(comment.id)
             }
 

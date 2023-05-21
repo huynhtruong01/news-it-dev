@@ -26,7 +26,7 @@ export const deleteNews = (id: number) => {
 }
 
 export const updateNews = (data: INewsForm) => {
-    return AxiosClient.post(`${BASE_URL}/${data?.id}`, data)
+    return AxiosClient.put(`${BASE_URL}/${data?.id}`, data)
 }
 
 export const likeNews = (id: number) => {

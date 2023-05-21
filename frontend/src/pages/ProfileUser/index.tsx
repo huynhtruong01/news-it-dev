@@ -2,6 +2,7 @@ import { userApi } from '@/api'
 import { IsFollow } from '@/enums'
 import { IFollow, IUser } from '@/models'
 import { ProfileInfoItem, ProfileLeftItem, ProfileNews } from '@/pages/Profile/components'
+import { ProfileUserNumFollow } from '@/pages/ProfileUser/components'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
@@ -23,7 +24,6 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { ProfileUserNumFollow } from '@/pages/ProfileUser/components'
 
 export interface IProfileUserProps {
     pUser: IUser | null
@@ -34,6 +34,7 @@ export interface IProfileUserProps {
 function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProps) {
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
     const [user, setUser] = useState<IUser | null>(null)
+    const [followers, setFollowers] = useState<number>(0)
     const params = useParams()
 
     useEffect(() => {
@@ -50,6 +51,7 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
             ;(async () => {
                 try {
                     const res = await userApi.getUserByUsername(params.username as string)
+                    setFollowers(res.data.user.numFollowers)
                     setUser(res.data.user)
                 } catch (error) {
                     throw new Error(error as string)
@@ -60,7 +62,7 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
 
     useEffect(() => {
         if (Array.isArray(pUser?.following)) {
-            const isFollowed = pUser?.following.find((t) => t.id === user?.id)
+            const isFollowed = pUser?.following?.find((t) => t.id === user?.id)
             if (isFollowed) {
                 setFollowed(IsFollow.FOLLOWING)
                 return
@@ -87,9 +89,11 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
             if (user?.id) {
                 if (followed === IsFollow.FOLLOW) {
                     setFollowed(IsFollow.FOLLOWING)
+                    setFollowers(followers + 1)
                     await userApi.followUser(user.id)
                 } else {
                     setFollowed(IsFollow.FOLLOW)
+                    setFollowers(followers === 0 ? 0 : followers - 1)
                     await userApi.unfollowUser(user.id)
                 }
 
@@ -271,8 +275,8 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
                 >
                     <Stack gap={2}>
                         <ProfileUserNumFollow
-                            numFollowed={user.numFollowers as number}
-                            numFollowing={user.numFollowing as number}
+                            numFollowed={followers}
+                            numFollowing={user.numFollowers as number}
                         />
 
                         {user.skillLanguages && (

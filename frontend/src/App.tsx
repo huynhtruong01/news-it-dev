@@ -11,15 +11,38 @@ import {
     ProfileUser,
     CreateNews,
 } from '@/pages'
-import { Header } from '@components/common/index'
+import { Header, SocketClient } from '@components/common/index'
 import { MainLayout } from '@layouts/index'
 import { Box } from '@mui/material'
 import { Route, Routes } from 'react-router-dom'
 import { MainContent } from '@features/index'
+import { useEffect } from 'react'
+import io, { Socket } from 'socket.io-client'
+import { connect, useDispatch } from 'react-redux'
+import { AppDispatch } from '@/store'
+import { setValuesSocket } from '@/store/socket'
 
-function App() {
+export interface IAppProps {
+    pSetSocket: (socket: Socket) => void
+}
+
+function App({ pSetSocket }: IAppProps) {
+    const dispatch: AppDispatch = useDispatch()
+
+    useEffect(() => {
+        const socket = io(import.meta.env.VITE_HOST_BACKEND, {
+            withCredentials: true,
+        })
+        pSetSocket(socket)
+
+        return () => {
+            socket.close()
+        }
+    }, [dispatch])
+
     return (
         <Box>
+            <SocketClient />
             <Header />
             <MainLayout>
                 <Routes>
@@ -42,4 +65,10 @@ function App() {
     )
 }
 
-export default App
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSetSocket: (socket: Socket) => dispatch(setValuesSocket(socket)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(App)

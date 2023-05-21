@@ -195,6 +195,11 @@ export class User extends BaseEntity {
     @ManyToMany(() => Comment, (comment) => comment.likes, {
         cascade: true,
     })
+    @JoinTable({
+        name: 'user_comment_likes',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'commentId', referencedColumnName: 'id' },
+    })
     commentLikes?: Comment[]
 
     // TODO: add column role names

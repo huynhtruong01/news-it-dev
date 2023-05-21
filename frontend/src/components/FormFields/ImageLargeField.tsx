@@ -77,11 +77,13 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
         )
     }
 
+    console.log('error:', error)
+
     return (
         <Controller
             control={control}
             name={name}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange } }) => (
                 <Box
                     sx={{
                         margin: theme.spacing(2, 0, 4),

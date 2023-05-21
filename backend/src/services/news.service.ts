@@ -110,7 +110,6 @@ class NewsService {
             const user = await userService.getById(data.userId)
 
             if (user) {
-                user.newsCount++
                 await userService.updateAll(user.id, user)
             }
 
@@ -237,16 +236,20 @@ class NewsService {
     }
 
     // delete
-    async delete(id: number): Promise<News | null> {
+    async delete(id: number, userId: number): Promise<News | null> {
         try {
             const news = await this.newsRepository.findOne({
                 where: {
                     id,
                 },
             })
-            if (!news) return null
+            const user = await userService.getById(userId)
+            if (!news || !user) return null
 
+            user.newsCount = user.newsCount - 1
+            await userService.updateAll(userId, user)
             await this.newsRepository.delete(id)
+
             return news
         } catch (error) {
             throw new Error(error as string)

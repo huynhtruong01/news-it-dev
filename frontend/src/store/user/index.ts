@@ -28,5 +28,5 @@ const userSlice = createSlice({
     extraReducers,
 })
 
-export const { saveUserLogin, signout } = userSlice.actions
+export const { saveUserLogin, signout, deleteNewsUser } = userSlice.actions
 export default userSlice.reducer

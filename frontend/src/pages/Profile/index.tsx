@@ -84,8 +84,9 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                                     top: '1.5rem',
                                     right: '1.5rem',
                                     borderRadius: theme.spacing(0.75),
-                                    padding: theme.spacing(1, 2),
+                                    padding: theme.spacing(1.5, 2),
                                     backgroundColor: theme.palette.primary.light,
+                                    fontWeight: 500,
                                     '&:hover': {
                                         backgroundColor: theme.palette.primary.dark,
                                     },

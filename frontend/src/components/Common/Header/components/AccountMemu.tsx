@@ -80,10 +80,11 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                         },
                         li: {
                             borderRadius: theme.spacing(0.75),
-                            padding: theme.spacing(1, 2),
+                            padding: 0,
                             a: {
                                 display: 'block',
                                 width: '100%',
+                                padding: theme.spacing(1, 2),
                             },
                             '&:hover': {
                                 backgroundColor: alpha(theme.palette.primary.dark, 0.15),

@@ -101,7 +101,6 @@ export const extraReducers = (builders: ActionReducerMapBuilder<ICommentStore>) 
     builders.addCase(
         updateCommentReply.fulfilled,
         (state: ICommentStore, action: PayloadAction<IComment>) => {
-            console.log('payload: ', action.payload)
             const newComments = [...state.comments]
             const index = newComments.findIndex((c) => c.id === action.payload.id)
 

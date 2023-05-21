@@ -1,17 +1,23 @@
 import { AppDataSource } from '@/config'
 import { relationDataComment } from '@/data'
-import { Comment, User } from '@/entities'
+import { Comment, News, User } from '@/entities'
 import { ICommentRes, IObjectCommon } from '@/models'
-import { commonService, userService } from '@/services'
+import { commonService, newsService, userService } from '@/services'
 import { createComment, paginationQuery, sortQuery } from '@/utils'
+import { io } from 'server'
 import { IsNull } from 'typeorm'
 
 class CommentService {
     constructor(
-        private commentRepository = AppDataSource.getRepository(Comment),
-        private userRepository = AppDataSource.getRepository(User)
+        private commentRepository = AppDataSource.getRepository(Comment) // private userRepository = AppDataSource.getRepository(User)
     ) {}
 
+    // ----------------------- CHECKING -------------------------------
+    checkIncludesUser(comment: Comment, user: User): boolean {
+        return !!comment.likes?.find((u) => u.id === user.id)
+    }
+
+    // --------------------- SERVICES -----------------------------------
     async getAll(query: IObjectCommon): Promise<ICommentRes> {
         try {
             const newSortQuery = sortQuery(query)
@@ -35,6 +41,7 @@ class CommentService {
         }
     }
 
+    // create
     async create(data: Comment): Promise<Comment> {
         try {
             const comment = createComment(data)
@@ -48,6 +55,9 @@ class CommentService {
 
             const newComment = await this.commentRepository.save(comment)
             newComment.user = (await userService.getByIdComment(data.userId)) as User
+            newComment.news = (await newsService.getByIdComment(data.newsId)) as News
+
+            io.to(newComment.news?.slug).emit('createComment', newComment)
 
             return newComment
         } catch (error) {
@@ -55,6 +65,7 @@ class CommentService {
         }
     }
 
+    // reply
     async reply(data: Comment) {
         try {
             const parentComment = await this.getById(data.parentCommentId as number)
@@ -62,21 +73,31 @@ class CommentService {
 
             const comment = createComment(data)
 
+            const slug = commonService.generateSlug(comment.comment)
+            comment.slug = slug
+
+            comment.childrenComments = []
+            comment.likes = []
+
             // comment.user = (await userService.getByIdComment(data.userId)) as User
             // comment.news = (await newsService.getByIdComment(data.newsId)) as News
 
             const replyComment = await this.commentRepository.save(comment)
             replyComment.user = (await userService.getByIdComment(data.userId)) as User
+            replyComment.news = (await newsService.getByIdComment(data.newsId)) as News
 
             parentComment.childrenComments?.push(replyComment)
 
             const newParentComment = await this.commentRepository.save(parentComment)
+
+            io.to(replyComment.news.slug).emit('replyComment', newParentComment)
             return newParentComment
         } catch (error) {
             throw new Error(error as string)
         }
     }
 
+    // get by id
     async getById(id: number): Promise<Comment | null> {
         try {
             const comment = await this.commentRepository.findOne({
@@ -93,6 +114,7 @@ class CommentService {
         }
     }
 
+    // get by id with little relation
     async getByIdRelation(id: number): Promise<Comment | null> {
         try {
             const comment = await this.commentRepository.findOne({
@@ -101,6 +123,7 @@ class CommentService {
                 },
                 relations: {
                     childrenComments: true,
+                    news: true,
                 },
             })
             if (!comment) return null
@@ -111,12 +134,14 @@ class CommentService {
         }
     }
 
+    // update
     async update(id: number, data: Comment): Promise<Comment | null> {
         try {
             const comment = await this.getById(id)
             if (!comment) return null
 
             const newComment = await this.commentRepository.save({ ...comment, ...data })
+            io.to(newComment.news?.slug as string).emit('updateComment', newComment)
 
             return newComment
         } catch (error) {
@@ -124,6 +149,7 @@ class CommentService {
         }
     }
 
+    // update reply
     async updateReply(id: number, data: Comment): Promise<Comment | null> {
         try {
             if (id) {
@@ -139,6 +165,10 @@ class CommentService {
                 }
 
                 const newComment = await this.commentRepository.save(comment)
+                io.to(newComment.news?.slug as string).emit(
+                    'updateCommentReply',
+                    newComment
+                )
 
                 return newComment
             }
@@ -149,6 +179,7 @@ class CommentService {
         }
     }
 
+    // delete
     async delete(id: number): Promise<void | null> {
         try {
             const comment = await this.getByIdRelation(id)
@@ -167,6 +198,7 @@ class CommentService {
                 }
             }
 
+            io.to(comment.news?.slug as string).emit('deleteComment', comment)
             await this.commentRepository.delete(id)
         } catch (error) {
             throw new Error(error as string)
@@ -182,7 +214,11 @@ class CommentService {
             const user = await userService.getById(userId)
             if (!user) return null
 
-            comment.numLikes = comment.numLikes + 1
+            const isIncludesUser = this.checkIncludesUser(comment, user)
+            if (isIncludesUser)
+                throw new Error(`User ${user.username} liked this comment to like.`)
+
+            const numLikes = (comment.numLikes || 0) + 1
             comment.likes?.push(user)
 
             if (comment.parentCommentId) {
@@ -191,7 +227,8 @@ class CommentService {
                 if (parentComment) {
                     parentComment.childrenComments = parentComment.childrenComments?.map(
                         (c) => {
-                            if (c.id === comment.id) return comment
+                            if (c.id === comment.id)
+                                return { ...comment, numLikes } as Comment
                             return c
                         }
                     )
@@ -200,9 +237,14 @@ class CommentService {
                 }
             }
 
-            const newComment = await this.commentRepository.save(comment)
-            user.commentLikes?.push(newComment)
-            await this.userRepository.save(user)
+            const newComment = await this.commentRepository.save({
+                ...comment,
+                numLikes,
+            })
+            io.to(comment.news?.slug as string).emit('likeComment', newComment)
+
+            user.commentLikes = [...(user.commentLikes || []), newComment]
+            await userService.updateAll(userId, user)
 
             return newComment
         } catch (error) {
@@ -219,7 +261,13 @@ class CommentService {
             const user = await userService.getById(userId)
             if (!user) return null
 
-            comment.numLikes = comment.numLikes - 1
+            const isIncludesUser = this.checkIncludesUser(comment, user)
+            if (!isIncludesUser)
+                throw new Error(
+                    `User ${user.username} didn't like this comment to unlike.`
+                )
+
+            comment.numLikes = comment.numLikes === 0 ? 0 : comment.numLikes - 1
             comment.likes = comment.likes?.filter((u) => u.id !== userId)
 
             if (comment.parentCommentId) {
@@ -238,8 +286,10 @@ class CommentService {
             }
 
             const newComment = await this.commentRepository.save(comment)
-            user.commentLikes?.filter((c) => c.id !== newComment.id)
-            await this.userRepository.save(user)
+            io.to(comment.news?.slug as string).emit('unlikeComment', newComment)
+
+            user.commentLikes = user.commentLikes?.filter((c) => c.id !== id)
+            await userService.updateAll(userId, user)
 
             return newComment
         } catch (error) {

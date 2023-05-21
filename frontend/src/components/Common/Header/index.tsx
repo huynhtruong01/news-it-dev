@@ -1,4 +1,3 @@
-import { user } from '@/data'
 import { theme } from '@/utils'
 import ClearIcon from '@mui/icons-material/Clear'
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
@@ -18,14 +17,17 @@ import { ChangeEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AccountMemu } from './components'
 import { connect } from 'react-redux'
-import { IUser } from '@/models'
-import { AppState } from '@/store'
+import { IUser, INewsForm } from '@/models'
+import { AppState, AppDispatch } from '@/store'
+import { setInitValueForm } from '@/store/news'
+import { initNewsFormValues } from '@/data'
 
 export interface IHeaderProps {
     pUser: IUser | null
+    pSetInitValuesNewsForm: (values: setInitValueForm) => void
 }
 
-function Header({ pUser }: IHeaderProps) {
+function Header({ pUser, pSetInitValuesNewsForm }: IHeaderProps) {
     const [showClearIcon, setShowClearIcon] = useState<boolean>(false)
     const [searchVal, setSearchVal] = useState<string>('')
 
@@ -38,6 +40,10 @@ function Header({ pUser }: IHeaderProps) {
 
     const handleClearVal = () => {
         setShowClearIcon(false)
+    }
+
+    const handleSetInitValuesForm = () => {
+        pSetInitValuesNewsForm(initNewsFormValues)
     }
 
     return (
@@ -207,6 +213,7 @@ function Header({ pUser }: IHeaderProps) {
                                             },
                                         },
                                     }}
+                                    onClick={handleSetInitValuesForm}
                                 >
                                     <Link to={'/create-news'}>Create News</Link>
                                 </Button>
@@ -260,4 +267,10 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-export default connect(mapStateToProps, null)(Header)
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSetInitValuesNewsForm: (values: INewsForm) => dispatch(setInitValueForm(values)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

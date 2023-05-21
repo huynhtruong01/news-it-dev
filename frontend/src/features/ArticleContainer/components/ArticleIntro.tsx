@@ -32,7 +32,7 @@ function ArticleIntro({
     const [saved, setSaved] = useState<boolean>(false)
     const navigate = useNavigate()
 
-    const { title, sapo, hashTags, readTimes, numLikes, numComments, slug } = article
+    const { title, sapo, hashTags, readTimes, numLikes, slug, comments } = article
 
     useEffect(() => {
         if (pUser?.id) {
@@ -78,6 +78,10 @@ function ArticleIntro({
             throw new Error(error as string)
         }
     }
+
+    const commentLength = useMemo(() => {
+        return comments?.length || 0
+    }, [article])
 
     return (
         <Box width={'100%'} paddingLeft={5}>
@@ -150,7 +154,7 @@ function ArticleIntro({
                         onButtonClick={handleLikeClick}
                     />
                     <ButtonIconForm
-                        text={`${numComments} Comments`}
+                        text={`${commentLength} Comments`}
                         icon={ChatBubbleOutlineOutlinedIcon}
                         onButtonClick={handleCommentClick}
                     />

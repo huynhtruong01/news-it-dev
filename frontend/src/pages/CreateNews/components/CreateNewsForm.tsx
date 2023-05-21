@@ -20,6 +20,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
 import { enqueueSnackbar } from 'notistack'
 import { useNavigate } from 'react-router-dom'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 export interface ICreateNewsFormProps {
     onNewsSubmit: (values: INewsForm) => Promise<void>
@@ -32,6 +33,7 @@ function CreateNewsForm({
     pHashTagSelects,
     pGetAllHashTags,
     pInitValuesForm,
+    onNewsSubmit,
 }: ICreateNewsFormProps) {
     const navigate = useNavigate()
 
@@ -45,22 +47,36 @@ function CreateNewsForm({
                 'is-nullable-thumbnail',
                 'Please choose thumbnail image.',
                 function (file) {
+                    if (pInitValuesForm.thumbnailImage) return true
                     const { thumbnailImage, coverImage } = this.parent
                     if (!((thumbnailImage && coverImage) || file?.name)) return
                     if (file?.name) return true
                 }
             )
-            .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file))
-            .test('size-img', 'Maximum 4MB.', (file) => checkSizeImg(file, SIZE_4_MB)),
+            .test('type-img', 'Invalid type image.', (file) => {
+                if (pInitValuesForm.thumbnailImage) return true
+                return checkTypeImg(file)
+            })
+            .test('size-img', 'Maximum 4MB.', (file) => {
+                if (pInitValuesForm.thumbnailImage) return true
+                return checkSizeImg(file, SIZE_4_MB)
+            }),
         coverImage: yup
             .mixed<File>()
             .test('is-nullable-cover', 'Please choose cover image.', function (file) {
+                if (pInitValuesForm.coverImage) return true
                 const { thumbnailImage, coverImage } = this.parent
                 if (!((thumbnailImage && coverImage) || file?.name)) return
                 if (file?.name) return true
             })
-            .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file))
-            .test('size-img', 'Maximum 10MB.', (file) => checkSizeImg(file, SIZE_10_MB)),
+            .test('type-img', 'Invalid type image.', (file) => {
+                if (pInitValuesForm.coverImage) return true
+                return checkTypeImg(file)
+            })
+            .test('size-img', 'Maximum 10MB.', (file) => {
+                if (pInitValuesForm.coverImage) return true
+                return checkSizeImg(file, SIZE_10_MB)
+            }),
         content: yup.string().required('Please enter news content.'),
     })
 
@@ -91,11 +107,11 @@ function CreateNewsForm({
         setValue('coverImage', pInitValuesForm.coverImage)
         setValue('thumbnailImage', pInitValuesForm.thumbnailImage)
         setValue('hashTagOptionIds', pInitValuesForm.hashTagOptionIds)
-    }, [pInitValuesForm])
+    }, [pInitValuesForm, setValue])
 
     const handleNewsSubmit = async (values: INewsForm) => {
         try {
-            await onNewsSubmit(values)
+            await onNewsSubmit({ ...values, id: pInitValuesForm?.id })
 
             reset()
         } catch (error) {
@@ -172,7 +188,7 @@ function CreateNewsForm({
                             name={'thumbnailImage'}
                             label={'Thumbnail Image'}
                             disabled={isSubmitting}
-                            initValue={initNewsFormValues.thumbnailImage}
+                            initValue={pInitValuesForm.thumbnailImage}
                             placeholder={'Enter thumbnail image'}
                         />
                         <ImageLargeField
@@ -180,7 +196,7 @@ function CreateNewsForm({
                             name={'coverImage'}
                             label={'Cover Image'}
                             disabled={isSubmitting}
-                            initValue={initNewsFormValues.coverImage}
+                            initValue={pInitValuesForm.coverImage}
                             placeholder={'Enter cover image'}
                         />
                     </Box>
@@ -200,6 +216,7 @@ function CreateNewsForm({
                 sx={{
                     button: {
                         fontWeight: 500,
+                        padding: theme.spacing(1.5),
                     },
                 }}
             >
@@ -218,20 +235,22 @@ function CreateNewsForm({
                 >
                     Cancel
                 </Button>
-                <Button
+                <LoadingButton
                     type="submit"
-                    variant="contained"
                     fullWidth
+                    loading={isSubmitting}
+                    loadingPosition="start"
+                    variant="contained"
+                    disabled={isSubmitting}
                     sx={{
                         backgroundColor: theme.palette.primary.light,
                         '&:hover': {
                             backgroundColor: theme.palette.primary.dark,
                         },
                     }}
-                    disabled={isSubmitting}
                 >
-                    Create News
-                </Button>
+                    {pInitValuesForm?.id ? 'Update News' : 'Create News'}
+                </LoadingButton>
             </Stack>
         </Box>
     )

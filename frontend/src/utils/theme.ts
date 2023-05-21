@@ -126,6 +126,9 @@ let theme = createTheme({
                         fontSize: '20px',
                     },
                 },
+                paragraph: {
+                    lineHeight: 1,
+                },
             },
         },
         MuiPaper: {

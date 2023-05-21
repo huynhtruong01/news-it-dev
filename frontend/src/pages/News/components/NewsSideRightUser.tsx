@@ -43,7 +43,7 @@ function NewsSideRightUser({
 
     useEffect(() => {
         if (Array.isArray(pUser?.following)) {
-            const isFollowed = pUser?.following.find((t) => t.id === user?.id)
+            const isFollowed = pUser?.following?.find((t) => t.id === user?.id)
             if (isFollowed) {
                 setFollowed(IsFollow.FOLLOWING)
                 return

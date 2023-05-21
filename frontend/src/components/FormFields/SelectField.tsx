@@ -1,12 +1,5 @@
 import { Controller, Path, FieldValues } from 'react-hook-form'
-import {
-    Box,
-    Select,
-    InputLabel,
-    FormHelperText,
-    MenuItem,
-    FormControl,
-} from '@mui/material'
+import { Box, Select, InputLabel, FormHelperText, MenuItem } from '@mui/material'
 import { ISelectValue } from '@/models'
 import { theme } from '@/utils'
 
@@ -44,6 +37,7 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                             fontWeight: 500,
                             color: '#000',
                         }}
+                        disabled={disabled}
                     >
                         {label}
                     </InputLabel>
@@ -52,6 +46,7 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
+                        disabled={disabled}
                         sx={{
                             width: '100%',
                             textTransform: 'capitalize',
