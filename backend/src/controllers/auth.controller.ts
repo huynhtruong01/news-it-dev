@@ -2,9 +2,71 @@ import { AppDataSource, sendEmail } from '@/config'
 import { MAX_AGE_ACCESS_TOKEN } from '@/consts'
 import { User } from '@/entities'
 import { Results, StatusCode, StatusText } from '@/enums'
-import { RequestUser } from '@/models'
+import { IFacebookPayload, IGooglePayload, RequestUser } from '@/models'
 import { authService, commonService, userService } from '@/services'
 import { Request, Response } from 'express'
+import { OAuth2Client } from 'google-auth-library'
+const fetch = (...args: Parameters<typeof import('node-fetch')['default']>) =>
+    import('node-fetch').then(({ default: fetch }) => fetch(...args))
+
+const client = new OAuth2Client(`${process.env.CLIENT_ID}`)
+const CLIENT_URL = `${process.env.BASE_URL}`
+
+const loginUser = async (user: User, password: string, res: Response) => {
+    try {
+        const checkPassword = await commonService.comparePassword(
+            password,
+            user?.password as string
+        )
+        if (!checkPassword) {
+            res.status(StatusCode.BAD_REQUEST).json({
+                results: Results.ERROR,
+                status: StatusText.FAILED,
+                message: 'Incorrect password.',
+            })
+            return
+        }
+
+        // generate token: access & refresh
+        const accessToken = authService.signAccessToken(user.id)
+        const refreshToken = authService.signRefreshToken(user.id)
+
+        res.status(StatusCode.SUCCESS).json({
+            results: Results.SUCCESS,
+            status: StatusText.SUCCESS,
+            data: {
+                user,
+                accessToken,
+                refreshToken,
+            },
+        })
+    } catch (error) {
+        throw new Error(error as string)
+    }
+}
+
+// register user
+const registerUser = async (data: User, res: Response) => {
+    try {
+        const user = await userService.create(data)
+
+        // generate token: access & refresh
+        const accessToken = authService.signAccessToken(user.id)
+        const refreshToken = authService.signRefreshToken(user.id)
+
+        res.status(StatusCode.SUCCESS).json({
+            results: Results.SUCCESS,
+            status: StatusText.SUCCESS,
+            data: {
+                user,
+                accessToken,
+                refreshToken,
+            },
+        })
+    } catch (error) {
+        throw new Error(error as string)
+    }
+}
 
 class AuthController {
     constructor(private userRepository = AppDataSource.getRepository(User)) {}
@@ -15,11 +77,11 @@ class AuthController {
             // check email has exits
             const { emailAddress, username } = req.body
 
-            const isEmailExits = await authService.checkEmailOrUsername(emailAddress)
-            const isUsernameExits = await authService.checkEmailOrUsername(username)
+            const isEmailExist = await authService.checkEmailOrUsername(emailAddress)
+            const isUsernameExist = await authService.checkEmailOrUsername(username)
 
             // check username has exits
-            if (isEmailExits || isUsernameExits) {
+            if (isEmailExist || isUsernameExist) {
                 res.status(StatusCode.BAD_REQUEST).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
@@ -28,17 +90,15 @@ class AuthController {
                 return
             }
 
-            // create user
-            // const user = await userService.create(req.body)
-            // user.password = undefined
-
-            const activeToken = authService.signActiveToken(emailAddress)
+            // generate token & send email
+            const activeToken = authService.signActiveToken(req.body)
             if (emailAddress) {
-                const url = `${process.env.BASE_URL}/active/${activeToken}`
-                sendEmail(emailAddress, url, 'Verify your email address.')
+                const token = encodeURIComponent(activeToken).replaceAll('.', '_')
+                const url = `${process.env.BASE_URL}/active/${token}`
+                await sendEmail(emailAddress, url, 'Verify your email address.')
             }
 
-            res.status(StatusCode.CREATED).json({
+            res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
                 status: StatusText.SUCCESS,
                 data: {
@@ -54,12 +114,65 @@ class AuthController {
         }
     }
 
+    // active token
+    async activeUser(req: Request, res: Response) {
+        try {
+            const { activeToken } = req.body
+
+            const decode = authService.verifyToken(activeToken)
+
+            // console.log(decode)
+
+            if (!decode.newUser) {
+                res.status(StatusCode.BAD_REQUEST).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Not valid authentication.',
+                })
+                return
+            }
+
+            // check email & username exist
+            const isEmailExist = await authService.checkEmailOrUsername(
+                decode.newUser.emailAddress
+            )
+            const isUsernameExist = await authService.checkEmailOrUsername(
+                decode.newUser.username
+            )
+
+            if (isEmailExist || isUsernameExist) {
+                res.status(StatusCode.BAD_REQUEST).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Email or username already exits.',
+                })
+                return
+            }
+
+            const user = await userService.create(decode.newUser)
+            res.status(StatusCode.CREATED).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    user,
+                    message: 'Active user success.',
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
     // login (POST)
     async login(req: Request, res: Response) {
         try {
             // check email and password
-            const { email, password } = req.body
-            if (!email || !password) {
+            const { emailAddress, password } = req.body
+            if (!emailAddress || !password) {
                 res.status(StatusCode.BAD_REQUEST).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
@@ -69,7 +182,7 @@ class AuthController {
             }
 
             // check email has exits
-            const user = await authService.getByEmail(email)
+            const user = await authService.getByEmail(emailAddress)
             if (!user) {
                 res.status(StatusCode.BAD_REQUEST).json({
                     results: Results.ERROR,
@@ -214,6 +327,107 @@ class AuthController {
                     refreshToken,
                 },
             })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // google login
+    async googleLogin(req: Request, res: Response) {
+        try {
+            const { tokenId } = req.body
+            const verify = await client.verifyIdToken({
+                idToken: tokenId,
+                audience: `${process.env.CLIENT_ID}`,
+            })
+
+            const { email, email_verified, name, picture, given_name, family_name } = <
+                IGooglePayload
+            >verify.getPayload()
+
+            if (!email_verified) {
+                res.status(StatusCode.ERROR).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Email verification failed.',
+                })
+                return
+            }
+
+            const password = `${email}`
+
+            const user = await authService.getByEmail(email)
+
+            if (user) {
+                await loginUser(user, password, res)
+            } else {
+                const dataUser = {
+                    username: name,
+                    avatar: picture,
+                    password,
+                    roleIds: [2],
+                    emailAddress: email,
+                    firstName: given_name,
+                    lastName: family_name,
+                }
+                await registerUser(dataUser as User, res)
+            }
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // facebook login
+    async facebookLogin(req: Request, res: Response) {
+        try {
+            const { accessToken, userId } = req.body
+
+            const URL = `
+                https://graph.facebook.com/v16.0/${userId}/?fields=id,name,email,picture,first_name,last_name&access_token=${accessToken}
+            `
+            const data: IFacebookPayload = await fetch(URL)
+                .then((res) => res.json())
+                .then((res) => res as IFacebookPayload)
+            const { email, name, picture, first_name, last_name }: IFacebookPayload = data
+            const password = email
+
+            const user = await authService.getByEmail(email)
+
+            if (user) {
+                loginUser(user, password, res)
+            } else {
+                const dataUser = {
+                    username: name,
+                    avatar: picture.data.url,
+                    password,
+                    roleIds: [2],
+                    emailAddress: email,
+                    firstName: first_name,
+                    lastName: last_name,
+                }
+                registerUser(dataUser as User, res)
+            }
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // github login
+    async githubLogin(req: Request, res: Response) {
+        try {
+            const { code } = req.body
         } catch (error) {
             res.status(StatusCode.ERROR).json({
                 results: Results.ERROR,

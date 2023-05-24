@@ -10,6 +10,9 @@ import {
     Signout,
     ProfileUser,
     CreateNews,
+    ActiveAccount,
+    Notifications,
+    SearchNews,
 } from '@/pages'
 import { Header, SocketClient } from '@components/common/index'
 import { MainLayout } from '@layouts/index'
@@ -49,6 +52,7 @@ function App({ pSetSocket }: IAppProps) {
                     <Route path={'/'} element={<MainContent />} />
                     <Route path={'/login'} element={<Login />} />
                     <Route path={'/signup'} element={<Signup />} />
+                    <Route path={'/active/:activeToken'} element={<ActiveAccount />} />
                     <Route path={'/news/:slug'} element={<News />} />
                     <Route path={'/profile'} element={<Profile />} />
                     <Route path={'/profile/:username'} element={<ProfileUser />} />
@@ -59,6 +63,8 @@ function App({ pSetSocket }: IAppProps) {
                     <Route path={'/signout-confirm'} element={<Signout />} />
                     <Route path={'/create-news'} element={<CreateNews />} />
                     <Route path={'/update-news'} element={<CreateNews />} />
+                    <Route path={'/notifications'} element={<Notifications />} />
+                    <Route path={'/search'} element={<SearchNews />} />
                 </Routes>
             </MainLayout>
         </Box>

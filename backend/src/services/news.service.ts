@@ -1,6 +1,7 @@
 import { AppDataSource } from '@/config'
 import { relationNewsData } from '@/data'
 import { News, User } from '@/entities'
+import { NewsStatus, Order } from '@/enums'
 import { INewsRes, IObjectCommon, IOrder } from '@/models'
 import { commonService } from '@/services/common.service'
 import { hashTagService } from '@/services/hashTag.service'
@@ -28,24 +29,44 @@ class NewsService {
         return newLikeUserIds.includes(userId)
     }
 
-    async getAllByConditional(
-        conditional?: IObjectCommon,
-        sort?: IObjectCommon
-    ): Promise<INewsRes> {
+    async getAllByConditional(query: IObjectCommon): Promise<INewsRes> {
         try {
-            const [news, count] = await this.newsRepository.findAndCount({
-                where: {
-                    ...(conditional || {}),
-                },
-                order: {
-                    ...(sort || {
-                        createdAt: 'DESC',
-                    }),
-                },
-                relations: relationNewsData,
-            })
+            const pagination = paginationQuery(query)
 
-            return [news, count]
+            if (query.hashTag) {
+                const hashTagIds = (query.hashTag as string).split(',')
+                const [news, count] = await this.newsRepository
+                    .createQueryBuilder('news')
+                    .leftJoinAndSelect('news.user', 'user')
+                    .leftJoinAndSelect('news.hashTags', 'hashTag')
+                    .where('news.status = :status', { status: NewsStatus.PUBLIC })
+                    .andWhere('hashTag.id IN (:...hashTagIds)', {
+                        hashTagIds,
+                    })
+                    .orderBy('news.createdAt', Order.DESC)
+                    .skip(pagination.skip)
+                    .take(pagination.take)
+                    .getManyAndCount()
+
+                return [news, count]
+            } else {
+                const newFiltersQuery = filtersQuery(query)
+                const newSortQuery = sortQuery(query)
+
+                const [news, count] = await this.newsRepository.findAndCount({
+                    order: {
+                        ...newSortQuery,
+                    },
+                    where: {
+                        ...newFiltersQuery,
+                        status: NewsStatus.PUBLIC,
+                    },
+                    ...pagination,
+                    relations: relationNewsData,
+                })
+
+                return [news, count]
+            }
         } catch (error) {
             throw new Error(error as string)
         }
@@ -85,6 +106,7 @@ class NewsService {
                 .createQueryBuilder('news')
                 .leftJoinAndSelect('news.hashTags', 'hashTag')
                 .where('hashTag.id IN (:...hashTagIds)')
+                .andWhere('news.status = :status', { status: query.status })
                 .orderBy('news.createdAt', query.createdAt as IOrder)
                 .setParameter('hashTagIds', query.hashTagIds as number[])
                 .skip((+query.page - 1) * +query.limit)

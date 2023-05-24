@@ -3,6 +3,21 @@ import { IObjectCommon } from '@/models'
 
 export const articleHeader: IObjectCommon[] = [
     {
+        name: 'Relevant',
+        value: NewsFilters.RELEVANT,
+    },
+    {
+        name: 'Latest',
+        value: NewsFilters.LATEST,
+    },
+    {
+        name: 'Top',
+        value: NewsFilters.TOP,
+    },
+]
+
+export const tagHeader: IObjectCommon[] = [
+    {
         name: 'Latest',
         value: NewsFilters.LATEST,
     },

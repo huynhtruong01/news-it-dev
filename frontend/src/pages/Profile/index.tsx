@@ -6,7 +6,16 @@ import { formatDate, theme } from '@/utils'
 import ArticleIcon from '@mui/icons-material/Article'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import TagIcon from '@mui/icons-material/Tag'
-import { Avatar, Box, Button, Divider, Paper, Stack, Typography } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    Button,
+    Divider,
+    Paper,
+    Stack,
+    Typography,
+    Grid,
+} from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
@@ -151,51 +160,49 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                         )}
                     </Box>
 
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gridTemplateColumns: '1fr 2fr',
-                            gap: 2,
-                        }}
-                    >
-                        <Stack gap={2}>
-                            {pUser.skillLanguages && (
-                                <ProfileLeftItem
-                                    title={'Skills/Languages'}
-                                    value={pUser.skillLanguages}
-                                />
-                            )}
+                    <Grid container spacing={2}>
+                        <Grid item md={4}>
+                            <Stack gap={2}>
+                                {pUser.skillLanguages && (
+                                    <ProfileLeftItem
+                                        title={'Skills/Languages'}
+                                        value={pUser.skillLanguages}
+                                    />
+                                )}
 
-                            {pUser.currentlyLearning && (
-                                <ProfileLeftItem
-                                    title={'Currently Learning'}
-                                    value={pUser.currentlyLearning}
-                                />
-                            )}
+                                {pUser.currentlyLearning && (
+                                    <ProfileLeftItem
+                                        title={'Currently Learning'}
+                                        value={pUser.currentlyLearning}
+                                    />
+                                )}
 
-                            <Box component={Paper} elevation={1} padding={2}>
-                                <ProfileInfoItem
-                                    icon={ArticleIcon}
-                                    text={`${pUser.newsCount || 0} news`}
-                                    marginBottom={2}
-                                />
-                                <ProfileInfoItem
-                                    icon={ChatBubbleOutlineIcon}
-                                    text={`${
-                                        pUser.comments?.length || 0
-                                    } comment written`}
-                                    marginBottom={2}
-                                />
-                                <ProfileInfoItem
-                                    icon={TagIcon}
-                                    text={`${pUser.hashTags?.length || 0} tags followed`}
-                                />
-                            </Box>
-                        </Stack>
-                        <Box>
+                                <Box component={Paper} elevation={1} padding={2}>
+                                    <ProfileInfoItem
+                                        icon={ArticleIcon}
+                                        text={`${pUser.newsCount || 0} news`}
+                                        marginBottom={2}
+                                    />
+                                    <ProfileInfoItem
+                                        icon={ChatBubbleOutlineIcon}
+                                        text={`${
+                                            pUser.comments?.length || 0
+                                        } comment written`}
+                                        marginBottom={2}
+                                    />
+                                    <ProfileInfoItem
+                                        icon={TagIcon}
+                                        text={`${
+                                            pUser.hashTags?.length || 0
+                                        } tags followed`}
+                                    />
+                                </Box>
+                            </Stack>
+                        </Grid>
+                        <Grid item md={8}>
                             <ProfileNews news={newNews} />
-                        </Box>
-                    </Box>
+                        </Grid>
+                    </Grid>
                 </Stack>
             </Box>
         )

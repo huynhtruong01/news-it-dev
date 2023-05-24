@@ -1,18 +1,14 @@
-import { Box } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { SkeletonNews } from '@/components/Common/Skeleton/SkeletonNewsList/components'
 
 export function SkeletonNewsList() {
     return (
-        <Box
-            sx={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 3,
-            }}
-        >
+        <Grid container spacing={2}>
             {Array.from(new Array(5)).map((item, idx) => (
-                <SkeletonNews key={idx} />
+                <Grid key={idx} item md={6}>
+                    <SkeletonNews />
+                </Grid>
             ))}
-        </Box>
+        </Grid>
     )
 }

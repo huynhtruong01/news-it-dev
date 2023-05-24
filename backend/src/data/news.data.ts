@@ -5,6 +5,7 @@ export const relationNewsData = {
         news: {
             hashTags: true,
         },
+        followers: true,
     },
     hashTags: true,
     comments: {

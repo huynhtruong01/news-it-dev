@@ -1,4 +1,4 @@
-import { Box, Button, Stack, alpha } from '@mui/material'
+import { Box, Button, Stack, alpha, Grid } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { INewsForm, IOptionItem } from '@/models'
@@ -128,14 +128,8 @@ function CreateNewsForm({
     return (
         <Box component="form" onSubmit={handleSubmit(handleNewsSubmit)}>
             <Box marginBottom={3}>
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 350px',
-                        gap: 3,
-                    }}
-                >
-                    <Box>
+                <Grid container spacing={2}>
+                    <Grid item md>
                         <InputField
                             form={form}
                             name={'title'}
@@ -180,9 +174,14 @@ function CreateNewsForm({
                             placeholder={'choose tags...'}
                             list={pHashTagSelects || []}
                         />
-                    </Box>
+                    </Grid>
 
-                    <Box>
+                    <Grid
+                        item
+                        sx={{
+                            width: '350px',
+                        }}
+                    >
                         <ImageLargeField
                             form={form}
                             name={'thumbnailImage'}
@@ -199,8 +198,8 @@ function CreateNewsForm({
                             initValue={pInitValuesForm.coverImage}
                             placeholder={'Enter cover image'}
                         />
-                    </Box>
-                </Box>
+                    </Grid>
+                </Grid>
                 <EditorField
                     form={form}
                     name={'content'}

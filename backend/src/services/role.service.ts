@@ -79,7 +79,6 @@ class RoleService {
 
     async create(data: Role): Promise<Role> {
         try {
-            console.log('data: ', data)
             const role = createRoleData(data)
 
             // create slug

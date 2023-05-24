@@ -1,11 +1,13 @@
-import { InputField, PasswordField } from '@components/formFields/index'
-import { useToast } from '@/hooks'
+import { InputField, PasswordField } from '@/components/FormFields'
 import { ISignupValues } from '@/models'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Box, Button } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { initSignupValues } from '@data/index'
+import { enqueueSnackbar } from 'notistack'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { theme } from '@/utils'
 
 export interface ISignupFormProps {
     onSignupSubmit: (values: ISignupValues) => Promise<void>
@@ -15,7 +17,7 @@ const schema = yup.object().shape({
     firstName: yup.string().required('Please enter first name.'),
     lastName: yup.string().required('Please enter last name.'),
     username: yup.string().required('Please enter username.'),
-    email: yup.string().required('Please enter email.').email('Invalid email'),
+    emailAddress: yup.string().required('Please enter email.').email('Invalid email'),
     password: yup
         .string()
         .required('Please enter password.')
@@ -28,7 +30,6 @@ const schema = yup.object().shape({
 })
 
 export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
-    const { toastError } = useToast()
     const form = useForm<ISignupValues>({
         defaultValues: initSignupValues,
         resolver: yupResolver(schema),
@@ -45,7 +46,9 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
             await onSignupSubmit(values)
             reset()
         } catch (error) {
-            toastError((error as Error).message)
+            enqueueSnackbar(error.message, {
+                variant: 'error',
+            })
         }
     }
 
@@ -87,7 +90,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                 <InputField
                     form={form}
                     label="Email"
-                    name="email"
+                    name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
                 />
@@ -104,9 +107,31 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     disabled={isSubmitting}
                 />
             </Box>
-            <Button type="submit" fullWidth variant="contained" disabled={isSubmitting}>
+            <LoadingButton
+                type="submit"
+                fullWidth
+                loading={isSubmitting}
+                loadingIndicator={
+                    <CircularProgress
+                        color="inherit"
+                        size={16}
+                        sx={{ paddingLeft: '5px', paddingRight: '5px' }}
+                    />
+                }
+                loadingPosition="start"
+                variant="contained"
+                disabled={isSubmitting}
+                sx={{
+                    backgroundColor: theme.palette.primary.light,
+                    padding: theme.spacing(1.5),
+                    fontWeight: 500,
+                    '&:hover': {
+                        backgroundColor: theme.palette.primary.dark,
+                    },
+                }}
+            >
                 Sign up
-            </Button>
+            </LoadingButton>
         </Box>
     )
 }

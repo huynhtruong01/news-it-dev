@@ -5,19 +5,26 @@ import { theme } from '@utils/index'
 import { authApi } from '@/api'
 import { Link } from 'react-router-dom'
 import { AuthContainer } from '@/pages/Auth/AuthContainer'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { saveUserLogin } from '@/store/user'
-import { AppDispatch } from '@/store'
+import { AppDispatch, AppState } from '@/store'
 import { setLs } from '@/utils'
 import { enqueueSnackbar } from 'notistack'
+import { useEffect } from 'react'
 
 export interface ILoginProps {
+    pUser: IUser | null
     pSaveUserLogin: (user: IUser) => void
 }
 
-function Login({ pSaveUserLogin }: ILoginProps) {
+function Login({ pUser, pSaveUserLogin }: ILoginProps) {
     const navigate = useNavigate()
+    const location = useLocation()
+
+    useEffect(() => {
+        if (pUser) navigate(-1)
+    }, [pUser])
 
     const handleLoginSubmit = async (values: ILoginValues) => {
         try {
@@ -33,11 +40,15 @@ function Login({ pSaveUserLogin }: ILoginProps) {
             enqueueSnackbar('Log in successfully.', {
                 variant: 'success',
             })
-            navigate(-1)
+
+            const checkPath = location.state?.from
+            if (!checkPath) {
+                navigate('/')
+            } else {
+                navigate(-1)
+            }
         } catch (error) {
-            enqueueSnackbar(`Log in error: ${(error as Error).message}`, {
-                variant: 'error',
-            })
+            throw new Error((error as Error).message)
         }
     }
 
@@ -127,10 +138,16 @@ function Login({ pSaveUserLogin }: ILoginProps) {
     )
 }
 
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pSaveUserLogin: (user: IUser) => dispatch(saveUserLogin(user)),
     }
 }
 
-export default connect(null, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

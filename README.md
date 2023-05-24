@@ -185,3 +185,10 @@ server.ts
 - **Update Comment**:
 
 - **Like Comment**:
+
+### THE FOLLOW MAKE NOTIFY
+
+- After user create new news, emit socket to create notify.
+- Then, after create notify, it need to emit for client to add new notify to redux client.
+
+> [https://www.youtube.com/watch?v=qikE08Zrnds&list=PLs4co9a6NhMyAfSnDg1MKGwLdLx0OA07d&index=33](https://www.youtube.com/watch?v=qikE08Zrnds&list=PLs4co9a6NhMyAfSnDg1MKGwLdLx0OA07d&index=33)

@@ -4,7 +4,7 @@ import { Box, BoxProps, Divider, Paper, Stack, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { IFilters, INews } from '@/models'
-import { Order } from '@/enums'
+import { Order, Status } from '@/enums'
 import { newsApi } from '@/api'
 
 export interface INewsSideRightRelationProps extends BoxProps {
@@ -29,6 +29,7 @@ export function NewsSideRightRelation({
                     limit: 5,
                     createdAt: Order.DESC,
                     hashTagIds: hashTagIds.join(','),
+                    status: Status.PUBLIC,
                 }
                 const res = await newsApi.getNewsByTagIds(filters)
 

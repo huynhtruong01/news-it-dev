@@ -1,5 +1,5 @@
 export interface ILoginValues {
-    email: string
+    emailAddress: string
     password: string
     rememberMe: boolean
 }
@@ -8,7 +8,12 @@ export interface ISignupValues {
     username: string
     lastName: string
     firstName: string
-    email: string
+    emailAddress: string
     password: string
     confirmPassword: string
+}
+
+export interface IFacebookLoginParams {
+    accessToken: string
+    userId: string
 }

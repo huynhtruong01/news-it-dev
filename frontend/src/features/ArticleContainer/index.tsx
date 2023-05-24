@@ -1,22 +1,27 @@
 import { newsApi } from '@/api'
 import { NewsFilters, Order } from '@/enums'
 import { ArticleHeader, ArticleList } from '@/features/ArticleContainer/components'
-import { IFilters, INews, INewsStatus } from '@/models'
+import { IFilters, INews, INewsStatus, IUser } from '@/models'
+import { AppState } from '@/store'
 import { Box, BoxProps } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
+import { connect } from 'react-redux'
 
-export type IArticleContainer = BoxProps
+export interface IArticleContainer extends BoxProps {
+    pUser: IUser | null
+}
 
-export function ArticleContainer({ ...rest }: IArticleContainer) {
+function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
     const listRef = useRef<HTMLElement | null>(null)
     const [filters, setFilters] = useState<IFilters>({
         limit: 6,
         page: 1,
         createdAt: Order.DESC,
+        hashTag: pUser?.hashTags?.map((t) => t.id).join(',') || '',
     })
     const [newsList, setNewsList] = useState<INews[]>([])
     const [loading, setLoading] = useState<boolean>(true)
-    const [status, setStatus] = useState<INewsStatus>(NewsFilters.LATEST)
+    const [status, setStatus] = useState<INewsStatus>(NewsFilters.RELEVANT)
     const [total, setTotal] = useState<number>(0)
 
     // FETCH ALL NEWS HERE
@@ -25,7 +30,10 @@ export function ArticleContainer({ ...rest }: IArticleContainer) {
             try {
                 if (filters.page === 1) setLoading(true)
 
-                const res = await newsApi.getAllNews(filters)
+                const res = await newsApi.getAllNewsPublic({
+                    ...filters,
+                    hashTag: pUser?.hashTags?.map((t) => t.id).join(',') || '',
+                })
                 if (filters.page === 1) {
                     setNewsList(res.data.news)
                 } else {
@@ -61,7 +69,7 @@ export function ArticleContainer({ ...rest }: IArticleContainer) {
 
     return (
         <Box {...rest} ref={listRef}>
-            {!!newsList?.length && (
+            {!loading && (
                 <ArticleHeader
                     filters={filters}
                     status={status}
@@ -74,3 +82,11 @@ export function ArticleContainer({ ...rest }: IArticleContainer) {
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(ArticleContainer)

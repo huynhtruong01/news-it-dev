@@ -1,7 +1,7 @@
 import { InputField, ImageField } from '@/components/FormFields'
 import { initUserProfileValues } from '@/data'
 import { IUser, IUserData } from '@/models'
-import { Box, BoxProps, Paper, Typography, Stack } from '@mui/material'
+import { Box, BoxProps, Paper, Typography, Stack, CircularProgress } from '@mui/material'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { theme, checkTypeImg, checkSizeImg } from '@/utils'
@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 import { uploadImage } from '@/utils'
 import { useSnackbar } from 'notistack'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { useNavigate } from 'react-router-dom'
 
 export interface ISettingsFormProps extends BoxProps {
     user: IUser | null
@@ -23,6 +24,7 @@ export interface ISettingsFormProps extends BoxProps {
 
 export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormProps) {
     const { enqueueSnackbar } = useSnackbar()
+    const navigate = useNavigate()
     const schema = yup.object().shape({
         username: yup.string().required('Please enter username.'),
         lastName: yup.string().required('Please enter last name.'),
@@ -91,6 +93,8 @@ export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormPro
                 enqueueSnackbar('Update profile successfully.', {
                     variant: 'success',
                 })
+
+                navigate('/profile')
             }
         } catch (error) {
             throw new Error(error as string)
@@ -203,6 +207,13 @@ export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormPro
                         type="submit"
                         fullWidth
                         loading={isSubmitting}
+                        loadingIndicator={
+                            <CircularProgress
+                                color="inherit"
+                                size={16}
+                                sx={{ paddingLeft: '5px', paddingRight: '5px' }}
+                            />
+                        }
                         loadingPosition="start"
                         variant="contained"
                         disabled={isSubmitting}

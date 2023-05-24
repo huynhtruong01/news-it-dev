@@ -16,6 +16,7 @@ import { HashTag } from '@/entities/hashTag.entity'
 import { NewsStatus } from '@/enums'
 import { INewsStatus } from '@/models'
 import { Comment } from './comment.entity'
+import { Notify } from './notify.entity'
 
 @Entity('news')
 export class News extends BaseEntity {
@@ -110,6 +111,11 @@ export class News extends BaseEntity {
         onDelete: 'CASCADE',
     })
     comments?: Comment[]
+
+    @OneToMany(() => Notify, (notify) => notify.news, {
+        onDelete: 'CASCADE',
+    })
+    notifications?: Notify[]
 
     @Column({
         type: 'int',

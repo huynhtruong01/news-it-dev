@@ -1,18 +1,20 @@
 import { InputField, PasswordField, CheckBoxField } from '@/components/FormFields'
-import { useToast } from '@/hooks'
 import { ILoginValues } from '@/models'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Box, Button } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { initLoginValues } from '@/data'
+import { enqueueSnackbar } from 'notistack'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { theme } from '@/utils'
 
 export interface ILoginFormProps {
     onLoginSubmit: (values: ILoginValues) => Promise<void>
 }
 
 const schema = yup.object().shape({
-    email: yup.string().required('Please enter email.').email('Invalid email'),
+    emailAddress: yup.string().required('Please enter email.').email('Invalid email'),
     password: yup
         .string()
         .required('Please enter password.')
@@ -21,7 +23,6 @@ const schema = yup.object().shape({
 })
 
 export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
-    const { toastError } = useToast()
     const form = useForm<ILoginValues>({
         defaultValues: initLoginValues,
         resolver: yupResolver(schema),
@@ -54,7 +55,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                 <InputField
                     form={form}
                     label="Email"
-                    name="email"
+                    name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
                 />
@@ -71,9 +72,31 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     disabled={isSubmitting}
                 />
             </Box>
-            <Button type="submit" fullWidth variant="contained" disabled={isSubmitting}>
+            <LoadingButton
+                type="submit"
+                fullWidth
+                loading={isSubmitting}
+                loadingIndicator={
+                    <CircularProgress
+                        color="inherit"
+                        size={16}
+                        sx={{ paddingLeft: '5px', paddingRight: '5px' }}
+                    />
+                }
+                loadingPosition="start"
+                variant="contained"
+                disabled={isSubmitting}
+                sx={{
+                    backgroundColor: theme.palette.primary.light,
+                    padding: theme.spacing(1.5),
+                    fontWeight: 500,
+                    '&:hover': {
+                        backgroundColor: theme.palette.primary.dark,
+                    },
+                }}
+            >
                 Login
-            </Button>
+            </LoadingButton>
         </Box>
     )
 }

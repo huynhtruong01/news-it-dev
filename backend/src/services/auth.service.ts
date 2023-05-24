@@ -69,8 +69,8 @@ class AuthService {
     }
 
     // sign active token
-    signActiveToken(email: string) {
-        return jwt.sign({ email }, process.env.JWT_SECRET as string, {
+    signActiveToken(user: User) {
+        return jwt.sign({ newUser: user }, process.env.JWT_SECRET as string, {
             expiresIn: process.env.JWT_ACTIVE_EXPIRES,
         })
     }

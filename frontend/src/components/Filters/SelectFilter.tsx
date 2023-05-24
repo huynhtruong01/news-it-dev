@@ -22,7 +22,7 @@ export interface ISelectFilterProps extends BoxProps {
 export function SelectFilter({
     selects,
     label,
-    initValue = '',
+    initValue = ALL,
     onFilterChange,
     ...rest
 }: ISelectFilterProps) {

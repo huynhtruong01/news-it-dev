@@ -1,8 +1,6 @@
-import { Box, Typography, Paper, Container } from '@mui/material'
+import { SocialLogin } from '@/pages/Auth/components'
+import { Box, Container, Paper, Typography } from '@mui/material'
 import { theme } from '@utils/index'
-import { ButtonIconForm } from '@components/common/index'
-import GitHubIcon from '@mui/icons-material/GitHub'
-import GoogleIcon from '@mui/icons-material/Google'
 import { ReactNode, useEffect } from 'react'
 
 export interface IAuthContainerProps {
@@ -13,10 +11,6 @@ export function AuthContainer({ children }: IAuthContainerProps) {
     useEffect(() => {
         document.title = 'Welcome! - Dev Community'
     }, [])
-
-    const handleGithubLogin = () => {
-        console.log('login github')
-    }
 
     return (
         <Box
@@ -55,36 +49,7 @@ export function AuthContainer({ children }: IAuthContainerProps) {
                             marginBottom: theme.spacing(2),
                         }}
                     >
-                        <ButtonIconForm
-                            text={'Continue with Github'}
-                            icon={GitHubIcon}
-                            onButtonClick={handleGithubLogin}
-                            sx={{
-                                backgroundColor: theme.palette.secondary.dark,
-                                color: theme.palette.primary.contrastText,
-                                padding: theme.spacing(1.5),
-                                margin: theme.spacing(0.5, 0),
-
-                                '&:hover': {
-                                    backgroundColor: theme.palette.secondary.dark,
-                                },
-                            }}
-                        />
-                        <ButtonIconForm
-                            text={'Continue with Google'}
-                            icon={GoogleIcon}
-                            onButtonClick={handleGithubLogin}
-                            sx={{
-                                backgroundColor: theme.palette.primary.contrastText,
-                                color: theme.palette.secondary.dark,
-                                padding: theme.spacing(1.5),
-                                margin: theme.spacing(0.5, 0),
-
-                                '&:hover': {
-                                    backgroundColor: theme.palette.primary.contrastText,
-                                },
-                            }}
-                        />
+                        <SocialLogin />
                     </Box>
                     {children}
                 </Paper>

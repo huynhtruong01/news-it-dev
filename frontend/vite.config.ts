@@ -1,9 +1,15 @@
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import * as path from 'path'
+import { defineConfig, UserConfigFn } from 'vite'
+
+export interface IUserConfigFn extends UserConfigFn {
+    optimizeDeps: {
+        enabled: boolean
+    }
+}
 
 // https://vitejs.dev/config/
-export default defineConfig(() => {
+const config = defineConfig(() => {
     const aliases = {
         '@': path.resolve(__dirname, './src/'),
         '@components': `${path.resolve(__dirname, './src/components/')}`,
@@ -32,5 +38,10 @@ export default defineConfig(() => {
         resolve: {
             alias: aliases,
         },
+        optimizeDeps: {
+            disabled: false,
+        },
     }
 })
+
+export default config

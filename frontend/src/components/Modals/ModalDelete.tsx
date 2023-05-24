@@ -7,8 +7,8 @@ import { red, yellow } from '@mui/material/colors'
 import { theme } from '@/utils'
 import { enqueueSnackbar } from 'notistack'
 import { newsApi } from '@/api'
-import { INews } from '@/models'
-import { setNews } from '@/store/news'
+import { INews, INewsForm, IOptionItem, IStatus } from '@/models'
+import { setInitValueForm, setNews } from '@/store/news'
 import { deleteNewsUser } from '@/store/user'
 
 export interface IModelDeleteProps {
@@ -17,6 +17,7 @@ export interface IModelDeleteProps {
     pSetNews: (news: INews | null) => void
     pSetShowModalDelete: (isShow: boolean) => void
     pDeleteNews: (id: number) => void
+    pSetInitValuesNewsForm: (news: INewsForm) => void
 }
 
 function ModelDelete({
@@ -25,6 +26,7 @@ function ModelDelete({
     pSetNews,
     pSetShowModalDelete,
     pDeleteNews,
+    pSetInitValuesNewsForm,
 }: IModelDeleteProps) {
     const handleClose = () => {
         pSetShowModalDelete(false)
@@ -46,6 +48,32 @@ function ModelDelete({
             enqueueSnackbar('Delete failed.', {
                 variant: 'error',
             })
+        }
+    }
+
+    const handleSetInitValuesNews = () => {
+        if (pNews) {
+            const hashTagOptionIds = pNews.hashTags?.map(
+                (item) =>
+                    ({
+                        id: item.id,
+                        name: item.name,
+                    } as IOptionItem)
+            )
+            const newNewsValues: INewsForm = {
+                id: pNews.id,
+                title: pNews.title,
+                sapo: pNews.sapo,
+                thumbnailImage: pNews.thumbnailImage,
+                coverImage: pNews.coverImage,
+                content: pNews.content,
+                status: pNews.status as IStatus,
+                readTimes: pNews.readTimes,
+                hashTags: pNews.hashTags,
+                hashTagOptionIds,
+            }
+            pSetInitValuesNewsForm(newNewsValues)
+            handleClose()
         }
     }
 
@@ -92,7 +120,10 @@ function ModelDelete({
                     }}
                 >
                     You cannot undo this action, perhaps you just want to{' '}
-                    <Link to={'/'}>edit</Link> instead?
+                    <Link to={`/update-news`} onClick={handleSetInitValuesNews}>
+                        edit
+                    </Link>{' '}
+                    instead?
                 </Typography>
 
                 <Stack direction="row" gap={1} justifyContent="flex-end">
@@ -140,6 +171,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         pSetShowModalDelete: (isShow: boolean) => dispatch(setShowModalDelete(isShow)),
         pSetNews: (news: INews | null) => dispatch(setNews(news)),
         pDeleteNews: (id: number) => dispatch(deleteNewsUser(id)),
+        pSetInitValuesNewsForm: (values: INewsForm) => dispatch(setInitValueForm(values)),
     }
 }
 

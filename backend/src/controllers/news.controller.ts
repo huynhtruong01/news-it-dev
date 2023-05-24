@@ -1,4 +1,4 @@
-import { NewsStatus, Results, StatusCode, StatusText } from '@/enums'
+import { Results, StatusCode, StatusText } from '@/enums'
 import { IObjectCommon, RequestUser } from '@/models'
 import { hashTagService, newsService, userService } from '@/services'
 import { Request, Response } from 'express'
@@ -21,12 +21,8 @@ class NewsController {
     // get all news public (GET)
     async getAllNewsPublic(req: Request, res: Response) {
         try {
-            const sort: IObjectCommon = req.query as IObjectCommon
             const [news, count] = await newsService.getAllByConditional(
-                {
-                    status: NewsStatus.PUBLIC,
-                },
-                sort
+                req.query as IObjectCommon
             )
 
             res.status(StatusCode.SUCCESS).json({

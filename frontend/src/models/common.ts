@@ -31,7 +31,7 @@ export interface IFilters {
     search?: string
     createdAt?: IOrderReq
     status?: string
-    hashTag?: number
+    hashTag?: number | string
     numLikes?: IOrderReq
     numNews?: IOrderReq
     hashTagIds?: string

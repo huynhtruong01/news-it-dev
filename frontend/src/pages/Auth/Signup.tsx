@@ -1,25 +1,36 @@
+import { authApi } from '@/api'
+import { AuthContainer } from '@/pages/Auth/AuthContainer'
 import { SignupForm } from '@components/forms/index'
 import { ISignupValues } from '@models/index'
 import { Box, Typography } from '@mui/material'
 import { theme } from '@utils/index'
-import { authApi } from '@/api'
-import { useToast } from '@hooks/index'
-import { Link } from 'react-router-dom'
-import { AuthContainer } from '@/pages/Auth/AuthContainer'
-import { useNavigate } from 'react-router-dom'
+import { enqueueSnackbar } from 'notistack'
+import { Link, useNavigate } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { AppState } from '@/store'
+import { IUser } from '@/models'
+import { useEffect } from 'react'
 
-export function Signup() {
-    const { toastSuccess } = useToast()
+export interface ISignupProps {
+    pUser: IUser | null
+}
+
+export function Signup({ pUser }: ISignupProps) {
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (pUser) navigate(-1)
+    }, [pUser, navigate])
 
     const handleSignupSubmit = async (values: ISignupValues) => {
         try {
             await authApi.signup(values)
 
-            toastSuccess('Sign up successfully.')
-            navigate('/login')
+            enqueueSnackbar('Sign up successfully. Check your email.', {
+                variant: 'success',
+            })
         } catch (error) {
-            throw new Error(error as string)
+            throw new Error((error as Error).message)
         }
     }
 
@@ -51,3 +62,11 @@ export function Signup() {
         </AuthContainer>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(Signup)

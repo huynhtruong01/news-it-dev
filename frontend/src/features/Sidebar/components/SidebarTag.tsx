@@ -24,6 +24,7 @@ function SidebarTag({ pTags }: ISidebarTagProps) {
                 <Link to={'/tags'}>
                     <IconButton
                         sx={{
+                            padding: 0.5,
                             '&:hover': {
                                 backgroundColor: alpha(theme.palette.primary.dark, 0.1),
                                 svg: {

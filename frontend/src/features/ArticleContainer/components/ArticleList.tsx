@@ -1,6 +1,6 @@
 import { EmptyList, SkeletonNewsList } from '@/components/Common'
 import { INews } from '@/models'
-import { Box } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { useMemo } from 'react'
 import { ArticleItem } from '.'
 
@@ -19,17 +19,13 @@ export function ArticleList({ loading, articleList }: IArticleListProps) {
             {loading && <SkeletonNewsList />}
             {!newArticleList.length && !loading && <EmptyList title="No news here" />}
             {!!newArticleList.length && !loading && (
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
-                        gap: 3,
-                    }}
-                >
+                <Grid container spacing={2}>
                     {newArticleList.map((news) => (
-                        <ArticleItem key={news.id} article={news} />
+                        <Grid key={news.id} item md={6}>
+                            <ArticleItem article={news} />
+                        </Grid>
                     ))}
-                </Box>
+                </Grid>
             )}
         </Box>
     )

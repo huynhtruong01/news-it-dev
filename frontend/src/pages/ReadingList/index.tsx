@@ -7,7 +7,7 @@ import {
 import { AppDispatch, AppState } from '@/store'
 import { IProfileFilters, getProfileFilters } from '@/store/user/thunkApi'
 import { removeDuplicated } from '@/utils'
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography, Grid } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
@@ -74,19 +74,22 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
                 <ReadingListFilters setFilters={setFilters} />
             </Stack>
 
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '240px 1fr',
-                    gap: 2,
-                }}
-            >
-                <ReadingListTags
-                    hashTags={hashTags as IHashTag[]}
-                    setFilters={setFilters}
-                />
-                <ReadingListNews news={newsSaves} />
-            </Box>
+            <Grid container spacing={2}>
+                <Grid
+                    item
+                    sx={{
+                        width: '240px',
+                    }}
+                >
+                    <ReadingListTags
+                        hashTags={hashTags as IHashTag[]}
+                        setFilters={setFilters}
+                    />
+                </Grid>
+                <Grid item md>
+                    <ReadingListNews news={newsSaves} />
+                </Grid>
+            </Grid>
         </Box>
     )
 }

@@ -1,29 +1,51 @@
 import { articleHeader } from '@/data'
 import { Order } from '@/enums'
 import { NewsFilters } from '@/enums/news'
-import { IFilters, INewsStatus } from '@/models'
+import { IFilters, IHashTag, INewsStatus, IUser } from '@/models'
+import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
+import { connect } from 'react-redux'
 
 export interface IArticleHeaderProps extends BoxProps {
     filters: IFilters
     status: INewsStatus
     setStatus: Dispatch<SetStateAction<INewsStatus>>
     setFilters: Dispatch<SetStateAction<IFilters>>
+    pUser: IUser | null
+    pHashTags: IHashTag[]
 }
 
-export function ArticleHeader({
+function ArticleHeader({
     filters,
     status,
     setStatus,
     setFilters,
+    pUser,
+    pHashTags,
     ...rest
 }: IArticleHeaderProps) {
     const handleNewsFilters = (valFilter: string) => {
         const newFilters = { ...filters }
+
+        if (valFilter === NewsFilters.RELEVANT) {
+            delete newFilters.numLikes
+
+            if (pUser && pUser?.hashTags?.length) {
+                newFilters.hashTag = pUser.hashTags.map((h) => h.id).join(',')
+            } else {
+                newFilters.hashTag = pHashTags.map((h) => h.id).join(',')
+            }
+
+            setStatus(NewsFilters.RELEVANT)
+            setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
+            return
+        }
+
         if (valFilter === NewsFilters.LATEST) {
             delete newFilters.numLikes
+            delete newFilters.hashTag
 
             setStatus(NewsFilters.LATEST)
             setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
@@ -31,6 +53,7 @@ export function ArticleHeader({
         }
 
         delete newFilters.createdAt
+        delete newFilters.hashTag
         setStatus(NewsFilters.TOP)
         setFilters({ ...newFilters, numLikes: Order.DESC, page: 1 })
     }
@@ -73,3 +96,12 @@ export function ArticleHeader({
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+        pHashTags: state.hashTag.hashTags,
+    }
+}
+
+export default connect(mapStateToProps, null)(ArticleHeader)

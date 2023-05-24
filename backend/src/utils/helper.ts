@@ -1,6 +1,6 @@
 import { Status } from '@/enums'
 import { IObjectCommon } from '@/models'
-import { ILike, In } from 'typeorm'
+import { FindOperator, ILike, In } from 'typeorm'
 
 export const covertObjectQuery = (query: IObjectCommon, queryKeys: string[]) => {
     const booleans = ['true', 'false']
@@ -86,17 +86,20 @@ export const filtersArrQuery = (query: IObjectCommon) => {
     const arrFilters = ['hashTag']
 
     const queryKeys = Object.keys(query).filter((k) => arrFilters.includes(k))
-    return queryKeys.reduce((obj: IObjectCommon, k: string) => {
-        let newQuery: number[] = []
+    return queryKeys.reduce(
+        (obj: Record<string, string[] | FindOperator<any>>, k: string) => {
+            let newQuery: (number | string)[] = []
 
-        if (typeof +query[k] === 'number') {
-            newQuery = [+query[k]]
-        }
-        if (typeof query[k] === 'string') {
-            newQuery = (query[k] as string).split(',').map((k: string) => Number(k))
-        }
+            if (typeof +query[k] === 'number') {
+                newQuery = [+query[k]]
+            }
+            if (typeof query[k] === 'string') {
+                newQuery = (query[k] as string).split(',').map((k: string) => +k)
+            }
 
-        obj[`${k}Ids`] = In(newQuery)
-        return obj
-    }, {})
+            obj[`${k}Ids`] = In(newQuery)
+            return obj
+        },
+        {}
+    )
 }

@@ -11,6 +11,9 @@ router.route('/logout').get(authController.logout)
 router.route('/refresh-token').post(authController.refreshToken)
 router.route('/reset-password').post(authController.resetPassword)
 router.route('/check-email').post(authController.checkEmail)
+router.route('/active-user').post(authController.activeUser)
+router.route('/google-login').post(authController.googleLogin)
+router.route('/facebook-login').post(authController.facebookLogin)
 
 // has user to check
 router.use(authMiddleware.getUser)

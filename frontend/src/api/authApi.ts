@@ -11,6 +11,19 @@ export const signup = (data: ISignupValues) => {
     return AxiosClient.post(`${BASE_URL}/signup`, data).then((res) => res.data)
 }
 
+export const googleLogin = (token: string) => {
+    return AxiosClient.post(`${BASE_URL}/google-login`, {
+        tokenId: token,
+    }).then((res) => res.data)
+}
+
+export const facebookLogin = (accessToken: string, userId: string) => {
+    return AxiosClient.post(`${BASE_URL}/facebook-login`, {
+        accessToken,
+        userId,
+    }).then((res) => res.data)
+}
+
 export const refreshToken = (token: string) => {
     return AxiosClient.post(`${BASE_URL}/refresh-token`, {
         token,
@@ -19,6 +32,12 @@ export const refreshToken = (token: string) => {
 
 export const verifyUser = () => {
     return AxiosClient.get(`${BASE_URL}/verify`).then((res) => res.data)
+}
+
+export const activeUser = (token: string) => {
+    return AxiosClient.post(`${BASE_URL}/active-user`, {
+        activeToken: token,
+    })
 }
 
 export const logout = () => {

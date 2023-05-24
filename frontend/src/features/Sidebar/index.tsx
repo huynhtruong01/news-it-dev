@@ -10,7 +10,7 @@ export interface ISidebarProps extends BoxProps {
 
 function Sidebar({ pUser, ...rest }: ISidebarProps) {
     return (
-        <Box {...rest}>
+        <Box {...rest} width={'100%'}>
             <Box component="aside">
                 <Stack direction={'column'} spacing={2}>
                     {!pUser && <SidebarHeader />}

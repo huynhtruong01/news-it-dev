@@ -2,7 +2,7 @@ import { newsApi } from '@/api'
 import { INews } from '@/models'
 import { NewsDetail, NewsSideLeft, NewsSideRight } from '@/pages/News/components'
 import { AppState } from '@/store'
-import { Box } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -42,17 +42,22 @@ function News({ pSocket }: INewsProps) {
     return (
         news && (
             <Box minHeight={'100vh'}>
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '64px 7fr 3fr',
-                        gap: 2,
-                    }}
-                >
-                    <NewsSideLeft news={news} />
-                    <NewsDetail news={news} />
-                    <NewsSideRight news={news} />
-                </Box>
+                <Grid container spacing={3}>
+                    <Grid
+                        item
+                        sx={{
+                            width: '64px',
+                        }}
+                    >
+                        <NewsSideLeft news={news} />
+                    </Grid>
+                    <Grid item md={8}>
+                        <NewsDetail news={news} />
+                    </Grid>
+                    <Grid item md>
+                        <NewsSideRight news={news} />
+                    </Grid>
+                </Grid>
             </Box>
         )
     )

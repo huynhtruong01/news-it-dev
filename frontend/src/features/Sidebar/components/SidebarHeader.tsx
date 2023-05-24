@@ -36,9 +36,8 @@ export function SidebarHeader() {
 
                         a: {
                             display: 'block',
-
                             fontSize: '1rem',
-                            padding: theme.spacing(0.75, 1.75),
+                            padding: theme.spacing(1.25),
                         },
                     },
                 }}
@@ -47,7 +46,7 @@ export function SidebarHeader() {
                     fullWidth
                     variant="contained"
                     sx={{
-                        marginBottom: 0.5,
+                        marginBottom: 0.75,
                         border: `2px solid ${theme.palette.primary.main}`,
 
                         '&:hover': {

@@ -7,7 +7,7 @@ import {
 } from '@/pages/Dashboard/components'
 import { AppDispatch, AppState } from '@/store'
 import { getProfile } from '@/store/user/thunkApi'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Grid } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
 import { connect } from 'react-redux'
@@ -35,19 +35,18 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
                     </Typography>
                 </Box>
 
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '240px 1fr',
-                        gap: 2,
-                    }}
-                >
+                <Grid container spacing={2}>
                     {pUser && (
                         <>
-                            <Box>
+                            <Grid
+                                item
+                                sx={{
+                                    width: '240px',
+                                }}
+                            >
                                 <DashboardLeftList user={pUser} />
-                            </Box>
-                            <Box>
+                            </Grid>
+                            <Grid item md>
                                 <Routes>
                                     <Route
                                         index
@@ -81,10 +80,10 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
                                         }
                                     />
                                 </Routes>
-                            </Box>
+                            </Grid>
                         </>
                     )}
-                </Box>
+                </Grid>
             </Box>
         </Box>
     )

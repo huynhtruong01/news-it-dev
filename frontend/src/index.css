@@ -18,3 +18,24 @@ ul {
 li {
     list-style-type: none;
 }
+
+.custom-facebook-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: transparent;
+    padding: 10px 20px;
+    font-size: 1rem;
+    text-transform: none;
+    font-family: Roboto, sans-serif;
+    color: #404040;
+    cursor: pointer;
+}
+
+.custom-facebook-login svg {
+    font-size: 20px;
+    margin-right: 8px;
+    margin-left: -4px;
+    color: #3b5998;
+}

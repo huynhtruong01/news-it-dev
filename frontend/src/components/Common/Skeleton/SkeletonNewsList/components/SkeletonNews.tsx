@@ -13,7 +13,7 @@ export function SkeletonNews() {
                 <Skeleton
                     variant="rounded"
                     width={'100%'}
-                    height={280}
+                    height={270}
                     sx={{
                         borderRadius: 0,
                     }}

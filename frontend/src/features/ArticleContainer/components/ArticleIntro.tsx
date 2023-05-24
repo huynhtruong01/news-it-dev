@@ -92,6 +92,12 @@ function ArticleIntro({
                     fontWeight={'bold'}
                     sx={{
                         marginBottom: 1,
+                        a: {
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                        },
 
                         '&:hover': {
                             a: {
@@ -106,7 +112,12 @@ function ArticleIntro({
                     <Typography
                         sx={{
                             fontSize: theme.typography.body2,
-                            color: alpha(theme.palette.secondary.dark, 0.9),
+                            color: alpha(theme.palette.secondary.dark, 0.8),
+                            display: '-webkit-box',
+                            WebkitLineClamp: 1,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            paddingRight: 3,
                         }}
                     >
                         {sapo}

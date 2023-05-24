@@ -13,6 +13,7 @@ import { News } from '@/entities/news.entity'
 import { Comment } from '@/entities/comment.entity'
 import { Role } from '@/entities/role.entity'
 import { HashTag } from '@/entities/hashTag.entity'
+import { Notify } from '@/entities/notify.entity'
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -201,6 +202,26 @@ export class User extends BaseEntity {
         inverseJoinColumn: { name: 'commentId', referencedColumnName: 'id' },
     })
     commentLikes?: Comment[]
+
+    @ManyToMany(() => Notify, (notify) => notify.recipients, {
+        cascade: true,
+    })
+    @JoinTable({
+        name: 'user_notifications_received',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'notificationId', referencedColumnName: 'id' },
+    })
+    notificationsReceived?: Notify[]
+
+    @OneToMany(() => Notify, (notify) => notify.user, {
+        cascade: true,
+    })
+    @JoinTable({
+        name: 'user_notifications',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'notificationId', referencedColumnName: 'id' },
+    })
+    notifications?: Notify[]
 
     // TODO: add column role names
 

@@ -1,16 +1,17 @@
 import { AppDataSource } from '@/config'
+import { relationDataHashTag } from '@/data'
 import { HashTag, User } from '@/entities'
+import { IHashTagRes, IObjectCommon } from '@/models'
 import {
     createHashTag,
     filtersQuery,
     paginationQuery,
-    sortQuery,
     searchQuery,
+    sortQuery,
 } from '@/utils'
 import { commonService } from './common.service'
 import { userService } from './user.service'
-import { IObjectCommon, IHashTagRes } from '@/models'
-import { relationDataHashTag } from '@/data'
+import { NewsStatus } from '@/enums'
 
 interface ICheckHashTag {
     user: User
@@ -164,12 +165,24 @@ class HashTagService {
     // get by name (GET)
     async getByName(name: string): Promise<HashTag | null> {
         try {
-            const hashTag = await this.hashTagRepository.findOne({
-                where: {
-                    name,
-                },
-                relations: relationDataHashTag,
-            })
+            // const hashTag = await this.hashTagRepository.findOne({
+            //     relations: relationDataHashTag,
+            //     where: {
+            //         name,
+            //         'news.status': NewsStatus.PUBLIC
+            //     },
+            // })
+
+            const hashTag = await this.hashTagRepository
+                .createQueryBuilder('hashTag')
+                .where('hashTag.name = :name', { name })
+                .leftJoinAndSelect('hashTag.users', 'users')
+                .leftJoinAndSelect('hashTag.news', 'news', 'news.status = :status', {
+                    status: NewsStatus.PUBLIC,
+                })
+                .leftJoinAndSelect('news.user', 'user')
+                .getOne()
+
             if (!hashTag) return null
 
             return hashTag

@@ -1,4 +1,5 @@
 import { HashTagList } from '@/components/Common'
+import { Status } from '@/enums'
 import { INews, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
@@ -29,6 +30,7 @@ function NewsSideRightRelationUser({
                     )
                 })
                 .filter((n) => n.id !== news.id)
+                .filter((n) => n.status === Status.PUBLIC)
                 .slice(0, 3)
         }
         return []

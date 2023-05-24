@@ -1,19 +1,18 @@
-import { Box } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { SkeletonHashTagItem } from '@/components/Common/Skeleton/SkeletonHashTagList/components'
 
-export function SkeletonHashTagList() {
+export interface ISkeletonHashTagListProps {
+    column?: number
+}
+
+export function SkeletonHashTagList({ column = 3 }: ISkeletonHashTagListProps) {
     return (
-        <Box
-            sx={{
-                width: '100%',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                gap: 3,
-            }}
-        >
+        <Grid container spacing={column}>
             {Array.from(new Array(12)).map((item, idx) => (
-                <SkeletonHashTagItem key={idx} />
+                <Grid key={idx} item md={6}>
+                    <SkeletonHashTagItem />
+                </Grid>
             ))}
-        </Box>
+        </Grid>
     )
 }

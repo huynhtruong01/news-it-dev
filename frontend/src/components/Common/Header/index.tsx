@@ -24,7 +24,7 @@ import { initNewsFormValues } from '@/data'
 
 export interface IHeaderProps {
     pUser: IUser | null
-    pSetInitValuesNewsForm: (values: setInitValueForm) => void
+    pSetInitValuesNewsForm: (values: INewsForm) => void
 }
 
 function Header({ pUser, pSetInitValuesNewsForm }: IHeaderProps) {
@@ -65,7 +65,7 @@ function Header({ pUser, pSetInitValuesNewsForm }: IHeaderProps) {
                     sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
-                        padding: theme.spacing(0.5, 0),
+                        padding: theme.spacing(0.75, 0),
                     }}
                 >
                     <Box
@@ -218,11 +218,14 @@ function Header({ pUser, pSetInitValuesNewsForm }: IHeaderProps) {
                                     <Link to={'/create-news'}>Create News</Link>
                                 </Button>
                                 <Box
-                                    padding={1}
                                     sx={{
                                         borderRadius: theme.spacing(0.75),
                                         cursor: 'pointer',
                                         transition: '.2s ease-in-out',
+                                        a: {
+                                            display: 'block',
+                                            padding: 1,
+                                        },
                                         '&:hover': {
                                             backgroundColor: alpha(
                                                 theme.palette.primary.dark,
@@ -234,22 +237,24 @@ function Header({ pUser, pSetInitValuesNewsForm }: IHeaderProps) {
                                         },
                                     }}
                                 >
-                                    <Badge
-                                        color="error"
-                                        badgeContent={2}
-                                        sx={{
-                                            '& .MuiBadge-badge': {
-                                                border: `1px solid ${theme.palette.primary.contrastText}`,
-                                            },
-                                        }}
-                                    >
-                                        <NotificationsNoneOutlinedIcon
+                                    <Link to={'/notifications'}>
+                                        <Badge
+                                            color="error"
+                                            badgeContent={2}
                                             sx={{
-                                                fontSize: '30px',
-                                                color: theme.palette.secondary.light,
+                                                '& .MuiBadge-badge': {
+                                                    border: `1px solid ${theme.palette.primary.contrastText}`,
+                                                },
                                             }}
-                                        />
-                                    </Badge>
+                                        >
+                                            <NotificationsNoneOutlinedIcon
+                                                sx={{
+                                                    fontSize: '30px',
+                                                    color: theme.palette.secondary.light,
+                                                }}
+                                            />
+                                        </Badge>
+                                    </Link>
                                 </Box>
                                 <AccountMemu />
                             </Stack>

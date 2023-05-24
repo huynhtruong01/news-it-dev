@@ -1,4 +1,4 @@
-import { Comment, HashTag, News, Role, User } from '@/entities'
+import { Comment, HashTag, News, Notify, Role, User } from '@/entities'
 import { DataSource } from 'typeorm'
 
 export const AppDataSource = new DataSource({
@@ -7,6 +7,6 @@ export const AppDataSource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: 'news_app',
-    entities: [User, News, HashTag, Role, Comment],
+    entities: [User, News, HashTag, Role, Comment, Notify],
     synchronize: true,
 })

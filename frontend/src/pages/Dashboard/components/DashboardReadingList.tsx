@@ -1,7 +1,8 @@
 import { ArticleItem } from '@/features/ArticleContainer/components'
 import { INews } from '@/models'
-import { Box, Stack } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { useMemo } from 'react'
+import { EmptyList } from '@/components/Common'
 
 export interface IDashboardReadingListProps {
     saves?: INews[]
@@ -14,11 +15,14 @@ export function DashboardReadingList({ saves }: IDashboardReadingListProps) {
 
     return (
         <Box>
-            <Stack gap={2}>
+            {newSaves.length === 0 && <EmptyList title="No news save" />}
+            <Grid container spacing={2}>
                 {newSaves.map((save) => (
-                    <ArticleItem key={save.id} article={save} />
+                    <Grid key={save.id} item md={6}>
+                        <ArticleItem article={save} />
+                    </Grid>
                 ))}
-            </Stack>
+            </Grid>
         </Box>
     )
 }

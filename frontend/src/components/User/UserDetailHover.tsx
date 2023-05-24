@@ -40,10 +40,6 @@ function UserDetailHover({
     const checkSelf = useCheckSelf(user)
 
     useEffect(() => {
-        pGetProfile()
-    }, [])
-
-    useEffect(() => {
         if (Array.isArray(pUser?.following)) {
             const isFollowed = pUser?.following?.find((t) => t.id === user?.id)
             if (isFollowed) {

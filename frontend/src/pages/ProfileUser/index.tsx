@@ -19,6 +19,7 @@ import {
     Stack,
     Typography,
     alpha,
+    Grid,
 } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
@@ -266,54 +267,50 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
                     )}
                 </Box>
 
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 2fr',
-                        gap: 2,
-                    }}
-                >
-                    <Stack gap={2}>
-                        <ProfileUserNumFollow
-                            numFollowed={followers}
-                            numFollowing={user.numFollowers as number}
-                        />
+                <Grid container spacing={2}>
+                    <Grid item md={4}>
+                        <Stack gap={2}>
+                            <ProfileUserNumFollow
+                                numFollowed={followers}
+                                numFollowing={user.numFollowing as number}
+                            />
 
-                        {user.skillLanguages && (
-                            <ProfileLeftItem
-                                title={'Skills/Languages'}
-                                value={user.skillLanguages}
-                            />
-                        )}
+                            {user.skillLanguages && (
+                                <ProfileLeftItem
+                                    title={'Skills/Languages'}
+                                    value={user.skillLanguages}
+                                />
+                            )}
 
-                        {user.currentlyLearning && (
-                            <ProfileLeftItem
-                                title={'Currently Learning'}
-                                value={user.currentlyLearning}
-                            />
-                        )}
+                            {user.currentlyLearning && (
+                                <ProfileLeftItem
+                                    title={'Currently Learning'}
+                                    value={user.currentlyLearning}
+                                />
+                            )}
 
-                        <Box component={Paper} elevation={1} padding={2}>
-                            <ProfileInfoItem
-                                icon={ArticleIcon}
-                                text={`${user.newsCount || 0} news`}
-                                marginBottom={2}
-                            />
-                            <ProfileInfoItem
-                                icon={ChatBubbleOutlineIcon}
-                                text={`${user.comments?.length || 0} comment written`}
-                                marginBottom={2}
-                            />
-                            <ProfileInfoItem
-                                icon={TagIcon}
-                                text={`${user.hashTags?.length || 0} tags followed`}
-                            />
-                        </Box>
-                    </Stack>
-                    <Box>
+                            <Box component={Paper} elevation={1} padding={2}>
+                                <ProfileInfoItem
+                                    icon={ArticleIcon}
+                                    text={`${user.newsCount || 0} news`}
+                                    marginBottom={2}
+                                />
+                                <ProfileInfoItem
+                                    icon={ChatBubbleOutlineIcon}
+                                    text={`${user.comments?.length || 0} comment written`}
+                                    marginBottom={2}
+                                />
+                                <ProfileInfoItem
+                                    icon={TagIcon}
+                                    text={`${user.hashTags?.length || 0} tags followed`}
+                                />
+                            </Box>
+                        </Stack>
+                    </Grid>
+                    <Grid item md={8}>
                         <ProfileNews news={newNews} />
-                    </Box>
-                </Box>
+                    </Grid>
+                </Grid>
             </Stack>
         </Box>
     ) : (

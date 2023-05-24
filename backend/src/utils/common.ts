@@ -1,5 +1,5 @@
 import { AVATAR, MAX_AGE_REFRESH_TOKEN } from '@/consts'
-import { HashTag, News, Role, User, Comment } from '@/entities'
+import { HashTag, News, Role, User, Comment, Notify } from '@/entities'
 import { NewsStatus } from '@/enums'
 import { CookieOptions } from 'express'
 
@@ -60,6 +60,15 @@ export const createComment = (data: Comment): Comment => {
     comment.userId = data.userId
 
     return comment
+}
+
+export const createNotify = (data: Notify): Notify => {
+    const notify = new Notify()
+    notify.userId = data.userId
+    notify.newsId = data.newsId
+    notify.recipients = data.recipients
+
+    return notify
 }
 
 export const optionCookies = (options?: CookieOptions): CookieOptions => {

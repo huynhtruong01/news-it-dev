@@ -7,6 +7,12 @@ export const getAllNews = (params: IFilters) => {
     return AxiosClient.get(`${BASE_URL}`, { params }).then((res) => res.data)
 }
 
+export const getAllNewsPublic = (params: IFilters) => {
+    return AxiosClient.get(`${BASE_URL}/get-all-public`, { params }).then(
+        (res) => res.data
+    )
+}
+
 export const getNewsBySlug = (slug: string) => {
     return AxiosClient.get(`${BASE_URL}/detail/${slug}`).then((res) => res.data)
 }

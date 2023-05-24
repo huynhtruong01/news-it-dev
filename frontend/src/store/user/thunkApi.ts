@@ -4,8 +4,9 @@ import {
     createAsyncThunk,
 } from '@reduxjs/toolkit'
 import { IUserStore } from '.'
-import { userApi } from '@/api'
-import { IFiltersUserNews, IUser } from '@/models'
+import { authApi, userApi } from '@/api'
+import { IFacebookLoginParams, IFiltersUserNews, IUser } from '@/models'
+import { setLs } from '@/utils'
 
 export interface IProfileFilters {
     id: number
@@ -25,6 +26,29 @@ export const getProfileFilters = createAsyncThunk(
     }
 )
 
+// login google
+export const googleLogin = createAsyncThunk('user/googleLogin', async (token: string) => {
+    const result = await authApi.googleLogin(token)
+    setLs(import.meta.env.VITE_ACCESS_TOKEN_KEY, result.data.accessToken)
+    setLs(import.meta.env.VITE_REFRESH_TOKEN_KEY, result.data.refreshToken)
+
+    return result.data.user
+})
+
+// login facebook
+export const facebookLogin = createAsyncThunk(
+    'user/facebook',
+    async (data: IFacebookLoginParams) => {
+        const { accessToken, userId } = data
+        const result = await authApi.facebookLogin(accessToken, userId)
+
+        setLs(import.meta.env.VITE_ACCESS_TOKEN_KEY, result.data.accessToken)
+        setLs(import.meta.env.VITE_REFRESH_TOKEN_KEY, result.data.refreshToken)
+
+        return result.data.user
+    }
+)
+
 export const extraReducers = (builders: ActionReducerMapBuilder<IUserStore>) => {
     builders.addCase(
         getProfile.fulfilled,
@@ -37,6 +61,20 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IUserStore>) => 
         getProfileFilters.fulfilled,
         (state: IUserStore, action: PayloadAction<IUser>) => {
             state.userProfileFilter = action.payload
+        }
+    )
+
+    builders.addCase(
+        googleLogin.fulfilled,
+        (state: IUserStore, action: PayloadAction<IUser>) => {
+            state.user = action.payload
+        }
+    )
+
+    builders.addCase(
+        facebookLogin.fulfilled,
+        (state: IUserStore, action: PayloadAction<IUser>) => {
+            state.user = action.payload
         }
     )
 }

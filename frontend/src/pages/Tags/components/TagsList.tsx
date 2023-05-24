@@ -1,5 +1,5 @@
 import { IHashTag } from '@/models'
-import { Box } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { TagsItem } from '.'
 import { SkeletonHashTagList } from '@/components/Common'
 
@@ -13,17 +13,13 @@ export function TagsList({ tags, loading }: ITagsListProps) {
         <Box>
             {loading && <SkeletonHashTagList />}
             {!loading && (
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                        gap: 3,
-                    }}
-                >
+                <Grid container spacing={3}>
                     {tags.map((tag) => (
-                        <TagsItem key={tag.id} tag={tag} />
+                        <Grid key={tag.id} item md={4}>
+                            <TagsItem tag={tag} />
+                        </Grid>
                     ))}
-                </Box>
+                </Grid>
             )}
         </Box>
     )

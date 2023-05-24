@@ -1,5 +1,6 @@
 import { NewsFilters, Status } from '@/enums'
 import { IHashTag, IUser, IImgType, IComment, IOptionItem } from '.'
+import { ALL } from '@/consts'
 
 export interface INewsData {
     title: string
@@ -43,4 +44,8 @@ export interface INews extends INewsData {
     id: number
 }
 
-export type INewsStatus = NewsFilters.LATEST | NewsFilters.TOP
+export type INewsStatus = NewsFilters.LATEST | NewsFilters.TOP | NewsFilters.RELEVANT
+
+export interface INewsFilters {
+    status?: INewsStatus | typeof ALL
+}

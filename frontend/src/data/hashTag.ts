@@ -4,43 +4,43 @@ import { AVATAR, IMAGE } from '.'
 export const tags: IOptionItem[] = [
     {
         name: 'html',
-        value: 1,
+        id: 1,
     },
     {
         name: 'css',
-        value: 2,
+        id: 2,
     },
     {
         name: 'javascript',
-        value: 3,
+        id: 3,
     },
     {
         name: 'reactjs',
-        value: 4,
+        id: 4,
     },
     {
         name: 'devops',
-        value: 5,
+        id: 5,
     },
     {
         name: 'beginner',
-        value: 6,
+        id: 6,
     },
     {
         name: 'python',
-        value: 7,
+        id: 7,
     },
     {
         name: 'webdev',
-        value: 8,
+        id: 8,
     },
     {
         name: 'typescript',
-        value: 9,
+        id: 9,
     },
     {
         name: 'nodejs',
-        value: 10,
+        id: 10,
     },
 ]
 
@@ -49,6 +49,7 @@ export const tagList: IHashTag[] = [
         id: 1,
         name: 'html',
         color: '#008335',
+        title: '',
         description:
             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
     },
@@ -56,6 +57,7 @@ export const tagList: IHashTag[] = [
         id: 2,
         name: 'css',
         color: '#ED1556',
+        title: '',
         description:
             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
     },
@@ -63,6 +65,7 @@ export const tagList: IHashTag[] = [
         id: 3,
         name: 'javascript',
         color: '#3b49df',
+        title: '',
         description:
             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
     },
@@ -70,6 +73,7 @@ export const tagList: IHashTag[] = [
         id: 4,
         name: 'python',
         color: '#ebdf37',
+        title: '',
         description:
             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
     },
@@ -77,6 +81,7 @@ export const tagList: IHashTag[] = [
 
 export const tag: IHashTag = {
     id: 1,
+    title: '',
     name: 'html',
     color: '#008335',
     description:
@@ -113,21 +118,33 @@ export const tag: IHashTag = {
                     id: 1,
                     name: 'html',
                     color: '#008335',
+                    title: '',
+                    description:
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
                 },
                 {
                     id: 2,
                     name: 'css',
                     color: '#ED1556',
+                    title: '',
+                    description:
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
                 },
                 {
                     id: 3,
                     name: 'javascript',
                     color: '#3b49df',
+                    title: '',
+                    description:
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
                 },
                 {
                     id: 4,
                     name: 'python',
                     color: '#ebdf37',
+                    title: '',
+                    description:
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
                 },
             ],
         },
@@ -162,21 +179,33 @@ export const tag: IHashTag = {
                     id: 1,
                     name: 'html',
                     color: '#008335',
+                    title: '',
+                    description:
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
                 },
                 {
                     id: 2,
                     name: 'css',
                     color: '#ED1556',
+                    title: '',
+                    description:
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
                 },
                 {
                     id: 3,
                     name: 'javascript',
                     color: '#3b49df',
+                    title: '',
+                    description:
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
                 },
                 {
                     id: 4,
                     name: 'python',
                     color: '#ebdf37',
+                    title: '',
+                    description:
+                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard',
                 },
             ],
         },

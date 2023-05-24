@@ -4,13 +4,13 @@ export const initSignupValues: ISignupValues = {
     firstName: '',
     lastName: '',
     username: '',
-    email: '',
+    emailAddress: '',
     password: '',
     confirmPassword: '',
 }
 
 export const initLoginValues: ILoginValues = {
-    email: '',
+    emailAddress: '',
     password: '',
     rememberMe: false,
 }
