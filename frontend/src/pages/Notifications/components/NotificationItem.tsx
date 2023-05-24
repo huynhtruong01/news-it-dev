@@ -1,15 +1,20 @@
 import { HashTagList } from '@/components/Common'
-import { AVATAR, tagList } from '@/data'
-import { Avatar, Box, Typography, Button, Paper, Stack, alpha } from '@mui/material'
-import { Link } from 'react-router-dom'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
-import moment from 'moment'
+import { useLinkUser } from '@/hooks'
+import { IHashTag, INotify, IUser } from '@/models'
 import { theme } from '@/utils'
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import { Avatar, Box, Button, Paper, Stack, Typography, alpha } from '@mui/material'
+import moment from 'moment'
+import { Link } from 'react-router-dom'
 
-// export interface INotificationItemProps {}
+export interface INotificationItemProps {
+    notify: INotify
+}
 
-export function NotificationItem() {
+export function NotificationItem({ notify }: INotificationItemProps) {
+    const linkUser = useLinkUser(notify.user as IUser)
+
     return (
         <Box
             component={Paper}
@@ -19,7 +24,7 @@ export function NotificationItem() {
             }}
         >
             <Stack direction={'row'} alignItems={'center'} gap={1} marginBottom={2}>
-                <Avatar src={AVATAR} alt="" />
+                <Avatar src={notify.user?.avatar} alt={notify.user?.username} />
                 <Box>
                     <Typography
                         variant="body1"
@@ -29,16 +34,16 @@ export function NotificationItem() {
                             },
                         }}
                     >
-                        <Link to={'/'}>Huynh Truong</Link> add new news
+                        <Link to={linkUser}>{notify.user?.username}</Link> add new news
                     </Typography>
                     <Box
                         component="time"
                         sx={{
-                            fontSize: theme.typography.body2,
+                            fontSize: theme.typography.caption,
                             color: alpha(theme.palette.secondary.main, 0.65),
                         }}
                     >
-                        {moment([2018, 0, 29]).fromNow()}
+                        {moment(notify.news?.createdAt || new Date()).fromNow()}
                     </Box>
                 </Box>
             </Stack>
@@ -58,11 +63,9 @@ export function NotificationItem() {
                         },
                     }}
                 >
-                    <Link to={'/'}>
-                        Tailwind CSS for Beginners: Build a Social Link Project
-                    </Link>
+                    <Link to={`/news/${notify.news?.slug}`}>{notify.news?.title}</Link>
                 </Typography>
-                <HashTagList tags={tagList} />
+                <HashTagList tags={notify.news?.hashTags as IHashTag[]} />
                 <Stack
                     direction={'row'}
                     justifyContent={'space-between'}

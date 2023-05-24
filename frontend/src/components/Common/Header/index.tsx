@@ -25,9 +25,10 @@ import { initNewsFormValues } from '@/data'
 export interface IHeaderProps {
     pUser: IUser | null
     pSetInitValuesNewsForm: (values: INewsForm) => void
+    pNumNotifications: number
 }
 
-function Header({ pUser, pSetInitValuesNewsForm }: IHeaderProps) {
+function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderProps) {
     const [showClearIcon, setShowClearIcon] = useState<boolean>(false)
     const [searchVal, setSearchVal] = useState<string>('')
 
@@ -240,7 +241,7 @@ function Header({ pUser, pSetInitValuesNewsForm }: IHeaderProps) {
                                     <Link to={'/notifications'}>
                                         <Badge
                                             color="error"
-                                            badgeContent={2}
+                                            badgeContent={pNumNotifications}
                                             sx={{
                                                 '& .MuiBadge-badge': {
                                                     border: `1px solid ${theme.palette.primary.contrastText}`,
@@ -269,6 +270,7 @@ function Header({ pUser, pSetInitValuesNewsForm }: IHeaderProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pNumNotifications: state.notify.numNotifications,
     }
 }
 

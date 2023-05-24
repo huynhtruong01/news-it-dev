@@ -32,7 +32,6 @@ function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
 
                 const res = await newsApi.getAllNewsPublic({
                     ...filters,
-                    hashTag: pUser?.hashTags?.map((t) => t.id).join(',') || '',
                 })
                 if (filters.page === 1) {
                     setNewsList(res.data.news)
@@ -69,15 +68,16 @@ function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
 
     return (
         <Box {...rest} ref={listRef}>
-            {!loading && (
-                <ArticleHeader
-                    filters={filters}
-                    status={status}
-                    setStatus={setStatus}
-                    setFilters={setFilters}
-                    marginBottom={1}
-                />
-            )}
+            <ArticleHeader
+                filters={filters}
+                status={status}
+                setStatus={setStatus}
+                setFilters={setFilters}
+                marginBottom={1}
+                sx={{
+                    opacity: loading ? 0 : 1,
+                }}
+            />
             <ArticleList loading={loading} articleList={newsList} />
         </Box>
     )

@@ -1,4 +1,4 @@
-import { IComment, IUser } from '@/models'
+import { IComment, INotifyData, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import {
     createComment,
@@ -10,7 +10,9 @@ import {
     updateCommentReply,
 } from '@/store/comment'
 import { IActionComment } from '@/store/comment/reducers'
+import { createNotify } from '@/store/notify/thunkApi'
 import { Box } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { Socket } from 'socket.io-client'
@@ -25,6 +27,7 @@ export interface ISocketClientProps {
     pDeleteComment: (data: IComment) => void
     pLikeComment: (data: IActionComment) => void
     pUnLikeComment: (data: IActionComment) => void
+    pCreateNotify: (data: INotifyData) => Promise<PayloadAction<unknown>>
 }
 
 function SocketClient({
@@ -37,8 +40,18 @@ function SocketClient({
     pDeleteComment,
     pLikeComment,
     pUnLikeComment,
+    pCreateNotify,
 }: ISocketClientProps) {
     const dispatch: AppDispatch = useDispatch()
+
+    useEffect(() => {
+        if (!pUser?.id) return
+        pSocket?.emit('subscribe', pUser.id.toString())
+
+        return () => {
+            pSocket?.emit('unsubscribe', pUser?.id.toString())
+        }
+    }, [dispatch, pUser, pSocket])
 
     useEffect(() => {
         if (!pSocket) return
@@ -117,6 +130,17 @@ function SocketClient({
         }
     }, [dispatch, pSocket])
 
+    useEffect(() => {
+        if (!pSocket || !pUser) return
+        pSocket.on('notify-news', async (notify: INotifyData) => {
+            await pCreateNotify(notify)
+        })
+
+        return () => {
+            pSocket.off('notify-news')
+        }
+    }, [dispatch, pSocket])
+
     return <Box></Box>
 }
 
@@ -136,6 +160,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         pDeleteComment: (data: IComment) => dispatch(deleteComment(data)),
         pLikeComment: (data: IActionComment) => dispatch(likeComment(data)),
         pUnLikeComment: (data: IActionComment) => dispatch(unlikeComment(data)),
+        pCreateNotify: (data: INotifyData) => dispatch(createNotify(data)),
     }
 }
 

@@ -6,17 +6,24 @@ import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { ArticleContainer, Sidebar } from '..'
 import { getProfile } from '@/store/user/thunkApi'
+import { getNotifies } from '@/store/notify/thunkApi'
 
 export interface IMainContentProps {
     pGetAllTagsPopular: () => Promise<PayloadAction<unknown>>
     pGetProfile: () => Promise<PayloadAction<unknown>>
+    pGetNotifies: () => Promise<PayloadAction<unknown>>
 }
 
-function MainContent({ pGetAllTagsPopular, pGetProfile }: IMainContentProps) {
+function MainContent({
+    pGetAllTagsPopular,
+    pGetProfile,
+    pGetNotifies,
+}: IMainContentProps) {
     useEffect(() => {
         document.title = 'DEV Community'
         pGetAllTagsPopular()
         pGetProfile()
+        pGetNotifies()
     }, [])
 
     return (
@@ -43,6 +50,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetAllTagsPopular: () => dispatch(getAllHashTagsPopular()),
         pGetProfile: () => dispatch(getProfile()),
+        pGetNotifies: () => dispatch(getNotifies()),
     }
 }
 

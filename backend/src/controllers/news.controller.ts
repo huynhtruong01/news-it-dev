@@ -1,7 +1,9 @@
-import { Results, StatusCode, StatusText } from '@/enums'
+import { User } from '@/entities'
+import { NewsStatus, Results, StatusCode, StatusText } from '@/enums'
 import { IObjectCommon, RequestUser } from '@/models'
 import { hashTagService, newsService, userService } from '@/services'
 import { Request, Response } from 'express'
+import { io } from 'server'
 
 // ---------------- CHECK -------------------------
 const checkNewsId = (newsId: number, res: Response): boolean => {
@@ -182,6 +184,21 @@ class NewsController {
                 ...req.body,
                 userId: req.user?.id,
             })
+
+            const notify = {
+                userId: user.id,
+                newsId: newNews.id,
+                user,
+                news: newNews,
+                recipients: user.followers,
+                isRead: false,
+            }
+
+            if (newNews.status === NewsStatus.PUBLIC) {
+                for (const u of (user.followers as User[]) || []) {
+                    io.to(u.id.toString()).emit('notify-news', notify)
+                }
+            }
 
             res.status(StatusCode.CREATED).json({
                 results: Results.SUCCESS,

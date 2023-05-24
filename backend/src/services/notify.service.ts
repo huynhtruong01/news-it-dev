@@ -1,5 +1,6 @@
 import { AppDataSource } from '@/config'
 import { Notify } from '@/entities'
+import { Order } from '@/enums'
 import { createNotify } from '@/utils'
 
 class NotifyService {
@@ -10,8 +11,12 @@ class NotifyService {
         try {
             const notifications = await this.notifyRepository
                 .createQueryBuilder('notify')
+                .leftJoinAndSelect('notify.user', 'user')
+                .leftJoinAndSelect('notify.news', 'news')
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
                 .leftJoinAndSelect('notify.recipients', 'recipients')
                 .where('recipients.id = :userId', { userId })
+                .orderBy('notify.createdAt', Order.DESC)
                 .getMany()
 
             return notifications
@@ -24,6 +29,13 @@ class NotifyService {
     async create(data: Notify) {
         try {
             const notify = createNotify(data)
+            if (data.user) {
+                notify.user = data.user
+            }
+            if (data.news) {
+                notify.news = data.news
+            }
+
             const newNotify = await this.notifyRepository.save(notify)
 
             return newNotify
