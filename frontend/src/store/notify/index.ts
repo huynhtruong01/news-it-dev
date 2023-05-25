@@ -4,12 +4,18 @@ import { extraReducers } from '@/store/notify/thunkApi'
 
 export interface INotifyStore {
     notifications: INotify[]
+    notificationsFilter: INotify[]
     numNotifications: number
+    total: number
+    totalFilter: number
 }
 
 const initialState: INotifyStore = {
     notifications: [],
+    notificationsFilter: [],
     numNotifications: 0,
+    total: 0,
+    totalFilter: 0,
 }
 
 const notifySlice = createSlice({

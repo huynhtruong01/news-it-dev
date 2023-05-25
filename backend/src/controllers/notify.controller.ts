@@ -1,5 +1,5 @@
 import { Results, StatusCode, StatusText } from '@/enums'
-import { RequestUser } from '@/models'
+import { IObjectCommon, RequestUser } from '@/models'
 import { notifyService } from '@/services'
 import { Response } from 'express'
 
@@ -8,13 +8,17 @@ class NotifyController {
     async getAllNotifies(req: RequestUser, res: Response) {
         try {
             if (req.user?.id) {
-                const notifies = await notifyService.getAll(Number(req.user.id))
+                const [notifies, count] = await notifyService.getAll(
+                    Number(req.user.id),
+                    req.query as IObjectCommon
+                )
 
                 res.status(StatusCode.SUCCESS).json({
                     results: Results.SUCCESS,
                     status: StatusText.SUCCESS,
                     data: {
                         notifies,
+                        total: count,
                     },
                 })
             }

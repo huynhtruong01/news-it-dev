@@ -43,7 +43,7 @@ export function SearchFilter({
 
     return (
         <Box {...rest}>
-            <FormControl>
+            <FormControl fullWidth>
                 <TextField
                     size="small"
                     variant="outlined"

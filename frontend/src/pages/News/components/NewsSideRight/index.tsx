@@ -1,6 +1,10 @@
 import { INews, IUser } from '@/models'
 import { Box, BoxProps, Stack } from '@mui/material'
-import { NewsSideRightRelation, NewsSideRightRelationUser, NewsSideRightUser } from '.'
+import {
+    NewsSideRightRelation,
+    NewsSideRightRelationUser,
+    NewsSideRightUser,
+} from '@/pages/News/components/NewsSideRight/components'
 
 export interface INewsSideRightProps extends BoxProps {
     news: INews | null

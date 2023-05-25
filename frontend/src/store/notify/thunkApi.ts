@@ -1,5 +1,5 @@
 import { notifyApi } from '@/api'
-import { INotify, INotifyData } from '@/models'
+import { IFilters, INotify, INotifyData, INotifyRes } from '@/models'
 import {
     ActionReducerMapBuilder,
     PayloadAction,
@@ -15,10 +15,21 @@ export const createNotify = createAsyncThunk(
     }
 )
 
-export const getNotifies = createAsyncThunk('notify/getNotifies', async () => {
-    const result = await notifyApi.getNotifies()
-    return result.data.notifies
-})
+export const getNotifies = createAsyncThunk(
+    'notify/getNotifies',
+    async (filters: IFilters) => {
+        const result = await notifyApi.getNotifies(filters)
+        return result.data
+    }
+)
+
+export const getNotifiesFilters = createAsyncThunk(
+    'notify/getNotifiesFilters',
+    async (filters: IFilters) => {
+        const result = await notifyApi.getNotifies(filters)
+        return result.data
+    }
+)
 
 export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) => {
     builders.addCase(
@@ -33,9 +44,18 @@ export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) =
 
     builders.addCase(
         getNotifies.fulfilled,
-        (state: INotifyStore, action: PayloadAction<INotify[]>) => {
-            state.notifications = action.payload
-            state.numNotifications = action.payload.length
+        (state: INotifyStore, action: PayloadAction<INotifyRes>) => {
+            state.notifications = action.payload.notifies
+            state.numNotifications = action.payload.notifies.length
+            state.total = action.payload.total
+        }
+    )
+
+    builders.addCase(
+        getNotifiesFilters.fulfilled,
+        (state: INotifyStore, action: PayloadAction<INotifyRes>) => {
+            state.notificationsFilter = action.payload.notifies
+            state.totalFilter = action.payload.total
         }
     )
 }

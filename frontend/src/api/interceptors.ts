@@ -38,7 +38,7 @@ const onResponseError = async (
         const token = await authApi.refreshToken(refreshToken)
 
         setLs(import.meta.env.VITE_ACCESS_TOKEN_KEY, token.data.accessToken)
-        setLs(import.meta.env.VITE_REFRESH_TOKEN_KEY, token.data.accessToken)
+        setLs(import.meta.env.VITE_REFRESH_TOKEN_KEY, token.data.refreshToken)
 
         originalConfig.headers.Authorization = `Bearer ${token.data.accessToken}`
         return axiosInstance(originalConfig)

@@ -30,6 +30,9 @@ function ButtonNewsIcon({
     const [liked, setLiked] = useState<boolean>(false)
 
     useEffect(() => {
+        if (!news) return
+        setNumLikes(news.numLikes as number)
+
         if (pUser?.id) {
             const isLiked = pUser?.newsLikes?.find((n) => n.id === news.id)
             if (isLiked) {
@@ -49,12 +52,8 @@ function ButtonNewsIcon({
 
             if (news.id) {
                 if (liked) {
-                    setLiked(false)
-                    setNumLikes(numLikes <= 0 ? 0 : numLikes - 1)
                     await newsApi.unlikeNews(news.id)
                 } else {
-                    setLiked(true)
-                    setNumLikes(numLikes + 1)
                     await newsApi.likeNews(news.id)
                 }
 

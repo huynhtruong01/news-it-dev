@@ -17,7 +17,7 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET as string
 const MAIL_REFRESH_TOKEN = process.env.MAIL_REFRESH_TOKEN as string
 const SENDER_EMAIL_ADDRESS = process.env.SENDER_EMAIL_ADDRESS as string
 
-export const sendEmail = async (to: string, url: string, text: string) => {
+export const sendEmail = async (to: string | string[], url: string, text: string) => {
     const oAuth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, OAUTH_PLAYGROUND)
     oAuth2Client.setCredentials({ refresh_token: MAIL_REFRESH_TOKEN })
     try {

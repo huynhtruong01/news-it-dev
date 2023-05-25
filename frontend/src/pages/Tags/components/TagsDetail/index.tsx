@@ -1,13 +1,13 @@
 import { hashTagApi } from '@/api'
 import { NewsFilters } from '@/enums'
-import { IHashTag, INews, INewsStatus, IUser } from '@/models'
+import { IHashTag, INews, INewsFilters, IUser } from '@/models'
 import {
     TagsDetailHeader,
     TagsDetailLeft,
     TagsDetailNews,
 } from '@/pages/Tags/components/TagsDetail/components'
 import { AppState } from '@/store'
-import { Box, Stack, Grid } from '@mui/material'
+import { Box, Grid, Stack } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -17,7 +17,11 @@ export interface ITagsDetailProps {
 }
 
 function TagsDetail({ pUser }: ITagsDetailProps) {
-    const [status, setStatus] = useState<INewsStatus>(NewsFilters.LATEST)
+    const [filters, setFilters] = useState<INewsFilters>({
+        status: NewsFilters.LATEST,
+        search: '',
+    })
+    // const [status, setStatus] = useState<INewsStatus>(NewsFilters.LATEST)
     const [tag, setTag] = useState<IHashTag | null>(null)
     const [tagNews, setTagNews] = useState<INews[]>([])
     const params = useParams()
@@ -53,21 +57,32 @@ function TagsDetail({ pUser }: ITagsDetailProps) {
     }, [params])
 
     useEffect(() => {
-        let newTagNews = [...tagNews]
-        if (status === NewsFilters.LATEST) {
-            newTagNews = newTagNews.sort((a, b) => {
-                return (
-                    new Date(b.createdAt as Date).getTime() -
-                    new Date(a.createdAt as Date).getTime()
+        if (tag?.news?.length) {
+            let newTagNews = [...tag.news]
+
+            // status filters
+            if (filters.status === NewsFilters.LATEST) {
+                newTagNews = newTagNews.sort((a, b) => {
+                    return (
+                        new Date(b.createdAt as Date).getTime() -
+                        new Date(a.createdAt as Date).getTime()
+                    )
+                })
+            } else {
+                newTagNews = newTagNews.sort(
+                    (a, b) => (b.numLikes || 0) - (a.numLikes || 0)
                 )
+            }
+
+            // search filters
+            newTagNews = newTagNews.filter((n) => {
+                return n.title
+                    .toLowerCase()
+                    .includes(filters.search?.toLowerCase() as string)
             })
             setTagNews(newTagNews)
-            return
         }
-
-        newTagNews = newTagNews.sort((a, b) => (b.numLikes || 0) - (a.numLikes || 0))
-        setTagNews(newTagNews)
-    }, [status])
+    }, [filters])
 
     return (
         tag && (
@@ -92,8 +107,8 @@ function TagsDetail({ pUser }: ITagsDetailProps) {
 
                         <Grid item md>
                             <TagsDetailNews
-                                status={status}
-                                setStatus={setStatus}
+                                filters={filters}
+                                setFilters={setFilters}
                                 news={tagNews}
                             />
                         </Grid>

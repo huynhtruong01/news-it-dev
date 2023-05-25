@@ -1,3 +1,4 @@
+import { ALL } from '@/consts'
 import { INews, IUser } from '.'
 
 export interface INotifyData {
@@ -14,4 +15,18 @@ export interface INotifyData {
 
 export interface INotify extends Omit<INotifyData, 'id'> {
     id: number
+}
+
+export interface INotifyRes {
+    notifies: INotify[]
+    total: number
+}
+
+export type INotifyRead = number | typeof ALL
+
+export interface INotifyFilters {
+    page: number
+    limit: number
+    isRead?: INotifyRead
+    search?: string
 }

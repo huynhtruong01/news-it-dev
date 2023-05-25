@@ -14,6 +14,7 @@ import {
     sortQuery,
 } from '@/utils'
 import { userService } from './user.service'
+import { io } from 'server'
 
 class NewsService {
     constructor(private newsRepository = AppDataSource.getRepository(News)) {}
@@ -52,12 +53,14 @@ class NewsService {
             } else {
                 const newFiltersQuery = filtersQuery(query)
                 const newSortQuery = sortQuery(query)
+                const titleSearchQuery = searchQuery(query, 'title')
 
                 const [news, count] = await this.newsRepository.findAndCount({
                     order: {
                         ...newSortQuery,
                     },
                     where: {
+                        ...titleSearchQuery,
                         ...newFiltersQuery,
                         status: NewsStatus.PUBLIC,
                     },
@@ -311,6 +314,8 @@ class NewsService {
 
             const newNews = await this.updateAll(newsId, news)
 
+            io.to(newNews?.slug as string).emit('likeNews', newNews)
+
             return newNews
         } catch (error) {
             throw new Error(error as string)
@@ -330,6 +335,8 @@ class NewsService {
                 if (news.numLikes < 0) news.numLikes = 0
 
                 const newNews = await this.updateAll(newsId, news)
+
+                io.to(newNews?.slug as string).emit('unlikeNews', newNews)
                 return newNews
             }
 
@@ -352,6 +359,7 @@ class NewsService {
             news.numSaves++
 
             const newNews = await this.updateAll(newsId, news)
+            io.to(newNews?.slug as string).emit('saveNews', newNews)
 
             return newNews
         } catch (error) {
@@ -374,7 +382,7 @@ class NewsService {
                 if (news.numSaves > 0) news.numSaves--
 
                 const newNews = await this.updateAll(newsId, news)
-
+                io.to(newNews?.slug as string).emit('unsaveNews', newNews)
                 return newNews
             }
 

@@ -1,7 +1,6 @@
 import { commentApi } from '@/api'
 import { IComment, IUser } from '@/models'
 import { AppDispatch } from '@/store'
-import { IActionComment } from '@/store/comment/reducers'
 import { getProfile } from '@/store/user/thunkApi'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
@@ -14,8 +13,6 @@ import { connect } from 'react-redux'
 
 export interface IButtonLikeCommentProps extends ButtonProps {
     pGetProfile: () => Promise<PayloadAction<unknown>>
-    pLikeComment: (data: IActionComment) => void
-    pUnLikeComment: (data: IActionComment) => void
     comment: IComment
     user: IUser
 }
@@ -45,12 +42,10 @@ function ButtonLikeComment({
             if (isLike) {
                 setIsLike(false)
                 setNumLikes(numLikes - 1)
-                // pUnLikeComment({ comment, user })
                 await commentApi.unlikeComment(comment.id)
             } else {
                 setIsLike(true)
                 setNumLikes(numLikes + 1)
-                // pLikeComment({ comment, user })
                 await commentApi.likeComment(comment.id)
             }
 
@@ -80,7 +75,7 @@ function ButtonLikeComment({
             }
             onClick={handleLikeComment}
         >
-            {numLikes} likes
+            {numLikes} Likes
         </Button>
     )
 }

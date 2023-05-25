@@ -12,6 +12,7 @@ const fetch = (...args: Parameters<typeof import('node-fetch')['default']>) =>
 const client = new OAuth2Client(`${process.env.CLIENT_ID}`)
 const CLIENT_URL = `${process.env.BASE_URL}`
 
+// login user
 const loginUser = async (user: User, password: string, res: Response) => {
     try {
         const checkPassword = await commonService.comparePassword(

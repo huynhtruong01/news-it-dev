@@ -4,11 +4,11 @@ import { ButtonIconForm } from '@/components/Common'
 import { IComment, ICommentData, IUser } from '@/models'
 import { AppState } from '@/store'
 import { formatDate, theme } from '@/utils'
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import { Avatar, Box, Paper, Stack, Typography, alpha } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
 import { useMemo, useState } from 'react'
+import { RiChat3Line } from 'react-icons/ri'
 import { connect } from 'react-redux'
 import { CommentInput, CommentList } from '.'
 
@@ -224,7 +224,7 @@ ICommentItemProps) {
                                     />
                                     <ButtonIconForm
                                         text={'Reply'}
-                                        icon={ChatBubbleOutlineIcon}
+                                        icon={RiChat3Line}
                                         onButtonClick={handleShowInputReply}
                                     />
                                 </>

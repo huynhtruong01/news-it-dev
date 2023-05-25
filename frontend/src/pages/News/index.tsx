@@ -1,34 +1,43 @@
-import { newsApi } from '@/api'
 import { INews } from '@/models'
 import { NewsDetail, NewsSideLeft, NewsSideRight } from '@/pages/News/components'
-import { AppState } from '@/store'
+import { AppDispatch, AppState } from '@/store'
+import { resetNewsDetail } from '@/store/news'
+import { getNews } from '@/store/news/thunkApi'
 import { Box, Grid } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 
 export interface INewsProps {
     pSocket: Socket | null
+    pNewsDetail: INews | null
+    pGetNewsDetail: (slug: string) => Promise<PayloadAction<unknown>>
+    pResetNewsDetail: () => void
 }
 
-function News({ pSocket }: INewsProps) {
-    const [news, setNews] = useState<INews | null>(null)
+function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsProps) {
     const params = useParams()
 
     // FETCH NEWS DETAIL
     useEffect(() => {
+        pResetNewsDetail()
         if (!params.slug) return
         ;(async () => {
             try {
-                const res = await newsApi.getNewsBySlug(params.slug as string)
-                document.title = res.data.news.title
-                setNews(res.data.news)
+                await pGetNewsDetail(params.slug as string)
             } catch (error) {
                 throw new Error(error as string)
             }
         })()
-    }, [params])
+    }, [params.slug])
+
+    useEffect(() => {
+        if (pNewsDetail) {
+            document.title = pNewsDetail.title
+        }
+    }, [pNewsDetail])
 
     useEffect(() => {
         if (!params.slug || !pSocket) return
@@ -40,7 +49,7 @@ function News({ pSocket }: INewsProps) {
     }, [pSocket, params])
 
     return (
-        news && (
+        pNewsDetail && (
             <Box minHeight={'100vh'}>
                 <Grid container spacing={3}>
                     <Grid
@@ -49,13 +58,13 @@ function News({ pSocket }: INewsProps) {
                             width: '64px',
                         }}
                     >
-                        <NewsSideLeft news={news} />
+                        <NewsSideLeft news={pNewsDetail} />
                     </Grid>
                     <Grid item md={8}>
-                        <NewsDetail news={news} />
+                        <NewsDetail news={pNewsDetail} />
                     </Grid>
                     <Grid item md>
-                        <NewsSideRight news={news} />
+                        <NewsSideRight news={pNewsDetail} />
                     </Grid>
                 </Grid>
             </Box>
@@ -66,7 +75,15 @@ function News({ pSocket }: INewsProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pSocket: state.socket.socket,
+        pNewsDetail: state.news.newsDetail,
     }
 }
 
-export default connect(mapStateToProps, null)(News)
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pGetNewsDetail: (slug: string) => dispatch(getNews(slug)),
+        pResetNewsDetail: () => dispatch(resetNewsDetail()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(News)

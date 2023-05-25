@@ -1,25 +1,35 @@
 import { AppDataSource } from '@/config'
 import { Notify } from '@/entities'
 import { Order } from '@/enums'
-import { createNotify } from '@/utils'
+import { IObjectCommon } from '@/models'
+import { createNotify, paginationQuery } from '@/utils'
 
 class NotifyService {
     constructor(private notifyRepository = AppDataSource.getRepository(Notify)) {}
 
     // get all
-    async getAll(userId: number) {
+    async getAll(userId: number, query: IObjectCommon) {
         try {
-            const notifications = await this.notifyRepository
+            const pagination = paginationQuery(query)
+
+            const [notifications, count] = await this.notifyRepository
                 .createQueryBuilder('notify')
                 .leftJoinAndSelect('notify.user', 'user')
                 .leftJoinAndSelect('notify.news', 'news')
                 .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .leftJoinAndSelect('news.saveUsers', 'saveUsers')
+                .leftJoinAndSelect('news.likes', 'likes')
                 .leftJoinAndSelect('notify.recipients', 'recipients')
                 .where('recipients.id = :userId', { userId })
+                .andWhere('LOWER(news.title) LIKE LOWER(:search)', {
+                    search: `%${query.search || ''}%`,
+                })
                 .orderBy('notify.createdAt', Order.DESC)
-                .getMany()
+                .take(pagination.take)
+                .skip(pagination.skip)
+                .getManyAndCount()
 
-            return notifications
+            return [notifications, count]
         } catch (error) {
             throw new Error(error as string)
         }

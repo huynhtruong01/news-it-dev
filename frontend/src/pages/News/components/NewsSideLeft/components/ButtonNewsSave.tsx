@@ -30,6 +30,9 @@ function ButtonNewsSave({
     const [saved, setSaved] = useState<boolean>(false)
 
     useEffect(() => {
+        if (!news) return
+        setNumSaves(news.numSaves as number)
+
         if (pUser?.id) {
             const isLiked = pUser?.saves?.find((n) => n.id === news.id)
             if (isLiked) {
@@ -49,12 +52,8 @@ function ButtonNewsSave({
 
             if (news.id) {
                 if (saved) {
-                    setSaved(false)
-                    setNumSaves(numSaves <= 0 ? 0 : numSaves - 1)
                     await newsApi.unsaveNews(news.id)
                 } else {
-                    setSaved(true)
-                    setNumSaves(numSaves + 1)
                     await newsApi.saveNews(news.id)
                 }
 

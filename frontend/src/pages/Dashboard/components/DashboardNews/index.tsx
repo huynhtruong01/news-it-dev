@@ -14,13 +14,27 @@ export interface IDashboardNewsProps extends BoxProps {
 }
 
 export function DashboardNews({ newsList, newsCount, ...rest }: IDashboardNewsProps) {
-    const [filters, setFilters] = useState<INewsFilters>({})
+    const [filters, setFilters] = useState<INewsFilters>({
+        status: ALL,
+        search: '',
+    })
 
     const newNewsList = useMemo(() => {
-        if (filters.status === ALL || Object.keys(filters.status || {}).length === 0) {
-            return newsList
-        }
-        return newsList?.length ? newsList.filter((n) => n.status === filters.status) : []
+        return newsList
+            .filter((n) => {
+                const filterStatus =
+                    filters.status === n.status || filters.status === ALL ? true : false
+                const filtersSearch = n.title
+                    .toLowerCase()
+                    .includes(filters.search?.toLowerCase() as string)
+
+                return filterStatus && filtersSearch
+            })
+            .sort(
+                (a, b) =>
+                    new Date(b.createdAt as Date).getTime() -
+                    new Date(a.createdAt as Date).getTime()
+            )
     }, [newsList, filters])
 
     return (

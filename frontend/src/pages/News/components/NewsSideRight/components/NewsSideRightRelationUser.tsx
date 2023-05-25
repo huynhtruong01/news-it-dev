@@ -21,14 +21,14 @@ function NewsSideRightRelationUser({
     ...rest
 }: INewsSideRightRelationUserProps) {
     const newsList = useMemo(() => {
-        if (user?.news?.length) {
-            return user?.news
-                ?.sort((a, b) => {
-                    return (
-                        new Date(b.createdAt as Date).getTime() -
-                        new Date(a.createdAt as Date).getTime()
-                    )
-                })
+        if (user && Array.isArray(user?.news)) {
+            const newNewsList = [...(user?.news || [])].sort(
+                (a, b) =>
+                    new Date(b.createdAt as Date).getTime() -
+                    new Date(a.createdAt as Date).getTime()
+            )
+
+            return newNewsList
                 .filter((n) => n.id !== news.id)
                 .filter((n) => n.status === Status.PUBLIC)
                 .slice(0, 3)

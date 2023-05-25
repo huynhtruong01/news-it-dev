@@ -50,7 +50,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetAllTagsPopular: () => dispatch(getAllHashTagsPopular()),
         pGetProfile: () => dispatch(getProfile()),
-        pGetNotifies: () => dispatch(getNotifies()),
+        pGetNotifies: () => dispatch(getNotifies({ page: 1, limit: 100 })),
     }
 }
 

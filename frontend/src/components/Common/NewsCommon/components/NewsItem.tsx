@@ -1,12 +1,14 @@
 import { newsApi } from '@/api'
 import { HashTagList } from '@/components/Common'
 import { useLinkUser } from '@/hooks'
-import { IHashTag, INotify, IUser } from '@/models'
+import { IHashTag, INews, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { Avatar, Box, Button, Paper, Stack, Typography, alpha } from '@mui/material'
 import { indigo, red } from '@mui/material/colors'
@@ -15,31 +17,24 @@ import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import BookmarkIcon from '@mui/icons-material/Bookmark'
 
-export interface INotificationItemProps {
+export interface INewsItemProps {
     pUser: IUser | null
     pSetShowModalAuth: (isShow: boolean) => void
     pGetProfile: () => Promise<PayloadAction<unknown>>
-    notify: INotify
+    news: INews
 }
 
-function NotificationItem({
-    pUser,
-    pSetShowModalAuth,
-    pGetProfile,
-    notify,
-}: INotificationItemProps) {
+function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProps) {
     const [liked, setLiked] = useState<boolean>(false)
     const [saved, setSaved] = useState<boolean>(false)
 
-    const linkUser = useLinkUser(notify.user as IUser)
+    const linkUser = useLinkUser(news?.user as IUser)
 
     useEffect(() => {
         if (pUser?.id) {
-            const isLike = pUser?.newsLikes?.some((n) => n.id === notify?.news?.id)
-            const isSave = pUser?.saves?.some((n) => n.id === notify?.news?.id)
+            const isLike = pUser?.newsLikes?.some((n) => n.id === news.id)
+            const isSave = pUser?.saves?.some((n) => n.id === news.id)
 
             if (isLike) {
                 setLiked(true)
@@ -62,13 +57,13 @@ function NotificationItem({
                 return
             }
 
-            if (notify.news?.id) {
+            if (news.id) {
                 if (liked) {
                     setLiked(false)
-                    await newsApi.unlikeNews(notify.news?.id)
+                    await newsApi.unlikeNews(news.id)
                 } else {
                     setLiked(true)
-                    await newsApi.likeNews(notify.news?.id)
+                    await newsApi.likeNews(news.id)
                 }
 
                 await pGetProfile()
@@ -85,13 +80,13 @@ function NotificationItem({
                 return
             }
 
-            if (notify.news?.id) {
+            if (news.id) {
                 if (saved) {
                     setSaved(false)
-                    await newsApi.unsaveNews(notify.news?.id)
+                    await newsApi.unsaveNews(news.id)
                 } else {
                     setSaved(true)
-                    await newsApi.saveNews(notify.news?.id)
+                    await newsApi.saveNews(news.id)
                 }
 
                 await pGetProfile()
@@ -110,7 +105,9 @@ function NotificationItem({
             }}
         >
             <Stack direction={'row'} alignItems={'center'} gap={1} marginBottom={2}>
-                <Avatar src={notify.user?.avatar} alt={notify.user?.username} />
+                <Link to={linkUser}>
+                    <Avatar src={news?.user?.avatar} alt={news?.user?.username} />
+                </Link>
                 <Box>
                     <Typography
                         variant="body1"
@@ -120,7 +117,7 @@ function NotificationItem({
                             },
                         }}
                     >
-                        <Link to={linkUser}>{notify.user?.username}</Link> add new news
+                        <Link to={linkUser}>{news?.user?.username}</Link>
                     </Typography>
                     <Box
                         component="time"
@@ -129,7 +126,7 @@ function NotificationItem({
                             color: alpha(theme.palette.secondary.main, 0.65),
                         }}
                     >
-                        {moment(notify.news?.createdAt || new Date()).fromNow()}
+                        {moment(news?.createdAt || new Date()).fromNow()}
                     </Box>
                 </Box>
             </Stack>
@@ -149,9 +146,9 @@ function NotificationItem({
                         },
                     }}
                 >
-                    <Link to={`/news/${notify.news?.slug}`}>{notify.news?.title}</Link>
+                    <Link to={`/news/${news?.slug}`}>{news?.title}</Link>
                 </Typography>
-                <HashTagList tags={notify.news?.hashTags as IHashTag[]} />
+                <HashTagList tags={news?.hashTags as IHashTag[]} />
                 <Stack
                     direction={'row'}
                     justifyContent={'space-between'}
@@ -237,4 +234,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NotificationItem)
+export default connect(mapStateToProps, mapDispatchToProps)(NewsItem)

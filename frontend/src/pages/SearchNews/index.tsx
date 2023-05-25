@@ -1,19 +1,41 @@
-import { TitlePage } from '@/components/Common'
+import { newsApi } from '@/api'
+import { NewsList, TitlePage } from '@/components/Common'
+import { INews } from '@/models'
 import { Box, Grid } from '@mui/material'
-import { NotificationList } from '@/pages/Notifications/components'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 // export interface ISearchNewsProps {}
 
 export function SearchNews() {
+    const [searchParams] = useSearchParams()
+    const [news, setNews] = useState<INews[]>([])
+    const query = searchParams.get('q')
+
     useEffect(() => {
         document.title = 'Search Results for'
     }, [])
 
+    useEffect(() => {
+        if (!query) return
+        ;(async () => {
+            try {
+                const res = await newsApi.getAllNewsPublic({
+                    page: 1,
+                    limit: 100,
+                    search: query,
+                })
+                setNews(res.data.news)
+            } catch (error) {
+                throw new Error(error as string)
+            }
+        })()
+    }, [searchParams, query])
+
     return (
         <Box>
             <Box>
-                <TitlePage>Search</TitlePage>
+                <TitlePage>Search results for {query}</TitlePage>
             </Box>
 
             <Grid
@@ -30,7 +52,7 @@ export function SearchNews() {
                     }}
                 ></Grid>
                 <Grid item md>
-                    <NotificationList />
+                    <NewsList newsList={news} />
                 </Grid>
             </Grid>
         </Box>

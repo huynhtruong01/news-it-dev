@@ -48,4 +48,5 @@ export type INewsStatus = NewsFilters.LATEST | NewsFilters.TOP | NewsFilters.REL
 
 export interface INewsFilters {
     status?: INewsStatus | typeof ALL
+    search?: string
 }

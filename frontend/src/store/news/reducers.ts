@@ -9,4 +9,23 @@ export const reducers = {
     setNews: (state: INewsStore, action: PayloadAction<INews | null>) => {
         state.news = action.payload
     },
+    setNewsDetail: (state: INewsStore, action: PayloadAction<INews>) => {
+        const news = action.payload
+        const newsDetail = state.newsDetail
+
+        if (newsDetail && newsDetail.id === news.id) {
+            state.newsDetail = news
+        }
+    },
+    setSaveNewsDetail: (state: INewsStore, action: PayloadAction<INews>) => {
+        const news = action.payload
+        const newsDetail = state.newsDetail
+
+        if (newsDetail && newsDetail.id === news.id) {
+            state.newsDetail = news
+        }
+    },
+    resetNewsDetail: (state: INewsStore) => {
+        state.newsDetail = null
+    },
 }

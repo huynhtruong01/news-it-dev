@@ -1,34 +1,39 @@
 import { EmptyList } from '@/components/Common'
+import { SearchFilter } from '@/components/Filters'
 import { tagHeader } from '@/data'
 import { ArticleItem } from '@/features/ArticleContainer/components'
-import { INews, INewsStatus } from '@/models'
+import { INews, INewsFilters, INewsStatus } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Grid, Stack } from '@mui/material'
 import { Dispatch, SetStateAction, useMemo } from 'react'
 
 export interface ITagsDetailNewsProps extends BoxProps {
     news?: INews[]
-    status: INewsStatus
-    setStatus: Dispatch<SetStateAction<INewsStatus>>
+    filters: INewsFilters
+    setFilters: Dispatch<SetStateAction<INewsFilters>>
 }
 
 export function TagsDetailNews({
     news,
-    status,
-    setStatus,
+    filters,
+    setFilters,
     ...rest
 }: ITagsDetailNewsProps) {
     const newNews = useMemo(() => {
         return news?.length ? news : []
     }, [news])
 
-    const handleSetStatus = (value: string) => {
-        setStatus(value as INewsStatus)
+    const handleSetStatus = (value: INewsStatus) => {
+        setFilters((prev) => ({ ...prev, status: value }))
+    }
+
+    const handleSearchFilters = (value: string | number) => {
+        setFilters((prev) => ({ ...prev, search: !value ? '' : (value as string) }))
     }
 
     return (
         <Box {...rest}>
-            {newNews.length > 0 && (
+            <Stack direction={'row'} justifyContent={'space-between'}>
                 <Stack
                     direction={'row'}
                     gap={1}
@@ -49,13 +54,13 @@ export function TagsDetailNews({
                         <Box
                             key={h.value}
                             sx={{
-                                fontWeight: h.value === status ? 700 : 400,
+                                fontWeight: h.value === filters.status ? 700 : 400,
                                 color:
-                                    h.value === status
+                                    h.value === filters.status
                                         ? theme.palette.primary.main
                                         : theme.palette.secondary.main,
                                 backgroundColor:
-                                    h.value === status
+                                    h.value === filters.status
                                         ? theme.palette.primary.contrastText
                                         : 'transparent',
                             }}
@@ -65,7 +70,13 @@ export function TagsDetailNews({
                         </Box>
                     ))}
                 </Stack>
-            )}
+
+                <SearchFilter
+                    initValue={''}
+                    onSearchChange={handleSearchFilters}
+                    placeholder={'Search title...'}
+                />
+            </Stack>
 
             <Box>
                 {!newNews.length && <EmptyList title="No news here" />}

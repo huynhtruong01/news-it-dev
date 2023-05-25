@@ -1,3 +1,4 @@
+import { sendEmail } from '@/config'
 import { User } from '@/entities'
 import { NewsStatus, Results, StatusCode, StatusText } from '@/enums'
 import { IObjectCommon, RequestUser } from '@/models'
@@ -198,6 +199,10 @@ class NewsController {
                 for (const u of (user.followers as User[]) || []) {
                     io.to(u.id.toString()).emit('notify-news', notify)
                 }
+
+                const emails = user.followers?.map((u) => u.emailAddress)
+                const url = `${process.env.HOST_FRONTEND}/news/${newNews.slug}`
+                await sendEmail(emails as string[], url, 'Read new news')
             }
 
             res.status(StatusCode.CREATED).json({

@@ -1,4 +1,4 @@
-import { IComment, INotifyData, IUser } from '@/models'
+import { IComment, INews, INotifyData, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import {
     createComment,
@@ -10,6 +10,7 @@ import {
     updateCommentReply,
 } from '@/store/comment'
 import { IActionComment } from '@/store/comment/reducers'
+import { setNewsDetail } from '@/store/news'
 import { createNotify } from '@/store/notify/thunkApi'
 import { Box } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -28,6 +29,7 @@ export interface ISocketClientProps {
     pLikeComment: (data: IActionComment) => void
     pUnLikeComment: (data: IActionComment) => void
     pCreateNotify: (data: INotifyData) => Promise<PayloadAction<unknown>>
+    pSetNewsDetail: (data: INews) => void
 }
 
 function SocketClient({
@@ -41,6 +43,7 @@ function SocketClient({
     pLikeComment,
     pUnLikeComment,
     pCreateNotify,
+    pSetNewsDetail,
 }: ISocketClientProps) {
     const dispatch: AppDispatch = useDispatch()
 
@@ -141,6 +144,50 @@ function SocketClient({
         }
     }, [dispatch, pSocket])
 
+    useEffect(() => {
+        if (!pSocket || !pUser) return
+        pSocket.on('likeNews', (news: INews) => {
+            pSetNewsDetail(news)
+        })
+
+        return () => {
+            pSocket.off('likeNews')
+        }
+    }, [dispatch, pSocket])
+
+    useEffect(() => {
+        if (!pSocket || !pUser) return
+        pSocket.on('unlikeNews', (news: INews) => {
+            pSetNewsDetail(news)
+        })
+
+        return () => {
+            pSocket.off('unlikeNews')
+        }
+    }, [dispatch, pSocket])
+
+    useEffect(() => {
+        if (!pSocket || !pUser) return
+        pSocket.on('saveNews', (news: INews) => {
+            pSetNewsDetail(news)
+        })
+
+        return () => {
+            pSocket.off('saveNews')
+        }
+    }, [dispatch, pSocket])
+
+    useEffect(() => {
+        if (!pSocket || !pUser) return
+        pSocket.on('unsaveNews', (news: INews) => {
+            pSetNewsDetail(news)
+        })
+
+        return () => {
+            pSocket.off('unsaveNews')
+        }
+    }, [dispatch, pSocket])
+
     return <Box></Box>
 }
 
@@ -161,6 +208,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         pLikeComment: (data: IActionComment) => dispatch(likeComment(data)),
         pUnLikeComment: (data: IActionComment) => dispatch(unlikeComment(data)),
         pCreateNotify: (data: INotifyData) => dispatch(createNotify(data)),
+        pSetNewsDetail: (news: INews) => dispatch(setNewsDetail(news)),
     }
 }
 

@@ -1,5 +1,8 @@
+import { initNewsFormValues } from '@/data'
+import { INewsForm, IUser } from '@/models'
+import { AppDispatch, AppState } from '@/store'
+import { setInitValueForm } from '@/store/news'
 import { theme } from '@/utils'
-import ClearIcon from '@mui/icons-material/Clear'
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
 import SearchIcon from '@mui/icons-material/Search'
 import {
@@ -7,20 +10,17 @@ import {
     Box,
     Button,
     Container,
+    IconButton,
     InputAdornment,
     Paper,
     Stack,
     TextField,
     alpha,
 } from '@mui/material'
-import { ChangeEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { AccountMemu } from './components'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { IUser, INewsForm } from '@/models'
-import { AppState, AppDispatch } from '@/store'
-import { setInitValueForm } from '@/store/news'
-import { initNewsFormValues } from '@/data'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { AccountMemu } from './components'
 
 export interface IHeaderProps {
     pUser: IUser | null
@@ -29,18 +29,21 @@ export interface IHeaderProps {
 }
 
 function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderProps) {
-    const [showClearIcon, setShowClearIcon] = useState<boolean>(false)
     const [searchVal, setSearchVal] = useState<string>('')
+    const location = useLocation()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!location.pathname.startsWith('/search')) setSearchVal('')
+    }, [navigate])
 
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target
-
         setSearchVal(value)
-        setShowClearIcon(!!value)
     }
 
-    const handleClearVal = () => {
-        setShowClearIcon(false)
+    const handleSearchClick = () => {
+        navigate(`/search?q=${encodeURIComponent(searchVal)}`)
     }
 
     const handleSetInitValuesForm = () => {
@@ -97,20 +100,17 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                         <TextField
                             value={searchVal}
                             InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                ),
                                 endAdornment: (
                                     <InputAdornment
-                                        position="end"
-                                        style={{
-                                            display: showClearIcon ? 'flex' : 'none',
+                                        position="start"
+                                        sx={{
+                                            marginRight: 0,
                                         }}
-                                        onClick={handleClearVal}
+                                        onClick={handleSearchClick}
                                     >
-                                        <ClearIcon />
+                                        <IconButton>
+                                            <SearchIcon />
+                                        </IconButton>
                                     </InputAdornment>
                                 ),
                             }}
@@ -119,6 +119,12 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                             onChange={handleSearchChange}
                             sx={{
                                 width: 400,
+                                '.MuiInputBase-root': {
+                                    paddingRight: 0,
+                                },
+                                fieldset: {
+                                    paddingRight: 0,
+                                },
                             }}
                         />
                     </Box>

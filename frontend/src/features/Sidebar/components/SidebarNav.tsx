@@ -37,15 +37,15 @@ export function SidebarNav() {
                         key={item.name}
                         sx={{
                             width: '100%',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 1,
-                            padding: theme.spacing(0.75),
                             cursor: 'pointer',
                             borderRadius: theme.spacing(0.75),
                             color: alpha(theme.palette.secondary.main, 0.9),
 
                             a: {
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                                padding: theme.spacing(0.75),
                                 flex: 1,
                             },
 
@@ -58,12 +58,14 @@ export function SidebarNav() {
                             },
                         }}
                     >
-                        <Box>
-                            {item.name === 'Home' && <Icon />}
-                            {item.name === 'Reading List' && <ListingIcon />}
-                            {item.name === 'Tags' && <TagIcon />}
-                        </Box>
-                        <Link to={`${item.link}`}>{item.name}</Link>
+                        <Link to={`${item.link}`}>
+                            <Box>
+                                {item.name === 'Home' && <Icon />}
+                                {item.name === 'Reading List' && <ListingIcon />}
+                                {item.name === 'Tags' && <TagIcon />}
+                            </Box>
+                            {item.name}
+                        </Link>
                     </Box>
                 ))}
             </Box>
