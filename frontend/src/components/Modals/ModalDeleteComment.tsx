@@ -14,7 +14,6 @@ export interface IModelDeleteCommentProps {
     pComment: IComment | null
     pSetComment: (comment: IComment | null) => void
     pSetShowModalDeleteComment: (isShow: boolean) => void
-    pDeleteComment: (comment: IComment) => void
 }
 
 function ModelDeleteComment({

@@ -7,3 +7,4 @@ export const LOGO =
 export const COLOR_WHITE = '#ffffff'
 
 export const HEADER_HEIGHT = 54
+export const MAX_SCROLL_TOP = 200

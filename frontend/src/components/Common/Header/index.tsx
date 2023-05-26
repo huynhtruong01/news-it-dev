@@ -17,7 +17,7 @@ import {
     TextField,
     alpha,
 } from '@mui/material'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AccountMemu } from './components'
@@ -30,6 +30,7 @@ export interface IHeaderProps {
 
 function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderProps) {
     const [searchVal, setSearchVal] = useState<string>('')
+    const searchRef = useRef<HTMLInputElement | null>(null)
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -42,8 +43,10 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
         setSearchVal(value)
     }
 
-    const handleSearchClick = () => {
+    const handleSearchNews = (e: FormEvent<HTMLElement>) => {
+        e.preventDefault()
         navigate(`/search?q=${encodeURIComponent(searchVal)}`)
+        if (searchRef.current) searchRef.current.blur()
     }
 
     const handleSetInitValuesForm = () => {
@@ -97,36 +100,38 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                                 />
                             </Link>
                         </Box>
-                        <TextField
-                            value={searchVal}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment
-                                        position="start"
-                                        sx={{
-                                            marginRight: 0,
-                                        }}
-                                        onClick={handleSearchClick}
-                                    >
-                                        <IconButton>
-                                            <SearchIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            size="small"
-                            placeholder={'Search...'}
-                            onChange={handleSearchChange}
-                            sx={{
-                                width: 400,
-                                '.MuiInputBase-root': {
-                                    paddingRight: 0,
-                                },
-                                fieldset: {
-                                    paddingRight: 0,
-                                },
-                            }}
-                        />
+                        <Box component="form" onSubmit={handleSearchNews}>
+                            <TextField
+                                inputRef={searchRef}
+                                value={searchVal}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment
+                                            position="start"
+                                            sx={{
+                                                marginRight: 0,
+                                            }}
+                                        >
+                                            <IconButton type="submit">
+                                                <SearchIcon />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                size="small"
+                                placeholder={'Search...'}
+                                onChange={handleSearchChange}
+                                sx={{
+                                    width: 400,
+                                    '.MuiInputBase-root': {
+                                        paddingRight: 0,
+                                    },
+                                    fieldset: {
+                                        paddingRight: 0,
+                                    },
+                                }}
+                            />
+                        </Box>
                     </Box>
                     <Stack
                         direction={'row'}

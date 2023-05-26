@@ -1,5 +1,5 @@
 import { ALL } from '@/consts'
-import { INews, IUser } from '.'
+import { IFilters, INews, IUser } from '.'
 
 export interface INotifyData {
     id?: number
@@ -8,7 +8,7 @@ export interface INotifyData {
     user?: IUser
     news?: INews
     recipients?: IUser[]
-    isRead: boolean
+    readUsers: (string | number)[]
     createdAt: Date
     updatedAt: Date
 }
@@ -18,6 +18,7 @@ export interface INotify extends Omit<INotifyData, 'id'> {
 }
 
 export interface INotifyRes {
+    userId?: number
     notifies: INotify[]
     total: number
 }
@@ -29,4 +30,9 @@ export interface INotifyFilters {
     limit: number
     isRead?: INotifyRead
     search?: string
+}
+
+export interface INotifiesFilter {
+    filters: IFilters
+    userId: number
 }

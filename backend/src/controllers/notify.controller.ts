@@ -52,6 +52,30 @@ class NotifyController {
         }
     }
 
+    // update read users (GET)
+    async readUsersNotify(req: RequestUser, res: Response) {
+        try {
+            const notify = await notifyService.readUsers(
+                Number(req.params.notifyId),
+                Number(req.user?.id)
+            )
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    notify,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
     // delete by news id (DELETE)
     async deleteNotifyByNewsId(req: RequestUser, res: Response) {
         try {

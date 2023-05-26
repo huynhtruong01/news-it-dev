@@ -14,7 +14,7 @@ import {
     Notifications,
     SearchNews,
 } from '@/pages'
-import { Header, SocketClient } from '@components/common/index'
+import { Header, ScrollTop, SocketClient } from '@components/common/index'
 import { MainLayout } from '@layouts/index'
 import { Box } from '@mui/material'
 import { Route, Routes } from 'react-router-dom'
@@ -67,6 +67,7 @@ function App({ pSetSocket }: IAppProps) {
                     <Route path={'/search'} element={<SearchNews />} />
                 </Routes>
             </MainLayout>
+            <ScrollTop />
         </Box>
     )
 }

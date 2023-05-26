@@ -36,6 +36,7 @@ export interface IFilters {
     numNews?: IOrderReq
     hashTagIds?: string
     newsId?: number
+    isRead?: number
 }
 
 export interface ISelectValue {

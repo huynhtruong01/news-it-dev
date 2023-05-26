@@ -1,4 +1,4 @@
-import { AppDispatch } from '@/store'
+import { AppDispatch, AppState } from '@/store'
 import { getAllHashTagsPopular } from '@/store/hashTag/thunkApi'
 import { Grid, Box } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -7,14 +7,17 @@ import { connect } from 'react-redux'
 import { ArticleContainer, Sidebar } from '..'
 import { getProfile } from '@/store/user/thunkApi'
 import { getNotifies } from '@/store/notify/thunkApi'
+import { IUser } from '@/models'
 
 export interface IMainContentProps {
+    pUser: IUser | null
     pGetAllTagsPopular: () => Promise<PayloadAction<unknown>>
     pGetProfile: () => Promise<PayloadAction<unknown>>
-    pGetNotifies: () => Promise<PayloadAction<unknown>>
+    pGetNotifies: (userId: number) => Promise<PayloadAction<unknown>>
 }
 
 function MainContent({
+    pUser,
     pGetAllTagsPopular,
     pGetProfile,
     pGetNotifies,
@@ -23,7 +26,7 @@ function MainContent({
         document.title = 'DEV Community'
         pGetAllTagsPopular()
         pGetProfile()
-        pGetNotifies()
+        pGetNotifies(pUser?.id as number)
     }, [])
 
     return (
@@ -46,12 +49,19 @@ function MainContent({
     )
 }
 
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetAllTagsPopular: () => dispatch(getAllHashTagsPopular()),
         pGetProfile: () => dispatch(getProfile()),
-        pGetNotifies: () => dispatch(getNotifies({ page: 1, limit: 100 })),
+        pGetNotifies: (userId: number) =>
+            dispatch(getNotifies({ filters: { page: 1, limit: 100 }, userId })),
     }
 }
 
-export default connect(null, mapDispatchToProps)(MainContent)
+export default connect(mapStateToProps, mapDispatchToProps)(MainContent)

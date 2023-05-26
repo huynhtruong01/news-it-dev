@@ -1,6 +1,5 @@
 import { TitlePage } from '@/components/Common'
-import { ALL } from '@/consts'
-import { IFilters, INotify, INotifyFilters } from '@/models'
+import { IFilters, INotifiesFilter, INotify, INotifyFilters, IUser } from '@/models'
 import {
     NotificationList,
     NotificationNavFilters,
@@ -16,12 +15,14 @@ import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 export interface INotificationsProps {
+    pUser: IUser | null
     pNotifications: INotify[]
     pNotificationsTotal: number
-    pGetNotifications: (filters: IFilters) => Promise<PayloadAction<unknown>>
+    pGetNotifications: (data: INotifiesFilter) => Promise<PayloadAction<unknown>>
 }
 
 export function Notifications({
+    pUser,
     pNotifications,
     pNotificationsTotal,
     pGetNotifications,
@@ -30,7 +31,6 @@ export function Notifications({
         page: 1,
         limit: 8,
         search: '',
-        isRead: ALL,
     })
 
     useEffect(() => {
@@ -41,11 +41,12 @@ export function Notifications({
         ;(async () => {
             try {
                 const newFilters: IFilters = {
-                    page: filters.page,
-                    limit: filters.limit,
-                    search: filters.search,
+                    ...filters,
                 }
-                await pGetNotifications(newFilters)
+                await pGetNotifications({
+                    filters: newFilters,
+                    userId: pUser?.id as number,
+                })
             } catch (error) {
                 enqueueSnackbar((error as Error).message, {
                     variant: 'error',
@@ -55,7 +56,12 @@ export function Notifications({
     }, [filters])
 
     return (
-        <Box>
+        <Box
+            sx={{
+                maxWidth: 1024,
+                margin: 'auto',
+            }}
+        >
             <Stack direction={'row'} justifyContent={'space-between'}>
                 <TitlePage>Notifications</TitlePage>
                 <NotificationSearchFilters setFilters={setFilters} />
@@ -82,11 +88,13 @@ export function Notifications({
                     <NotificationList notifications={pNotifications || []} />
 
                     {/* pagination */}
-                    <NotificationPaginationFilters
-                        filters={filters}
-                        setFilters={setFilters}
-                        total={pNotificationsTotal}
-                    />
+                    {pNotificationsTotal > 0 && (
+                        <NotificationPaginationFilters
+                            filters={filters}
+                            setFilters={setFilters}
+                            total={pNotificationsTotal}
+                        />
+                    )}
                 </Grid>
             </Grid>
         </Box>
@@ -95,6 +103,7 @@ export function Notifications({
 
 const mapStateToProps = (state: AppState) => {
     return {
+        pUser: state.user.user,
         pNotifications: state.notify.notificationsFilter,
         pNotificationsTotal: state.notify.totalFilter,
     }
@@ -102,7 +111,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pGetNotifications: (filters: IFilters) => dispatch(getNotifiesFilters(filters)),
+        pGetNotifications: (data: INotifiesFilter) => dispatch(getNotifiesFilters(data)),
     }
 }
 

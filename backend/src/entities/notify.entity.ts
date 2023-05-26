@@ -27,10 +27,9 @@ export class Notify extends BaseEntity {
     newsId: number
 
     @Column({
-        type: 'boolean',
-        default: false,
+        type: 'simple-array',
     })
-    isRead: boolean
+    readUsers?: (string | number)[]
 
     @ManyToMany(() => User, (user) => user.notificationsReceived, {
         onDelete: 'CASCADE',

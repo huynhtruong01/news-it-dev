@@ -12,16 +12,19 @@ import { Avatar, Box, Button, Paper, Stack, Typography, alpha } from '@mui/mater
 import { indigo, red } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
+import { enqueueSnackbar } from 'notistack'
+import { readUsersNotify } from '@/store/notify/thunkApi'
 
 export interface INotificationItemProps {
     pUser: IUser | null
     pSetShowModalAuth: (isShow: boolean) => void
     pGetProfile: () => Promise<PayloadAction<unknown>>
+    pReadUsersNotify: (id: number) => Promise<PayloadAction<unknown>>
     notify: INotify
 }
 
@@ -29,12 +32,19 @@ function NotificationItem({
     pUser,
     pSetShowModalAuth,
     pGetProfile,
+    pReadUsersNotify,
     notify,
 }: INotificationItemProps) {
     const [liked, setLiked] = useState<boolean>(false)
     const [saved, setSaved] = useState<boolean>(false)
+    const navigate = useNavigate()
 
     const linkUser = useLinkUser(notify.user as IUser)
+
+    const isRead = useMemo(
+        () => notify.readUsers.includes((pUser?.id as number).toString()),
+        [pUser, notify]
+    )
 
     useEffect(() => {
         if (pUser?.id) {
@@ -101,12 +111,26 @@ function NotificationItem({
         }
     }
 
+    const handleUpdateReadNotify = async (link: string) => {
+        try {
+            navigate(link)
+            await pReadUsersNotify(notify.id)
+        } catch (error) {
+            enqueueSnackbar((error as Error).message, {
+                variant: 'error',
+            })
+        }
+    }
+
     return (
         <Box
             component={Paper}
             elevation={1}
             sx={{
                 padding: 3,
+                borderLeft: `0.5rem solid ${
+                    isRead ? 'transparent' : theme.palette.primary.main
+                } `,
             }}
         >
             <Stack direction={'row'} alignItems={'center'} gap={1} marginBottom={2}>
@@ -141,7 +165,11 @@ function NotificationItem({
                     fontWeight={700}
                     sx={{
                         marginBottom: 1.5,
-                        a: {
+                        span: {
+                            fontSize: theme.typography.h5,
+                            fontWeight: 700,
+                            cursor: 'pointer',
+
                             '&:hover': {
                                 color: theme.palette.primary.main,
                                 textDecoration: 'underline',
@@ -149,7 +177,14 @@ function NotificationItem({
                         },
                     }}
                 >
-                    <Link to={`/news/${notify.news?.slug}`}>{notify.news?.title}</Link>
+                    <Typography
+                        component="span"
+                        onClick={() =>
+                            handleUpdateReadNotify(`/news/${notify.news?.slug as string}`)
+                        }
+                    >
+                        {notify.news?.title}
+                    </Typography>
                 </Typography>
                 <HashTagList tags={notify.news?.hashTags as IHashTag[]} />
                 <Stack
@@ -234,6 +269,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+        pReadUsersNotify: (id: number) => dispatch(readUsersNotify(id)),
     }
 }
 

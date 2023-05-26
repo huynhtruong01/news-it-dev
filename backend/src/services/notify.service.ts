@@ -1,4 +1,5 @@
 import { AppDataSource } from '@/config'
+import { relationDataNotify } from '@/data'
 import { Notify } from '@/entities'
 import { Order } from '@/enums'
 import { IObjectCommon } from '@/models'
@@ -29,7 +30,16 @@ class NotifyService {
                 .skip(pagination.skip)
                 .getManyAndCount()
 
-            return [notifications, count]
+            let newNotifications = [...notifications]
+            if (query.isRead) {
+                newNotifications = newNotifications.filter((n) =>
+                    Number(query.isRead) === 0
+                        ? !n.readUsers?.includes(userId.toString() as string)
+                        : n.readUsers?.includes(userId.toString() as string)
+                )
+            }
+
+            return [newNotifications, count]
         } catch (error) {
             throw new Error(error as string)
         }
@@ -66,6 +76,38 @@ class NotifyService {
             if (!notify) return null
 
             return notify
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get by id
+    async getById(id: number) {
+        try {
+            const notify = await this.notifyRepository.findOne({
+                where: {
+                    id,
+                },
+                relations: relationDataNotify,
+            })
+
+            if (!notify) return null
+
+            return notify
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // push id read users
+    async readUsers(id: number, userId: number) {
+        try {
+            const notify = await this.getById(id)
+            if (!notify) return null
+
+            notify.readUsers?.push(userId)
+            const newNotify = await this.notifyRepository.save({ ...notify })
+            return newNotify
         } catch (error) {
             throw new Error(error as string)
         }

@@ -7,14 +7,15 @@ import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
 import { indigo } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
+import { RiChat3Line } from 'react-icons/ri'
 import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 export interface IArticleIntroProps {
     article: INews
@@ -30,17 +31,25 @@ function ArticleIntro({
     pSetShowModalAuth,
 }: IArticleIntroProps) {
     const [saved, setSaved] = useState<boolean>(false)
+    const [liked, setLiked] = useState<boolean>(false)
     const navigate = useNavigate()
 
     const { title, sapo, hashTags, readTimes, numLikes, slug, comments } = article
 
     useEffect(() => {
         if (pUser?.id) {
-            const isLiked = pUser?.saves?.find((n) => n.id === article.id)
-            if (isLiked) {
+            const isSaved = pUser?.saves?.find((n) => n.id === article.id)
+            const isLiked = pUser?.newsLikes?.find((n) => n.id === article.id)
+            if (isSaved) {
                 setSaved(true)
             } else {
                 setSaved(false)
+            }
+
+            if (isLiked) {
+                setLiked(true)
+            } else {
+                setLiked(false)
             }
         }
     }, [pUser, article])
@@ -161,12 +170,13 @@ function ArticleIntro({
                 >
                     <ButtonIconForm
                         text={`${numLikes} Likes`}
-                        icon={FavoriteBorderIcon}
+                        icon={liked ? FavoriteIcon : FavoriteBorderIcon}
+                        isLiked={liked}
                         onButtonClick={handleLikeClick}
                     />
                     <ButtonIconForm
                         text={`${commentLength} Comments`}
-                        icon={ChatBubbleOutlineOutlinedIcon}
+                        icon={RiChat3Line}
                         onButtonClick={handleCommentClick}
                     />
                 </Stack>

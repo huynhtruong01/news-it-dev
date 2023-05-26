@@ -4,6 +4,7 @@ import { theme } from '@utils/index'
 import { useNavigate } from 'react-router-dom'
 import { ModalAuth, ModalDelete, ModalDeleteComment } from '@/components'
 import { HEADER_HEIGHT } from '@/consts'
+import { ProgressBar } from '@/components/Common'
 
 export interface IMainLayoutProps {
     children: ReactNode
@@ -19,10 +20,12 @@ export function MainLayout({ children }: IMainLayoutProps) {
     return (
         <Box
             sx={{
+                position: 'relative',
                 paddingTop: 8,
                 backgroundColor: theme.palette.grey['A100'],
             }}
         >
+            <ProgressBar marginTop={`${HEADER_HEIGHT + 4}px`} />
             <Container
                 sx={{
                     paddingTop: 2,

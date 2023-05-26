@@ -5,18 +5,19 @@ import { IHashTag, INews, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
-import { theme } from '@/utils'
+import { formatDate, theme } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { Avatar, Box, Button, Paper, Stack, Typography, alpha } from '@mui/material'
 import { indigo, red } from '@mui/material/colors'
+import { makeStyles } from '@mui/styles'
 import { PayloadAction } from '@reduxjs/toolkit'
-import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { RiChat3Line } from 'react-icons/ri'
 
 export interface INewsItemProps {
     pUser: IUser | null
@@ -25,9 +26,20 @@ export interface INewsItemProps {
     news: INews
 }
 
+const useStyles = makeStyles({
+    button: {
+        backgroundColor: alpha(theme.palette.secondary.main, 0.075),
+        '&:hover': {
+            backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+        },
+    },
+})
+
 function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProps) {
+    const styles = useStyles()
     const [liked, setLiked] = useState<boolean>(false)
     const [saved, setSaved] = useState<boolean>(false)
+    const navigate = useNavigate()
 
     const linkUser = useLinkUser(news?.user as IUser)
 
@@ -96,6 +108,10 @@ function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProp
         }
     }
 
+    const handleNavigateComment = () => {
+        navigate(`/news/${news.slug}#comments`)
+    }
+
     return (
         <Box
             component={Paper}
@@ -126,7 +142,7 @@ function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProp
                             color: alpha(theme.palette.secondary.main, 0.65),
                         }}
                     >
-                        {moment(news?.createdAt || new Date()).fromNow()}
+                        {formatDate(news?.createdAt || new Date(), "MMM DD 'YY")}
                     </Box>
                 </Box>
             </Stack>
@@ -161,60 +177,81 @@ function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProp
                         },
                     }}
                 >
-                    <Button
-                        variant="contained"
-                        startIcon={
-                            liked ? (
-                                <FavoriteIcon
-                                    sx={{
-                                        color: red[700],
-                                    }}
-                                />
-                            ) : (
-                                <FavoriteBorderIcon />
-                            )
-                        }
-                        sx={{
-                            backgroundColor: liked
-                                ? alpha(red[700], 0.1)
-                                : alpha(theme.palette.secondary.main, 0.075),
-                            '&:hover': {
+                    <Stack direction={'row'} gap={1}>
+                        <Button
+                            variant="contained"
+                            startIcon={
+                                liked ? (
+                                    <FavoriteIcon
+                                        sx={{
+                                            color: red[700],
+                                        }}
+                                    />
+                                ) : (
+                                    <FavoriteBorderIcon />
+                                )
+                            }
+                            sx={{
                                 backgroundColor: liked
                                     ? alpha(red[700], 0.1)
-                                    : alpha(theme.palette.secondary.main, 0.1),
-                            },
-                        }}
-                        onClick={handleLikeNews}
-                    >
-                        Like
-                    </Button>
-                    <Button
-                        variant="contained"
-                        endIcon={
-                            saved ? (
-                                <BookmarkIcon
-                                    sx={{
-                                        color: indigo[700],
-                                    }}
-                                />
-                            ) : (
-                                <BookmarkBorderIcon />
-                            )
-                        }
-                        sx={{
-                            backgroundColor: saved
-                                ? alpha(indigo[700], 0.1)
-                                : alpha(theme.palette.secondary.main, 0.075),
-                            '&:hover': {
+                                    : alpha(theme.palette.secondary.main, 0.075),
+                                '&:hover': {
+                                    backgroundColor: liked
+                                        ? alpha(red[700], 0.1)
+                                        : alpha(theme.palette.secondary.main, 0.1),
+                                },
+                            }}
+                            onClick={handleLikeNews}
+                        >
+                            {news.numLikes} Like
+                        </Button>
+                        <Button
+                            className={styles.button}
+                            startIcon={<RiChat3Line />}
+                            variant="contained"
+                            onClick={handleNavigateComment}
+                        >
+                            Comment
+                        </Button>
+                    </Stack>
+                    <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                        <Typography
+                            component="small"
+                            variant="caption"
+                            sx={{
+                                color: alpha(theme.palette.secondary.main, 0.8),
+                            }}
+                        >
+                            {news.readTimes} min read
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            endIcon={
+                                saved ? (
+                                    <BookmarkIcon
+                                        sx={{
+                                            color: indigo[700],
+                                        }}
+                                    />
+                                ) : (
+                                    <BookmarkBorderIcon />
+                                )
+                            }
+                            sx={{
                                 backgroundColor: saved
                                     ? alpha(indigo[700], 0.1)
-                                    : alpha(theme.palette.secondary.main, 0.1),
-                            },
-                        }}
-                        onClick={handleSaveNews}
-                    >
-                        Save
-                    </Button>
+                                    : alpha(theme.palette.secondary.main, 0.075),
+                                '&:hover': {
+                                    backgroundColor: saved
+                                        ? alpha(indigo[700], 0.1)
+                                        : alpha(theme.palette.secondary.main, 0.1),
+                                },
+                            }}
+                            onClick={handleSaveNews}
+                        >
+                            Save
+                        </Button>
+                    </Stack>
                 </Stack>
             </Box>
         </Box>

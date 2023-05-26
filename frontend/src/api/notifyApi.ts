@@ -10,3 +10,7 @@ export const createNotify = (data: INotifyData) => {
 export const getNotifies = (params: IFilters) => {
     return AxiosClient.get(`${BASE_URL}`, { params }).then((res) => res.data)
 }
+
+export const readUsersNotify = (notifyId: number) => {
+    return AxiosClient.get(`${BASE_URL}/read-users/${notifyId}`).then((res) => res.data)
+}
