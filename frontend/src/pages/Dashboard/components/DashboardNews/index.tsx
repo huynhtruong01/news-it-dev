@@ -24,9 +24,14 @@ export function DashboardNews({ newsList, newsCount, ...rest }: IDashboardNewsPr
             .filter((n) => {
                 const filterStatus =
                     filters.status === n.status || filters.status === ALL ? true : false
-                const filtersSearch = n.title
-                    .toLowerCase()
-                    .includes(filters.search?.toLowerCase() as string)
+                const filtersSearch =
+                    filters.search === ''
+                        ? true
+                        : (filters.search as string)
+                              .toLowerCase()
+                              .split(' ')
+                              .filter((x) => !!x)
+                              .some((w) => n.title.toLowerCase().includes(w))
 
                 return filterStatus && filtersSearch
             })

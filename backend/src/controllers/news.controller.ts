@@ -189,6 +189,7 @@ class NewsController {
             const notify = {
                 userId: user.id,
                 newsId: newNews.id,
+                text: 'add new news',
                 user,
                 news: newNews,
                 recipients: user.followers,

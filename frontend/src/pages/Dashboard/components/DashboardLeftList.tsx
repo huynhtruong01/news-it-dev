@@ -167,6 +167,36 @@ export function DashboardLeftList({ user }: IDashboardLeftListProps) {
                     component="li"
                     sx={{
                         a: {
+                            fontWeight: activeLink === 'likes' ? 500 : 400,
+                            backgroundColor:
+                                activeLink === 'likes'
+                                    ? theme.palette.primary.contrastText
+                                    : 'transparent',
+
+                            '&:hover': {
+                                backgroundColor:
+                                    activeLink === 'likes'
+                                        ? theme.palette.primary.contrastText
+                                        : alpha(theme.palette.primary.light, 0.2),
+                                color:
+                                    activeLink === 'likes'
+                                        ? '#000'
+                                        : theme.palette.primary.dark,
+                            },
+                        },
+                    }}
+                >
+                    <Link to={'/dashboard/likes'}>
+                        <Typography component="span">News likes</Typography>
+                        <Typography component="span">
+                            {user.newsLikes?.length || 0}
+                        </Typography>
+                    </Link>
+                </Box>
+                <Box
+                    component="li"
+                    sx={{
+                        a: {
                             fontWeight: activeLink === 'reading-list' ? 500 : 400,
                             backgroundColor:
                                 activeLink === 'reading-list'

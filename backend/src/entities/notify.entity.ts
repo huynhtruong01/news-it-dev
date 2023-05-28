@@ -27,6 +27,11 @@ export class Notify extends BaseEntity {
     newsId: number
 
     @Column({
+        type: 'text',
+    })
+    text: string
+
+    @Column({
         type: 'simple-array',
     })
     readUsers?: (string | number)[]

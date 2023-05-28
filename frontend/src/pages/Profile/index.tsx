@@ -4,7 +4,7 @@ import { AppDispatch, AppState } from '@/store'
 import { getProfile } from '@/store/user/thunkApi'
 import { formatDate, theme } from '@/utils'
 import ArticleIcon from '@mui/icons-material/Article'
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
+import { RiChat1Line } from 'react-icons/ri'
 import TagIcon from '@mui/icons-material/Tag'
 import {
     Avatar,
@@ -20,6 +20,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { ProfileUserNumFollow } from '@/pages/ProfileUser/components'
 
 export interface IProfileProps {
     pUser: IUser | null
@@ -163,6 +164,11 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                     <Grid container spacing={2}>
                         <Grid item md={4}>
                             <Stack gap={2}>
+                                <ProfileUserNumFollow
+                                    numFollowed={pUser.numFollowers as number}
+                                    numFollowing={pUser.numFollowing as number}
+                                />
+
                                 {pUser.skillLanguages && (
                                     <ProfileLeftItem
                                         title={'Skills/Languages'}
@@ -184,7 +190,7 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                                         marginBottom={2}
                                     />
                                     <ProfileInfoItem
-                                        icon={ChatBubbleOutlineIcon}
+                                        icon={RiChat1Line}
                                         text={`${
                                             pUser.comments?.length || 0
                                         } comment written`}

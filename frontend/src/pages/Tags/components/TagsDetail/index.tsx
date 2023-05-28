@@ -76,9 +76,12 @@ function TagsDetail({ pUser }: ITagsDetailProps) {
 
             // search filters
             newTagNews = newTagNews.filter((n) => {
-                return n.title
+                if (filters.search === '') return true
+                return (filters.search as string)
                     .toLowerCase()
-                    .includes(filters.search?.toLowerCase() as string)
+                    .split(' ')
+                    .filter((x) => !!x)
+                    .some((w) => n.title.toLowerCase().includes(w))
             })
             setTagNews(newTagNews)
         }

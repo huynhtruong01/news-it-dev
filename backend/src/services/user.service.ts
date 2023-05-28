@@ -48,8 +48,6 @@ class UserService {
             const newPaginationQuery = paginationQuery(query)
 
             const searchUserName = searchQuery(query, 'username')
-            // const searchFirstName = searchQuery(query, 'firstName')
-            // const searchLastName = searchQuery(query, 'lastName')
 
             const [users, count] = await this.userRepository.findAndCount({
                 order: {
@@ -58,9 +56,6 @@ class UserService {
                 where: {
                     ...newFiltersQuery,
                     ...searchUserName,
-                    // ...searchFirstName,
-                    // ...searchLastName,
-                    // isAdmin: true,
                 },
                 ...newPaginationQuery,
                 relations: relationDataUser,
@@ -143,6 +138,9 @@ class UserService {
                 where: {
                     id,
                 },
+                relations: {
+                    followers: true,
+                },
             })
             if (!user) return null
 
@@ -176,19 +174,15 @@ class UserService {
             const user = await this.getByIdNoRelations(id)
             if (!user) return null
 
-            // const hashTags = () => {
-            //     const hashTagSaves =
-            //         user?.saves?.reduce((tags: HashTag[], news) => {
-            //             return [...tags, ...(news.hashTags || [])]
-            //         }, []) || []
-
-            //     return removeDuplicated<HashTag>(hashTagSaves as HashTag[]) || []
-            // }
-
             const newNews = user.saves?.filter((n) => {
-                const search = n.title
-                    .toLowerCase()
-                    .includes((filters.search as string).toLowerCase())
+                const search =
+                    filters.search === '' || !filters.search
+                        ? true
+                        : (filters.search as string)
+                              .toLowerCase()
+                              .split(' ')
+                              .filter((x) => !!x)
+                              .some((w) => n.title.toLowerCase().includes(w))
                 if (!filters.tag) return search
 
                 const hasIncludeTag = n.hashTags?.some(

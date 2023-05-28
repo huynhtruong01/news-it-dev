@@ -8,7 +8,7 @@ import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
 import { formatDate, theme } from '@/utils'
 import ArticleIcon from '@mui/icons-material/Article'
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
+import { RiChat1Line } from 'react-icons/ri'
 import TagIcon from '@mui/icons-material/Tag'
 import {
     Avatar,
@@ -296,7 +296,7 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
                                     marginBottom={2}
                                 />
                                 <ProfileInfoItem
-                                    icon={ChatBubbleOutlineIcon}
+                                    icon={RiChat1Line}
                                     text={`${user.comments?.length || 0} comment written`}
                                     marginBottom={2}
                                 />

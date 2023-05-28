@@ -1,6 +1,7 @@
 import { AppDataSource } from '@/config'
 import { relationDataHashTag } from '@/data'
 import { HashTag, User } from '@/entities'
+import { NewsStatus } from '@/enums'
 import { IHashTagRes, IObjectCommon } from '@/models'
 import {
     createHashTag,
@@ -11,7 +12,6 @@ import {
 } from '@/utils'
 import { commonService } from './common.service'
 import { userService } from './user.service'
-import { NewsStatus } from '@/enums'
 
 interface ICheckHashTag {
     user: User
@@ -165,14 +165,6 @@ class HashTagService {
     // get by name (GET)
     async getByName(name: string): Promise<HashTag | null> {
         try {
-            // const hashTag = await this.hashTagRepository.findOne({
-            //     relations: relationDataHashTag,
-            //     where: {
-            //         name,
-            //         'news.status': NewsStatus.PUBLIC
-            //     },
-            // })
-
             const hashTag = await this.hashTagRepository
                 .createQueryBuilder('hashTag')
                 .where('hashTag.name = :name', { name })

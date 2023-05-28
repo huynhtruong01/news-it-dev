@@ -21,6 +21,7 @@ export function ProfileInfoItem({ icon, text, ...rest }: IProfileInfoItemProps) 
                         color: alpha(theme.palette.secondary.dark, 0.9),
                     },
                     svg: {
+                        fontSize: theme.typography.h6,
                         color: alpha(theme.palette.secondary.dark, 0.7),
                     },
                 }}

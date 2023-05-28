@@ -23,7 +23,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
         >
             <Stack direction={'row'} gap={2}>
                 <Box>
-                    {/* TODO: WRITE LINK HERE */}
+                    {/* WRITE LINK HERE */}
                     <Link to={linkUser}>
                         <Avatar
                             src={article.user?.avatar as string}

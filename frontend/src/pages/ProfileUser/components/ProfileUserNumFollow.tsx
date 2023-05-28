@@ -1,5 +1,6 @@
 import { theme } from '@/utils'
-import { Box, Paper, Typography, alpha } from '@mui/material'
+import { Box, Paper, Stack, Typography, alpha } from '@mui/material'
+import { HiOutlineUser } from 'react-icons/hi'
 
 export interface IProfileUserNumFollowProps {
     numFollowed: number
@@ -17,19 +18,26 @@ export function ProfileUserNumFollow({
                     div: {
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 1.5,
+                        gap: 1,
                         color: alpha(theme.palette.secondary.dark, 0.9),
+                    },
+                    svg: {
+                        fontSize: theme.typography.h6,
                     },
                 }}
             >
-                <Box marginBottom={2}>
-                    <Typography>{numFollowed}</Typography>
-                    <Typography>followed</Typography>
-                </Box>
-                <Box>
-                    <Typography>{numFollowing}</Typography>
-                    <Typography>following</Typography>
-                </Box>
+                <Stack direction={'row'} alignItems={'center'} gap={1.5} marginBottom={2}>
+                    <Typography>
+                        <HiOutlineUser />
+                    </Typography>
+                    <Typography>{numFollowed} followed</Typography>
+                </Stack>
+                <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                    <Typography>
+                        <HiOutlineUser />
+                    </Typography>
+                    <Typography>{numFollowing} following</Typography>
+                </Stack>
             </Box>
         </Box>
     )

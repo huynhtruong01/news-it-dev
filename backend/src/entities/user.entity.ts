@@ -183,6 +183,11 @@ export class User extends BaseEntity {
     })
     comments?: Comment[]
 
+    @OneToMany(() => Comment, (comment) => comment.replyUser, {
+        cascade: true,
+    })
+    replyComments?: Comment[]
+
     @ManyToMany(() => HashTag, (hashTag) => hashTag.users, {
         cascade: true,
     })

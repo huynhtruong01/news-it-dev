@@ -9,7 +9,6 @@ export interface IReadingListFiltersProps extends BoxProps {
 
 export function ReadingListFilters({ setFilters, ...rest }: IReadingListFiltersProps) {
     const handleSearchChange = (value: string) => {
-        console.log('search value: ', value)
         setFilters((prev: IFiltersNewsSave) => ({ ...prev, search: value }))
     }
 

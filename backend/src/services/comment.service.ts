@@ -79,16 +79,32 @@ class CommentService {
             comment.childrenComments = []
             comment.likes = []
 
-            // comment.user = (await userService.getByIdComment(data.userId)) as User
-            // comment.news = (await newsService.getByIdComment(data.newsId)) as News
-
             const replyComment = await this.commentRepository.save(comment)
             replyComment.user = (await userService.getByIdComment(data.userId)) as User
             replyComment.news = (await newsService.getByIdComment(data.newsId)) as News
 
+            if (data.replyUserId) {
+                replyComment.replyUser = (await userService.getByIdComment(
+                    data.replyUserId
+                )) as User
+            }
+
             parentComment.childrenComments?.push(replyComment)
 
             const newParentComment = await this.commentRepository.save(parentComment)
+
+            if (replyComment.replyUserId && replyComment.replyUser) {
+                const notify = {
+                    userId: replyComment.user.id,
+                    newsId: replyComment.news.id,
+                    text: `reply to ${replyComment.replyUser.username}`,
+                    user: replyComment.user,
+                    news: replyComment.news,
+                    recipients: replyComment.user.followers,
+                    isRead: false,
+                }
+                io.to(replyComment.replyUserId.toString()).emit('notify-news', notify)
+            }
 
             io.to(replyComment.news.slug).emit('replyComment', newParentComment)
             return newParentComment

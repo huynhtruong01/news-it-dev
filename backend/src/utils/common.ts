@@ -58,6 +58,7 @@ export const createComment = (data: Comment): Comment => {
     comment.parentCommentId = data.parentCommentId || null
     comment.newsId = data.newsId
     comment.userId = data.userId
+    comment.replyUserId = data.replyUserId ? data.replyUserId : null
 
     return comment
 }
@@ -67,6 +68,7 @@ export const createNotify = (data: Notify): Notify => {
     notify.userId = data.userId
     notify.newsId = data.newsId
     notify.recipients = data.recipients
+    notify.text = data.text || ''
 
     return notify
 }

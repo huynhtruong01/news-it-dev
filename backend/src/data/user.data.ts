@@ -36,7 +36,10 @@ export const relationDataUser = {
         user: true,
         hashTags: true,
     },
-    newsLikes: true,
+    newsLikes: {
+        user: true,
+        hashTags: true,
+    },
     saves: {
         user: true,
         hashTags: true,

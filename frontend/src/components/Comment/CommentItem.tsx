@@ -11,6 +11,8 @@ import { useMemo, useState } from 'react'
 import { RiChat1Line } from 'react-icons/ri'
 import { connect } from 'react-redux'
 import { CommentInput, CommentList } from '.'
+import { useLinkUser } from '@/hooks'
+import { Link } from 'react-router-dom'
 
 export interface ICommentItemProps {
     pUser: IUser | null
@@ -20,26 +22,32 @@ export interface ICommentItemProps {
     comment: IComment
 }
 
-function CommentItem({
-    pUser,
-    comment,
-}: // pReplyComment,
-// pUpdateComment,
-// pUpdateCommentReply,
-ICommentItemProps) {
+function CommentItem({ pUser, comment }: ICommentItemProps) {
     const [isReply, setIsReply] = useState<boolean>(false)
     const [initValue, setInitValue] = useState<string>('')
     const [edit, setEdit] = useState<IComment | null>(null)
     const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false)
     const [loadingReply, setLoadingReply] = useState<boolean>(false)
+    const [replyUser, setReplyUser] = useState<IUser | null>(null)
 
-    const { comment: content, user, childrenComments, newsId, createdAt } = comment
+    const linkUser = useLinkUser(comment.user as IUser)
+
+    const {
+        comment: content,
+        user,
+        childrenComments,
+        newsId,
+        replyUserId,
+        replyUser: replyUserData,
+        createdAt,
+    } = comment
 
     const newChildrenComments = useMemo(() => {
         return childrenComments?.length ? childrenComments : []
     }, [comment])
 
-    const handleShowInputReply = () => {
+    const handleShowInputReply = (user: IUser) => {
+        setReplyUser(user)
         setIsReply(true)
     }
 
@@ -51,11 +59,14 @@ ICommentItemProps) {
             const newComment: ICommentData = {
                 userId: pUser?.id as number,
                 newsId,
+                replyUserId: replyUser?.id,
                 comment: value,
                 parentCommentId: comment.parentCommentId
                     ? comment.parentCommentId
                     : comment.id,
             }
+
+            setReplyUser(null)
 
             await commentApi.replyComment(newComment)
         } catch (error) {
@@ -91,19 +102,26 @@ ICommentItemProps) {
         }
     }
 
+    const handleNavReply = (userId: number, username: string): string => {
+        if (userId === pUser?.id) return `/profile`
+        return `/profile/${username}`
+    }
+
     return (
         <Box marginBottom={2}>
             <Stack direction={'row'} gap={2}>
                 {!loadingUpdate && (
                     <Box>
-                        <Avatar
-                            src={user?.avatar}
-                            alt={user?.username}
-                            sx={{
-                                width: 32,
-                                height: 32,
-                            }}
-                        />
+                        <Link to={linkUser}>
+                            <Avatar
+                                src={user?.avatar}
+                                alt={user?.username}
+                                sx={{
+                                    width: 32,
+                                    height: 32,
+                                }}
+                            />
+                        </Link>
                     </Box>
                 )}
 
@@ -123,13 +141,42 @@ ICommentItemProps) {
                                 <Box>
                                     <Typography
                                         component="span"
-                                        marginRight={1.5}
                                         fontWeight={500}
                                         fontSize={'1rem'}
                                     >
-                                        {user?.username}
+                                        <Link to={linkUser}>{user?.username} </Link>
                                     </Typography>
-                                    <Box component="time" fontSize={'14px'}>
+
+                                    {replyUserId && replyUserData?.id && (
+                                        <>
+                                            <Typography
+                                                component="span"
+                                                sx={{
+                                                    color: alpha(
+                                                        theme.palette.secondary.dark,
+                                                        0.8
+                                                    ),
+                                                    fontSize: theme.typography.body2,
+
+                                                    a: {
+                                                        fontWeight: 700,
+                                                    },
+                                                }}
+                                            >
+                                                reply to{' '}
+                                                <Link
+                                                    to={`${handleNavReply(
+                                                        replyUserData.id,
+                                                        replyUserData.username
+                                                    )}`}
+                                                >
+                                                    {replyUserData.username}
+                                                </Link>
+                                            </Typography>
+                                            <span> • </span>
+                                        </>
+                                    )}
+                                    <Box component="time" fontSize={'12px'}>
                                         {formatDate(createdAt || new Date(), 'MMM DD')}
                                     </Box>
                                 </Box>
@@ -225,7 +272,9 @@ ICommentItemProps) {
                                     <ButtonIconForm
                                         text={'Reply'}
                                         icon={RiChat1Line}
-                                        onButtonClick={handleShowInputReply}
+                                        onButtonClick={() =>
+                                            handleShowInputReply(comment.user as IUser)
+                                        }
                                     />
                                 </>
                             )}
@@ -247,13 +296,5 @@ const mapStateToProps = (state: AppState) => {
         pUser: state.user.user,
     }
 }
-
-// const mapDispatchProps = (dispatch: AppDispatch) => {
-//     return {
-//         pReplyComment: (data: ICommentData) => dispatch(replyComment(data)),
-//         pUpdateComment: (data: ICommentData) => dispatch(updateComment(data)),
-//         pUpdateCommentReply: (data: ICommentData) => dispatch(updateCommentReply(data)),
-//     }
-// }
 
 export default connect(mapStateToProps, null)(CommentItem)

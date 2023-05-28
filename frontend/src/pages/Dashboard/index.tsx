@@ -2,6 +2,7 @@ import { INews, IUser } from '@/models'
 import {
     DashboardLeftList,
     DashboardNews,
+    DashboardNewsLikes,
     DashboardReadingList,
     DashboardTags,
 } from '@/pages/Dashboard/components'
@@ -60,13 +61,21 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
                                     <Route
                                         path="followers"
                                         element={
-                                            <DashboardFollow follows={pUser.followers} />
+                                            <DashboardFollow
+                                                title={'Followers'}
+                                                follows={pUser.followers as IUser[]}
+                                                numFollows={pUser.numFollowers as number}
+                                            />
                                         }
                                     />
                                     <Route
                                         path="following"
                                         element={
-                                            <DashboardFollow follows={pUser.following} />
+                                            <DashboardFollow
+                                                title={'Following'}
+                                                follows={pUser.following as IUser[]}
+                                                numFollows={pUser.numFollowing as number}
+                                            />
                                         }
                                     />
                                     <Route
@@ -74,9 +83,19 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
                                         element={<DashboardTags tags={pUser.hashTags} />}
                                     />
                                     <Route
+                                        path="likes"
+                                        element={
+                                            <DashboardNewsLikes
+                                                newsLikes={pUser.newsLikes as INews[]}
+                                            />
+                                        }
+                                    />
+                                    <Route
                                         path="reading-list"
                                         element={
-                                            <DashboardReadingList saves={pUser.saves} />
+                                            <DashboardReadingList
+                                                saves={pUser.saves as INews[]}
+                                            />
                                         }
                                     />
                                 </Routes>

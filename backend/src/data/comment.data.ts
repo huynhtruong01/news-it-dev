@@ -3,6 +3,7 @@ export const relationDataComment = {
     childrenComments: {
         user: true,
         likes: true,
+        replyUser: true,
     },
     news: true,
     user: true,

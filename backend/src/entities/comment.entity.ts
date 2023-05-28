@@ -24,6 +24,11 @@ export class Comment extends BaseEntity {
     userId: number
 
     @Column({
+        nullable: true,
+    })
+    replyUserId: number | null
+
+    @Column({
         type: 'int',
     })
     newsId: number
@@ -53,6 +58,12 @@ export class Comment extends BaseEntity {
     })
     @JoinColumn({ name: 'userId' })
     user: User
+
+    @ManyToOne(() => User, (user) => user.replyComments, {
+        onDelete: 'CASCADE',
+    })
+    @JoinColumn({ name: 'replyUserId' })
+    replyUser?: User
 
     @Column({
         type: 'text',

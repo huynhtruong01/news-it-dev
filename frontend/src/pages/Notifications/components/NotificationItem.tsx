@@ -149,7 +149,7 @@ function NotificationItem({
                             },
                         }}
                     >
-                        <Link to={linkUser}>{notify.user?.username}</Link> add new news
+                        <Link to={linkUser}>{notify.user?.username}</Link> {notify.text}
                     </Typography>
                     <Box
                         component="time"

@@ -7,6 +7,7 @@ export interface INotifyData {
     newsId: number
     user?: IUser
     news?: INews
+    text?: string
     recipients?: IUser[]
     readUsers: (string | number)[]
     createdAt: Date
