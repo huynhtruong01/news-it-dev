@@ -1,21 +1,20 @@
-import { InputField, ImageField } from '@/components/FormFields'
+import { userApi } from '@/api'
+import { ImageField, InputField } from '@/components/FormFields'
+import { SIZE_10_MB } from '@/consts'
 import { initUserProfileValues } from '@/data'
 import { IUser, IUserData } from '@/models'
-import { Box, BoxProps, Paper, Typography, Stack, CircularProgress } from '@mui/material'
+import { AppDispatch } from '@/store'
+import { saveUserLogin } from '@/store/user'
+import { checkSizeImg, checkTypeImg, theme, uploadImage } from '@/utils'
+import { yupResolver } from '@hookform/resolvers/yup'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { Box, BoxProps, Paper, Stack, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { theme, checkTypeImg, checkSizeImg } from '@/utils'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { SIZE_10_MB } from '@/consts'
-import { userApi } from '@/api'
-import { saveUserLogin } from '@/store/user'
-import { AppDispatch } from '@/store'
 import { connect } from 'react-redux'
-import { uploadImage } from '@/utils'
-import { useSnackbar } from 'notistack'
-import LoadingButton from '@mui/lab/LoadingButton'
 import { useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
 
 export interface ISettingsFormProps extends BoxProps {
     user: IUser | null
@@ -82,7 +81,10 @@ export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormPro
                 const newValues: IUser = { ...values, id: user.id }
                 if (newValues.avatar instanceof File) {
                     // covert img by cloudinary
-                    const { url } = await uploadImage(newValues.avatar)
+                    const { url } = await uploadImage(
+                        newValues.avatar,
+                        import.meta.env.VITE_UPLOAD_PRESETS_AVATAR_CLOUDINARY
+                    )
                     newValues.avatar = url
                 }
 
@@ -207,13 +209,13 @@ export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormPro
                         type="submit"
                         fullWidth
                         loading={isSubmitting}
-                        loadingIndicator={
-                            <CircularProgress
-                                color="inherit"
-                                size={16}
-                                sx={{ paddingLeft: '5px', paddingRight: '5px' }}
-                            />
-                        }
+                        // loadingIndicator={
+                        //     <CircularProgress
+                        //         color="inherit"
+                        //         size={16}
+                        //         sx={{ paddingLeft: '5px', paddingRight: '5px' }}
+                        //     />
+                        // }
                         loadingPosition="start"
                         variant="contained"
                         disabled={isSubmitting}

@@ -1,3 +1,4 @@
+import { SkeletonNewsDetail } from '@/components/Common'
 import { INews } from '@/models'
 import { NewsDetail, NewsSideLeft, NewsSideRight } from '@/pages/News/components'
 import { AppDispatch, AppState } from '@/store'
@@ -5,7 +6,7 @@ import { resetNewsDetail } from '@/store/news'
 import { getNews } from '@/store/news/thunkApi'
 import { Box, Grid } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
@@ -19,6 +20,7 @@ export interface INewsProps {
 
 function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsProps) {
     const params = useParams()
+    const [loading, setLoading] = useState<boolean>(true)
 
     // FETCH NEWS DETAIL
     useEffect(() => {
@@ -26,10 +28,12 @@ function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsP
         if (!params.slug) return
         ;(async () => {
             try {
+                setLoading(true)
                 await pGetNewsDetail(params.slug as string)
             } catch (error) {
                 throw new Error(error as string)
             }
+            setLoading(false)
         })()
     }, [params.slug])
 
@@ -49,26 +53,29 @@ function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsP
     }, [pSocket, params])
 
     return (
-        pNewsDetail && (
-            <Box minHeight={'100vh'}>
-                <Grid container spacing={3}>
-                    <Grid
-                        item
-                        sx={{
-                            width: '64px',
-                        }}
-                    >
-                        <NewsSideLeft news={pNewsDetail} />
+        <Box minHeight={'100vh'}>
+            <Box>{loading && <SkeletonNewsDetail />}</Box>
+            <Box>
+                {pNewsDetail && !loading && (
+                    <Grid container spacing={3}>
+                        <Grid
+                            item
+                            sx={{
+                                width: '64px',
+                            }}
+                        >
+                            <NewsSideLeft news={pNewsDetail} />
+                        </Grid>
+                        <Grid item md={8}>
+                            <NewsDetail news={pNewsDetail} />
+                        </Grid>
+                        <Grid item md>
+                            <NewsSideRight news={pNewsDetail} />
+                        </Grid>
                     </Grid>
-                    <Grid item md={8}>
-                        <NewsDetail news={pNewsDetail} />
-                    </Grid>
-                    <Grid item md>
-                        <NewsSideRight news={pNewsDetail} />
-                    </Grid>
-                </Grid>
+                )}
             </Box>
-        )
+        </Box>
     )
 }
 

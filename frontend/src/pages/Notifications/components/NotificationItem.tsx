@@ -1,7 +1,7 @@
 import { newsApi } from '@/api'
 import { HashTagList } from '@/components/Common'
 import { useLinkUser } from '@/hooks'
-import { IHashTag, INotify, IUser } from '@/models'
+import { IHashTag, INotify, INotifyUpdateReadParams, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
@@ -24,7 +24,7 @@ export interface INotificationItemProps {
     pUser: IUser | null
     pSetShowModalAuth: (isShow: boolean) => void
     pGetProfile: () => Promise<PayloadAction<unknown>>
-    pReadUsersNotify: (id: number) => Promise<PayloadAction<unknown>>
+    pReadUsersNotify: (data: INotifyUpdateReadParams) => Promise<PayloadAction<unknown>>
     notify: INotify
 }
 
@@ -42,7 +42,7 @@ function NotificationItem({
     const linkUser = useLinkUser(notify.user as IUser)
 
     const isRead = useMemo(
-        () => notify.readUsers.includes((pUser?.id as number).toString()),
+        () => notify.readUsers?.includes((pUser?.id as number).toString()),
         [pUser, notify]
     )
 
@@ -113,8 +113,13 @@ function NotificationItem({
 
     const handleUpdateReadNotify = async (link: string) => {
         try {
+            if (!pUser?.id) return
+
             navigate(link)
-            await pReadUsersNotify(notify.id)
+            await pReadUsersNotify({
+                notifyId: notify.id,
+                userId: pUser.id,
+            })
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',
@@ -269,7 +274,8 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
-        pReadUsersNotify: (id: number) => dispatch(readUsersNotify(id)),
+        pReadUsersNotify: (data: INotifyUpdateReadParams) =>
+            dispatch(readUsersNotify(data)),
     }
 }
 

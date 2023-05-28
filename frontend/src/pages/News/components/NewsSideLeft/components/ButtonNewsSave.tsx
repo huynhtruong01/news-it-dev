@@ -26,12 +26,12 @@ function ButtonNewsSave({
     pSetShowModalAuth,
     ...rest
 }: IButtonNewsSaveProps) {
-    const [numSaves, setNumSaves] = useState<number>(news.numSaves || 0)
+    const [numSaves, setNumSaves] = useState<number>(news?.numSaves || 0)
     const [saved, setSaved] = useState<boolean>(false)
 
     useEffect(() => {
         if (!news) return
-        setNumSaves(news.numSaves as number)
+        setNumSaves(news?.numSaves as number)
 
         if (pUser?.id) {
             const isLiked = pUser?.saves?.find((n) => n.id === news.id)
@@ -65,19 +65,20 @@ function ButtonNewsSave({
     }
 
     return (
-        <Box
-            {...rest}
-            position={'relative'}
-            width={'100%'}
-            onClick={handleSaveNews}
-            sx={{
-                cursor: 'pointer',
-            }}
-        >
+        <Box {...rest} position={'relative'} width={'100%'} onClick={handleSaveNews}>
             <Stack alignItems={'center'} padding={theme.spacing(0, 1)}>
                 <IconButton
+                    title="Save"
                     sx={{
                         borderRadius: '50%',
+                        svg: {
+                            transition: '.2s ease-in-out',
+                        },
+                        '&:hover': {
+                            svg: {
+                                color: indigo[700],
+                            },
+                        },
                     }}
                 >
                     {saved ? (
@@ -92,9 +93,11 @@ function ButtonNewsSave({
                 </IconButton>
                 <Typography
                     component="span"
-                    fontSize={'14px'}
-                    fontWeight={500}
-                    color={theme.palette.secondary.light}
+                    sx={{
+                        fontSize: theme.typography.body2,
+                        fontWeight: 500,
+                        color: theme.palette.secondary.light,
+                    }}
                 >
                     {numSaves}
                 </Typography>

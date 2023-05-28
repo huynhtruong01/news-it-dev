@@ -30,12 +30,18 @@ export interface IHeaderProps {
 
 function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderProps) {
     const [searchVal, setSearchVal] = useState<string>('')
+    const [showButtonCreate, setShowButtonCreate] = useState<boolean>(true)
     const searchRef = useRef<HTMLInputElement | null>(null)
     const location = useLocation()
     const navigate = useNavigate()
 
     useEffect(() => {
         if (!location.pathname.startsWith('/search')) setSearchVal('')
+        if (location.pathname.startsWith('/create-news')) {
+            setShowButtonCreate(false)
+        } else {
+            setShowButtonCreate(true)
+        }
     }, [navigate])
 
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +118,21 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                                                 marginRight: 0,
                                             }}
                                         >
-                                            <IconButton type="submit">
+                                            <IconButton
+                                                type="submit"
+                                                sx={{
+                                                    '&:hover': {
+                                                        backgroundColor: alpha(
+                                                            theme.palette.primary.main,
+                                                            0.1
+                                                        ),
+                                                        svg: {
+                                                            color: theme.palette.primary
+                                                                .main,
+                                                        },
+                                                    },
+                                                }}
+                                            >
                                                 <SearchIcon />
                                             </IconButton>
                                         </InputAdornment>
@@ -207,28 +227,32 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
 
                         {pUser && (
                             <Stack direction={'row'} gap={1.5} alignItems={'center'}>
-                                <Button
-                                    variant="contained"
-                                    sx={{
-                                        border: `1px solid ${theme.palette.primary.main}`,
+                                {showButtonCreate && (
+                                    <Button
+                                        variant="contained"
+                                        sx={{
+                                            border: `1px solid ${theme.palette.primary.main}`,
 
-                                        '& > a': {
-                                            display: 'block !important',
-                                            padding: '10px 14px !important',
-                                            color: theme.palette.primary.main,
-                                        },
-
-                                        '&:hover': {
-                                            backgroundColor: theme.palette.primary.main,
-                                            '& a': {
-                                                color: theme.palette.primary.contrastText,
+                                            '& > a': {
+                                                display: 'block !important',
+                                                padding: '10px 14px !important',
+                                                color: theme.palette.primary.main,
                                             },
-                                        },
-                                    }}
-                                    onClick={handleSetInitValuesForm}
-                                >
-                                    <Link to={'/create-news'}>Create News</Link>
-                                </Button>
+
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    theme.palette.primary.main,
+                                                '& a': {
+                                                    color: theme.palette.primary
+                                                        .contrastText,
+                                                },
+                                            },
+                                        }}
+                                        onClick={handleSetInitValuesForm}
+                                    >
+                                        <Link to={'/create-news'}>Create News</Link>
+                                    </Button>
+                                )}
                                 <Box
                                     sx={{
                                         borderRadius: theme.spacing(0.75),

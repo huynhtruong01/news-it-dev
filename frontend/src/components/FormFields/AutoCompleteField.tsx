@@ -6,7 +6,7 @@ import {
     InputLabel,
 } from '@mui/material'
 import { Path, FieldValues, Controller } from 'react-hook-form'
-import { IOptionItem } from '@/models'
+import { IObjectCommon, IOptionItem } from '@/models'
 import { theme } from '@/utils'
 
 export type IAutoCompleteFieldProps<TFormValues> = {
@@ -25,7 +25,6 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
     placeholder = '',
     disabled,
     list,
-    ...rest
 }: IAutoCompleteFieldProps<TFormValues>) {
     const {
         control,
@@ -36,7 +35,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
     const error = errors[name]
 
     const handleFilters = () => {
-        const ids = getValues(name).map((val) => val.id)
+        const ids = getValues(name).map((val: IObjectCommon) => val.id)
         return list.filter((option) => !ids.includes(option.id))
     }
 
@@ -44,7 +43,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
         <Controller
             name={name}
             control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
                 <Autocomplete
                     multiple
                     options={handleFilters()}
@@ -77,7 +76,9 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
                                 helperText={error?.message || ''}
                                 sx={{
                                     marginTop: 1,
-                                    backgroundColor: '#fff',
+                                    '.MuiInputBase-root': {
+                                        backgroundColor: '#fff',
+                                    },
                                 }}
                             />
                         </Box>

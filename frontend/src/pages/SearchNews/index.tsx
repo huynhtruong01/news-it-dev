@@ -21,11 +21,11 @@ export function SearchNews() {
     const query = searchParams.get('q')
 
     useEffect(() => {
-        document.title = 'Search Results for'
-    }, [])
+        document.title = `Search Results for ${query}`
+    }, [query])
 
     useEffect(() => {
-        // if (!query) return
+        if (!query) return
         ;(async () => {
             try {
                 const res = await newsApi.getAllNewsPublic({

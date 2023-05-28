@@ -28,7 +28,7 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
         <Controller
             control={control}
             name={name}
-            render={({ field: { onChange, value, onBlur } }) => (
+            render={({ field: { onChange, value, onBlur, ref } }) => (
                 <Box margin={theme.spacing(2, 0, 1)} width={'100%'}>
                     <InputLabel
                         error={!!error?.message}
@@ -41,6 +41,7 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
                     </InputLabel>
                     <TextField
                         fullWidth
+                        inputRef={ref}
                         onChange={onChange}
                         onBlur={onBlur}
                         value={value}

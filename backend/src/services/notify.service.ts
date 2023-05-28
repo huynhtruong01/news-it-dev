@@ -31,6 +31,7 @@ class NotifyService {
                 .getManyAndCount()
 
             let newNotifications = [...notifications]
+            let newCount = count
             if (query.isRead) {
                 newNotifications = newNotifications.filter((n) =>
                     Number(query.isRead) === 0
@@ -39,7 +40,9 @@ class NotifyService {
                 )
             }
 
-            return [newNotifications, count]
+            if (newNotifications.length === 0) newCount = 0
+
+            return [newNotifications, newCount]
         } catch (error) {
             throw new Error(error as string)
         }

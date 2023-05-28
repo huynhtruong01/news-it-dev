@@ -63,7 +63,7 @@ export function Notifications({
             }}
         >
             <Stack direction={'row'} justifyContent={'space-between'}>
-                <TitlePage>Notifications</TitlePage>
+                <TitlePage>Notifications ({pNotificationsTotal})</TitlePage>
                 <NotificationSearchFilters setFilters={setFilters} />
             </Stack>
 

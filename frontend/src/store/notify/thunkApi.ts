@@ -1,5 +1,12 @@
 import { notifyApi } from '@/api'
-import { INotifiesFilter, INotify, INotifyData, INotifyRes } from '@/models'
+import {
+    INotifiesFilter,
+    INotify,
+    INotifyData,
+    INotifyRes,
+    INotifyUpdateRead,
+    INotifyUpdateReadParams,
+} from '@/models'
 import {
     ActionReducerMapBuilder,
     PayloadAction,
@@ -33,9 +40,13 @@ export const getNotifiesFilters = createAsyncThunk(
 
 export const readUsersNotify = createAsyncThunk(
     'notify/readUsersNotify',
-    async (notifyId: number) => {
+    async ({ notifyId, userId }: INotifyUpdateReadParams) => {
         const result = await notifyApi.readUsersNotify(notifyId)
-        return result.data.notify
+
+        return {
+            notify: result.data.notify,
+            userId,
+        }
     }
 )
 
@@ -77,26 +88,31 @@ export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) =
 
     builders.addCase(
         readUsersNotify.fulfilled,
-        (state: INotifyStore, action: PayloadAction<INotify>) => {
+        (state: INotifyStore, action: PayloadAction<INotifyUpdateRead>) => {
             const newNotifiesFilters = [...state.notificationsFilter]
             const newNotifies = [...state.notifications]
             const indexFilters = newNotifiesFilters.findIndex(
-                (notify) => notify.id === action.payload.id
+                (notify) => notify.id === action.payload.notify.id
             )
             const index = newNotifiesFilters.findIndex(
-                (notify) => notify.id === action.payload.id
+                (notify) => notify.id === action.payload.notify.id
             )
 
             if (indexFilters > -1) {
-                newNotifiesFilters[indexFilters] = action.payload
+                newNotifiesFilters[indexFilters] = action.payload.notify
             }
 
             if (index > -1) {
-                newNotifies[index] = action.payload
+                newNotifies[index] = action.payload.notify
             }
+
+            const newNotifiesNotRead = newNotifies.filter(
+                (n) => !n.readUsers?.includes(action.payload.userId.toString() as string)
+            )
 
             state.notificationsFilter = newNotifiesFilters
             state.notifications = newNotifies
+            state.numNotifications = newNotifiesNotRead.length
         }
     )
 }

@@ -12,21 +12,21 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import { red } from '@mui/material/colors'
 import { setShowModalAuth } from '@/store/common'
 
-export interface IButtonNewsIconProps extends BoxProps {
+export interface IButtonNewsLikeProps extends BoxProps {
     news: INews
     pUser: IUser | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
     pSetShowModalAuth: (isShow: boolean) => void
 }
 
-function ButtonNewsIcon({
+function ButtonNewsLike({
     news,
     pUser,
     pGetProfile,
     pSetShowModalAuth,
     ...rest
-}: IButtonNewsIconProps) {
-    const [numLikes, setNumLikes] = useState<number>(news.numLikes || 0)
+}: IButtonNewsLikeProps) {
+    const [numLikes, setNumLikes] = useState<number>(news?.numLikes || 0)
     const [liked, setLiked] = useState<boolean>(false)
 
     useEffect(() => {
@@ -65,19 +65,20 @@ function ButtonNewsIcon({
     }
 
     return (
-        <Box
-            {...rest}
-            position={'relative'}
-            width={'100%'}
-            onClick={handleLikeNews}
-            sx={{
-                cursor: 'pointer',
-            }}
-        >
+        <Box {...rest} position={'relative'} width={'100%'} onClick={handleLikeNews}>
             <Stack alignItems={'center'} padding={theme.spacing(0, 1)}>
                 <IconButton
                     sx={{
                         borderRadius: '50%',
+
+                        svg: {
+                            transition: '.2s ease-in-out',
+                        },
+                        '&:hover': {
+                            svg: {
+                                color: red[700],
+                            },
+                        },
                     }}
                 >
                     {liked ? (
@@ -92,9 +93,11 @@ function ButtonNewsIcon({
                 </IconButton>
                 <Typography
                     component="span"
-                    fontSize={'14px'}
-                    fontWeight={500}
-                    color={theme.palette.secondary.light}
+                    sx={{
+                        fontSize: theme.typography.body2,
+                        fontWeight: 500,
+                        color: theme.palette.secondary.light,
+                    }}
                 >
                     {numLikes}
                 </Typography>
@@ -116,4 +119,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ButtonNewsIcon)
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonNewsLike)

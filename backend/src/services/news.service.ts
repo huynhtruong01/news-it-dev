@@ -13,8 +13,8 @@ import {
     searchQuery,
     sortQuery,
 } from '@/utils'
-import { userService } from './user.service'
 import { io } from 'server'
+import { userService } from './user.service'
 
 class NewsService {
     constructor(private newsRepository = AppDataSource.getRepository(News)) {}
@@ -50,26 +50,54 @@ class NewsService {
                     .getManyAndCount()
 
                 return [news, count]
-            } else {
-                const newFiltersQuery = filtersQuery(query)
-                const newSortQuery = sortQuery(query)
-                const titleSearchQuery = searchQuery(query, 'title')
+            }
 
-                const [news, count] = await this.newsRepository.findAndCount({
-                    order: {
-                        ...newSortQuery,
-                    },
-                    where: {
-                        ...titleSearchQuery,
-                        ...newFiltersQuery,
-                        status: NewsStatus.PUBLIC,
-                    },
-                    ...pagination,
-                    relations: relationNewsData,
-                })
+            if (query.search && (query.search as string).split(' ').length >= 2) {
+                const conditions = (query.search as string)
+                    .split(' ')
+                    .map((k) => k.toLowerCase())
+
+                const [news, count] = await this.newsRepository
+                    .createQueryBuilder('news')
+                    .leftJoinAndSelect('news.user', 'user')
+                    .leftJoinAndSelect('news.hashTags', 'hashTag')
+                    .where('news.status = :status', { status: NewsStatus.PUBLIC })
+                    .andWhere(
+                        conditions
+                            .map((keyword) => {
+                                return `LOWER(news.title) LIKE :${keyword}`
+                            })
+                            .join(' OR '),
+                        conditions.reduce((params, keyword) => {
+                            return { ...params, [keyword]: `%${keyword}%` }
+                        }, {})
+                    )
+                    .orderBy('news.createdAt', Order.DESC)
+                    .skip(pagination.skip)
+                    .take(pagination.take)
+                    .getManyAndCount()
 
                 return [news, count]
             }
+
+            const newFiltersQuery = filtersQuery(query)
+            const newSortQuery = sortQuery(query)
+            const titleSearchQuery = searchQuery(query, 'title')
+
+            const [news, count] = await this.newsRepository.findAndCount({
+                order: {
+                    ...newSortQuery,
+                },
+                where: {
+                    ...titleSearchQuery,
+                    ...newFiltersQuery,
+                    status: NewsStatus.PUBLIC,
+                },
+                ...pagination,
+                relations: relationNewsData,
+            })
+
+            return [news, count]
         } catch (error) {
             throw new Error(error as string)
         }

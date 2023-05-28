@@ -37,7 +37,8 @@ export function ScrollTop() {
             sx={{
                 position: 'fixed',
                 bottom: 50,
-                right: isShow ? 20 : -40,
+                right: isShow ? 40 : -40,
+                opacity: isShow ? 1 : 0,
                 transition: '.2s ease-in-out',
             }}
         >

@@ -18,6 +18,8 @@
     "@mui/material": "^5.12.1",
     "@mui/styles": "^5.12.3",
     "@reduxjs/toolkit": "^1.9.5",
+    "@tanstack/react-query": "^4.29.11",
+    "@tanstack/react-query-devtools": "^4.29.11",
     "axios": "^1.3.6",
     "flatted": "^3.2.7",
     "gapi-script": "^1.2.0",

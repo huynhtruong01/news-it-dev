@@ -3,7 +3,7 @@ import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import {
     Box,
-    FormControlProps,
+    BoxProps,
     IconButton,
     InputAdornment,
     InputLabel,
@@ -17,7 +17,7 @@ export type IPasswordFieldProps<TFormValues> = {
     name: Path<TFormValues>
     label: string
     disabled: boolean
-} & FormControlProps
+} & BoxProps
 
 export function PasswordField<TFormValues extends FieldValues = FieldValues>({
     form,
@@ -39,8 +39,8 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
         <Controller
             control={control}
             name={name}
-            render={({ field: { onChange, value, onBlur } }) => (
-                <Box margin={theme.spacing(2, 0, 1)} width={'100%'}>
+            render={({ field: { onChange, value, onBlur, ref } }) => (
+                <Box margin={theme.spacing(2, 0, 1)} width={'100%'} {...rest}>
                     <InputLabel
                         error={!!error?.message}
                         sx={{
@@ -52,6 +52,7 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
                     </InputLabel>
                     <TextField
                         fullWidth
+                        inputRef={ref}
                         type={showPassword ? 'text' : 'password'}
                         value={value}
                         onChange={onChange}

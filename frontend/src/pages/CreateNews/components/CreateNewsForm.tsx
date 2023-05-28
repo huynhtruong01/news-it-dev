@@ -38,14 +38,14 @@ function CreateNewsForm({
     const navigate = useNavigate()
 
     const schema = yup.object().shape({
-        title: yup.string().required('Please enter name.'),
+        title: yup.string().required('Please enter news name.'),
         sapo: yup.string(),
-        readTimes: yup.number(),
+        readTimes: yup.number().min(1, 'At lease 1 min.'),
         thumbnailImage: yup
             .mixed<File>()
             .test(
                 'is-nullable-thumbnail',
-                'Please choose thumbnail image.',
+                'Please choose news thumbnail image.',
                 function (file) {
                     if (pInitValuesForm.thumbnailImage) return true
                     const { thumbnailImage, coverImage } = this.parent
@@ -63,12 +63,16 @@ function CreateNewsForm({
             }),
         coverImage: yup
             .mixed<File>()
-            .test('is-nullable-cover', 'Please choose cover image.', function (file) {
-                if (pInitValuesForm.coverImage) return true
-                const { thumbnailImage, coverImage } = this.parent
-                if (!((thumbnailImage && coverImage) || file?.name)) return
-                if (file?.name) return true
-            })
+            .test(
+                'is-nullable-cover',
+                'Please choose news cover image.',
+                function (file) {
+                    if (pInitValuesForm.coverImage) return true
+                    const { thumbnailImage, coverImage } = this.parent
+                    if (!((thumbnailImage && coverImage) || file?.name)) return
+                    if (file?.name) return true
+                }
+            )
             .test('type-img', 'Invalid type image.', (file) => {
                 if (pInitValuesForm.coverImage) return true
                 return checkTypeImg(file)
@@ -78,6 +82,7 @@ function CreateNewsForm({
                 return checkSizeImg(file, SIZE_10_MB)
             }),
         content: yup.string().required('Please enter news content.'),
+        hashTagOptionIds: yup.array().min(1, 'At least one tag must be selected.'),
     })
 
     useEffect(() => {
@@ -143,6 +148,8 @@ function CreateNewsForm({
                             label={'Sapo'}
                             disabled={isSubmitting}
                             placeholder={'sub description news...'}
+                            minRows={2}
+                            multiline
                         />
                         <Box
                             sx={{

@@ -36,3 +36,13 @@ export interface INotifiesFilter {
     filters: IFilters
     userId: number
 }
+
+export interface INotifyUpdateRead {
+    notify: INotify
+    userId: number
+}
+
+export interface INotifyUpdateReadParams {
+    notifyId: number
+    userId: number
+}

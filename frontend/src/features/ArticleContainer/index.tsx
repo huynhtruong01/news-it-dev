@@ -4,7 +4,7 @@ import { ArticleHeader, ArticleList } from '@/features/ArticleContainer/componen
 import { IFilters, INews, INewsStatus, IUser } from '@/models'
 import { AppState } from '@/store'
 import { Box, BoxProps } from '@mui/material'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 export interface IArticleContainer extends BoxProps {
@@ -12,7 +12,6 @@ export interface IArticleContainer extends BoxProps {
 }
 
 function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
-    const listRef = useRef<HTMLElement | null>(null)
     const [filters, setFilters] = useState<IFilters>({
         limit: 6,
         page: 1,
@@ -51,8 +50,8 @@ function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
         const handleScrollList = async () => {
             try {
                 if (
-                    window.innerHeight + window.scrollY + 10 >=
-                    document.body.scrollHeight
+                    window.innerHeight + window.scrollY >= document.body.scrollHeight &&
+                    newsList.length <= total
                 ) {
                     setFilters((prev) => ({ ...prev, page: prev.page + 1 }))
                 }
@@ -64,19 +63,16 @@ function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
         window.addEventListener('scroll', handleScrollList)
 
         return () => window.removeEventListener('scroll', handleScrollList)
-    }, [])
+    }, [total, newsList])
 
     return (
-        <Box {...rest} ref={listRef}>
+        <Box {...rest}>
             <ArticleHeader
                 filters={filters}
                 status={status}
                 setStatus={setStatus}
                 setFilters={setFilters}
                 marginBottom={1}
-                sx={{
-                    opacity: loading ? 0 : 1,
-                }}
             />
             <ArticleList loading={loading} articleList={newsList} />
         </Box>

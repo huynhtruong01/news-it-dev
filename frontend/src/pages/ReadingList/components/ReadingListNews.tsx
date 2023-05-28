@@ -9,13 +9,17 @@ export interface IReadingListNewsProps extends BoxProps {
 
 export function ReadingListNews({ news }: IReadingListNewsProps) {
     return (
-        <Box component={Paper} elevation={1} paddingBottom={2}>
+        <>
             {news.length === 0 && <EmptyList title="No news reading list" />}
-            <Box>
-                {news.map((article) => (
-                    <ReadingListNewsItem key={article.id} article={article} />
-                ))}
-            </Box>
-        </Box>
+            {news.length > 0 && (
+                <Box component={Paper} elevation={1} paddingBottom={2}>
+                    <Box>
+                        {news.map((article) => (
+                            <ReadingListNewsItem key={article.id} article={article} />
+                        ))}
+                    </Box>
+                </Box>
+            )}
+        </>
     )
 }

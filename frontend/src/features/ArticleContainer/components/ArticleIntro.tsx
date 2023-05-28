@@ -7,15 +7,15 @@ import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
 import { indigo } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
-import { RiChat3Line } from 'react-icons/ri'
+import { RiChat1Line } from 'react-icons/ri'
 import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import FavoriteIcon from '@mui/icons-material/Favorite'
 
 export interface IArticleIntroProps {
     article: INews
@@ -176,7 +176,7 @@ function ArticleIntro({
                     />
                     <ButtonIconForm
                         text={`${commentLength} Comments`}
-                        icon={RiChat3Line}
+                        icon={RiChat1Line}
                         onButtonClick={handleCommentClick}
                     />
                 </Stack>

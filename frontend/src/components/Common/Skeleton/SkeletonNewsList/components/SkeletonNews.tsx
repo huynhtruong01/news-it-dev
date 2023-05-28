@@ -22,7 +22,14 @@ export function SkeletonNews() {
 
             <Box padding={2.5}>
                 <Stack direction="row" gap={1} marginBottom={2}>
-                    <Skeleton variant="circular" width={32} height={32} />
+                    <Skeleton
+                        variant="circular"
+                        width={32}
+                        height={32}
+                        sx={{
+                            borderRadius: '50%',
+                        }}
+                    />
                     <Box flex={1}>
                         <Skeleton
                             variant="text"

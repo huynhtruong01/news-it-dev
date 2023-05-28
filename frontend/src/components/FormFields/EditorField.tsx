@@ -1,4 +1,4 @@
-import { Box, FormHelperText } from '@mui/material'
+import { Box, FormHelperText, FormLabel } from '@mui/material'
 import { Controller, FieldValues, Path } from 'react-hook-form'
 import { theme } from '@/utils'
 import { TextEditor } from '@/components/Common'
@@ -34,12 +34,24 @@ export function EditorField<TFormValues extends FieldValues = FieldValues>({
                         margin: theme.spacing(2, 0, 1),
                     }}
                 >
+                    <FormLabel
+                        error={!!error?.message}
+                        sx={{
+                            display: 'inline-block',
+                            fontWeight: 500,
+                            color: '#000',
+                            marginBottom: 1,
+                        }}
+                    >
+                        {label}
+                    </FormLabel>
                     <TextEditor
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
                         disabled={disabled}
                         placeholder={placeholder}
+                        error={error}
                     />
                     <FormHelperText
                         disabled={disabled}

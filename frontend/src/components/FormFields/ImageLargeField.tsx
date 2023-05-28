@@ -77,32 +77,29 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
         )
     }
 
-    console.log('error:', error)
-
     return (
         <Controller
             control={control}
             name={name}
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, ref } }) => (
                 <Box
                     sx={{
                         margin: theme.spacing(2, 0, 4),
                     }}
                     {...rest}
                 >
+                    <FormLabel
+                        error={!!error?.message}
+                        sx={{
+                            display: 'inline-flex',
+                            fontWeight: 500,
+                            color: '#000',
+                        }}
+                    >
+                        {label}
+                    </FormLabel>
                     {!img && (
                         <Box>
-                            <FormLabel
-                                error={!!error?.message}
-                                sx={{
-                                    display: 'inline-flex',
-
-                                    fontWeight: 500,
-                                    color: '#000',
-                                }}
-                            >
-                                {label}
-                            </FormLabel>
                             <Box
                                 ref={imgInputRef}
                                 component="label"
@@ -170,6 +167,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                                 {error?.message || ''}
                             </FormHelperText>
                             <input
+                                ref={ref}
                                 type="file"
                                 id={name}
                                 onChange={(e) => {
@@ -190,6 +188,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: 2,
+                                marginTop: 1,
                             }}
                         >
                             <Box

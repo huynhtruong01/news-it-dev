@@ -1,7 +1,14 @@
-import { Controller, Path, FieldValues } from 'react-hook-form'
-import { Box, Select, InputLabel, FormHelperText, MenuItem } from '@mui/material'
 import { ISelectValue } from '@/models'
 import { theme } from '@/utils'
+import {
+    Box,
+    FormControl,
+    FormHelperText,
+    InputLabel,
+    MenuItem,
+    Select,
+} from '@mui/material'
+import { Controller, FieldValues, Path } from 'react-hook-form'
 
 export type ISelectFieldProps<TFormValues> = {
     form: TFormValues
@@ -28,9 +35,8 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
         <Controller
             control={control}
             name={name}
-            render={({ field: { onChange, value, onBlur } }) => (
+            render={({ field: { onChange, value, onBlur, ref } }) => (
                 <Box margin={theme.spacing(2, 0, 1)} width={'100%'}>
-                    {/* <FormControl fullWidth> */}
                     <InputLabel
                         error={!!error?.message}
                         sx={{
@@ -41,48 +47,43 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                     >
                         {label}
                     </InputLabel>
-                    <Select
-                        autoWidth
-                        value={value}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        disabled={disabled}
-                        sx={{
-                            width: '100%',
-                            textTransform: 'capitalize',
-                            marginTop: 1,
-                            ul: {
+                    <FormControl fullWidth size="small">
+                        <Select
+                            ref={ref}
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            disabled={disabled}
+                            sx={{
                                 width: '100%',
-                            },
-                            backgroundColor: '#fff',
-                        }}
-                        size="small"
-                        MenuProps={{
-                            classes: {
-                                paper: {
-                                    '& .MuiSelect-select': {
-                                        overflow: 'visible !important', // Override the overflow property for the select element
-                                    },
+                                textTransform: 'capitalize',
+                                marginTop: 1,
+                                ul: {
+                                    width: '100%',
                                 },
-                            },
-                        }}
-                    >
-                        {selects.map((select) => (
-                            <MenuItem
-                                key={select.value}
-                                value={select.value}
-                                sx={{
-                                    textTransform: 'capitalize',
-                                }}
-                            >
-                                {select.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                                backgroundColor: '#fff',
+                                '& .MuiSelect-select': {
+                                    width: '100%',
+                                    overflow: 'visible',
+                                },
+                            }}
+                        >
+                            {selects.map((select) => (
+                                <MenuItem
+                                    key={select.value}
+                                    value={select.value}
+                                    sx={{
+                                        textTransform: 'capitalize',
+                                    }}
+                                >
+                                    {select.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <FormHelperText error={!!error?.message}>
                         {error?.message || ''}
                     </FormHelperText>
-                    {/* </FormControl> */}
                 </Box>
             )}
         />

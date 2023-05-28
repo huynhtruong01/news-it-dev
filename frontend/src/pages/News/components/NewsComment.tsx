@@ -43,11 +43,14 @@ function NewsComment({
     useEffect(() => {
         if (commentRef.current && location.hash === '#comments') {
             commentRef.current.scrollIntoView({ behavior: 'smooth' })
+
             if (commentInputRef.current) {
                 commentInputRef.current.focus()
             }
         }
+    }, [location])
 
+    useEffect(() => {
         // get all comments by news id
         ;(async () => {
             setLoadingComment(true)
@@ -127,6 +130,7 @@ function NewsComment({
             <Box>
                 <CommentInput
                     initValue={''}
+                    commentInputRef={commentInputRef}
                     onCommentChange={handleCommentSubmit}
                     sx={{
                         marginBottom: 6,

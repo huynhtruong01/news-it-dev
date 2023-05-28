@@ -2,13 +2,21 @@ import { IComment, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Avatar, Box, BoxProps, Button, Stack, TextField } from '@mui/material'
-import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from 'react'
+import {
+    Dispatch,
+    FormEvent,
+    MutableRefObject,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 import { connect } from 'react-redux'
 
 export interface ICommentInputProps extends BoxProps {
     pUser: IUser | null
     initValue: string
-    // commentInputRef: MutableRefObject<HTMLInputElement | null>
+    commentInputRef?: MutableRefObject<HTMLInputElement | null>
     onCommentChange: ((value: string) => Promise<void>) | ((value: string) => void)
     isReply?: boolean
     isEdit?: boolean
@@ -18,7 +26,7 @@ export interface ICommentInputProps extends BoxProps {
 
 function CommentInput({
     pUser,
-    // commentInputRef,
+    commentInputRef,
     initValue,
     onCommentChange,
     isReply = false,
@@ -72,7 +80,7 @@ function CommentInput({
                 <Box component="form" onSubmit={handleCommentSubmit} flex={1}>
                     <Box marginBottom={2}>
                         <TextField
-                            inputRef={inputRef}
+                            inputRef={commentInputRef ? commentInputRef : inputRef}
                             value={value}
                             fullWidth
                             onChange={(e) => setValue(e.target.value)}

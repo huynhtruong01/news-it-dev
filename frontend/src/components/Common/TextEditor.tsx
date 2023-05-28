@@ -6,6 +6,7 @@ import 'react-quill/dist/quill.snow.css'
 import { toolbarOptions } from '@/data'
 import { uploadImage, theme } from '@/utils'
 import { makeStyles } from '@mui/styles'
+import { red } from '@mui/material/colors'
 
 export interface ITextEditorProps {
     value: string
@@ -13,6 +14,7 @@ export interface ITextEditorProps {
     onBlur: Noop
     disabled: boolean
     placeholder?: string
+    error?: boolean
 }
 
 const modules = {
@@ -47,6 +49,11 @@ const useStyles = makeStyles({
             '& img': {
                 borderRadius: theme.spacing(0.5),
                 margin: theme.spacing(1.5, 0),
+                width: 'auto',
+                height: 'auto',
+            },
+            '& h1,h2,h3,h4,h5,h6': {
+                margin: theme.spacing(1.25, 0),
             },
         },
         '& .ql-toolbar': {
@@ -61,6 +68,65 @@ const useStyles = makeStyles({
             color: '#333',
         },
     },
+    error: {
+        '& .ql-container': {
+            borderRadius: theme.spacing(0, 0, 0.5, 0.5),
+            overflow: 'hidden',
+            borderColor: red[500],
+        },
+        '& .ql-editor': {
+            fontFamily: 'Roboto, sans-serif',
+            fontSize: '16px',
+            lineHeight: '24px',
+            color: '#333',
+            minHeight: 200,
+            backgroundColor: '#fff',
+
+            '&[data-placeholder]::before': {
+                fontStyle: 'normal',
+            },
+
+            '& span': {
+                lineHeight: 2,
+            },
+            '& p': {
+                margin: theme.spacing(1, 0),
+            },
+            '& img': {
+                borderRadius: theme.spacing(0.5),
+                margin: theme.spacing(1.5, 0),
+                width: 'auto',
+                height: 'auto',
+            },
+            '& h1,h2,h3,h4,h5,h6': {
+                margin: theme.spacing(1.25, 0),
+            },
+        },
+        '& .ql-toolbar': {
+            backgroundColor: '#fff',
+            borderRadius: theme.spacing(0.5, 0.5, 0, 0),
+            borderBottom: `1px solid ${red[500]}`,
+            padding: '8px',
+            borderColor: red[500],
+        },
+        '& .ql-toolbar button': {
+            fontFamily: 'Roboto, sans-serif',
+            fontSize: '16px',
+            color: '#333',
+        },
+
+        '& .ql-toolbar.ql-snow': {
+            '& .ql-stroke, & .ql-fill, & .ql-thin': {
+                stroke: red[500],
+                '&:hover': {
+                    stroke: red[500],
+                },
+            },
+            '& .ql-picker-label': {
+                color: red[500],
+            },
+        },
+    },
 })
 
 export function TextEditor({
@@ -69,6 +135,7 @@ export function TextEditor({
     onBlur,
     disabled,
     placeholder = '',
+    error,
 }: ITextEditorProps) {
     const styles = useStyles()
     const quillRef = useRef<ReactQuill | null>(null)
@@ -127,7 +194,7 @@ export function TextEditor({
         >
             <ReactQuill
                 ref={quillRef}
-                className={styles.root}
+                className={error ? styles.error : styles.root}
                 value={value}
                 theme={'snow'}
                 onChange={onChange}

@@ -19,7 +19,9 @@ export function ArticleItem({ article }: IArticleItemProps) {
                 <Box
                     sx={{
                         maxHeight: 270,
+                        minHeight: 200,
                         overflow: 'hidden',
+
                         img: {
                             height: '100%',
                             borderRadius: theme.spacing(0.75, 0.75, 0, 0),
