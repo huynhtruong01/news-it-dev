@@ -56,8 +56,8 @@ export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) =
         (state: INotifyStore, action: PayloadAction<INotify>) => {
             const newNotifications = [...state.notifications]
             const newNotificationsFilters = [...state.notificationsFilter]
-            newNotifications.push(action.payload)
-            newNotificationsFilters.push(action.payload)
+            newNotifications.unshift(action.payload)
+            newNotificationsFilters.unshift(action.payload)
 
             state.notifications = newNotifications
             state.notificationsFilter = newNotificationsFilters
@@ -91,10 +91,11 @@ export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) =
         (state: INotifyStore, action: PayloadAction<INotifyUpdateRead>) => {
             const newNotifiesFilters = [...state.notificationsFilter]
             const newNotifies = [...state.notifications]
+
             const indexFilters = newNotifiesFilters.findIndex(
                 (notify) => notify.id === action.payload.notify.id
             )
-            const index = newNotifiesFilters.findIndex(
+            const index = newNotifies.findIndex(
                 (notify) => notify.id === action.payload.notify.id
             )
 
@@ -106,13 +107,9 @@ export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) =
                 newNotifies[index] = action.payload.notify
             }
 
-            const newNotifiesNotRead = newNotifies.filter(
-                (n) => !n.readUsers?.includes(action.payload.userId.toString() as string)
-            )
-
             state.notificationsFilter = newNotifiesFilters
             state.notifications = newNotifies
-            state.numNotifications = newNotifiesNotRead.length
+            state.numNotifications = state.numNotifications - 1
         }
     )
 }

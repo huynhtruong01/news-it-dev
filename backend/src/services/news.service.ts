@@ -14,7 +14,7 @@ import {
     sortQuery,
 } from '@/utils'
 import { io } from 'server'
-import { userService } from './user.service'
+import { userService, notifyService } from '.'
 
 class NewsService {
     constructor(private newsRepository = AppDataSource.getRepository(News)) {}
@@ -103,6 +103,12 @@ class NewsService {
         }
     }
 
+    checkImage(thumbnailImage?: string, coverImage?: string) {
+        if (!thumbnailImage) throw new Error('Missing thumbnail image.')
+        if (!coverImage) throw new Error('Missing cover image.')
+    }
+
+    // QUERY
     async getAll(query: IObjectCommon): Promise<INewsRes> {
         try {
             const newFiltersQuery = filtersQuery(query)
@@ -190,11 +196,16 @@ class NewsService {
         }
     }
 
+    // get by id news into comment
     async getByIdComment(id: number) {
         try {
             const news = await this.newsRepository.findOne({
                 where: {
                     id,
+                },
+                relations: {
+                    hashTags: true,
+                    user: true,
                 },
             })
             if (!news) return null
@@ -238,7 +249,8 @@ class NewsService {
                 data.slug = commonService.generateSlug(data.title)
             }
 
-            // TODO: check both thumnail image and cover image is empty
+            // check both thumnail image and cover image is empty
+            this.checkImage(data.thumbnailImage, data.coverImage)
 
             const newNews = await this.newsRepository.save({
                 ...news,
@@ -275,7 +287,8 @@ class NewsService {
                 data.slug = commonService.generateSlug(data.title)
             }
 
-            // TODO: check both thumnail image and cover image is empty
+            // check both thumnail image and cover image is empty
+            this.checkImage(data.thumbnailImage, data.coverImage)
 
             const newNews = await this.newsRepository.save({
                 ...news,
@@ -343,6 +356,18 @@ class NewsService {
             const newNews = await this.updateAll(newsId, news)
 
             io.to(newNews?.slug as string).emit('likeNews', newNews)
+
+            const notify = {
+                userId: user.id,
+                newsId: news.id,
+                user,
+                news,
+                text: 'liked your news',
+                recipients: [news.user],
+                readUsers: [],
+            }
+            const newNotify = await notifyService.create(notify)
+            io.to(news.user.id.toString()).emit('notifyNews', newNotify)
 
             return newNews
         } catch (error) {

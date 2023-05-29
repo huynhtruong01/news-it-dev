@@ -1,7 +1,8 @@
+import { IFollowNotify, INews, IUser } from '@/models'
+import { resetNotify } from '@/store/notify'
+import { removeLs } from '@/utils'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IUserStore } from '.'
-import { INews, IUser } from '@/models'
-import { removeLs } from '@/utils'
 
 export const reducers = {
     saveUserLogin(state: IUserStore, action: PayloadAction<IUser | null>) {
@@ -13,6 +14,8 @@ export const reducers = {
 
         removeLs(import.meta.env.VITE_ACCESS_TOKEN_KEY)
         removeLs(import.meta.env.VITE_REFRESH_TOKEN_KEY)
+
+        resetNotify()
     },
     deleteNewsUser: (state: IUserStore, action: PayloadAction<number>) => {
         const newsList = [...((state.user?.news as INews[]) || [])]
@@ -29,5 +32,9 @@ export const reducers = {
                 } as IUser
             }
         }
+    },
+    followNotify: (state: IUserStore, action: PayloadAction<IFollowNotify>) => {
+        const { socket, user, userFollow } = action.payload
+        socket.emit('followNotify', { user, userFollow })
     },
 }

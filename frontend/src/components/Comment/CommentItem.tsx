@@ -170,7 +170,10 @@ function CommentItem({ pUser, comment }: ICommentItemProps) {
                                                         replyUserData.username
                                                     )}`}
                                                 >
-                                                    {replyUserData.username}
+                                                    {replyUserData.username ===
+                                                    pUser?.username
+                                                        ? 'you'
+                                                        : replyUserData.username}
                                                 </Link>
                                             </Typography>
                                             <span> • </span>

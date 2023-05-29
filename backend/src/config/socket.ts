@@ -26,4 +26,19 @@ export const SocketServer = (socket: Socket) => {
     socket.on('disconnect', () => {
         console.log(socket.id + ' disconnected')
     })
+
+    socket.on('followNotify', ({ user, userFollow }) => {
+        console.log(user.username, userFollow.username)
+        const notify = {
+            userId: user.id,
+            newsId: null,
+            user,
+            news: null,
+            recipients: [userFollow],
+            readUsers: [],
+            text: 'has started follow you',
+        }
+
+        socket.to(userFollow.id.toString()).emit('createNotify', notify)
+    })
 }

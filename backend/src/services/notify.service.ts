@@ -2,7 +2,7 @@ import { AppDataSource } from '@/config'
 import { relationDataNotify } from '@/data'
 import { Notify } from '@/entities'
 import { Order } from '@/enums'
-import { IObjectCommon } from '@/models'
+import { INotifyData, IObjectCommon } from '@/models'
 import { createNotify, paginationQuery } from '@/utils'
 
 class NotifyService {
@@ -22,6 +22,9 @@ class NotifyService {
                 .leftJoinAndSelect('news.likes', 'likes')
                 .leftJoinAndSelect('notify.recipients', 'recipients')
                 .where('recipients.id = :userId', { userId })
+                .andWhere(
+                    'notify.newsId IS NULL OR news.id IS NULL OR news.id IS NOT NULL'
+                )
                 .andWhere('LOWER(news.title) LIKE LOWER(:search)', {
                     search: `%${query.search || ''}%`,
                 })
@@ -49,16 +52,14 @@ class NotifyService {
     }
 
     // create
-    async create(data: Notify) {
+    async create(data: INotifyData) {
         try {
             const notify = createNotify(data)
             if (data.user) {
                 notify.user = data.user
             }
-            if (data.news) {
-                notify.news = data.news
-            }
 
+            notify.news = data.news ? data.news : null
             const newNotify = await this.notifyRepository.save(notify)
 
             return newNotify

@@ -1,6 +1,7 @@
 import { AVATAR, MAX_AGE_REFRESH_TOKEN } from '@/consts'
 import { HashTag, News, Role, User, Comment, Notify } from '@/entities'
 import { NewsStatus } from '@/enums'
+import { INotifyData } from '@/models'
 import { CookieOptions } from 'express'
 
 export const createUserData = (data: User): User => {
@@ -63,11 +64,12 @@ export const createComment = (data: Comment): Comment => {
     return comment
 }
 
-export const createNotify = (data: Notify): Notify => {
+export const createNotify = (data: INotifyData): Notify => {
     const notify = new Notify()
     notify.userId = data.userId
-    notify.newsId = data.newsId
+    notify.newsId = data.newsId ? data.newsId : null
     notify.recipients = data.recipients
+    notify.readUsers = data.readUsers ? data.readUsers : []
     notify.text = data.text || ''
 
     return notify

@@ -1,4 +1,4 @@
-import { IComment, INews, INotifyData, IUser } from '@/models'
+import { IComment, INews, INotify, INotifyData, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import {
     createComment,
@@ -11,6 +11,7 @@ import {
 } from '@/store/comment'
 import { IActionComment } from '@/store/comment/reducers'
 import { setNewsDetail } from '@/store/news'
+import { addNotify } from '@/store/notify'
 import { createNotify } from '@/store/notify/thunkApi'
 import { Box } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -29,6 +30,7 @@ export interface ISocketClientProps {
     pLikeComment: (data: IActionComment) => void
     pUnLikeComment: (data: IActionComment) => void
     pCreateNotify: (data: INotifyData) => Promise<PayloadAction<unknown>>
+    pAddNotify: (data: INotify) => void
     pSetNewsDetail: (data: INews) => void
 }
 
@@ -43,6 +45,7 @@ function SocketClient({
     pLikeComment,
     pUnLikeComment,
     pCreateNotify,
+    pAddNotify,
     pSetNewsDetail,
 }: ISocketClientProps) {
     const dispatch: AppDispatch = useDispatch()
@@ -52,10 +55,11 @@ function SocketClient({
         pSocket?.emit('subscribe', pUser.id.toString())
 
         return () => {
-            pSocket?.emit('unsubscribe', pUser?.id.toString())
+            pSocket?.emit('unsubscribe', pUser.id.toString())
         }
     }, [dispatch, pUser, pSocket])
 
+    // COMMENT
     useEffect(() => {
         if (!pSocket) return
         pSocket.on('createComment', (data: IComment) => {
@@ -111,6 +115,7 @@ function SocketClient({
         }
     }, [dispatch, pSocket])
 
+    // LIKE COMMENT
     useEffect(() => {
         if (!pSocket || !pUser) return
         pSocket.on('likeComment', (comment: IComment) => {
@@ -133,17 +138,30 @@ function SocketClient({
         }
     }, [dispatch, pSocket])
 
+    // NOTIFY
     useEffect(() => {
         if (!pSocket || !pUser) return
-        pSocket.on('notify-news', async (notify: INotifyData) => {
+        pSocket.on('notifyNews', (notify: INotify) => {
+            pAddNotify(notify)
+        })
+
+        return () => {
+            pSocket.off('notifyNews')
+        }
+    }, [dispatch, pSocket])
+
+    useEffect(() => {
+        if (!pSocket || !pUser) return
+        pSocket.on('createNotify', async (notify: INotifyData) => {
             await pCreateNotify(notify)
         })
 
         return () => {
-            pSocket.off('notify-news')
+            pSocket.off('createNotify')
         }
     }, [dispatch, pSocket])
 
+    // LIKE NEWS
     useEffect(() => {
         if (!pSocket || !pUser) return
         pSocket.on('likeNews', (news: INews) => {
@@ -166,6 +184,7 @@ function SocketClient({
         }
     }, [dispatch, pSocket])
 
+    // SAVE NEWS
     useEffect(() => {
         if (!pSocket || !pUser) return
         pSocket.on('saveNews', (news: INews) => {
@@ -208,6 +227,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         pLikeComment: (data: IActionComment) => dispatch(likeComment(data)),
         pUnLikeComment: (data: IActionComment) => dispatch(unlikeComment(data)),
         pCreateNotify: (data: INotifyData) => dispatch(createNotify(data)),
+        pAddNotify: (data: INotify) => dispatch(addNotify(data)),
         pSetNewsDetail: (news: INews) => dispatch(setNewsDetail(news)),
     }
 }

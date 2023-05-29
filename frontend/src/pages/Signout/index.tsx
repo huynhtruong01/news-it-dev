@@ -5,6 +5,7 @@ import { Button, Stack, Typography } from '@mui/material'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { enqueueSnackbar } from 'notistack'
+import { SIGNOUT_NAV } from '@/consts'
 
 export interface ISignoutProps {
     pSignout: () => void
@@ -17,7 +18,7 @@ function Signout({ pSignout }: ISignoutProps) {
         enqueueSnackbar('Sign out successfully.', {
             variant: 'success',
         })
-        navigate('/')
+        navigate('/', { state: { from: SIGNOUT_NAV } })
     }
 
     return (

@@ -1,3 +1,4 @@
+import { SIGNOUT_NAV } from '@/consts'
 import { IFacebookLoginParams } from '@/models'
 import { AppDispatch } from '@/store'
 import { facebookLogin, googleLogin } from '@/store/user/thunkApi'
@@ -19,7 +20,7 @@ import {
 import { FaFacebookSquare } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import { connect } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export interface ISocialLoginProps {
     pGoogleLogin: (token: string) => Promise<PayloadAction<unknown>>
@@ -28,6 +29,7 @@ export interface ISocialLoginProps {
 
 function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
     const navigate = useNavigate()
+    const location = useLocation()
 
     useEffect(() => {
         function start() {
@@ -40,6 +42,15 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
         gapi.load('client:auth2', start)
     }, [])
 
+    const handleNavigate = () => {
+        const checkPath = location.state?.from
+        if (!checkPath || checkPath === SIGNOUT_NAV) {
+            navigate('/')
+        } else {
+            navigate(-1)
+        }
+    }
+
     const handleGoogleLogin = async (
         response: GoogleLoginResponse | GoogleLoginResponseOffline
     ) => {
@@ -50,7 +61,7 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
                     variant: 'success',
                 })
 
-                navigate(-1)
+                handleNavigate()
             }
         } catch (error) {
             enqueueSnackbar((error as Error).message, {

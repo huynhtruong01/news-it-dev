@@ -1,3 +1,4 @@
+import { Socket } from 'socket.io-client'
 import { IComment, IHashTag, INews, IOptionItem } from '.'
 
 export type IRoleIds = IOptionItem[]
@@ -47,3 +48,9 @@ export interface IFiltersNewsSave {
 }
 
 export type IFiltersUserNews = IFiltersNewsSave
+
+export interface IFollowNotify {
+    socket: Socket
+    user: IUser
+    userFollow: IUser
+}

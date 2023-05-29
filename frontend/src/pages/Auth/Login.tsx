@@ -12,6 +12,7 @@ import { AppDispatch, AppState } from '@/store'
 import { setLs } from '@/utils'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect } from 'react'
+import { SIGNOUT_NAV } from '@/consts'
 
 export interface ILoginProps {
     pUser: IUser | null
@@ -42,7 +43,7 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
             })
 
             const checkPath = location.state?.from
-            if (!checkPath) {
+            if (!checkPath || checkPath === SIGNOUT_NAV) {
                 navigate('/')
             } else {
                 navigate(-1)

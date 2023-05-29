@@ -22,9 +22,9 @@ export class Notify extends BaseEntity {
     userId: number
 
     @Column({
-        type: 'int',
+        nullable: true,
     })
-    newsId: number
+    newsId: number | null
 
     @Column({
         type: 'text',
@@ -51,11 +51,11 @@ export class Notify extends BaseEntity {
         onDelete: 'CASCADE',
     })
     @JoinColumn({ name: 'newsId' })
-    news?: News
+    news?: News | null
 
     @CreateDateColumn()
-    createdAt: string
+    createdAt?: string
 
     @UpdateDateColumn()
-    updatedAt: string
+    updatedAt?: string
 }

@@ -1,6 +1,7 @@
 import { INotify } from '@/models'
 import { createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from '@/store/notify/thunkApi'
+import { reducers } from '@/store/notify/reducers'
 
 export interface INotifyStore {
     notifications: INotify[]
@@ -21,8 +22,9 @@ const initialState: INotifyStore = {
 const notifySlice = createSlice({
     name: 'notify',
     initialState,
-    reducers: {},
+    reducers,
     extraReducers,
 })
 
+export const { addNotify, resetNotify } = notifySlice.actions
 export default notifySlice.reducer

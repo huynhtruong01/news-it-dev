@@ -1,6 +1,6 @@
 import { userApi } from '@/api'
 import { IsFollow } from '@/enums'
-import { IFollow, IUser } from '@/models'
+import { IFollow, IFollowNotify, IUser } from '@/models'
 import { ProfileInfoItem, ProfileLeftItem, ProfileNews } from '@/pages/Profile/components'
 import { ProfileUserNumFollow } from '@/pages/ProfileUser/components'
 import { AppDispatch, AppState } from '@/store'
@@ -25,14 +25,24 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { followNotify } from '@/store/user'
+import { Socket } from 'socket.io-client'
 
 export interface IProfileUserProps {
     pUser: IUser | null
+    pSocket: Socket | null
     pSetShowModalAuth: (isShow: boolean) => void
     pGetProfile: () => Promise<PayloadAction<unknown>>
+    pFollowNotify: (data: IFollowNotify) => void
 }
 
-function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProps) {
+function ProfileUser({
+    pSocket,
+    pUser,
+    pSetShowModalAuth,
+    pGetProfile,
+    pFollowNotify,
+}: IProfileUserProps) {
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
     const [user, setUser] = useState<IUser | null>(null)
     const [followers, setFollowers] = useState<number>(0)
@@ -92,6 +102,13 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
                     setFollowed(IsFollow.FOLLOWING)
                     setFollowers(followers + 1)
                     await userApi.followUser(user.id)
+
+                    // notify follow
+                    pFollowNotify({
+                        socket: pSocket as Socket,
+                        user: pUser,
+                        userFollow: user,
+                    })
                 } else {
                     setFollowed(IsFollow.FOLLOW)
                     setFollowers(followers === 0 ? 0 : followers - 1)
@@ -321,6 +338,7 @@ function ProfileUser({ pUser, pSetShowModalAuth, pGetProfile }: IProfileUserProp
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pSocket: state.socket.socket,
     }
 }
 
@@ -328,6 +346,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+        pFollowNotify: (data: IFollowNotify) => dispatch(followNotify(data)),
     }
 }
 

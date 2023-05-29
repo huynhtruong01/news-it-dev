@@ -1,8 +1,9 @@
 import { AppDataSource } from '@/config'
 import { relationDataComment } from '@/data'
 import { Comment, News, User } from '@/entities'
+import { Order } from '@/enums'
 import { ICommentRes, IObjectCommon } from '@/models'
-import { commonService, newsService, userService } from '@/services'
+import { commonService, newsService, notifyService, userService } from '@/services'
 import { createComment, paginationQuery, sortQuery } from '@/utils'
 import { io } from 'server'
 import { IsNull } from 'typeorm'
@@ -28,11 +29,14 @@ class CommentService {
                     newsId: query.newsId as number,
                     parentCommentId: IsNull(),
                 },
+                relations: relationDataComment,
                 order: {
                     ...newSortQuery,
+                    childrenComments: {
+                        id: Order.DESC,
+                    },
                 },
                 ...newPaginationQuery,
-                relations: relationDataComment,
             })
 
             return [comments, count]
@@ -58,6 +62,18 @@ class CommentService {
             newComment.news = (await newsService.getByIdComment(data.newsId)) as News
 
             io.to(newComment.news?.slug).emit('createComment', newComment)
+
+            const notify = {
+                userId: newComment.user.id,
+                newsId: newComment.news.id,
+                user: newComment.user,
+                news: newComment.news,
+                text: 'has been commented your news',
+                recipients: [newComment.news.user],
+                readUsers: [],
+            }
+            const newNotify = await notifyService.create(notify)
+            io.to(newComment.news.user.id.toString()).emit('notifyNews', newNotify)
 
             return newComment
         } catch (error) {
@@ -89,21 +105,31 @@ class CommentService {
                 )) as User
             }
 
-            parentComment.childrenComments?.push(replyComment)
+            parentComment.childrenComments
+                ?.sort((a, b) => b.id - a.id)
+                ?.unshift(replyComment)
 
             const newParentComment = await this.commentRepository.save(parentComment)
 
-            if (replyComment.replyUserId && replyComment.replyUser) {
+            if (
+                replyComment.replyUserId &&
+                replyComment.replyUser &&
+                replyComment.userId !== replyComment.replyUserId
+            ) {
                 const notify = {
                     userId: replyComment.user.id,
                     newsId: replyComment.news.id,
-                    text: `reply to ${replyComment.replyUser.username}`,
                     user: replyComment.user,
                     news: replyComment.news,
-                    recipients: replyComment.user.followers,
-                    isRead: false,
+                    recipients: [replyComment.replyUser],
+                    readUsers: [],
                 }
-                io.to(replyComment.replyUserId.toString()).emit('notify-news', notify)
+
+                const newNotify = await notifyService.create({
+                    ...notify,
+                    text: 'reply to your comment',
+                })
+                io.to(replyComment.replyUserId.toString()).emit('notifyNews', newNotify)
             }
 
             io.to(replyComment.news.slug).emit('replyComment', newParentComment)

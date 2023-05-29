@@ -58,6 +58,6 @@ export const sendEmail = async (to: string | string[], url: string, text: string
         const result = await transport.sendMail(mailOptions)
         return result
     } catch (error) {
-        throw new Error(error as string)
+        throw new Error(`error send email ${error}` as string)
     }
 }

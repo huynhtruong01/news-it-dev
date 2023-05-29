@@ -24,9 +24,18 @@ function MainContent({
 }: IMainContentProps) {
     useEffect(() => {
         document.title = 'DEV Community'
-        pGetAllTagsPopular()
-        pGetProfile()
-        pGetNotifies(pUser?.id as number)
+        ;(async () => {
+            try {
+                await pGetAllTagsPopular()
+
+                if (pUser?.id) {
+                    await pGetProfile()
+                    await pGetNotifies(pUser?.id as number)
+                }
+            } catch (error) {
+                throw new Error(error as string)
+            }
+        })()
     }, [])
 
     return (

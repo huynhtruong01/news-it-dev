@@ -2,7 +2,7 @@ import { sendEmail } from '@/config'
 import { User } from '@/entities'
 import { NewsStatus, Results, StatusCode, StatusText } from '@/enums'
 import { IObjectCommon, RequestUser } from '@/models'
-import { hashTagService, newsService, userService } from '@/services'
+import { hashTagService, newsService, notifyService, userService } from '@/services'
 import { Request, Response } from 'express'
 import { io } from 'server'
 
@@ -193,12 +193,15 @@ class NewsController {
                 user,
                 news: newNews,
                 recipients: user.followers,
-                isRead: false,
+                readUsers: [],
             }
 
             if (newNews.status === NewsStatus.PUBLIC) {
-                for (const u of (user.followers as User[]) || []) {
-                    io.to(u.id.toString()).emit('notify-news', notify)
+                const newNotify = await notifyService.create(notify)
+                if (newNotify) {
+                    for (const u of (user.followers as User[]) || []) {
+                        io.to(u.id.toString()).emit('notifyNews', newNotify)
+                    }
                 }
 
                 const emails = user.followers?.map((u) => u.emailAddress)

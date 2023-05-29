@@ -116,6 +116,8 @@ function NotificationItem({
             if (!pUser?.id) return
 
             navigate(link)
+            if (notify.readUsers.includes(pUser.id.toString())) return
+
             await pReadUsersNotify({
                 notifyId: notify.id,
                 userId: pUser.id,
@@ -144,12 +146,15 @@ function NotificationItem({
                     <Typography
                         variant="body1"
                         sx={{
+                            display: 'flex',
+                            gap: 0.5,
                             a: {
                                 fontWeight: 600,
                             },
                         }}
                     >
-                        <Link to={linkUser}>{notify.user?.username}</Link> {notify.text}
+                        <Link to={linkUser}>{notify.user?.username}</Link>{' '}
+                        <Box dangerouslySetInnerHTML={{ __html: notify.text || '' }} />
                     </Typography>
                     <Box
                         component="time"
@@ -158,108 +163,112 @@ function NotificationItem({
                             color: alpha(theme.palette.secondary.main, 0.65),
                         }}
                     >
-                        {moment(notify.news?.createdAt || new Date()).fromNow()}
+                        {moment(notify.createdAt || new Date()).fromNow()}
                     </Box>
                 </Box>
             </Stack>
 
-            <Box paddingLeft={6}>
-                <Typography
-                    component="h2"
-                    variant="h5"
-                    fontWeight={700}
-                    sx={{
-                        marginBottom: 1.5,
-                        span: {
-                            fontSize: theme.typography.h5,
-                            fontWeight: 700,
-                            cursor: 'pointer',
-
-                            '&:hover': {
-                                color: theme.palette.primary.main,
-                                textDecoration: 'underline',
-                            },
-                        },
-                    }}
-                >
+            {notify?.news && (
+                <Box paddingLeft={6}>
                     <Typography
-                        component="span"
-                        onClick={() =>
-                            handleUpdateReadNotify(`/news/${notify.news?.slug as string}`)
-                        }
-                    >
-                        {notify.news?.title}
-                    </Typography>
-                </Typography>
-                <HashTagList tags={notify.news?.hashTags as IHashTag[]} />
-                <Stack
-                    direction={'row'}
-                    justifyContent={'space-between'}
-                    marginTop={3}
-                    sx={{
-                        button: {
-                            fontSize: theme.typography.body2,
-                            padding: theme.spacing(0.85, 2),
-                            color: theme.palette.secondary.main,
-                        },
-                    }}
-                >
-                    <Button
-                        variant="contained"
-                        startIcon={
-                            liked ? (
-                                <FavoriteIcon
-                                    sx={{
-                                        color: red[700],
-                                    }}
-                                />
-                            ) : (
-                                <FavoriteBorderIcon />
-                            )
-                        }
+                        component="h2"
+                        variant="h5"
+                        fontWeight={700}
                         sx={{
-                            backgroundColor: liked
-                                ? alpha(red[700], 0.1)
-                                : alpha(theme.palette.secondary.main, 0.075),
-                            '&:hover': {
+                            marginBottom: 1.5,
+                            span: {
+                                fontSize: theme.typography.h5,
+                                fontWeight: 700,
+                                cursor: 'pointer',
+
+                                '&:hover': {
+                                    color: theme.palette.primary.main,
+                                    textDecoration: 'underline',
+                                },
+                            },
+                        }}
+                    >
+                        <Typography
+                            component="span"
+                            onClick={() =>
+                                handleUpdateReadNotify(
+                                    `/news/${notify.news?.slug as string}`
+                                )
+                            }
+                        >
+                            {notify.news?.title}
+                        </Typography>
+                    </Typography>
+                    <HashTagList tags={notify.news?.hashTags as IHashTag[]} />
+                    <Stack
+                        direction={'row'}
+                        justifyContent={'space-between'}
+                        marginTop={3}
+                        sx={{
+                            button: {
+                                fontSize: theme.typography.body2,
+                                padding: theme.spacing(0.85, 2),
+                                color: theme.palette.secondary.main,
+                            },
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            startIcon={
+                                liked ? (
+                                    <FavoriteIcon
+                                        sx={{
+                                            color: red[700],
+                                        }}
+                                    />
+                                ) : (
+                                    <FavoriteBorderIcon />
+                                )
+                            }
+                            sx={{
                                 backgroundColor: liked
                                     ? alpha(red[700], 0.1)
-                                    : alpha(theme.palette.secondary.main, 0.1),
-                            },
-                        }}
-                        onClick={handleLikeNews}
-                    >
-                        Like
-                    </Button>
-                    <Button
-                        variant="contained"
-                        endIcon={
-                            saved ? (
-                                <BookmarkIcon
-                                    sx={{
-                                        color: indigo[700],
-                                    }}
-                                />
-                            ) : (
-                                <BookmarkBorderIcon />
-                            )
-                        }
-                        sx={{
-                            backgroundColor: saved
-                                ? alpha(indigo[700], 0.1)
-                                : alpha(theme.palette.secondary.main, 0.075),
-                            '&:hover': {
+                                    : alpha(theme.palette.secondary.main, 0.075),
+                                '&:hover': {
+                                    backgroundColor: liked
+                                        ? alpha(red[700], 0.1)
+                                        : alpha(theme.palette.secondary.main, 0.1),
+                                },
+                            }}
+                            onClick={handleLikeNews}
+                        >
+                            Like
+                        </Button>
+                        <Button
+                            variant="contained"
+                            endIcon={
+                                saved ? (
+                                    <BookmarkIcon
+                                        sx={{
+                                            color: indigo[700],
+                                        }}
+                                    />
+                                ) : (
+                                    <BookmarkBorderIcon />
+                                )
+                            }
+                            sx={{
                                 backgroundColor: saved
                                     ? alpha(indigo[700], 0.1)
-                                    : alpha(theme.palette.secondary.main, 0.1),
-                            },
-                        }}
-                        onClick={handleSaveNews}
-                    >
-                        Save
-                    </Button>
-                </Stack>
-            </Box>
+                                    : alpha(theme.palette.secondary.main, 0.075),
+                                '&:hover': {
+                                    backgroundColor: saved
+                                        ? alpha(indigo[700], 0.1)
+                                        : alpha(theme.palette.secondary.main, 0.1),
+                                },
+                            }}
+                            onClick={handleSaveNews}
+                        >
+                            Save
+                        </Button>
+                    </Stack>
+                </Box>
+            )}
         </Box>
     )
 }
