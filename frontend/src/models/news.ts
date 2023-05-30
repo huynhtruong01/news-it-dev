@@ -1,6 +1,7 @@
 import { NewsFilters, Status } from '@/enums'
 import { IHashTag, IUser, IImgType, IComment, IOptionItem } from '.'
 import { ALL } from '@/consts'
+import { Socket } from 'socket.io-client'
 
 export interface INewsData {
     title: string
@@ -49,4 +50,10 @@ export type INewsStatus = NewsFilters.LATEST | NewsFilters.TOP | NewsFilters.REL
 export interface INewsFilters {
     status?: INewsStatus | typeof ALL
     search?: string
+}
+
+export interface INewsActions {
+    socket: Socket
+    news: INews
+    user: IUser
 }

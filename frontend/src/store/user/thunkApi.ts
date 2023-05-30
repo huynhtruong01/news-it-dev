@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit'
 import { IUserStore } from '.'
 import { authApi, userApi } from '@/api'
-import { IFacebookLoginParams, IFiltersUserNews, IUser } from '@/models'
+import { IFacebookLoginParams, IFiltersUserNews, IFollowNotify, IUser } from '@/models'
 import { setLs } from '@/utils'
 
 export interface IProfileFilters {
@@ -49,6 +49,26 @@ export const facebookLogin = createAsyncThunk(
     }
 )
 
+// follow
+export const followUserApi = createAsyncThunk(
+    'user/followUserApi',
+    async (data: IFollowNotify) => {
+        await userApi.followUser(data.userFollow.id)
+
+        return data
+    }
+)
+
+// unfollow
+export const unfollowUserApi = createAsyncThunk(
+    'user/unfollowUserApi',
+    async (user: IUser) => {
+        await userApi.unfollowUser(user.id)
+
+        return {}
+    }
+)
+
 export const extraReducers = (builders: ActionReducerMapBuilder<IUserStore>) => {
     builders.addCase(
         getProfile.fulfilled,
@@ -77,4 +97,16 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IUserStore>) => 
             state.user = action.payload
         }
     )
+
+    builders.addCase(
+        followUserApi.fulfilled,
+        (state: IUserStore, action: PayloadAction<IFollowNotify>) => {
+            const { socket, user, userFollow } = action.payload
+            socket.emit('followNotify', { user, userFollow })
+        }
+    )
+
+    builders.addCase(unfollowUserApi.fulfilled, (state: IUserStore) => {
+        return
+    })
 }

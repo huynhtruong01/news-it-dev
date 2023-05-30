@@ -21,10 +21,13 @@ class NotifyService {
                 .leftJoinAndSelect('news.saveUsers', 'saveUsers')
                 .leftJoinAndSelect('news.likes', 'likes')
                 .leftJoinAndSelect('notify.recipients', 'recipients')
-                .where('recipients.id = :userId', { userId })
-                .andWhere(
-                    'notify.newsId IS NULL OR news.id IS NULL OR news.id IS NOT NULL'
-                )
+                .where((qb) => {
+                    qb.where('notify.newsId IS NULL AND recipients.id = :userId', {
+                        userId,
+                    }).orWhere('notify.newsId IS NOT NULL AND recipients.id = :userId', {
+                        userId,
+                    })
+                })
                 .andWhere('LOWER(news.title) LIKE LOWER(:search)', {
                     search: `%${query.search || ''}%`,
                 })
@@ -51,6 +54,22 @@ class NotifyService {
         }
     }
 
+    // get all no conditions
+    async getAllNoConditions() {
+        try {
+            const [notifies, count] = await this.notifyRepository.findAndCount({
+                relations: relationDataNotify,
+                order: {
+                    createdAt: Order.DESC,
+                },
+            })
+
+            return [notifies, count]
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     // create
     async create(data: INotifyData) {
         try {
@@ -69,11 +88,12 @@ class NotifyService {
     }
 
     // get by newsId
-    async getByNewsId(newsId: number): Promise<Notify | null> {
+    async getByUserId(id: number): Promise<Notify | null> {
         try {
             const notify = await this.notifyRepository.findOne({
-                where: {
-                    newsId,
+                where: { id },
+                relations: {
+                    recipients: true,
                 },
             })
 
@@ -118,13 +138,22 @@ class NotifyService {
     }
 
     // delete by newsId
-    async delete(newsId: number) {
+    async delete(id: number, userId: number) {
         try {
-            const notify = await this.getByNewsId(newsId)
+            const notify = await this.getByUserId(id)
             if (!notify) return null
 
-            await this.notifyRepository.delete({ newsId })
+            const indexRead = notify.readUsers?.findIndex(
+                (n) => Number(n) === userId
+            ) as number
+            if (indexRead > -1) notify.readUsers?.splice(indexRead, 1)
 
+            const indexRecipients = notify.recipients?.findIndex(
+                (n) => Number(n.id) === userId
+            ) as number
+            if (indexRecipients > -1) notify.recipients?.splice(indexRecipients, 1)
+
+            await this.notifyRepository.save({ ...notify })
             return notify
         } catch (error) {
             throw new Error(error as string)

@@ -5,8 +5,9 @@ const router = express.Router()
 
 router.use(authMiddleware.getUser)
 
+router.route('/get-all').get(notifyController.getAllNotifiesNoConditions)
 router.route('/read-users/:notifyId').get(notifyController.readUsersNotify)
 router.route('/').get(notifyController.getAllNotifies).post(notifyController.createNotify)
-router.route('/:newsId').delete(notifyController.deleteNotifyByNewsId)
+router.route('/:notifyId').delete(notifyController.deleteNotifyByNewsId)
 
 export default router

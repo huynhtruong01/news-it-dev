@@ -1,10 +1,10 @@
-import { userApi } from '@/api'
 import { IsFollow } from '@/enums'
 import { useCheckSelf, useLinkUser } from '@/hooks'
-import { IFollow, IUser } from '@/models'
+import { IFollow, IFollowNotify, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
-import { getProfile } from '@/store/user/thunkApi'
+import { followUser, unfollowUser } from '@/store/user'
+import { followUserApi, getProfile, unfollowUserApi } from '@/store/user/thunkApi'
 import { formatDate, theme } from '@/utils'
 import {
     Avatar,
@@ -20,19 +20,29 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Socket } from 'socket.io-client'
 
 export interface IUserDetailHoverProps extends BoxProps {
     pUser: IUser | null
+    pSocket: Socket | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
     pSetShowModalAuth: (isShow: boolean) => void
+    pFollowUser: (data: IUser) => void
+    pUnFollowUser: (data: IUser) => void
+    pFollowUserApi: (data: IFollowNotify) => Promise<PayloadAction<unknown>>
+    pUnFollowUserApi: (data: IUser) => Promise<PayloadAction<unknown>>
     user: IUser
 }
 
 function UserDetailHover({
     user,
     pUser,
-    pGetProfile,
+    pSocket,
     pSetShowModalAuth,
+    pFollowUser,
+    pUnFollowUser,
+    pFollowUserApi,
+    pUnFollowUserApi,
     ...rest
 }: IUserDetailHoverProps) {
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
@@ -64,14 +74,16 @@ function UserDetailHover({
 
             if (user?.id) {
                 if (followed === IsFollow.FOLLOW) {
-                    setFollowed(IsFollow.FOLLOWING)
-                    await userApi.followUser(user.id)
+                    pFollowUser(user)
+                    await pFollowUserApi({
+                        socket: pSocket as Socket,
+                        user: pUser,
+                        userFollow: user,
+                    })
                 } else {
-                    setFollowed(IsFollow.FOLLOW)
-                    await userApi.unfollowUser(user.id)
+                    pUnFollowUser(user)
+                    await pUnFollowUserApi(user)
                 }
-
-                await pGetProfile()
             }
         } catch (error) {
             throw new Error(error as string)
@@ -203,6 +215,7 @@ function UserDetailHover({
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pSocket: state.socket.socket,
     }
 }
 
@@ -210,6 +223,10 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+        pFollowUser: (data: IUser) => dispatch(followUser(data)),
+        pUnFollowUser: (data: IUser) => dispatch(unfollowUser(data)),
+        pFollowUserApi: (data: IFollowNotify) => dispatch(followUserApi(data)),
+        pUnFollowUserApi: (data: IUser) => dispatch(unfollowUserApi(data)),
     }
 }
 

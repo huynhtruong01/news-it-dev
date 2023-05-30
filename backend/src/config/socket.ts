@@ -1,3 +1,4 @@
+import { notifyService } from '@/services'
 import { Socket } from 'socket.io'
 
 export const SocketServer = (socket: Socket) => {
@@ -28,7 +29,7 @@ export const SocketServer = (socket: Socket) => {
     })
 
     socket.on('followNotify', ({ user, userFollow }) => {
-        console.log(user.username, userFollow.username)
+        // console.log(user.username, userFollow.username)
         const notify = {
             userId: user.id,
             newsId: null,
@@ -36,9 +37,14 @@ export const SocketServer = (socket: Socket) => {
             news: null,
             recipients: [userFollow],
             readUsers: [],
-            text: 'has started follow you',
+            text: 'follow you',
         }
 
         socket.to(userFollow.id.toString()).emit('createNotify', notify)
+    })
+
+    socket.on('notifyLikesNews', async (notify) => {
+        const newNotify = await notifyService.create(notify)
+        socket.to(notify.news.user.id.toString()).emit('notifyNews', newNotify)
     })
 }

@@ -1,7 +1,7 @@
 import { newsApi } from '@/api'
 import { HashTagList } from '@/components/Common'
 import { useLinkUser } from '@/hooks'
-import { IHashTag, INews, IUser } from '@/models'
+import { IHashTag, INews, INewsActions, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
@@ -18,27 +18,47 @@ import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { RiChat3Line } from 'react-icons/ri'
+import { likeNews, saveNews, unlikeNews, unsaveNews } from '@/store/user'
+import { likeNewsApi } from '@/store/news/thunkApi'
+import { Socket } from 'socket.io-client'
 
 export interface INewsItemProps {
+    news: INews
     pUser: IUser | null
+    pSocket: Socket | null
     pSetShowModalAuth: (isShow: boolean) => void
     pGetProfile: () => Promise<PayloadAction<unknown>>
-    news: INews
+    pLikeNews: (data: INews) => void
+    pUnLikeNews: (data: INews) => void
+    pSaveNews: (data: INews) => void
+    pUnSaveNews: (data: INews) => void
+    pLikeNewsApi: (data: INewsActions) => Promise<PayloadAction<unknown>>
 }
 
 const useStyles = makeStyles({
     button: {
-        backgroundColor: alpha(theme.palette.secondary.main, 0.075),
+        backgroundColor: `${alpha(theme.palette.secondary.main, 0.075)} !important`,
         '&:hover': {
-            backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+            backgroundColor: `${alpha(theme.palette.secondary.main, 0.1)} !important`,
         },
     },
 })
 
-function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProps) {
+function NewsItem({
+    news,
+    pUser,
+    pSocket,
+    pSetShowModalAuth,
+    pLikeNews,
+    pUnLikeNews,
+    pSaveNews,
+    pUnSaveNews,
+    pLikeNewsApi,
+}: INewsItemProps) {
     const styles = useStyles()
     const [liked, setLiked] = useState<boolean>(false)
     const [saved, setSaved] = useState<boolean>(false)
+    const [numLikes, setNumLikes] = useState<number>(news.numLikes || 0)
     const navigate = useNavigate()
 
     const linkUser = useLinkUser(news?.user as IUser)
@@ -71,14 +91,18 @@ function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProp
 
             if (news.id) {
                 if (liked) {
-                    setLiked(false)
+                    setNumLikes(numLikes - 1)
+                    pUnLikeNews(news)
                     await newsApi.unlikeNews(news.id)
                 } else {
-                    setLiked(true)
-                    await newsApi.likeNews(news.id)
+                    setNumLikes(numLikes + 1)
+                    pLikeNews(news)
+                    await pLikeNewsApi({
+                        socket: pSocket as Socket,
+                        news,
+                        user: pUser as IUser,
+                    })
                 }
-
-                await pGetProfile()
             }
         } catch (error) {
             throw new Error(error as string)
@@ -94,14 +118,12 @@ function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProp
 
             if (news.id) {
                 if (saved) {
-                    setSaved(false)
+                    pUnSaveNews(news)
                     await newsApi.unsaveNews(news.id)
                 } else {
-                    setSaved(true)
+                    pSaveNews(news)
                     await newsApi.saveNews(news.id)
                 }
-
-                await pGetProfile()
             }
         } catch (error) {
             throw new Error(error as string)
@@ -203,7 +225,7 @@ function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProp
                             }}
                             onClick={handleLikeNews}
                         >
-                            {news.numLikes} Like
+                            {numLikes} Like
                         </Button>
                         <Button
                             className={styles.button}
@@ -261,6 +283,7 @@ function NewsItem({ pUser, pSetShowModalAuth, pGetProfile, news }: INewsItemProp
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pSocket: state.socket.socket,
     }
 }
 
@@ -268,6 +291,11 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+        pLikeNews: (data: INews) => dispatch(likeNews(data)),
+        pUnLikeNews: (data: INews) => dispatch(unlikeNews(data)),
+        pSaveNews: (data: INews) => dispatch(saveNews(data)),
+        pUnSaveNews: (data: INews) => dispatch(unsaveNews(data)),
+        pLikeNewsApi: (data: INewsActions) => dispatch(likeNewsApi(data)),
     }
 }
 

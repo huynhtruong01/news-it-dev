@@ -10,7 +10,7 @@ export interface INewsListProps {
 
 export function NewsList({ newsList }: INewsListProps) {
     const newNews = React.useMemo(() => {
-        return newsList.length ? newsList : []
+        return newsList?.length ? newsList : []
     }, [newsList])
 
     return (

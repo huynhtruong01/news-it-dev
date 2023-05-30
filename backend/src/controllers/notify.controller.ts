@@ -4,6 +4,28 @@ import { notifyService } from '@/services'
 import { Response } from 'express'
 
 class NotifyController {
+    // get all no conditions (GET)
+    async getAllNotifiesNoConditions(req: RequestUser, res: Response) {
+        try {
+            const [notifies, count] = await notifyService.getAllNoConditions()
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    notifies,
+                    total: count,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
     // get all notifies (GET)
     async getAllNotifies(req: RequestUser, res: Response) {
         try {
@@ -79,7 +101,10 @@ class NotifyController {
     // delete by news id (DELETE)
     async deleteNotifyByNewsId(req: RequestUser, res: Response) {
         try {
-            const notify = await notifyService.delete(Number(req.params.newsId))
+            const notify = await notifyService.delete(
+                Number(req.params.notifyId),
+                Number(req.user?.id)
+            )
             if (!notify) {
                 res.status(StatusCode.BAD_REQUEST).json({
                     results: Results.ERROR,

@@ -1,7 +1,7 @@
-import { ArticleItem } from '@/features/ArticleContainer/components'
+import { NewsList } from '@/components/Common'
 import { INews } from '@/models'
-import { BoxProps, Stack, Paper, Typography } from '@mui/material'
 import { theme } from '@/utils'
+import { BoxProps, Paper, Stack, Typography } from '@mui/material'
 
 export interface IProfileNewsProps extends BoxProps {
     news: INews[]
@@ -27,9 +27,7 @@ export function ProfileNews({ news }: IProfileNewsProps) {
                     </Typography>
                 </Stack>
             )}
-            {news.map((article) => (
-                <ArticleItem key={article.id} article={article} />
-            ))}
+            <NewsList newsList={news} />
         </Stack>
     )
 }

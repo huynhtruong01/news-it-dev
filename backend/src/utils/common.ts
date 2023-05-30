@@ -68,7 +68,7 @@ export const createNotify = (data: INotifyData): Notify => {
     const notify = new Notify()
     notify.userId = data.userId
     notify.newsId = data.newsId ? data.newsId : null
-    notify.recipients = data.recipients
+    notify.recipients = (data.recipients as User[])?.length > 0 ? data.recipients : []
     notify.readUsers = data.readUsers ? data.readUsers : []
     notify.text = data.text || ''
 

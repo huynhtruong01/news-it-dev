@@ -18,11 +18,11 @@ export function ProfileInfoItem({ icon, text, ...rest }: IProfileInfoItemProps) 
                 gap={1.5}
                 sx={{
                     span: {
-                        color: alpha(theme.palette.secondary.dark, 0.9),
+                        color: alpha(theme.palette.secondary.dark, 0.8),
                     },
                     svg: {
-                        fontSize: theme.typography.h6,
-                        color: alpha(theme.palette.secondary.dark, 0.7),
+                        fontSize: theme.typography.h5,
+                        color: alpha(theme.palette.secondary.dark, 0.6),
                     },
                 }}
             >

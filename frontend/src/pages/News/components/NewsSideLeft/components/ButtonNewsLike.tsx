@@ -4,26 +4,36 @@ import { theme } from '@/utils'
 import { Box, BoxProps, IconButton, Stack, Typography } from '@mui/material'
 import { connect } from 'react-redux'
 import { useState, useEffect } from 'react'
-import { INews, IUser } from '@/models'
+import { INews, INewsActions, IUser } from '@/models'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { newsApi } from '@/api'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import { red } from '@mui/material/colors'
 import { setShowModalAuth } from '@/store/common'
+import { likeNews, unlikeNews } from '@/store/user'
+import { likeNewsApi } from '@/store/news/thunkApi'
+import { Socket } from 'socket.io-client'
 
 export interface IButtonNewsLikeProps extends BoxProps {
     news: INews
     pUser: IUser | null
+    pSocket: Socket | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
     pSetShowModalAuth: (isShow: boolean) => void
+    pLikeNews: (data: INews) => void
+    pUnLikeNews: (data: INews) => void
+    pLikeNewsApi: (data: INewsActions) => Promise<PayloadAction<unknown>>
 }
 
 function ButtonNewsLike({
     news,
     pUser,
-    pGetProfile,
+    pSocket,
     pSetShowModalAuth,
+    pLikeNews,
+    pUnLikeNews,
+    pLikeNewsApi,
     ...rest
 }: IButtonNewsLikeProps) {
     const [numLikes, setNumLikes] = useState<number>(news?.numLikes || 0)
@@ -31,8 +41,6 @@ function ButtonNewsLike({
 
     useEffect(() => {
         if (!news) return
-        setNumLikes(news.numLikes as number)
-
         if (pUser?.id) {
             const isLiked = pUser?.newsLikes?.find((n) => n.id === news.id)
             if (isLiked) {
@@ -52,12 +60,20 @@ function ButtonNewsLike({
 
             if (news.id) {
                 if (liked) {
+                    setNumLikes(numLikes - 1)
+                    pUnLikeNews(news)
+
                     await newsApi.unlikeNews(news.id)
                 } else {
-                    await newsApi.likeNews(news.id)
-                }
+                    setNumLikes(numLikes + 1)
+                    pLikeNews(news)
 
-                await pGetProfile()
+                    await pLikeNewsApi({
+                        socket: pSocket as Socket,
+                        news,
+                        user: pUser as IUser,
+                    })
+                }
             }
         } catch (error) {
             throw new Error(error as string)
@@ -109,6 +125,7 @@ function ButtonNewsLike({
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pSocket: state.socket.socket,
     }
 }
 
@@ -116,6 +133,9 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+        pLikeNews: (data: INews) => dispatch(likeNews(data)),
+        pUnLikeNews: (data: INews) => dispatch(unlikeNews(data)),
+        pLikeNewsApi: (data: INewsActions) => dispatch(likeNewsApi(data)),
     }
 }
 

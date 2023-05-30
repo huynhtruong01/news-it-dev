@@ -3,6 +3,7 @@ import { ButtonIconForm, HashTagList } from '@/components/Common'
 import { INews, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
+import { likeNews, saveNews, unlikeNews, unsaveNews } from '@/store/user'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
@@ -22,13 +23,18 @@ export interface IArticleIntroProps {
     pUser: IUser | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
     pSetShowModalAuth: (isShow: boolean) => void
+    pLikeNews: (data: INews) => void
+    pUnLikeNews: (data: INews) => void
+    pSaveNews: (data: INews) => void
+    pUnSaveNews: (data: INews) => void
 }
 
 function ArticleIntro({
     article,
     pUser,
-    pGetProfile,
     pSetShowModalAuth,
+    pSaveNews,
+    pUnSaveNews,
 }: IArticleIntroProps) {
     const [saved, setSaved] = useState<boolean>(false)
     const [liked, setLiked] = useState<boolean>(false)
@@ -40,6 +46,7 @@ function ArticleIntro({
         if (pUser?.id) {
             const isSaved = pUser?.saves?.find((n) => n.id === article.id)
             const isLiked = pUser?.newsLikes?.find((n) => n.id === article.id)
+
             if (isSaved) {
                 setSaved(true)
             } else {
@@ -74,14 +81,12 @@ function ArticleIntro({
             }
             if (article.id) {
                 if (saved) {
-                    setSaved(false)
+                    pUnSaveNews(article)
                     await newsApi.unsaveNews(article.id)
                 } else {
-                    setSaved(true)
+                    pSaveNews(article)
                     await newsApi.saveNews(article.id)
                 }
-
-                await pGetProfile()
             }
         } catch (error) {
             throw new Error(error as string)
@@ -220,6 +225,10 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+        pLikeNews: (data: INews) => dispatch(likeNews(data)),
+        pUnLikeNews: (data: INews) => dispatch(unlikeNews(data)),
+        pSaveNews: (data: INews) => dispatch(saveNews(data)),
+        pUnSaveNews: (data: INews) => dispatch(unsaveNews(data)),
     }
 }
 

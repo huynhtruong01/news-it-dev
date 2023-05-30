@@ -173,6 +173,7 @@ class HashTagService {
                     status: NewsStatus.PUBLIC,
                 })
                 .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
                 .getOne()
 
             if (!hashTag) return null

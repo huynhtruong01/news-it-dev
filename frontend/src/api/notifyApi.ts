@@ -14,3 +14,7 @@ export const getNotifies = (params: IFilters) => {
 export const readUsersNotify = (notifyId: number) => {
     return AxiosClient.get(`${BASE_URL}/read-users/${notifyId}`).then((res) => res.data)
 }
+
+export const deleteNotify = (notifyId: number) => {
+    return AxiosClient.delete(`${BASE_URL}/${notifyId}`)
+}

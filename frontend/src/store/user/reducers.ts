@@ -37,4 +37,74 @@ export const reducers = {
         const { socket, user, userFollow } = action.payload
         socket.emit('followNotify', { user, userFollow })
     },
+    followUser: (state: IUserStore, action: PayloadAction<IUser>) => {
+        // check user in following
+        const user = state.user
+        const userFollow = action.payload
+
+        const includesUserFollowing = user?.following?.some((u) => u.id === userFollow.id)
+
+        if (!includesUserFollowing) {
+            user?.following?.push(userFollow)
+        }
+
+        state.user = user
+    },
+    unfollowUser: (state: IUserStore, action: PayloadAction<IUser>) => {
+        // check user in following
+        const user = state.user
+        const userFollow = action.payload
+
+        const index = user?.following?.findIndex((u) => u.id === userFollow.id) as number
+
+        if (index > -1) {
+            user?.following?.splice(index, 1)
+        }
+
+        state.user = user
+    },
+    likeNews: (state: IUserStore, action: PayloadAction<INews>) => {
+        const user = state.user
+        const news = action.payload
+
+        const includesNews = user?.newsLikes?.find((n) => n.id === news.id)
+        if (!includesNews) {
+            user?.newsLikes?.push(news)
+        }
+
+        state.user = user
+    },
+    unlikeNews: (state: IUserStore, action: PayloadAction<INews>) => {
+        const user = state.user
+        const news = action.payload
+
+        const index = user?.newsLikes?.findIndex((n) => n.id === news.id) as number
+        if (index > -1) {
+            user?.newsLikes?.splice(index, 1)
+        }
+
+        state.user = user
+    },
+    saveNews: (state: IUserStore, action: PayloadAction<INews>) => {
+        const user = state.user
+        const news = action.payload
+
+        const includesNews = user?.saves?.find((n) => n.id === news.id)
+        if (!includesNews) {
+            user?.saves?.push(news)
+        }
+
+        state.user = user
+    },
+    unsaveNews: (state: IUserStore, action: PayloadAction<INews>) => {
+        const user = state.user
+        const news = action.payload
+
+        const index = user?.saves?.findIndex((n) => n.id === news.id) as number
+        if (index > -1) {
+            user?.saves?.splice(index, 1)
+        }
+
+        state.user = user
+    },
 }

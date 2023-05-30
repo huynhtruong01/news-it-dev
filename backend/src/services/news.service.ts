@@ -14,7 +14,7 @@ import {
     sortQuery,
 } from '@/utils'
 import { io } from 'server'
-import { userService, notifyService } from '.'
+import { userService } from '.'
 
 class NewsService {
     constructor(private newsRepository = AppDataSource.getRepository(News)) {}
@@ -356,18 +356,6 @@ class NewsService {
             const newNews = await this.updateAll(newsId, news)
 
             io.to(newNews?.slug as string).emit('likeNews', newNews)
-
-            const notify = {
-                userId: user.id,
-                newsId: news.id,
-                user,
-                news,
-                text: 'liked your news',
-                recipients: [news.user],
-                readUsers: [],
-            }
-            const newNotify = await notifyService.create(notify)
-            io.to(news.user.id.toString()).emit('notifyNews', newNotify)
 
             return newNews
         } catch (error) {

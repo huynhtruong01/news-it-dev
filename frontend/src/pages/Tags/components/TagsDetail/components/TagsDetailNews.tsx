@@ -1,14 +1,13 @@
-import { EmptyList } from '@/components/Common'
+import { EmptyList, NewsList } from '@/components/Common'
 import { SearchFilter } from '@/components/Filters'
 import { tagHeader } from '@/data'
-import { ArticleItem } from '@/features/ArticleContainer/components'
 import { INews, INewsFilters, INewsStatus } from '@/models'
 import { theme } from '@/utils'
-import { Box, BoxProps, Grid, Stack } from '@mui/material'
+import { Box, BoxProps, Stack } from '@mui/material'
 import { Dispatch, SetStateAction, useMemo } from 'react'
 
 export interface ITagsDetailNewsProps extends BoxProps {
-    news?: INews[]
+    news: INews[]
     filters: INewsFilters
     setFilters: Dispatch<SetStateAction<INewsFilters>>
 }
@@ -20,7 +19,7 @@ export function TagsDetailNews({
     ...rest
 }: ITagsDetailNewsProps) {
     const newNews = useMemo(() => {
-        return news?.length ? news : []
+        return news && news?.length ? news : []
     }, [news])
 
     const handleSetStatus = (value: INewsStatus) => {
@@ -80,13 +79,7 @@ export function TagsDetailNews({
 
             <Box>
                 {!newNews.length && <EmptyList title="No news here" />}
-                <Grid container columns={12} spacing={2}>
-                    {newNews.map((article) => (
-                        <Grid item md={6} key={article.id}>
-                            <ArticleItem article={article} />
-                        </Grid>
-                    ))}
-                </Grid>
+                <NewsList newsList={newNews || []} />
             </Box>
         </Box>
     )

@@ -15,7 +15,7 @@ import {
     SearchNews,
 } from '@/pages'
 import { Header, ScrollTop, SocketClient } from '@components/common/index'
-import { MainLayout } from '@layouts/index'
+import { EmptyLayout, MainLayout } from '@layouts/index'
 import { Box } from '@mui/material'
 import { Route, Routes } from 'react-router-dom'
 import { MainContent } from '@features/index'
@@ -46,27 +46,142 @@ function App({ pSetSocket }: IAppProps) {
     return (
         <Box>
             <SocketClient />
+
             <Header />
-            <MainLayout>
-                <Routes>
-                    <Route path={'/'} element={<MainContent />} />
-                    <Route path={'/login'} element={<Login />} />
-                    <Route path={'/signup'} element={<Signup />} />
-                    <Route path={'/active/:activeToken'} element={<ActiveAccount />} />
-                    <Route path={'/news/:slug'} element={<News />} />
-                    <Route path={'/profile'} element={<Profile />} />
-                    <Route path={'/profile/:username'} element={<ProfileUser />} />
-                    <Route path={'/settings'} element={<Settings />} />
-                    <Route path={'/dashboard/*'} element={<Dashboard />} />
-                    <Route path={'/tags/*'} element={<Tags />} />
-                    <Route path={'/reading-list'} element={<ReadingList />} />
-                    <Route path={'/signout-confirm'} element={<Signout />} />
-                    <Route path={'/create-news'} element={<CreateNews />} />
-                    <Route path={'/update-news'} element={<CreateNews />} />
-                    <Route path={'/notifications'} element={<Notifications />} />
-                    <Route path={'/search'} element={<SearchNews />} />
-                </Routes>
-            </MainLayout>
+            <Routes>
+                {/* MAIN LAYOUT */}
+                <Route
+                    path={'/'}
+                    element={
+                        <MainLayout>
+                            <MainContent />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/login'}
+                    element={
+                        <MainLayout>
+                            <Login />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/signup'}
+                    element={
+                        <MainLayout>
+                            <Signup />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/active/:activeToken'}
+                    element={
+                        <MainLayout>
+                            <ActiveAccount />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/news/:slug'}
+                    element={
+                        <MainLayout>
+                            <News />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/settings'}
+                    element={
+                        <MainLayout>
+                            <Settings />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/dashboard/*'}
+                    element={
+                        <MainLayout>
+                            <Dashboard />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/tags/*'}
+                    element={
+                        <MainLayout>
+                            <Tags />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/reading-list'}
+                    element={
+                        <MainLayout>
+                            <ReadingList />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/signout-confirm'}
+                    element={
+                        <MainLayout>
+                            <Signout />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/create-news'}
+                    element={
+                        <MainLayout>
+                            <CreateNews />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/update-news'}
+                    element={
+                        <MainLayout>
+                            <CreateNews />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/notifications'}
+                    element={
+                        <MainLayout>
+                            <Notifications />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/search'}
+                    element={
+                        <MainLayout>
+                            <SearchNews />
+                        </MainLayout>
+                    }
+                />
+
+                {/* EMPTY LAYOUT */}
+                <Route
+                    path={'/profile'}
+                    element={
+                        <EmptyLayout>
+                            <Profile />
+                        </EmptyLayout>
+                    }
+                />
+                <Route
+                    path={'/profile/:username'}
+                    element={
+                        <EmptyLayout>
+                            <ProfileUser />
+                        </EmptyLayout>
+                    }
+                />
+            </Routes>
+
             <ScrollTop />
         </Box>
     )

@@ -28,5 +28,16 @@ const userSlice = createSlice({
     extraReducers,
 })
 
-export const { saveUserLogin, signout, deleteNewsUser, followNotify } = userSlice.actions
+export const {
+    saveUserLogin,
+    signout,
+    deleteNewsUser,
+    followNotify,
+    followUser,
+    unfollowUser,
+    likeNews,
+    unlikeNews,
+    saveNews,
+    unsaveNews,
+} = userSlice.actions
 export default userSlice.reducer

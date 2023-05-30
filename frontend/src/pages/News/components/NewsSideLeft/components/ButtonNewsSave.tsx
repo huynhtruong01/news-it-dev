@@ -2,6 +2,7 @@ import { newsApi } from '@/api'
 import { INews, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
+import { saveNews, unsaveNews } from '@/store/user'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
@@ -17,13 +18,16 @@ export interface IButtonNewsSaveProps extends BoxProps {
     pUser: IUser | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
     pSetShowModalAuth: (isShow: boolean) => void
+    pSaveNews: (data: INews) => void
+    pUnSaveNews: (data: INews) => void
 }
 
 function ButtonNewsSave({
     news,
     pUser,
-    pGetProfile,
     pSetShowModalAuth,
+    pSaveNews,
+    pUnSaveNews,
     ...rest
 }: IButtonNewsSaveProps) {
     const [numSaves, setNumSaves] = useState<number>(news?.numSaves || 0)
@@ -31,7 +35,6 @@ function ButtonNewsSave({
 
     useEffect(() => {
         if (!news) return
-        setNumSaves(news?.numSaves as number)
 
         if (pUser?.id) {
             const isLiked = pUser?.saves?.find((n) => n.id === news.id)
@@ -52,12 +55,14 @@ function ButtonNewsSave({
 
             if (news.id) {
                 if (saved) {
+                    setNumSaves(numSaves - 1)
+                    pUnSaveNews(news)
                     await newsApi.unsaveNews(news.id)
                 } else {
+                    setNumSaves(numSaves + 1)
+                    pSaveNews(news)
                     await newsApi.saveNews(news.id)
                 }
-
-                await pGetProfile()
             }
         } catch (error) {
             throw new Error(error as string)
@@ -116,6 +121,8 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+        pSaveNews: (data: INews) => dispatch(saveNews(data)),
+        pUnSaveNews: (data: INews) => dispatch(unsaveNews(data)),
     }
 }
 
