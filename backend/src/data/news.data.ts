@@ -8,12 +8,12 @@ export const relationNewsData = {
         followers: true,
     },
     hashTags: true,
-    comments: {
-        childrenComments: {
-            user: true,
-        },
-        user: true,
-        news: true,
-        parentComment: true,
-    },
+    // comments: {
+    //     childrenComments: {
+    //         user: true,
+    //     },
+    //     user: true,
+    //     news: true,
+    //     parentComment: true,
+    // },
 }

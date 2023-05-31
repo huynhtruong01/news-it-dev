@@ -515,4 +515,5 @@ export const initUserProfileValues: IUserData = {
     education: '',
     isAdmin: false,
     work: '',
+    bandingColor: '#ffffff',
 }

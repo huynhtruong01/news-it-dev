@@ -1,11 +1,17 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography, Grid } from '@mui/material'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { SettingsForm } from '@/pages/Settings/components'
+import {
+    SettingsProfile,
+    SettingsAccount,
+    SettingsNav,
+} from '@/pages/Settings/components'
 import { theme } from '@/utils'
 import { IUser } from '@/models'
 import { connect } from 'react-redux'
 import { AppState } from '@/store'
+import { Routes, Route } from 'react-router-dom'
+import { SettingsModalDelete } from '@/pages/Settings/components'
 
 export interface ISettingsProps {
     pUser: IUser | null
@@ -44,9 +50,25 @@ function Settings({ pUser }: ISettingsProps) {
                 </Typography>
 
                 <Box marginTop={2}>
-                    <SettingsForm user={pUser} />
+                    <Grid container spacing={2}>
+                        <Grid
+                            item
+                            sx={{
+                                width: 240,
+                            }}
+                        >
+                            <SettingsNav />
+                        </Grid>
+                        <Grid item md>
+                            <Routes>
+                                <Route path="profile" element={<SettingsProfile />} />
+                                <Route path="accounts" element={<SettingsAccount />} />
+                            </Routes>
+                        </Grid>
+                    </Grid>
                 </Box>
             </Stack>
+            <SettingsModalDelete />
         </Box>
     )
 }

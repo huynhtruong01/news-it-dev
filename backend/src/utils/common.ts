@@ -13,6 +13,7 @@ export const createUserData = (data: User): User => {
     user.password = data.password
     user.dateJoined = new Date()
     user.isAdmin = data.isAdmin
+    user.bandingColor = data.bandingColor ? data.bandingColor : '#ffffff'
     user.avatar = !data.avatar ? AVATAR : data.avatar
 
     return user

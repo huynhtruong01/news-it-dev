@@ -1,5 +1,5 @@
 import AxiosClient from '.'
-import { ILoginValues, ISignupValues } from '@models/index'
+import { ILoginValues, IResetPassword, ISignupValues } from '@models/index'
 
 const BASE_URL = '/auth'
 
@@ -42,4 +42,16 @@ export const activeUser = (token: string) => {
 
 export const logout = () => {
     return AxiosClient.get(`${BASE_URL}/logout`)
+}
+
+export const resetPassword = (data: IResetPassword) => {
+    return AxiosClient.post(`${BASE_URL}/reset-password`, data).then((res) => res.data)
+}
+
+export const deleteMe = () => {
+    return AxiosClient.delete(`${BASE_URL}/delete-me`)
+}
+
+export const forgotPassword = (data: IResetPassword) => {
+    return AxiosClient.post(`${BASE_URL}/forgot-password`, data)
 }

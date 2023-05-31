@@ -22,6 +22,7 @@ export interface IUserData {
     skillLanguages?: string
     education?: string
     work?: string
+    bandingColor?: string
     numFollowing?: number
     numFollowers?: number
     followers?: IUser[]

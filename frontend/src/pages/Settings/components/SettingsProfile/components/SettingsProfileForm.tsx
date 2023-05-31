@@ -1,5 +1,5 @@
 import { userApi } from '@/api'
-import { ImageField, InputField } from '@/components/FormFields'
+import { ImageField, InputField, ColorField } from '@/components/FormFields'
 import { SIZE_10_MB } from '@/consts'
 import { initUserProfileValues } from '@/data'
 import { IUser, IUserData } from '@/models'
@@ -16,12 +16,16 @@ import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 
-export interface ISettingsFormProps extends BoxProps {
+export interface ISettingsProfileFormProps extends BoxProps {
     user: IUser | null
     pSaveUserLogin: (data: IUser) => void
 }
 
-export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormProps) {
+export function SettingsProfileForm({
+    user,
+    pSaveUserLogin,
+    ...rest
+}: ISettingsProfileFormProps) {
     const { enqueueSnackbar } = useSnackbar()
     const navigate = useNavigate()
     const schema = yup.object().shape({
@@ -44,6 +48,7 @@ export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormPro
                 if (user.avatar) return true
                 return checkSizeImg(file, SIZE_10_MB)
             }),
+        bandingColor: yup.string(),
     })
 
     const form = useForm<IUserData>({
@@ -205,23 +210,31 @@ export function SettingsForm({ user, pSaveUserLogin, ...rest }: ISettingsFormPro
                 </Box>
 
                 <Box component={Paper} elevation={1} padding={3}>
+                    <Typography component="h2" variant="h5" fontWeight={700}>
+                        Branding
+                    </Typography>
+                    <Box paddingTop={2}>
+                        <ColorField
+                            form={form}
+                            name={'brand'}
+                            label={'Brand color'}
+                            disabled={isSubmitting}
+                            placeholder={'Enter color'}
+                        />
+                    </Box>
+                </Box>
+
+                <Box component={Paper} elevation={1} padding={3}>
                     <LoadingButton
                         type="submit"
                         fullWidth
                         loading={isSubmitting}
-                        // loadingIndicator={
-                        //     <CircularProgress
-                        //         color="inherit"
-                        //         size={16}
-                        //         sx={{ paddingLeft: '5px', paddingRight: '5px' }}
-                        //     />
-                        // }
                         loadingPosition="start"
                         variant="contained"
                         disabled={isSubmitting}
                         sx={{
                             backgroundColor: theme.palette.primary.light,
-                            padding: theme.spacing(1.5),
+                            padding: 1.5,
                             fontWeight: 500,
                             '&:hover': {
                                 backgroundColor: theme.palette.primary.dark,
@@ -242,4 +255,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(SettingsForm)
+export default connect(null, mapDispatchToProps)(SettingsProfileForm)

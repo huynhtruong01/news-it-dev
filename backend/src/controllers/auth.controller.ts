@@ -441,28 +441,33 @@ class AuthController {
     // forgot password (POST)
     async resetPassword(req: Request, res: Response) {
         try {
-            const { email, password, confirmPassword } = req.body
+            const { emailAddress, password, confirmPassword } = req.body
 
-            if (password !== confirmPassword) {
-                res.status(StatusCode.BAD_REQUEST).json({
-                    results: Results.ERROR,
-                    status: StatusText.FAILED,
-                    message: 'Password is not equal confirm password.',
-                })
-                return
-            }
-
-            const user = await authService.getByEmail(email)
+            const user = await authService.getByEmail(emailAddress)
             if (!user) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
-                    message: `Not found this user with email ${email}.`,
+                    message: `Not found this user with email ${emailAddress}.`,
                 })
                 return
             }
 
-            const hashPassword = await commonService.hashPassword(password)
+            const checkPassword = await commonService.comparePassword(
+                password,
+                user.password as string
+            )
+
+            if (!checkPassword) {
+                res.status(StatusCode.BAD_REQUEST).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: `Wrong password.`,
+                })
+                return
+            }
+
+            const hashPassword = await commonService.hashPassword(confirmPassword)
             user.password = hashPassword
 
             const newUser = await userService.update(user.id, user)
@@ -514,7 +519,7 @@ class AuthController {
     }
 
     // delete your self (DELETE)
-    async deleteYourSelf(req: RequestUser, res: Response) {
+    async deleteMe(req: RequestUser, res: Response) {
         try {
             if (req.user?.id) {
                 const user = await userService.delete(Number(req.user.id))
@@ -589,7 +594,50 @@ class AuthController {
         }
     }
 
-    // TODO: change password
+    // forgot password
+    async forgotPassword(req: Request, res: Response) {
+        try {
+            const { emailAddress, password, confirmPassword } = req.body
+
+            const user = await authService.getByEmail(emailAddress)
+            if (!user) {
+                res.status(StatusCode.NOT_FOUND).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: `Not found this user with email ${emailAddress}.`,
+                })
+                return
+            }
+
+            if (password !== confirmPassword) {
+                res.status(StatusCode.BAD_REQUEST).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Password is not equal confirm password.',
+                })
+                return
+            }
+
+            const hashPassword = await commonService.hashPassword(password)
+            user.password = hashPassword
+
+            const newUser = await userService.update(user.id, user)
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    user: newUser,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
 }
 
 export const authController = new AuthController()

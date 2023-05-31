@@ -51,6 +51,10 @@ function ButtonNewsLike({
         }
     }, [pUser, news])
 
+    useEffect(() => {
+        setNumLikes(news?.numLikes as number)
+    }, [news])
+
     const handleLikeNews = async () => {
         try {
             if (!pUser?.id) {

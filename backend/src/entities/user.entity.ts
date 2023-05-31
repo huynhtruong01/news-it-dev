@@ -116,6 +116,12 @@ export class User extends BaseEntity {
     work?: string
 
     @Column({
+        type: 'text',
+        default: '#ffffff',
+    })
+    bandingColor?: string
+
+    @Column({
         type: 'int',
         default: 0,
     })

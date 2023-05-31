@@ -17,3 +17,9 @@ export interface IFacebookLoginParams {
     accessToken: string
     userId: string
 }
+
+export interface IResetPassword {
+    emailAddress: string
+    password: string
+    confirmPassword: string
+}

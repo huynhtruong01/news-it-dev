@@ -15,25 +15,25 @@ import { PersistGate } from 'redux-persist/integration/react'
 const persistor = persistStore(store)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <BrowserRouter>
-                    <ThemeProvider theme={theme}>
-                        <SnackbarProvider
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
-                            }}
-                            autoHideDuration={2000}
-                        >
-                            <CssBaseline>
-                                <App />
-                            </CssBaseline>
-                        </SnackbarProvider>
-                    </ThemeProvider>
-                </BrowserRouter>
-            </PersistGate>
-        </Provider>
-    </React.StrictMode>
+    // <React.StrictMode>
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+            <BrowserRouter>
+                <ThemeProvider theme={theme}>
+                    <SnackbarProvider
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                        autoHideDuration={2000}
+                    >
+                        <CssBaseline>
+                            <App />
+                        </CssBaseline>
+                    </SnackbarProvider>
+                </ThemeProvider>
+            </BrowserRouter>
+        </PersistGate>
+    </Provider>
+    // </React.StrictMode>
 )

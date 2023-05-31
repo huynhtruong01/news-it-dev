@@ -1,30 +1,40 @@
-import { InputField, PasswordField, CheckBoxField } from '@/components/FormFields'
-import { ILoginValues } from '@/models'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { Box } from '@mui/material'
+import { InputField, PasswordField } from '@/components/FormFields'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { IResetPassword } from '@/models'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { enqueueSnackbar } from 'notistack'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import { initLoginValues } from '@/data'
-import { enqueueSnackbar } from 'notistack'
-import LoadingButton from '@mui/lab/LoadingButton'
 import { theme } from '@/utils'
 
-export interface ILoginFormProps {
-    onLoginSubmit: (values: ILoginValues) => Promise<void>
+export interface IForgotPasswordFormProps {
+    onSetPassword: (data: IResetPassword) => Promise<void>
 }
 
 const schema = yup.object().shape({
     emailAddress: yup.string().required('Please enter email.').email('Invalid email'),
     password: yup
         .string()
-        .required('Please enter password.')
-        .min(6, 'Enter password at least six characters.'),
-    rememberMe: yup.boolean(),
+        .required('Please enter new password.')
+        .min(6, 'Please enter new password at least six characters.'),
+    confirmPassword: yup
+        .string()
+        .required('Please enter confirm password.')
+        .oneOf([yup.ref('password')], 'Confirm password not matched.')
+        .min(6, 'Please enter confirm password at least six characters.'),
 })
 
-export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
-    const form = useForm<ILoginValues>({
-        defaultValues: initLoginValues,
+export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) {
+    const navigate = useNavigate()
+
+    const form = useForm<IResetPassword>({
+        defaultValues: {
+            emailAddress: '',
+            password: '',
+            confirmPassword: '',
+        },
         resolver: yupResolver(schema),
     })
 
@@ -34,30 +44,31 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
         formState: { isSubmitting },
     } = form
 
-    const handleLoginSubmit = async (values: ILoginValues) => {
+    const handleSetPassword = async (values: IResetPassword) => {
         try {
-            await onLoginSubmit(values)
+            await onSetPassword(values)
+
             reset()
+            enqueueSnackbar('Change your password successfully', {
+                variant: 'success',
+            })
+            navigate('/login')
         } catch (error) {
-            enqueueSnackbar(error.message, {
+            enqueueSnackbar((error as Error).message, {
                 variant: 'error',
             })
         }
     }
 
     return (
-        <Box component="form" onSubmit={handleSubmit(handleLoginSubmit)}>
-            <Box
-                sx={{
-                    marginBottom: 3,
-                }}
-            >
+        <Box component={'form'} onSubmit={handleSubmit(handleSetPassword)}>
+            <Box marginBottom={3}>
                 <InputField
                     form={form}
                     label="Email"
                     name="emailAddress"
-                    disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
+                    disabled={isSubmitting}
                 />
                 <PasswordField
                     form={form}
@@ -65,10 +76,10 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     name="password"
                     disabled={isSubmitting}
                 />
-                <CheckBoxField
+                <PasswordField
                     form={form}
-                    label="Remember me"
-                    name="rememberMe"
+                    label="Confirm password"
+                    name="Confirm password"
                     disabled={isSubmitting}
                 />
             </Box>
@@ -88,7 +99,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     },
                 }}
             >
-                Login
+                Change my password
             </LoadingButton>
         </Box>
     )

@@ -98,7 +98,7 @@ class UserService {
                 where: {
                     id,
                 },
-                select: selectUserData,
+                // select: selectUserData,
                 relations: relationDataUser,
             })
             if (!user) return null

@@ -17,12 +17,12 @@ export function NotificationNavFilters({
     const handleNavFilters = (value: INotifyRead) => {
         if (value === ALL) {
             setFilters((prev) => {
-                const newPrev = { ...prev }
+                const newPrev = { ...prev, page: 1 }
                 delete newPrev.isRead
                 return newPrev
             })
         } else {
-            setFilters((prev) => ({ ...prev, isRead: value }))
+            setFilters((prev) => ({ ...prev, isRead: value, page: 1 }))
         }
     }
 

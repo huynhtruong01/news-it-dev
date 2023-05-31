@@ -46,6 +46,10 @@ function ButtonNewsSave({
         }
     }, [pUser, news])
 
+    useEffect(() => {
+        setNumSaves(news?.numSaves as number)
+    }, [news])
+
     const handleSaveNews = async () => {
         try {
             if (!pUser?.id) {

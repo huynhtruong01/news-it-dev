@@ -18,10 +18,12 @@ export function NewsSideRightRelation({
     ...rest
 }: INewsSideRightRelationProps) {
     const [newsTagsList, setNewsTagsList] = useState<INews[]>([])
+    const [newHashTagIds, setNewHashTagIds] = useState<number[]>([])
     // CREATE STATE SAVE NEWS LIST
     // FETCH NEWS BY HASH TAGS IDS FOR RELATIONS
 
     useEffect(() => {
+        if (newHashTagIds.length === hashTagIds.length || !hashTagIds) return
         ;(async () => {
             try {
                 const filters: IFilters = {
@@ -35,11 +37,12 @@ export function NewsSideRightRelation({
 
                 const newNewsList = res.data.news.filter((n: INews) => n.id !== newsId)
                 setNewsTagsList(newNewsList)
+                setNewHashTagIds(hashTagIds)
             } catch (error) {
                 throw new Error(error as string)
             }
         })()
-    }, [hashTagIds])
+    }, [])
 
     return (
         <Box {...rest} component={Paper} borderRadius={theme.spacing(0.75)}>

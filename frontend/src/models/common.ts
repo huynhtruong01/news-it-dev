@@ -56,3 +56,9 @@ export type ISynthetic = INews | IHashTag | IUser | IRole
 export type IImgType = string | File
 
 export type IStatus = Status.DRAFT | Status.PUBLIC | Status.UNPUBLIC
+
+export interface ISettingSetPassword {
+    currentPassword: string
+    password: string
+    confirmPassword: string
+}

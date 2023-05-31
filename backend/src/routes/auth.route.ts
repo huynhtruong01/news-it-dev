@@ -14,10 +14,11 @@ router.route('/check-email').post(authController.checkEmail)
 router.route('/active-user').post(authController.activeUser)
 router.route('/google-login').post(authController.googleLogin)
 router.route('/facebook-login').post(authController.facebookLogin)
+router.route('/forgot-password').post(authController.forgotPassword)
 
 // has user to check
 router.use(authMiddleware.getUser)
 
-router.route('/delete-your-self').delete(authController.deleteYourSelf)
+router.route('/delete-me').delete(authController.deleteMe)
 
 export default router

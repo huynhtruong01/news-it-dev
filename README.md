@@ -192,3 +192,7 @@ server.ts
 - Then, after create notify, it need to emit for client to add new notify to redux client.
 
 > [https://www.youtube.com/watch?v=qikE08Zrnds&list=PLs4co9a6NhMyAfSnDg1MKGwLdLx0OA07d&index=33](https://www.youtube.com/watch?v=qikE08Zrnds&list=PLs4co9a6NhMyAfSnDg1MKGwLdLx0OA07d&index=33)
+
+### MULTI LANGUAGES (i18next)
+
+> [https://react.i18next.com/latest/using-with-hooks](https://react.i18next.com/latest/using-with-hooks)

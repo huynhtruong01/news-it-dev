@@ -1,6 +1,7 @@
 import {
     Login,
     News,
+    ForgotPassword,
     Signup,
     Profile,
     Settings,
@@ -24,6 +25,7 @@ import io, { Socket } from 'socket.io-client'
 import { connect, useDispatch } from 'react-redux'
 import { AppDispatch } from '@/store'
 import { setValuesSocket } from '@/store/socket'
+import i18n from './i18n'
 
 export interface IAppProps {
     pSetSocket: (socket: Socket) => void
@@ -75,6 +77,14 @@ function App({ pSetSocket }: IAppProps) {
                     }
                 />
                 <Route
+                    path={'/forgot-password'}
+                    element={
+                        <MainLayout>
+                            <ForgotPassword />
+                        </MainLayout>
+                    }
+                />
+                <Route
                     path={'/active/:activeToken'}
                     element={
                         <MainLayout>
@@ -91,7 +101,7 @@ function App({ pSetSocket }: IAppProps) {
                     }
                 />
                 <Route
-                    path={'/settings'}
+                    path={'/settings/*'}
                     element={
                         <MainLayout>
                             <Settings />

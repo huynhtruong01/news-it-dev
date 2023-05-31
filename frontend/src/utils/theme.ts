@@ -59,6 +59,8 @@ let theme = createTheme({
                         boxShadow: 'none',
                         fontWeight: 400,
                         fontSize: '16px',
+                        borderRadius: '6px',
+
                         '&:hover': {
                             boxShadow: 'none',
                         },

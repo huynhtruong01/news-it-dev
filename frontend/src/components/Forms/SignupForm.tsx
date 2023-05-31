@@ -111,13 +111,13 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                 type="submit"
                 fullWidth
                 loading={isSubmitting}
-                loadingIndicator={
-                    <CircularProgress
-                        color="inherit"
-                        size={16}
-                        sx={{ paddingLeft: '5px', paddingRight: '5px' }}
-                    />
-                }
+                // loadingIndicator={
+                //     <CircularProgress
+                //         color="inherit"
+                //         size={16}
+                //         sx={{ paddingLeft: '5px', paddingRight: '5px' }}
+                //     />
+                // }
                 loadingPosition="start"
                 variant="contained"
                 disabled={isSubmitting}

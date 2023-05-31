@@ -11,4 +11,7 @@ export const reducers = {
     setShowModalDeleteComment(state: ICommonStore, action: PayloadAction<boolean>) {
         state.isShowModalDeleteComment = action.payload
     },
+    setShowModalDeleteAccount(state: ICommonStore, action: PayloadAction<boolean>) {
+        state.isShowModalDeleteAccount = action.payload
+    },
 }

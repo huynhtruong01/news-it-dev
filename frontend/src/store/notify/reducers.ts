@@ -30,15 +30,16 @@ export const reducers = {
 
         const indexFilters = newNotifiesFilters.findIndex((n) => n.id === notify.id)
         if (indexFilters > -1) {
-            newNotifiesFilters[indexFilters].readUsers.push(userId)
+            newNotifiesFilters[indexFilters].readUsers.push(userId.toString())
         }
 
         const index = newNotifies.findIndex((n) => n.id === notify.id)
         if (index > -1) {
-            newNotifies[indexFilters].readUsers.push(userId)
+            newNotifies[indexFilters].readUsers.push(userId.toString())
         }
 
-        state.numNotifications = state.numNotifications - 1
+        state.numNotifications =
+            state.numNotifications === 0 ? 0 : state.numNotifications - 1
         state.notifications = newNotifies
         state.notificationsFilter = newNotifiesFilters
     },

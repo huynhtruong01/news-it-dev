@@ -25,7 +25,7 @@ export function MainLayout({ children }: IMainLayoutProps) {
                 backgroundColor: theme.palette.grey['A100'],
             }}
         >
-            <ProgressBar marginTop={`${HEADER_HEIGHT + 4}px`} />
+            {/* <ProgressBar marginTop={`${HEADER_HEIGHT + 4}px`} /> */}
             <Container
                 sx={{
                     paddingTop: 2,

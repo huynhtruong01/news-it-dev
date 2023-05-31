@@ -112,7 +112,7 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
                             },
                         }}
                     >
-                        {/* TODO: WRITE LINK HERE */}
+                        {/* WRITE LINK HERE */}
                         <Link to={'/forgot-password'}>Forgot password?</Link>
                     </Typography>
                     <Typography

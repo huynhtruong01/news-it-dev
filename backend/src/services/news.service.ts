@@ -141,11 +141,10 @@ class NewsService {
         try {
             const news = await this.newsRepository
                 .createQueryBuilder('news')
-                .leftJoinAndSelect('news.hashTags', 'hashTag')
-                .where('hashTag.id IN (:...hashTagIds)')
+                .where('hashTagIds IN (:...hashTagIdsQuery)')
                 .andWhere('news.status = :status', { status: query.status })
                 .orderBy('news.createdAt', query.createdAt as IOrder)
-                .setParameter('hashTagIds', query.hashTagIds as number[])
+                .setParameter('hashTagIdsQuery', query.hashTagIds as number[])
                 .skip((+query.page - 1) * +query.limit)
                 .take(+query.limit)
                 .getMany()

@@ -1,0 +1,85 @@
+{
+    "main_home": {
+        "home": "Home",
+        "reading_list": "Reading List",
+        "tags": "Tags",
+        "popular_tags": "Popular Tags",
+        "create_news": "Create News"
+    },
+
+    "common": {
+        "relevant": "Relevant",
+        "latest": "Latest",
+        "top": "Top",
+        "search": "Search",
+        "all_tags": "All tags",
+        "news": "news",
+        "comment": "comment",
+        "followed": "followed",
+        "follow": "follow",
+        "followers": "followers",
+        "following": "following",
+        "min_read": "min read"
+    },
+
+    "button": {
+        "like": "Like",
+        "save": "Save",
+        "comment": "Comment",
+        "delete": "Delete",
+        "edit": "Edit",
+        "save_profile_info": "Save Profile Information",
+        "set_new_password": "Set New Password",
+        "delete_account": "Delete Account"
+    },
+
+    "profile": {
+        "edit_profile": "Edit profile",
+        "news_published": "news published",
+        "comments_written": "comments written",
+        "tags_followed": "tags followed",
+        "follow": "Follow",
+        "following": "Following"
+    },
+
+    "dashboard": {
+        "dashboard": "Dashboard",
+        "followers": "Followers",
+        "following_user": "Following user",
+        "following_tags": "Following tags",
+        "news_likes": "News likes",
+        "reading_list": "Reading list"
+    },
+
+    "status": {
+        "draft": "Draft",
+        "public": "Public",
+        "unpublic": "Unpublic"
+    },
+
+    "settings": {
+        "settings": "Settings for",
+        "Profile": "Profile",
+        "Accounts": "Accounts"
+    },
+
+    "input": {
+        "Username": "Username",
+        "First Name": "First Name",
+        "Last Name": "Last Name",
+        "Email": "Email",
+        "Profile Image": "Profile Image",
+        "Website URL": "Website URL",
+        "Bio": "Bio",
+        "Currently Learning": "Currently Learning",
+        "Skills Languages": "Skills Languages",
+        "Education": "Education",
+        "Work": "Work",
+        "Branding": "Branding",
+        "Current password": "Current password",
+        "Password": "Password",
+        "Confirm new password": "Confirm new password",
+        "Set new password": "Set new password",
+        "Delete account": "Delete account"
+    }
+}

@@ -139,7 +139,7 @@ export function ProfileHeader({
                                     backgroundColor: theme.palette.primary.dark,
                                 },
                             }}
-                            onClick={() => navigate('/settings')}
+                            onClick={() => navigate('/settings/profile')}
                         >
                             Edit profile
                         </Button>

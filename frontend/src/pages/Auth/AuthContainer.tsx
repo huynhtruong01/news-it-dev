@@ -35,13 +35,13 @@ export function AuthContainer({ children }: IAuthContainerProps) {
                             textAlign="center"
                             fontWeight={700}
                         >
-                            Welcome to DEV Community
+                            Welcome to News Communicate
                         </Typography>
                         <Typography
                             textAlign="center"
                             color={theme.palette.secondary.main}
                         >
-                            DEV Community is a community of 1,061,194 amazing developers
+                            News Communicate is a community for amazing developers
                         </Typography>
                     </Box>
                     <Box

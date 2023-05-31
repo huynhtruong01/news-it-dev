@@ -138,7 +138,7 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                     </Link>
                 </MenuItem>
                 <MenuItem>
-                    <Link to={'/settings'}>
+                    <Link to={'/settings/profile'}>
                         <Stack direction={'row'} alignItems={'center'}>
                             <ListItemIcon>
                                 <Settings fontSize="small" />
