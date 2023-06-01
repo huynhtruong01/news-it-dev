@@ -44,7 +44,9 @@ export function DashboardReadingList({ saves, numSaves }: IDashboardReadingListP
             </Stack>
 
             <Box>
-                {newSaves.length === 0 && <EmptyList title="No news reading" />}
+                {newSaves.length === 0 && (
+                    <EmptyList title={t('empty.no_news_reading')} />
+                )}
                 {newSaves.length && <NewsList newsList={newSaves} />}
             </Box>
         </Box>

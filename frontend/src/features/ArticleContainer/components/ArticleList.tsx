@@ -3,6 +3,7 @@ import { INews } from '@/models'
 import { Box, Grid } from '@mui/material'
 import { useMemo } from 'react'
 import { ArticleItem } from '.'
+import { useTranslation } from 'react-i18next'
 
 export interface IArticleListProps {
     articleList: INews[]
@@ -10,6 +11,8 @@ export interface IArticleListProps {
 }
 
 export function ArticleList({ loading, articleList }: IArticleListProps) {
+    const { t } = useTranslation()
+
     const newArticleList = useMemo(() => {
         return articleList?.length ? articleList : []
     }, [articleList])
@@ -17,7 +20,9 @@ export function ArticleList({ loading, articleList }: IArticleListProps) {
     return (
         <Box>
             {loading && <SkeletonNewsList />}
-            {!newArticleList.length && !loading && <EmptyList title="No news here" />}
+            {!newArticleList.length && !loading && (
+                <EmptyList title={t('empty.no_news')} />
+            )}
             {!!newArticleList.length && !loading && (
                 <Grid container spacing={2}>
                     {newArticleList.map((news) => (

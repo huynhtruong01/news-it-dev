@@ -59,7 +59,9 @@ export function DashboardNews({ newsList, newsCount, ...rest }: IDashboardNewsPr
             </Stack>
 
             <Stack gap={2}>
-                {newNewsList.length === 0 && <EmptyList title="No news you created" />}
+                {newNewsList.length === 0 && (
+                    <EmptyList title={t('empty.no_news_created')} />
+                )}
                 {newNewsList?.map((news) => (
                     <DashboardNewsItem key={news.id} news={news} />
                 ))}

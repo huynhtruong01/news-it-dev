@@ -184,6 +184,17 @@
         "success": "Đăng xuất thành công"
     },
 
+    "empty": {
+        "no_news": "Không có bài tin tức nào",
+        "no_user_follow": "Không có người dùng nào theo dõi",
+        "no_news_created": "Không có bài tin tức nào bạn đã tạo",
+        "no_news_liked": "Không có bài tin tức nào đã thích",
+        "no_news_reading": "Không có bài tin tức nào đã lưu",
+        "no_hash_tag_follow": "Không theo dõi thẻ nào",
+        "no_notifications": "Không có thông báo nào",
+        "no_news_reading_list": "Không có bài tin tức nào đã lưu"
+    },
+
     "liked your news": "đã thích bài viết của bạn",
     "reply to your comment": "đã phản hổi bình luận của bạn",
     "follow you": "đã theo dõi bạn"

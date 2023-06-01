@@ -80,7 +80,7 @@ export function TagsDetailNews({
             </Stack>
 
             <Box>
-                {!newNews.length && <EmptyList title="No news here" />}
+                {!newNews.length && <EmptyList title={t('empty.no_news')} />}
                 <NewsList newsList={newNews || []} />
             </Box>
         </Box>

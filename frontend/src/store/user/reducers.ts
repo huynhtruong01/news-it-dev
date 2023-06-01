@@ -107,4 +107,24 @@ export const reducers = {
 
         state.user = user
     },
+    unsaveUserFiltersNews: (state: IUserStore, action: PayloadAction<INews>) => {
+        const userFilters = state.userProfileFilter
+        const user = state.user
+        const news = action.payload
+
+        const indexFilters = userFilters?.saves?.findIndex(
+            (n) => n.id === news.id
+        ) as number
+        const index = user?.saves?.findIndex((n) => n.id === news.id) as number
+
+        if (indexFilters > -1) {
+            userFilters?.saves?.splice(indexFilters, 1)
+        }
+        if (index > -1) {
+            user?.saves?.splice(index, 1)
+        }
+
+        state.userProfileFilter = userFilters
+        state.user = user
+    },
 }

@@ -4,14 +4,31 @@ import { formatDate, theme } from '@/utils'
 import { Avatar, Box, Button, Stack, Typography, alpha } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { enqueueSnackbar } from 'notistack'
+import { AppDispatch } from '@/store'
+import { unsaveUserFiltersNews } from '@/store/user'
+import { connect } from 'react-redux'
+import { newsApi } from '@/api'
 
 export interface IReadingListNewsItemProps {
     article: INews
+    pUnSaveNews: (data: INews) => void
 }
 
-export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
+function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps) {
     const { t } = useTranslation()
     const linkUser = useLinkUser(article?.user as IUser)
+
+    const handleUnSaveNews = async () => {
+        try {
+            pUnSaveNews(article)
+            await newsApi.unsaveNews(article.id)
+        } catch (error) {
+            enqueueSnackbar((error as Error).message, {
+                variant: 'error',
+            })
+        }
+    }
 
     return (
         <Stack
@@ -130,9 +147,18 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                         color: theme.palette.primary.dark,
                     },
                 }}
+                onClick={handleUnSaveNews}
             >
                 {t('button.unsave')}
             </Button>
         </Stack>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pUnSaveNews: (data: INews) => dispatch(unsaveUserFiltersNews(data)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(ReadingListNewsItem)

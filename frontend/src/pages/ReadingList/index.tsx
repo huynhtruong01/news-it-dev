@@ -30,6 +30,7 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
     }, [])
 
     useEffect(() => {
+        if (!pUser?.id) return
         ;(async () => {
             try {
                 if (pUser?.id) {
@@ -43,7 +44,7 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
                 throw new Error(error as string)
             }
         })()
-    }, [pUser, filters])
+    }, [filters])
 
     const numSaves = useMemo(() => {
         return pUserProfileFilter?.saves?.length || 0

@@ -44,7 +44,9 @@ export function DashboardNewsLikes({ newsLikes, numLikes }: IDashboardNewsLikesP
             </Stack>
 
             <Box>
-                {newNewsLikes.length === 0 && <EmptyList title="No news likes" />}
+                {newNewsLikes.length === 0 && (
+                    <EmptyList title={t('empty.no_news_liked')} />
+                )}
                 {newNewsLikes?.length && <NewsList newsList={newNewsLikes} />}
             </Box>
         </Box>

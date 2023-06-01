@@ -6,6 +6,7 @@ import {
 } from '@/pages/Dashboard/components/DashboardFollow/components'
 import { useMemo, useState } from 'react'
 import { EmptyList } from '@/components/Common'
+import { useTranslation } from 'react-i18next'
 
 export interface IDashboardFollowProps extends BoxProps {
     title: string
@@ -19,6 +20,7 @@ export function DashboardFollow({
     numFollows,
     ...rest
 }: IDashboardFollowProps) {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<INewsFilters>({
         search: '',
     })
@@ -55,7 +57,7 @@ export function DashboardFollow({
                 <DashboardFollowFilters setFilters={setFilters} />
             </Stack>
 
-            {newFollows.length === 0 && <EmptyList title="No user follow" />}
+            {newFollows.length === 0 && <EmptyList title={t('empty.no_user_follow')} />}
             <Grid container spacing={3}>
                 {newFollows.map((follow) => (
                     <Grid key={follow.id} item md={4}>

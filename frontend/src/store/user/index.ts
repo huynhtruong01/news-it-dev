@@ -39,5 +39,6 @@ export const {
     unlikeNews,
     saveNews,
     unsaveNews,
+    unsaveUserFiltersNews,
 } = userSlice.actions
 export default userSlice.reducer

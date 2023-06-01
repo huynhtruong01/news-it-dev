@@ -184,6 +184,17 @@
         "success": "Sign out successfully"
     },
 
+    "empty": {
+        "no_news": "No news",
+        "no_user_follow": "No user follow",
+        "no_news_created": "No news you created",
+        "no_news_liked": "No news likes",
+        "no_news_reading": "No news reading",
+        "no_hash_tag_follow": "No hash tag follow",
+        "no_notifications": "No notification",
+        "no_news_reading_list": "No news reading list"
+    },
+
     "liked your news": "liked your news",
     "reply to your comment": "reply to your comment",
     "follow you": "follow you"

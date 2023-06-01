@@ -46,7 +46,7 @@ export function DashboardTags({ tags, numTags }: IDashboardTagsProps) {
                 <DashboardTagFilters setFilters={setFilters} />
             </Stack>
 
-            {newTags.length === 0 && <EmptyList title="No hash tag follow" />}
+            {newTags.length === 0 && <EmptyList title={t('empty.no_hash_tag_follow')} />}
             <Grid container spacing={3}>
                 {newTags.map((tag) => (
                     <Grid key={tag.id} item md={4}>
