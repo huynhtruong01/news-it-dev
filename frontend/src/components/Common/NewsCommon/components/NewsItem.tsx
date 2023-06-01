@@ -21,6 +21,7 @@ import { RiChat3Line } from 'react-icons/ri'
 import { likeNews, saveNews, unlikeNews, unsaveNews } from '@/store/user'
 import { likeNewsApi } from '@/store/news/thunkApi'
 import { Socket } from 'socket.io-client'
+import { useTranslation } from 'react-i18next'
 
 export interface INewsItemProps {
     news: INews
@@ -55,6 +56,7 @@ function NewsItem({
     pUnSaveNews,
     pLikeNewsApi,
 }: INewsItemProps) {
+    const { t } = useTranslation()
     const styles = useStyles()
     const [liked, setLiked] = useState<boolean>(false)
     const [saved, setSaved] = useState<boolean>(false)
@@ -225,7 +227,7 @@ function NewsItem({
                             }}
                             onClick={handleLikeNews}
                         >
-                            {numLikes} Like
+                            {numLikes} {t('button.likes')}
                         </Button>
                         <Button
                             className={styles.button}
@@ -233,7 +235,7 @@ function NewsItem({
                             variant="contained"
                             onClick={handleNavigateComment}
                         >
-                            Comment
+                            {t('button.comment')}
                         </Button>
                     </Stack>
                     <Stack direction={'row'} alignItems={'center'} gap={1.5}>
@@ -244,7 +246,7 @@ function NewsItem({
                                 color: alpha(theme.palette.secondary.main, 0.8),
                             }}
                         >
-                            {news.readTimes} min read
+                            {news.readTimes} {t('common.min_read')}
                         </Typography>
                         <Button
                             variant="contained"
@@ -271,7 +273,7 @@ function NewsItem({
                             }}
                             onClick={handleSaveNews}
                         >
-                            Save
+                            {t('button.save')}
                         </Button>
                     </Stack>
                 </Stack>

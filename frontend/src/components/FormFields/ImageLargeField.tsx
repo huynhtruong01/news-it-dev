@@ -5,6 +5,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { indigo, red } from '@mui/material/colors'
 import { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles({
     dragEnter: {
@@ -31,6 +32,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
     placeholder = '',
     ...rest
 }: IImageLargeFieldProps<TFormValues>) {
+    const { t } = useTranslation()
     const styles = useStyles()
     const imgInputRef = useRef<HTMLLabelElement | null>(null)
     const [img, setImg] = useState<string | undefined>(initValue)
@@ -154,7 +156,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                                             fontWeight: 400,
                                         }}
                                     >
-                                        Drag & Drop or Choose your file here.
+                                        {t('placeholder.drag_drop')}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -221,7 +223,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                                         },
                                     }}
                                 >
-                                    Cancel
+                                    {t('button.cancel')}
                                 </Box>
                             </Box>
                         </Box>

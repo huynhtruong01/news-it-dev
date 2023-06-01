@@ -1,5 +1,6 @@
 import { theme } from '@/utils'
 import { Box, Paper, Stack, Typography, alpha } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { AiOutlineUser } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
 
@@ -16,6 +17,8 @@ export function ProfileUserNumFollow({
     linkFollowed,
     linkFollowing,
 }: IProfileUserNumFollowProps) {
+    const { t } = useTranslation()
+
     return (
         <Box component={Paper} elevation={1} padding={2}>
             <Box
@@ -53,13 +56,17 @@ export function ProfileUserNumFollow({
                             <Typography>
                                 <AiOutlineUser />
                             </Typography>
-                            <Typography>{numFollowed} followed</Typography>
+                            <Typography>
+                                {numFollowed} {t('common.followed')}
+                            </Typography>
                         </Stack>
                         <Stack direction={'row'} alignItems={'center'} gap={1.5}>
                             <Typography>
                                 <AiOutlineUser />
                             </Typography>
-                            <Typography>{numFollowing} following</Typography>
+                            <Typography>
+                                {numFollowing} {t('common.following')}
+                            </Typography>
                         </Stack>
                     </>
                 )}
@@ -75,7 +82,9 @@ export function ProfileUserNumFollow({
                                 <Typography>
                                     <AiOutlineUser />
                                 </Typography>
-                                <Typography>{numFollowed} followed</Typography>
+                                <Typography>
+                                    {numFollowed} {t('common.followed')}
+                                </Typography>
                             </Stack>
                         </Link>
                         <Link to={linkFollowing}>
@@ -83,7 +92,9 @@ export function ProfileUserNumFollow({
                                 <Typography>
                                     <AiOutlineUser />
                                 </Typography>
-                                <Typography>{numFollowing} following</Typography>
+                                <Typography>
+                                    {numFollowing} {t('common.following')}
+                                </Typography>
                             </Stack>
                         </Link>
                     </>

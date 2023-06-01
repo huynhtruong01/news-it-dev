@@ -3,12 +3,15 @@ import { INews, INewsFilters } from '@/models'
 import { DashboardReadingListFilters } from '@/pages/Dashboard/components/DashboardReadingList/components'
 import { Box, Stack, Typography } from '@mui/material'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface IDashboardReadingListProps {
     saves: INews[]
+    numSaves: number
 }
 
-export function DashboardReadingList({ saves }: IDashboardReadingListProps) {
+export function DashboardReadingList({ saves, numSaves }: IDashboardReadingListProps) {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<INewsFilters>({
         search: '',
     })
@@ -35,7 +38,7 @@ export function DashboardReadingList({ saves }: IDashboardReadingListProps) {
                 marginBottom={2}
             >
                 <Typography component="h2" variant="h6" fontWeight={700}>
-                    Reading List
+                    {t('dashboard.reading_list')} ({numSaves})
                 </Typography>
                 <DashboardReadingListFilters setFilters={setFilters} />
             </Stack>

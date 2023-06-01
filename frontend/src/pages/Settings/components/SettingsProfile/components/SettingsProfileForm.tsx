@@ -15,6 +15,8 @@ import { useForm } from 'react-hook-form'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
+import { SettingsSelectLanguages } from '@/pages/Settings/components/SettingsProfile/components'
+import { useTranslation } from 'react-i18next'
 
 export interface ISettingsProfileFormProps extends BoxProps {
     user: IUser | null
@@ -26,6 +28,7 @@ export function SettingsProfileForm({
     pSaveUserLogin,
     ...rest
 }: ISettingsProfileFormProps) {
+    const { t } = useTranslation()
     const { enqueueSnackbar } = useSnackbar()
     const navigate = useNavigate()
     const schema = yup.object().shape({
@@ -97,7 +100,7 @@ export function SettingsProfileForm({
                 const res = await userApi.updateUser(newValues)
                 pSaveUserLogin(res.data.user)
 
-                enqueueSnackbar('Update profile successfully.', {
+                enqueueSnackbar(t('message.update_profile_success'), {
                     variant: 'success',
                 })
 
@@ -113,41 +116,41 @@ export function SettingsProfileForm({
             <Stack component="form" gap={3} onSubmit={handleSubmit(handleSaveInfoSubmit)}>
                 <Box component={Paper} elevation={1} padding={3}>
                     <Typography component="h2" variant="h5" fontWeight={700}>
-                        User
+                        {t('settings.user')}
                     </Typography>
                     <Box paddingTop={2}>
                         <InputField
                             form={form}
                             name="username"
-                            label="Username"
+                            label={t('input.username')}
                             disabled={isSubmitting}
                             placeholder={'John Doe'}
                         />
                         <InputField
                             form={form}
                             name="firstName"
-                            label="First Name"
+                            label={t('input.first_name')}
                             disabled={isSubmitting}
                             placeholder={'Doe'}
                         />
                         <InputField
                             form={form}
                             name="lastName"
-                            label="Last Name"
+                            label={t('input.last_name')}
                             disabled={isSubmitting}
                             placeholder={'John'}
                         />
                         <InputField
                             form={form}
                             name="emailAddress"
-                            label="Email"
+                            label={t('input.email')}
                             disabled={isSubmitting}
                             placeholder={'john.doe@example.com'}
                         />
                         <ImageField
                             form={form}
                             name="avatar"
-                            label="Profile Image"
+                            label={t('input.profile_image')}
                             disabled={isSubmitting}
                             initValue={user?.avatar}
                         />
@@ -156,20 +159,20 @@ export function SettingsProfileForm({
 
                 <Box component={Paper} elevation={1} padding={3}>
                     <Typography component="h2" variant="h5" fontWeight={700}>
-                        Other Information
+                        {t('settings.other_information')}
                     </Typography>
                     <Box paddingTop={2}>
                         <InputField
                             form={form}
                             name="websiteUrl"
-                            label="Website URL"
+                            label={t('input.website_url')}
                             disabled={isSubmitting}
                             placeholder={'https://yoursite.com'}
                         />
                         <InputField
                             form={form}
                             name="bio"
-                            label="Bio"
+                            label={t('input.bio')}
                             disabled={isSubmitting}
                             placeholder={'A short bio...'}
                             minRows={4}
@@ -178,7 +181,7 @@ export function SettingsProfileForm({
                         <InputField
                             form={form}
                             name="currentlyLearning"
-                            label="Currently Learning"
+                            label={t('input.currently_learning')}
                             disabled={isSubmitting}
                             minRows={4}
                             multiline
@@ -186,43 +189,47 @@ export function SettingsProfileForm({
                         <InputField
                             form={form}
                             name="skillLanguages"
-                            label="Skills Languages"
+                            label={t('input.skill_languages')}
                             disabled={isSubmitting}
-                            placeholder={'Any languages, frameworks,etc...'}
+                            placeholder={t('placeholder.skill_languages') as string}
                             minRows={4}
                             multiline
                         />
                         <InputField
                             form={form}
                             name="education"
-                            label="Education"
+                            label={t('input.education')}
                             disabled={isSubmitting}
-                            placeholder={'Where did you go to school?'}
+                            placeholder={
+                                t('placeholder.where_did_you_go_to_school') as string
+                            }
                         />
                         <InputField
                             form={form}
                             name="work"
-                            label="Work"
+                            label={t('input.work')}
                             disabled={isSubmitting}
-                            placeholder={'What do you do?'}
+                            placeholder={t('placeholder.what_do_you_do') as string}
                         />
                     </Box>
                 </Box>
 
                 <Box component={Paper} elevation={1} padding={3}>
                     <Typography component="h2" variant="h5" fontWeight={700}>
-                        Branding
+                        {t('settings.banding')}
                     </Typography>
                     <Box paddingTop={2}>
                         <ColorField
                             form={form}
                             name={'brand'}
-                            label={'Brand color'}
+                            label={t('input.banding_color')}
                             disabled={isSubmitting}
                             placeholder={'Enter color'}
                         />
                     </Box>
                 </Box>
+
+                <SettingsSelectLanguages />
 
                 <Box component={Paper} elevation={1} padding={3}>
                     <LoadingButton
@@ -241,7 +248,7 @@ export function SettingsProfileForm({
                             },
                         }}
                     >
-                        Save Profile Information
+                        {t('button.save_profile_info')}
                     </LoadingButton>
                 </Box>
             </Stack>

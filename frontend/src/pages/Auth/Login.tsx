@@ -13,6 +13,7 @@ import { setLs } from '@/utils'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect } from 'react'
 import { SIGNOUT_NAV } from '@/consts'
+import { useTranslation } from 'react-i18next'
 
 export interface ILoginProps {
     pUser: IUser | null
@@ -20,6 +21,7 @@ export interface ILoginProps {
 }
 
 function Login({ pUser, pSaveUserLogin }: ILoginProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -38,7 +40,7 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
             setLs(import.meta.env.VITE_ACCESS_TOKEN_KEY, res.data.accessToken)
             setLs(import.meta.env.VITE_REFRESH_TOKEN_KEY, res.data.refreshToken)
 
-            enqueueSnackbar('Log in successfully.', {
+            enqueueSnackbar(t('message.login_success'), {
                 variant: 'success',
             })
 

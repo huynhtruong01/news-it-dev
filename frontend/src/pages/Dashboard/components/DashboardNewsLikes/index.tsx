@@ -3,12 +3,15 @@ import { INews, INewsFilters } from '@/models'
 import { Box, Stack, Typography } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { DashboardNewsLikesFilters } from '@/pages/Dashboard/components/DashboardNewsLikes/components'
+import { useTranslation } from 'react-i18next'
 
 export interface IDashboardNewsLikesProps {
     newsLikes: INews[]
+    numLikes: number
 }
 
-export function DashboardNewsLikes({ newsLikes }: IDashboardNewsLikesProps) {
+export function DashboardNewsLikes({ newsLikes, numLikes }: IDashboardNewsLikesProps) {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<INewsFilters>({
         search: '',
     })
@@ -35,7 +38,7 @@ export function DashboardNewsLikes({ newsLikes }: IDashboardNewsLikesProps) {
                 marginBottom={2}
             >
                 <Typography component="h2" variant="h6" fontWeight={700}>
-                    News Likes
+                    {t('dashboard.news_likes')} ({numLikes})
                 </Typography>
                 <DashboardNewsLikesFilters setFilters={setFilters} />
             </Stack>

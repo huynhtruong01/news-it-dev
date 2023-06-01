@@ -17,12 +17,14 @@ import {
     alpha,
 } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { TFunction } from 'i18next'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 
 export interface INewsSideRightUserProps extends BoxProps {
+    t: TFunction<'translation', undefined, 'translation'>
     pUser: IUser | null
     pSocket: Socket | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
@@ -35,6 +37,7 @@ export interface INewsSideRightUserProps extends BoxProps {
 }
 
 function NewsSideRightUser({
+    t,
     pUser,
     pSocket,
     user,
@@ -170,7 +173,9 @@ function NewsSideRightUser({
                             }}
                             onClick={handleFollowClick}
                         >
-                            {followed === IsFollow.FOLLOW ? 'Follow' : 'Following'}
+                            {followed === IsFollow.FOLLOW
+                                ? t('profile.follow')
+                                : t('profile.following')}
                         </Button>
                     )}
                 </Box>
@@ -190,24 +195,24 @@ function NewsSideRightUser({
                 >
                     {user.bio && (
                         <Box component="li">
-                            <Box>Bio</Box>
+                            <Box>{t('input.bio')}</Box>
                             <Typography>{user.bio}</Typography>
                         </Box>
                     )}
                     {user.skillLanguages && (
                         <Box component="li">
-                            <Box>Skill Languages</Box>
+                            <Box>{t('input.Skill')}</Box>
                             <Typography>{user.skillLanguages}</Typography>
                         </Box>
                     )}
                     {user.work && (
                         <Box component="li">
-                            <Box>Work</Box>
+                            <Box>{t('input.work')}</Box>
                             <Typography>{user.work}</Typography>
                         </Box>
                     )}
                     <Box component="li">
-                        <Box>Date Joined</Box>
+                        <Box>{t('input.dated_join')}</Box>
                         <Typography>
                             {formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
                         </Typography>

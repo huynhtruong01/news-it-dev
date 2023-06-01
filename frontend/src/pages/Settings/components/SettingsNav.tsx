@@ -4,8 +4,10 @@ import { settingsNav } from '@/data'
 import { theme } from '@/utils'
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export function SettingsNav() {
+    const { t } = useTranslation()
     const [pathName, setPathName] = useState<string>('')
     const navigate = useNavigate()
     const location = useLocation()
@@ -24,14 +26,17 @@ export function SettingsNav() {
                         sx={{
                             borderRadius: theme.spacing(0.75),
                             backgroundColor:
-                                pathName === nav.name.toLowerCase()
+                                pathName === (nav.name as string).toLowerCase()
                                     ? theme.palette.primary.contrastText
                                     : 'transparent',
-                            fontWeight: pathName === nav.name.toLowerCase() ? 500 : 400,
+                            fontWeight:
+                                pathName === (nav.name as string).toLowerCase()
+                                    ? 500
+                                    : 400,
                             '&:hover': {
                                 color: theme.palette.primary.main,
                                 backgroundColor:
-                                    pathName === nav.name.toLowerCase()
+                                    pathName === (nav.name as string).toLowerCase()
                                         ? theme.palette.primary.contrastText
                                         : alpha(theme.palette.primary.main, 0.075),
                             },
@@ -41,7 +46,7 @@ export function SettingsNav() {
                             },
                         }}
                     >
-                        <Link to={nav.link}>{nav.name}</Link>
+                        <Link to={nav.link as string}>{t(`settings.${nav.name}`)}</Link>
                     </Box>
                 ))}
             </Stack>

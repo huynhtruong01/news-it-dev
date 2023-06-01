@@ -9,6 +9,7 @@ import { setInitValueForm } from '@/store/news'
 import { AppDispatch } from '@/store'
 import { initNewsFormValues } from '@/data'
 import { connect } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const generateNewValues = (values: INewsForm) => {
     const { hashTagOptionIds, hashTags, ...rest } = values
@@ -25,6 +26,7 @@ export interface ICreateNewsProps {
 }
 
 function CreateNews({ pSetInitValuesNewsForm }: ICreateNewsProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     // create news
@@ -49,7 +51,7 @@ function CreateNews({ pSetInitValuesNewsForm }: ICreateNewsProps) {
 
             await newsApi.addNews({ ...newValues, hashTagIds: ids })
 
-            enqueueSnackbar('Create News successfully.', {
+            enqueueSnackbar(t('message.create_success'), {
                 variant: 'success',
             })
             navigate('/')
@@ -80,7 +82,7 @@ function CreateNews({ pSetInitValuesNewsForm }: ICreateNewsProps) {
 
             await newsApi.updateNews({ ...newValues, hashTagIds: ids })
 
-            enqueueSnackbar('Update News successfully.', {
+            enqueueSnackbar(t('message.update_success'), {
                 variant: 'success',
             })
         } catch (error) {

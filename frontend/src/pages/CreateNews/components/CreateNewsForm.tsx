@@ -21,6 +21,7 @@ import { useEffect } from 'react'
 import { enqueueSnackbar } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { useTranslation } from 'react-i18next'
 
 export interface ICreateNewsFormProps {
     onNewsSubmit: (values: INewsForm) => Promise<void>
@@ -35,6 +36,7 @@ function CreateNewsForm({
     pInitValuesForm,
     onNewsSubmit,
 }: ICreateNewsFormProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     const schema = yup.object().shape({
@@ -138,16 +140,16 @@ function CreateNewsForm({
                         <InputField
                             form={form}
                             name={'title'}
-                            label={'Title'}
+                            label={t('input.title')}
                             disabled={isSubmitting}
-                            placeholder={'title news...'}
+                            placeholder={t('placeholder.title') as string}
                         />
                         <InputField
                             form={form}
                             name={'sapo'}
-                            label={'Sapo'}
+                            label={t('input.sapo')}
                             disabled={isSubmitting}
-                            placeholder={'sub description news...'}
+                            placeholder={t('placeholder.sapo') as string}
                             minRows={2}
                             multiline
                         />
@@ -161,14 +163,14 @@ function CreateNewsForm({
                                 type="number"
                                 form={form}
                                 name={'readTimes'}
-                                label={'Read Times'}
+                                label={t('input.read_times')}
                                 disabled={isSubmitting}
                             />
                             <SelectField
                                 type="number"
                                 form={form}
                                 name={'status'}
-                                label={'Status'}
+                                label={t('input.status')}
                                 disabled={isSubmitting}
                                 selects={selectStatus}
                             />
@@ -176,9 +178,9 @@ function CreateNewsForm({
                         <AutoCompleteField
                             form={form}
                             name={'hashTagOptionIds'}
-                            label={'Tags'}
+                            label={t('input.tags')}
                             disabled={isSubmitting}
-                            placeholder={'choose tags...'}
+                            placeholder={t('placeholder.choose_tags') as string}
                             list={pHashTagSelects || []}
                         />
                     </Grid>
@@ -192,7 +194,7 @@ function CreateNewsForm({
                         <ImageLargeField
                             form={form}
                             name={'thumbnailImage'}
-                            label={'Thumbnail Image'}
+                            label={t('input.thumbnail_image')}
                             disabled={isSubmitting}
                             initValue={pInitValuesForm.thumbnailImage}
                             placeholder={'Enter thumbnail image'}
@@ -200,7 +202,7 @@ function CreateNewsForm({
                         <ImageLargeField
                             form={form}
                             name={'coverImage'}
-                            label={'Cover Image'}
+                            label={t('input.cover_image')}
                             disabled={isSubmitting}
                             initValue={pInitValuesForm.coverImage}
                             placeholder={'Enter cover image'}
@@ -210,9 +212,9 @@ function CreateNewsForm({
                 <EditorField
                     form={form}
                     name={'content'}
-                    label={'Content'}
+                    label={t('input.content')}
                     disabled={isSubmitting}
-                    placeholder={'typing content...'}
+                    placeholder={t('placeholder.typing_content') as string}
                 />
             </Box>
 
@@ -239,7 +241,7 @@ function CreateNewsForm({
                     disabled={isSubmitting}
                     onClick={handleCancel}
                 >
-                    Cancel
+                    {t('button.cancel')}
                 </Button>
                 <LoadingButton
                     type="submit"
@@ -255,7 +257,9 @@ function CreateNewsForm({
                         },
                     }}
                 >
-                    {pInitValuesForm?.id ? 'Update News' : 'Create News'}
+                    {pInitValuesForm?.id
+                        ? t('button.update_news')
+                        : t('button.create_news')}
                 </LoadingButton>
             </Stack>
         </Box>

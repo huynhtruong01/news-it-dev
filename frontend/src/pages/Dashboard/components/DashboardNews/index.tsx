@@ -7,6 +7,7 @@ import {
 } from '@/pages/Dashboard/components/DashboardNews/components'
 import { ALL } from '@/consts'
 import { EmptyList } from '@/components/Common'
+import { useTranslation } from 'react-i18next'
 
 export interface IDashboardNewsProps extends BoxProps {
     newsList: INews[]
@@ -14,6 +15,7 @@ export interface IDashboardNewsProps extends BoxProps {
 }
 
 export function DashboardNews({ newsList, newsCount, ...rest }: IDashboardNewsProps) {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<INewsFilters>({
         status: ALL,
         search: '',
@@ -51,7 +53,7 @@ export function DashboardNews({ newsList, newsCount, ...rest }: IDashboardNewsPr
                 marginBottom={2}
             >
                 <Typography component="h2" variant="h6" fontWeight={700}>
-                    News ({newsCount})
+                    {t('dashboard.news')} ({newsCount})
                 </Typography>
                 <DashboardNewsFilters setFilters={setFilters} />
             </Stack>

@@ -10,6 +10,7 @@ import { removeDuplicated } from '@/utils'
 import { Box, Stack, Typography, Grid } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 
 export interface IReadingListProps {
@@ -19,6 +20,7 @@ export interface IReadingListProps {
 }
 
 function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListProps) {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<IFiltersNewsSave>({
         search: '',
     })
@@ -69,7 +71,7 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
                 marginBottom={3}
             >
                 <Typography component="h1" variant="h4" fontWeight={700}>
-                    Reading list ({numSaves})
+                    {t('dashboard.reading_list')} ({numSaves})
                 </Typography>
                 <ReadingListFilters setFilters={setFilters} />
             </Stack>

@@ -6,6 +6,7 @@ import { getHashTags } from '@/store/hashTag/thunkApi'
 import { Box, Stack, Typography, Skeleton } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 
 export interface ITagsProps {
@@ -14,6 +15,7 @@ export interface ITagsProps {
 }
 
 function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
+    const { t } = useTranslation()
     const [loading, setLoading] = useState<boolean>(true)
     const [filters, setFilters] = useState<IFilters>({
         limit: 100,
@@ -49,7 +51,7 @@ function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
                     <Skeleton variant="rounded" width={130} height={38} />
                 ) : (
                     <Typography component="h1" variant="h4" fontWeight={700}>
-                        Top Tags
+                        {t('tags.title')}
                     </Typography>
                 )}
                 {loading ? (

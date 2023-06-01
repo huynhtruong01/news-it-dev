@@ -1,37 +1,41 @@
+import { DEFAULT_LANGUAGES } from '@/consts'
 import {
+    ActiveAccount,
+    CreateNews,
+    Dashboard,
+    ForgotPassword,
     Login,
     News,
-    ForgotPassword,
-    Signup,
-    Profile,
-    Settings,
-    Dashboard,
-    Tags,
-    ReadingList,
-    Signout,
-    ProfileUser,
-    CreateNews,
-    ActiveAccount,
     Notifications,
+    Profile,
+    ProfileUser,
+    ReadingList,
     SearchNews,
+    Settings,
+    Signout,
+    Signup,
+    Tags,
 } from '@/pages'
-import { Header, ScrollTop, SocketClient } from '@components/common/index'
-import { EmptyLayout, MainLayout } from '@layouts/index'
-import { Box } from '@mui/material'
-import { Route, Routes } from 'react-router-dom'
-import { MainContent } from '@features/index'
-import { useEffect } from 'react'
-import io, { Socket } from 'socket.io-client'
-import { connect, useDispatch } from 'react-redux'
 import { AppDispatch } from '@/store'
 import { setValuesSocket } from '@/store/socket'
-import i18n from './i18n'
+import { setLanguages } from '@/store/common'
+import { getLs } from '@/utils'
+import { Header, ScrollTop, SocketClient } from '@components/common/index'
+import { MainContent } from '@features/index'
+import { EmptyLayout, MainLayout } from '@layouts/index'
+import { Box } from '@mui/material'
+import i18next from 'i18next'
+import { useEffect } from 'react'
+import { connect, useDispatch } from 'react-redux'
+import { Route, Routes } from 'react-router-dom'
+import io, { Socket } from 'socket.io-client'
 
 export interface IAppProps {
     pSetSocket: (socket: Socket) => void
+    pSetLanguages: (lang: string) => void
 }
 
-function App({ pSetSocket }: IAppProps) {
+function App({ pSetSocket, pSetLanguages }: IAppProps) {
     const dispatch: AppDispatch = useDispatch()
 
     useEffect(() => {
@@ -44,6 +48,18 @@ function App({ pSetSocket }: IAppProps) {
             socket.close()
         }
     }, [dispatch])
+
+    useEffect(() => {
+        const language = getLs('i18nextLng')
+        if (!language) {
+            pSetLanguages(DEFAULT_LANGUAGES)
+            i18next.changeLanguage(DEFAULT_LANGUAGES)
+            return
+        }
+
+        pSetLanguages(language as string)
+        i18next.changeLanguage(language as string)
+    }, [])
 
     return (
         <Box>
@@ -200,6 +216,7 @@ function App({ pSetSocket }: IAppProps) {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pSetSocket: (socket: Socket) => dispatch(setValuesSocket(socket)),
+        pSetLanguages: (lang: string) => dispatch(setLanguages(lang)),
     }
 }
 

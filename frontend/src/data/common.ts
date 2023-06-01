@@ -3,26 +3,26 @@ import { IObjectCommon } from '@/models'
 
 export const articleHeader: IObjectCommon[] = [
     {
-        name: 'Relevant',
+        name: 'common.relevant',
         value: NewsFilters.RELEVANT,
     },
     {
-        name: 'Latest',
+        name: 'common.latest',
         value: NewsFilters.LATEST,
     },
     {
-        name: 'Top',
+        name: 'common.top',
         value: NewsFilters.TOP,
     },
 ]
 
 export const tagHeader: IObjectCommon[] = [
     {
-        name: 'Latest',
+        name: 'common.latest',
         value: NewsFilters.LATEST,
     },
     {
-        name: 'Top',
+        name: 'common.top',
         value: NewsFilters.TOP,
     },
 ]
@@ -52,5 +52,20 @@ export const settingsNav: IObjectCommon[] = [
     {
         name: 'Accounts',
         link: '/settings/accounts',
+    },
+]
+
+export const navMainHome: IObjectCommon[] = [
+    {
+        name: 'main_home.home',
+        link: '/',
+    },
+    {
+        name: 'main_home.reading_list',
+        link: '/reading-list',
+    },
+    {
+        name: 'main_home.tags',
+        link: '/tags',
     },
 ]

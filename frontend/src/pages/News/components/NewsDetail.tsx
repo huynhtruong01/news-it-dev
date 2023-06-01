@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { NewsComment } from '.'
 import { connect } from 'react-redux'
 import { AppState } from '@/store'
+import { useTranslation } from 'react-i18next'
 
 export interface INewsDetailProps extends BoxProps {
     pUser: IUser | null
@@ -15,6 +16,7 @@ export interface INewsDetailProps extends BoxProps {
 }
 
 function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
+    const { t } = useTranslation()
     const { user, title, content, hashTags, thumbnailImage, createdAt } = news
 
     const newTags = useMemo(() => {
@@ -75,7 +77,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                                     fontSize={'12px'}
                                     color={theme.palette.secondary.light}
                                 >
-                                    Posted on{' '}
+                                    {t('dates.posted_on')}{' '}
                                     {formatDate(createdAt || new Date(), 'MMM DD')}
                                 </Typography>
                             </Box>

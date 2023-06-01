@@ -11,6 +11,7 @@ import { Box, BoxProps, IconButton, Stack, Typography } from '@mui/material'
 import { indigo } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 
 export interface IButtonNewsSaveProps extends BoxProps {
@@ -30,6 +31,7 @@ function ButtonNewsSave({
     pUnSaveNews,
     ...rest
 }: IButtonNewsSaveProps) {
+    const { t } = useTranslation()
     const [numSaves, setNumSaves] = useState<number>(news?.numSaves || 0)
     const [saved, setSaved] = useState<boolean>(false)
 
@@ -77,7 +79,7 @@ function ButtonNewsSave({
         <Box {...rest} position={'relative'} width={'100%'} onClick={handleSaveNews}>
             <Stack alignItems={'center'} padding={theme.spacing(0, 1)}>
                 <IconButton
-                    title="Save"
+                    title={t('news.save') as string}
                     sx={{
                         borderRadius: '50%',
                         svg: {

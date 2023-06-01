@@ -2,6 +2,7 @@ import { IUser } from '@/models'
 import { theme } from '@/utils'
 import { Box, Stack, Typography, alpha } from '@mui/material'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 export interface IDashboardLeftListProps {
@@ -9,6 +10,7 @@ export interface IDashboardLeftListProps {
 }
 
 export function DashboardLeftList({ user }: IDashboardLeftListProps) {
+    const { t } = useTranslation()
     const [activeLink, setActiveLink] = useState<string>('')
     const navigate = useNavigate()
     const location = useLocation()
@@ -30,6 +32,7 @@ export function DashboardLeftList({ user }: IDashboardLeftListProps) {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             padding: theme.spacing(1),
+                            gap: 1,
                             borderRadius: theme.spacing(0.75),
                             color: theme.palette.grey[700],
 
@@ -69,7 +72,7 @@ export function DashboardLeftList({ user }: IDashboardLeftListProps) {
                     }}
                 >
                     <Link to={'/dashboard'}>
-                        <Typography component="span">News</Typography>
+                        <Typography component="span">{t('dashboard.news')}</Typography>
                         <Typography component="span">{user.newsCount || 0}</Typography>
                     </Link>
                 </Box>
@@ -97,7 +100,9 @@ export function DashboardLeftList({ user }: IDashboardLeftListProps) {
                     }}
                 >
                     <Link to={'/dashboard/followers'}>
-                        <Typography component="span">Followers</Typography>
+                        <Typography component="span">
+                            {t('dashboard.followers')}
+                        </Typography>
                         <Typography component="span">
                             {user.followers?.length || 0}
                         </Typography>
@@ -127,7 +132,9 @@ export function DashboardLeftList({ user }: IDashboardLeftListProps) {
                     }}
                 >
                     <Link to={'/dashboard/following'}>
-                        <Typography component="span">Following users</Typography>
+                        <Typography component="span">
+                            {t('dashboard.following_user')}
+                        </Typography>
                         <Typography component="span">
                             {user.following?.length || 0}
                         </Typography>
@@ -157,7 +164,9 @@ export function DashboardLeftList({ user }: IDashboardLeftListProps) {
                     }}
                 >
                     <Link to={'/dashboard/tags'}>
-                        <Typography component="span">Following tags</Typography>
+                        <Typography component="span">
+                            {t('dashboard.following_tags')}
+                        </Typography>
                         <Typography component="span">
                             {user.hashTags?.length || 0}
                         </Typography>
@@ -187,7 +196,9 @@ export function DashboardLeftList({ user }: IDashboardLeftListProps) {
                     }}
                 >
                     <Link to={'/dashboard/likes'}>
-                        <Typography component="span">News likes</Typography>
+                        <Typography component="span">
+                            {t('dashboard.news_likes')}
+                        </Typography>
                         <Typography component="span">
                             {user.newsLikes?.length || 0}
                         </Typography>
@@ -217,7 +228,9 @@ export function DashboardLeftList({ user }: IDashboardLeftListProps) {
                     }}
                 >
                     <Link to={'/dashboard/reading-list'}>
-                        <Typography component="span">Reading list</Typography>
+                        <Typography component="span">
+                            {t('dashboard.reading_list')}
+                        </Typography>
                         <Typography component="span">
                             {user.saves?.length || 0}
                         </Typography>

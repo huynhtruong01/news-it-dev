@@ -52,7 +52,7 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
                         size="small"
                         sx={{
                             marginTop: 1,
-                            input: {
+                            '.MuiInputBase-root': {
                                 backgroundColor: theme.palette.primary.contrastText,
                             },
                         }}

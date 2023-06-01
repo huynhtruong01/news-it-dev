@@ -1,6 +1,7 @@
 import { IHashTag } from '@/models'
 import { theme } from '@/utils'
 import { Box, Stack, Typography, alpha } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 export interface ITagsDetailLeftProps {
@@ -8,6 +9,8 @@ export interface ITagsDetailLeftProps {
 }
 
 export function TagsDetailLeft({ hashTagFollows }: ITagsDetailLeftProps) {
+    const { t } = useTranslation()
+
     return (
         <Box>
             <Typography
@@ -17,7 +20,7 @@ export function TagsDetailLeft({ hashTagFollows }: ITagsDetailLeftProps) {
                 marginBottom={2}
                 padding={theme.spacing(1, 2, 1, 0)}
             >
-                Tag Follows
+                {t('tags.title_detail')}
             </Typography>
             <Stack gap={0.5}>
                 {hashTagFollows.map((t) => (

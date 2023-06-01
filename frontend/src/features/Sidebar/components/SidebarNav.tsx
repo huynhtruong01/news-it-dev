@@ -1,24 +1,12 @@
 import { Icon, ListingIcon, TagIcon } from '@/components/Common'
-import { IObjectCommon } from '@/models'
+import { navMainHome } from '@/data'
 import { theme } from '@/utils'
 import { Box, Paper, alpha } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 export function SidebarNav() {
-    const lists: IObjectCommon[] = [
-        {
-            name: 'Home',
-            link: '/',
-        },
-        {
-            name: 'Reading List',
-            link: '/reading-list',
-        },
-        {
-            name: 'Tags',
-            link: '/tags',
-        },
-    ]
+    const { t } = useTranslation()
 
     return (
         <Paper
@@ -30,7 +18,7 @@ export function SidebarNav() {
             }}
         >
             <Box component="ul">
-                {lists.map((item) => (
+                {navMainHome.map((item) => (
                     <Box
                         component="li"
                         title={item.name as string}
@@ -58,13 +46,18 @@ export function SidebarNav() {
                             },
                         }}
                     >
-                        <Link to={`${item.link}`}>
+                        <Link
+                            to={`${item.link}`}
+                            title={t(item.name as string) as string}
+                        >
                             <Box>
-                                {item.name === 'Home' && <Icon />}
-                                {item.name === 'Reading List' && <ListingIcon />}
-                                {item.name === 'Tags' && <TagIcon />}
+                                {item.name === 'main_home.home' && <Icon />}
+                                {item.name === 'main_home.reading_list' && (
+                                    <ListingIcon />
+                                )}
+                                {item.name === 'main_home.tags' && <TagIcon />}
                             </Box>
-                            {item.name}
+                            {t(item.name as string)}
                         </Link>
                     </Box>
                 ))}

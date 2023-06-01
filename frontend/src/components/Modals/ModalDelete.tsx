@@ -10,6 +10,7 @@ import { newsApi } from '@/api'
 import { INews, INewsForm, IOptionItem, IStatus } from '@/models'
 import { setInitValueForm, setNews } from '@/store/news'
 import { deleteNewsUser } from '@/store/user'
+import { useTranslation } from 'react-i18next'
 
 export interface IModelDeleteProps {
     pShowModalDelete: boolean
@@ -29,6 +30,7 @@ function ModelDelete({
     pSetInitValuesNewsForm,
 }: IModelDeleteProps) {
     const handleClose = () => {
+        const { t } = useTranslation()
         pSetShowModalDelete(false)
     }
 
@@ -41,7 +43,7 @@ function ModelDelete({
 
             pSetNews(null)
             pSetShowModalDelete(false)
-            enqueueSnackbar(`Delete article successfully.`, {
+            enqueueSnackbar(`${t('message.delete_success')}`, {
                 variant: 'success',
             })
         } catch (error) {

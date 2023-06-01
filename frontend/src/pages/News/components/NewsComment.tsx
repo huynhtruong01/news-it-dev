@@ -9,6 +9,7 @@ import { Box, BoxProps, Button, Stack, Typography } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
@@ -28,6 +29,7 @@ function NewsComment({
     pTotal,
     ...rest
 }: INewsCommentProps) {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
@@ -123,7 +125,7 @@ function NewsComment({
         <Box {...rest} ref={commentRef} id="comments" padding={theme.spacing(4, 8)}>
             <Box component="header" marginBottom={3}>
                 <Typography component="h2" variant="h5" fontWeight={700}>
-                    Comments ({commentLength})
+                    {t('news.comment')} ({commentLength})
                 </Typography>
             </Box>
 
@@ -132,6 +134,7 @@ function NewsComment({
                     initValue={''}
                     commentInputRef={commentInputRef}
                     onCommentChange={handleCommentSubmit}
+                    t={t}
                     sx={{
                         marginBottom: 6,
                     }}
@@ -146,7 +149,7 @@ function NewsComment({
                         Loading comment...
                     </Typography>
                 )}
-                {!loadingComment && <CommentList comments={pComments} />}
+                {!loadingComment && <CommentList comments={pComments} t={t} />}
 
                 {loadMore && (
                     <Typography

@@ -3,6 +3,7 @@ import { AppState } from '@/store'
 import { theme } from '@/utils'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -11,6 +12,8 @@ export interface ISidebarTagProps {
 }
 
 function SidebarTag({ pTags }: ISidebarTagProps) {
+    const { t } = useTranslation()
+
     return (
         <Box>
             <Stack
@@ -19,7 +22,7 @@ function SidebarTag({ pTags }: ISidebarTagProps) {
                 alignItems={'center'}
             >
                 <Typography component="h3" variant="subtitle1" fontWeight={700}>
-                    Popular Tags
+                    {t('main_home.popular_tags')}
                 </Typography>
                 <Link to={'/tags'}>
                     <IconButton

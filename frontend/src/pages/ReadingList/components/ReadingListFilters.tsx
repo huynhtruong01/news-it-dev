@@ -2,12 +2,14 @@ import { SearchFilter } from '@/components/Filters'
 import { IFiltersNewsSave } from '@/models'
 import { Box, BoxProps, Stack } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface IReadingListFiltersProps extends BoxProps {
     setFilters: Dispatch<SetStateAction<IFiltersNewsSave>>
 }
 
 export function ReadingListFilters({ setFilters, ...rest }: IReadingListFiltersProps) {
+    const { t } = useTranslation()
     const handleSearchChange = (value: string) => {
         setFilters((prev: IFiltersNewsSave) => ({ ...prev, search: value }))
     }
@@ -30,7 +32,7 @@ export function ReadingListFilters({ setFilters, ...rest }: IReadingListFiltersP
                 <SearchFilter
                     initValue={''}
                     onSearchChange={handleSearchChange}
-                    placeholder="Search news..."
+                    placeholder={t('placeholder.search_title') as string}
                 />
             </Stack>
         </Box>

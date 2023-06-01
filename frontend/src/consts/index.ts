@@ -11,3 +11,4 @@ export const MAX_SCROLL_TOP = 200
 
 export const NEW_LIST_QUERY_KEY = 'news-list'
 export const SIGNOUT_NAV = 'signout'
+export const DEFAULT_LANGUAGES = 'vi'

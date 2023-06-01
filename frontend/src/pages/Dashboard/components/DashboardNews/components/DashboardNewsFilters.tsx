@@ -4,12 +4,15 @@ import { selectStatus } from '@/data'
 import { INewsFilters, INewsStatus } from '@/models'
 import { Stack } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface IDashboardNewsFiltersProps {
     setFilters: Dispatch<SetStateAction<INewsFilters>>
 }
 
 export function DashboardNewsFilters({ setFilters }: IDashboardNewsFiltersProps) {
+    const { t } = useTranslation()
+
     const handleStatusFilters = (value: string | number) => {
         if (value === ALL) {
             setFilters((prev: INewsFilters) => {
@@ -42,7 +45,8 @@ export function DashboardNewsFilters({ setFilters }: IDashboardNewsFiltersProps)
             <SearchFilter
                 initValue={''}
                 onSearchChange={handleSearchFilters}
-                placeholder="Search title..."
+                placeholder={t('placeholder.search_title') as string}
+                width={250}
             />
         </Stack>
     )

@@ -1,6 +1,7 @@
 import { theme } from '@/utils'
 import { Box, BoxProps, IconButton, Stack, Typography } from '@mui/material'
 import { yellow } from '@mui/material/colors'
+import { useTranslation } from 'react-i18next'
 import { RiChat1Line } from 'react-icons/ri'
 
 export interface IButtonNewsCommentsProps extends BoxProps {
@@ -8,12 +9,14 @@ export interface IButtonNewsCommentsProps extends BoxProps {
 }
 
 export function ButtonNewsComments({ totalComments, ...rest }: IButtonNewsCommentsProps) {
+    const { t } = useTranslation()
+
     return (
         <Box {...rest}>
             <Stack alignItems={'center'} padding={theme.spacing(0, 1)}>
                 <a href="#comments">
                     <IconButton
-                        title="Comment"
+                        title={t('news.comment') as string}
                         sx={{
                             borderRadius: '50%',
 

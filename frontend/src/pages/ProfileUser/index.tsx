@@ -4,7 +4,7 @@ import { IsFollow } from '@/enums'
 import { IFollow, IFollowNotify, IUser } from '@/models'
 import {
     ProfileHeader,
-    ProfileInfoItem,
+    ProfileInfo,
     ProfileLeftItem,
     ProfileNews,
 } from '@/pages/Profile/components'
@@ -14,12 +14,10 @@ import { setShowModalAuth } from '@/store/common'
 import { followUser, unfollowUser } from '@/store/user'
 import { followUserApi, getProfile, unfollowUserApi } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
-import TagIcon from '@mui/icons-material/Tag'
-import { Box, Grid, Paper, Stack } from '@mui/material'
+import { Box, Grid, Stack } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
-import { IoNewspaperOutline } from 'react-icons/io5'
-import { RiChat1Line } from 'react-icons/ri'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
@@ -45,6 +43,7 @@ function ProfileUser({
     pFollowUserApi,
     pUnFollowUserApi,
 }: IProfileUserProps) {
+    const { t } = useTranslation()
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
     const [user, setUser] = useState<IUser | null>(null)
     const [followers, setFollowers] = useState<number>(0)
@@ -157,36 +156,23 @@ function ProfileUser({
 
                             {user.skillLanguages && (
                                 <ProfileLeftItem
-                                    title={'Skills/Languages'}
+                                    title={t('input.skill_languages')}
                                     value={user.skillLanguages}
                                 />
                             )}
 
                             {user.currentlyLearning && (
                                 <ProfileLeftItem
-                                    title={'Currently Learning'}
+                                    title={t('input.currently_learning')}
                                     value={user.currentlyLearning}
                                 />
                             )}
 
-                            <Box component={Paper} elevation={1} padding={2}>
-                                <ProfileInfoItem
-                                    icon={IoNewspaperOutline}
-                                    text={`${user.newsCount || 0} news published`}
-                                    marginBottom={2}
-                                />
-                                <ProfileInfoItem
-                                    icon={RiChat1Line}
-                                    text={`${
-                                        user.comments?.length || 0
-                                    } comments written`}
-                                    marginBottom={2}
-                                />
-                                <ProfileInfoItem
-                                    icon={TagIcon}
-                                    text={`${user.hashTags?.length || 0} tags followed`}
-                                />
-                            </Box>
+                            <ProfileInfo
+                                numNews={user.newsCount as number}
+                                numComments={(user.comments?.length || 0) as number}
+                                numTag={user.hashTags?.length as number}
+                            />
                         </Stack>
                     </Grid>
                     <Grid item md={8}>

@@ -10,12 +10,14 @@ import { connect } from 'react-redux'
 import { AppState } from '@/store'
 import { IUser } from '@/models'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface ISignupProps {
     pUser: IUser | null
 }
 
 export function Signup({ pUser }: ISignupProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -26,7 +28,7 @@ export function Signup({ pUser }: ISignupProps) {
         try {
             await authApi.signup(values)
 
-            enqueueSnackbar('Sign up successfully. Check your email.', {
+            enqueueSnackbar(t('message.signup_success'), {
                 variant: 'success',
             })
         } catch (error) {

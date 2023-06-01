@@ -4,6 +4,7 @@ import { IFilters, INewsStatus } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack, alpha } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface ISearchNewsFiltersProps extends BoxProps {
     status: INewsStatus
@@ -16,6 +17,8 @@ export function SearchNewsFilters({
     setStatus,
     setFilters,
 }: ISearchNewsFiltersProps) {
+    const { t } = useTranslation()
+
     const handleFiltersSearchNewsChange = (value: INewsStatus) => {
         if (value === NewsFilters.LATEST) {
             setFilters((prev) => {
@@ -73,7 +76,7 @@ export function SearchNewsFilters({
                             handleFiltersSearchNewsChange(f.value as INewsStatus)
                         }
                     >
-                        {f.name}
+                        {t(f.name as string)}
                     </Box>
                 ))}
             </Stack>

@@ -4,13 +4,11 @@ import { Box } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 
-export interface IDashboardReadingListFiltersProps {
+export interface IDashboardTagFiltersProps {
     setFilters: Dispatch<SetStateAction<INewsFilters>>
 }
 
-export function DashboardReadingListFilters({
-    setFilters,
-}: IDashboardReadingListFiltersProps) {
+export function DashboardTagFilters({ setFilters }: IDashboardTagFiltersProps) {
     const { t } = useTranslation()
 
     const handleSearchReadingList = (value: string) => {

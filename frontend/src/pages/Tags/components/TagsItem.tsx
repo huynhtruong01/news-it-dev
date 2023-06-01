@@ -9,6 +9,7 @@ import { theme } from '@/utils'
 import { Box, Button, Paper, Typography, alpha } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useMemo, useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -20,6 +21,7 @@ export interface ITagsItemProps {
 }
 
 function TagsItem({ tag, pUser, pGetProfile, pSetShowModalAuth }: ITagsItemProps) {
+    const { t } = useTranslation()
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
     const color = useMemo(() => {
         return tag.color === COLOR_WHITE ? theme.palette.primary.dark : tag.color
@@ -111,7 +113,7 @@ function TagsItem({ tag, pUser, pGetProfile, pSetShowModalAuth }: ITagsItemProps
                         fontSize: theme.typography.body2,
                     }}
                 >
-                    {tag.news?.length || 0} news published
+                    {tag.news?.length || 0} {t('profile.news_published')}
                 </Typography>
                 {/* CHECK FOLLOW & FOLLOWING */}
                 {!pUser?.id && (
@@ -171,7 +173,9 @@ function TagsItem({ tag, pUser, pGetProfile, pSetShowModalAuth }: ITagsItemProps
                         }}
                         onClick={handleFollowClick}
                     >
-                        {followed === IsFollow.FOLLOW ? 'Follow' : 'Following'}
+                        {followed === IsFollow.FOLLOW
+                            ? t('profile.follow')
+                            : t('profile.following')}
                     </Button>
                 )}
             </Box>

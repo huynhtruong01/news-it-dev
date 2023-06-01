@@ -4,6 +4,7 @@ import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, Button, Divider, Paper, Typography, alpha } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -24,6 +25,7 @@ export function ProfileHeader({
     followed,
     onFollow,
 }: IProfileHeaderProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     const handleShowModalAuth = () => {
@@ -75,7 +77,7 @@ export function ProfileHeader({
                                     }}
                                     onClick={handleShowModalAuth}
                                 >
-                                    Follow
+                                    {t('profile.follow')}
                                 </Button>
                             )}
                             {pUser?.id && (
@@ -119,8 +121,8 @@ export function ProfileHeader({
                                     onClick={onFollow}
                                 >
                                     {followed === IsFollow.FOLLOWING
-                                        ? 'Following'
-                                        : 'Follow'}
+                                        ? t('profile.following')
+                                        : t('profile.follow')}
                                 </Button>
                             )}
                         </>
@@ -141,7 +143,7 @@ export function ProfileHeader({
                             }}
                             onClick={() => navigate('/settings/profile')}
                         >
-                            Edit profile
+                            {t('button.edit_profile')}
                         </Button>
                     )}
                 </Box>
@@ -173,7 +175,7 @@ export function ProfileHeader({
                             color: alpha(theme.palette.secondary.dark, 0.7),
                         }}
                     >
-                        Joined on{' '}
+                        {t('dates.joined_on')}{' '}
                         {formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
                     </Typography>
                 </Box>
@@ -189,7 +191,7 @@ export function ProfileHeader({
                                         fontWeight: 700,
                                     }}
                                 >
-                                    Work
+                                    {t('input.work')}
                                 </Box>
                                 <Typography>{user.work}</Typography>
                             </Box>

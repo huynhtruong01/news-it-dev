@@ -5,6 +5,7 @@ import { setInitValueForm, setNews } from '@/store/news'
 import { theme } from '@/utils'
 import { Box, BoxProps, Paper, Stack, Typography, Grid } from '@mui/material'
 import { green, red, yellow } from '@mui/material/colors'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -22,6 +23,7 @@ function DashboardNewsItem({
     pSetNews,
     ...rest
 }: IDashboardNewsItemProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     // DELETE NEWS
@@ -105,7 +107,7 @@ function DashboardNewsItem({
                                 fontWeight: 400,
                             }}
                         >
-                            {news.status}
+                            {t(`status.${news.status}`)}
                         </Typography>
                     </Stack>
                 </Grid>
@@ -133,7 +135,7 @@ function DashboardNewsItem({
                             }}
                             onClick={handleDeleteNews}
                         >
-                            Delete
+                            {t('button.delete')}
                         </Box>
                         <Box
                             sx={{
@@ -141,7 +143,7 @@ function DashboardNewsItem({
                             }}
                             onClick={handleSetInitValueNewsForm}
                         >
-                            Edit
+                            {t('button.edit')}
                         </Box>
                     </Stack>
                 </Grid>

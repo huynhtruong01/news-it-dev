@@ -21,6 +21,7 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AccountMemu } from './components'
+import { useTranslation } from 'react-i18next'
 
 export interface IHeaderProps {
     pUser: IUser | null
@@ -29,6 +30,7 @@ export interface IHeaderProps {
 }
 
 function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderProps) {
+    const { t } = useTranslation()
     const [searchVal, setSearchVal] = useState<string>('')
     const [showButtonCreate, setShowButtonCreate] = useState<boolean>(true)
     const searchRef = useRef<HTMLInputElement | null>(null)
@@ -139,7 +141,7 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                                     ),
                                 }}
                                 size="small"
-                                placeholder={'Search...'}
+                                placeholder={`${t('common.search')}...`}
                                 onChange={handleSearchChange}
                                 sx={{
                                     width: 400,
@@ -250,7 +252,9 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                                         }}
                                         onClick={handleSetInitValuesForm}
                                     >
-                                        <Link to={'/create-news'}>Create News</Link>
+                                        <Link to={'/create-news'}>
+                                            {t('main_home.create_news')}
+                                        </Link>
                                     </Button>
                                 )}
                                 <Box

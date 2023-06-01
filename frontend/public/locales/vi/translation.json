@@ -1,0 +1,190 @@
+{
+    "main_home": {
+        "home": "Trang chủ",
+        "reading_list": "Danh sách đọc",
+        "tags": "Các thẻ ",
+        "popular_tags": "Các thẻ phổ biến",
+        "create_news": "Tạo tin tức mới"
+    },
+
+    "auth": {
+        "signout": "Đăng xuất",
+        "login": "Đăng nhập"
+    },
+
+    "common": {
+        "relevant": "Các bài liên quan",
+        "latest": "Các bài mới nhất",
+        "top": "Các bài top",
+        "search": "Tìm kiếm",
+        "all_tags": "Tất cả các thẻ",
+        "news": "tin tức",
+        "comment": "bình luận",
+        "followed": "người đã theo dõi",
+        "follow": "theo dõi",
+        "followers": "người theo dõi",
+        "following": "người đang theo dõi",
+        "min_read": "phút đọc"
+    },
+
+    "news": {
+        "comment": "Bình luận",
+        "save": "Lưu",
+        "read_next": "Đọc tiếp",
+        "more_from": "Đọc thêm từ"
+    },
+
+    "notifications": {
+        "title": "Các thông báo",
+        "not_read": "Chưa đọc",
+        "read": "Đã đọc"
+    },
+
+    "tags": {
+        "title": "Các thẻ",
+        "title_detail": "Các thẻ theo dõi"
+    },
+
+    "button": {
+        "likes": "Lượt thích",
+        "like": "Thích",
+        "save": "Lưu",
+        "comment": "Bình luận",
+        "update": "Cập nhập",
+        "delete": "Xóa",
+        "edit": "Chỉnh sửa",
+        "save_profile_info": "Lưu thông tin hồ sơ",
+        "set_new_password": "Đặt lại mật khẩu mới",
+        "delete_account": "Xóa tài khoản",
+        "reply": "Phản hồi",
+        "copy_link": "Sao chép đường dẫn",
+        "copy_clipboard": "Sao chép vào bảng tạm",
+        "submit": "Gửi",
+        "clear": "Xóa hết",
+        "edit_profile": "Chỉnh sửa hồ sơ",
+        "unsave": "Không lưu",
+        "signout": "Đăng xuất",
+        "cancel": "Hủy",
+        "update_news": "Cập nhập tin tức",
+        "create_news": "Tạo mới tin tức"
+    },
+
+    "profile": {
+        "edit_profile": "Chỉnh sửa hồ sơ",
+        "news_published": "tin tức đã đăng",
+        "comments_written": "bình luận đã viết",
+        "tags_followed": "thẻ được theo dõi",
+        "follow": "Theo dõi",
+        "following": "Đang theo dõi"
+    },
+
+    "dashboard": {
+        "dashboard": "Bảng điều khiển",
+        "news": "Tin tức",
+        "followers": "Người dùng theo dõi",
+        "following_user": "Người dùng đang theo dõi",
+        "following_tags": "Thẻ đang theo dõi",
+        "news_likes": "Tin tức đã thích",
+        "reading_list": "Danh sách đọc",
+        "settings": "Cài đặt",
+        "following": "Đang theo dõi",
+        "languages": "Ngôn ngữ"
+    },
+
+    "selects": {
+        "all": "Tất cả"
+    },
+
+    "label": {
+        "Status": "Trạng thái"
+    },
+
+    "status": {
+        "draft": "Nháp",
+        "public": "Đăng lên",
+        "unpublic": "Ẩn"
+    },
+
+    "settings": {
+        "title": "Cài đặt cho",
+        "Profile": "Hồ sơ",
+        "Accounts": "Tài khoản",
+        "user": "Người dùng",
+        "other_information": "Những thông tin khác",
+        "banding": "Thương hiệu",
+        "languages": "Ngôn ngữ"
+    },
+
+    "input": {
+        "title": "Tiêu đề",
+        "sapo": "Mở đâu",
+        "read_times": "Thời gian đọc",
+        "status": "Trạng thái",
+        "tags": "Thẻ",
+        "thumbnail_image": "Ảnh nền",
+        "cover_image": "Ảnh bìa",
+        "content": "Nội dung",
+        "username": "Tên tài khoản",
+        "first_name": "Tên đầu",
+        "last_name": "Tên cuối",
+        "email": "Email",
+        "profile_image": "Ảnh hồ sơ",
+        "website_url": "Đường dẫn trang web",
+        "bio": "Tiểu sử",
+        "currently_learning": "Đang học tại",
+        "skill_languages": "Kỹ năng ngôn ngữ",
+        "education": "Giáo dục tại",
+        "work": "Làm việc tại",
+        "branding": "Thương hiệu",
+        "current_password": "Mật khẩu hiện tại",
+        "password": "Mật khẩu",
+        "confirm_password": "Xác nhận mật khẩu",
+        "set_new_password": "Đặt lại mật khẩu mới",
+        "delete_account": "Xóa tài khoản",
+        "dated_join": "Ngày tham gia",
+        "banding_color": "Màu sắc thương hiệu"
+    },
+
+    "placeholder": {
+        "search_title": "Tìm kiếm theo tiêu đề...",
+        "search_username_name": "Tìm kiếm theo tên hoặc tên tài khoản...",
+        "add_discussion": "Thêm bình luận vào",
+        "search_tag": "Tìm kiếm theo tên...",
+        "what_do_you_do": "Bạn làm nghề gì?",
+        "where_did_you_go_to_school": "Bạn đã học ở đâu?",
+        "skill_languages": "Bất kỳ ngôn ngữ, frameworks, vv ...",
+        "typing_content": "Nhập nội dung...",
+        "choose_tags": "Chọn thẻ...",
+        "sapo": "Nhập mở đầu cho tin tức...",
+        "title": "Nhập tiêu đề cho tin tức...",
+        "drag_drop": "Kéo & Thả hoặc Chọn ảnh"
+    },
+
+    "dates":{
+        "posted_on": "Đăng vào",
+        "joined_on": "Tham gia vào" 
+    },
+
+    "message": {
+        "reply_to": "phản hồi",
+        "signout": "Bạn có chắc chắn muốn đăng xuất không?",
+        "format_password_success": "Thay đổi mật khẩu thành công",
+        "delete_success": "Xóa tin tức thành công",
+        "create_account_success": "Tạo tài khoản thành công. Vui lòng đăng nhập để vào",
+        "login_success": "Đăng nhập thành công",
+        "signup_success": "Đăng nhập thành công. Vui lòng kiểm tra email của bạn",
+        "create_success": "Tạo tin tức thành công",
+        "update_success": "Cập nhập tin tức thành công",
+        "delete_account_success": "Xóa tài khoản thành công",
+        "set_new_password_success": "Đặt lại mật khẩu thành công",
+        "update_profile_success": "Cập nhập hồ sơ thành công"
+    },
+
+    "signout": {
+        "success": "Đăng xuất thành công"
+    },
+
+    "liked your news": "đã thích bài viết của bạn",
+    "reply to your comment": "đã phản hổi bình luận của bạn",
+    "follow you": "đã theo dõi bạn"
+}

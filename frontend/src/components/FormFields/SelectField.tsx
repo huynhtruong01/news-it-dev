@@ -9,6 +9,7 @@ import {
     Select,
 } from '@mui/material'
 import { Controller, FieldValues, Path } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 export type ISelectFieldProps<TFormValues> = {
     form: TFormValues
@@ -25,6 +26,7 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
     disabled,
     selects,
 }: ISelectFieldProps<TFormValues>) {
+    const { t } = useTranslation()
     const {
         control,
         formState: { errors },
@@ -76,7 +78,7 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                                         textTransform: 'capitalize',
                                     }}
                                 >
-                                    {select.name}
+                                    {t(select.name as string)}
                                 </MenuItem>
                             ))}
                         </Select>

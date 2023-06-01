@@ -13,6 +13,7 @@ import { connect } from 'react-redux'
 
 export interface IButtonLikeCommentProps extends ButtonProps {
     pGetProfile: () => Promise<PayloadAction<unknown>>
+    text: string
     comment: IComment
     user: IUser
 }
@@ -21,6 +22,7 @@ function ButtonLikeComment({
     pGetProfile,
     comment,
     user,
+    text,
     ...rest
 }: IButtonLikeCommentProps) {
     const [isLike, setIsLike] = useState<boolean>(false)
@@ -75,7 +77,7 @@ function ButtonLikeComment({
             }
             onClick={handleLikeComment}
         >
-            {numLikes} Likes
+            {numLikes} {text}
         </Button>
     )
 }

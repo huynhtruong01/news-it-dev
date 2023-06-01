@@ -13,10 +13,12 @@ import {
 } from '@mui/material'
 import { green } from '@mui/material/colors'
 import { MouseEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type IButtonMoreProps = BoxProps
 
 export function ButtonMore({ ...rest }: IButtonMoreProps) {
+    const { t } = useTranslation()
     const [copied, setCopied] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -101,7 +103,7 @@ export function ButtonMore({ ...rest }: IButtonMoreProps) {
                         }}
                     >
                         <Typography component="span" fontWeight={700}>
-                            Copy link
+                            {t('button.copy_link')}
                         </Typography>
                         <FileCopyIcon />
                     </Stack>
@@ -117,7 +119,7 @@ export function ButtonMore({ ...rest }: IButtonMoreProps) {
                         }}
                     >
                         <Typography textAlign={'center'} width={'100%'}>
-                            Copied to Clipboard
+                            {t('button.copy_clipboard')}
                         </Typography>
                     </MenuItem>
                 )}

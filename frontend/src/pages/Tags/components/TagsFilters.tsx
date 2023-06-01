@@ -2,6 +2,7 @@ import { SearchFilter } from '@/components/Filters'
 import { IFilters } from '@/models'
 import { Box } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface ITagsFiltersProps {
     filters: IFilters
@@ -9,6 +10,7 @@ export interface ITagsFiltersProps {
 }
 
 export function TagsFilters({ filters, setFilters }: ITagsFiltersProps) {
+    const { t } = useTranslation()
     const handleSearchChange = (value: string) => {
         setFilters((prev: IFilters) => ({ ...prev, search: value }))
     }
@@ -18,7 +20,7 @@ export function TagsFilters({ filters, setFilters }: ITagsFiltersProps) {
             <SearchFilter
                 initValue={filters?.search as string}
                 onSearchChange={handleSearchChange}
-                placeholder="Search for tag"
+                placeholder={t('placeholder.search_tag') as string}
             />
         </Box>
     )

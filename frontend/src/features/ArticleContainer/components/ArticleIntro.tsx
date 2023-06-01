@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { RiChat1Line } from 'react-icons/ri'
 import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export interface IArticleIntroProps {
     article: INews
@@ -36,6 +37,7 @@ function ArticleIntro({
     pSaveNews,
     pUnSaveNews,
 }: IArticleIntroProps) {
+    const { t } = useTranslation()
     const [saved, setSaved] = useState<boolean>(false)
     const [liked, setLiked] = useState<boolean>(false)
     const navigate = useNavigate()
@@ -174,13 +176,13 @@ function ArticleIntro({
                     }}
                 >
                     <ButtonIconForm
-                        text={`${numLikes} Likes`}
+                        text={`${numLikes} ${t('button.likes')}`}
                         icon={liked ? FavoriteIcon : FavoriteBorderIcon}
                         isLiked={liked}
                         onButtonClick={handleLikeClick}
                     />
                     <ButtonIconForm
-                        text={`${commentLength} Comments`}
+                        text={`${commentLength} ${t('button.comment')}`}
                         icon={RiChat1Line}
                         onButtonClick={handleCommentClick}
                     />
@@ -188,7 +190,7 @@ function ArticleIntro({
 
                 <Stack direction={'row'} gap={1} alignItems={'center'}>
                     <Typography component="small" fontSize={'12px'} fontWeight={400}>
-                        {readTimes} min read
+                        {readTimes} {t('common.min_read')}
                     </Typography>
                     <IconButton
                         sx={{

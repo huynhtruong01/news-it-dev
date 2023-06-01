@@ -6,6 +6,7 @@ import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 
 export interface IArticleHeaderProps extends BoxProps {
@@ -26,6 +27,7 @@ function ArticleHeader({
     pHashTags,
     ...rest
 }: IArticleHeaderProps) {
+    const { t } = useTranslation()
     const handleNewsFilters = (valFilter: string) => {
         const newFilters = { ...filters }
 
@@ -88,7 +90,7 @@ function ArticleHeader({
                             }}
                             onClick={() => handleNewsFilters(item.value as string)}
                         >
-                            {item.name}
+                            {t(item.name as string)}
                         </Box>
                     ))}
                 </Stack>

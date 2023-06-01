@@ -8,6 +8,7 @@ import { red } from '@mui/material/colors'
 import { enqueueSnackbar } from 'notistack'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export interface ISettingsModalDeleteProps {
     pShowModalDeleteAccount: boolean
@@ -20,6 +21,7 @@ function SettingsModalDelete({
     pSetShowModalDeleteAccount,
     pResetValueRedux,
 }: ISettingsModalDeleteProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     const handleClose = () => {
@@ -29,7 +31,7 @@ function SettingsModalDelete({
     const handleDeleteAccount = async () => {
         try {
             pResetValueRedux()
-            enqueueSnackbar('Delete account successfully.', {
+            enqueueSnackbar(t('message.delete_account_success'), {
                 variant: 'success',
             })
             handleClose()

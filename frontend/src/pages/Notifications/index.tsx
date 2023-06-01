@@ -12,6 +12,7 @@ import { Box, Grid, Stack } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 
 export interface INotificationsProps {
@@ -27,6 +28,7 @@ export function Notifications({
     pNotificationsTotal,
     pGetNotifications,
 }: INotificationsProps) {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<INotifyFilters>({
         page: 1,
         limit: 8,
@@ -63,7 +65,9 @@ export function Notifications({
             }}
         >
             <Stack direction={'row'} justifyContent={'space-between'}>
-                <TitlePage>Notifications ({pNotificationsTotal})</TitlePage>
+                <TitlePage>
+                    {t('notifications.title')} ({pNotificationsTotal})
+                </TitlePage>
                 <NotificationSearchFilters setFilters={setFilters} />
             </Stack>
 

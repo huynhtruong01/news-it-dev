@@ -1,28 +1,29 @@
 import { commentApi } from '@/api'
 import { ButtonLikeComment, CommentAction } from '@/components/Comment/components'
 import { ButtonIconForm } from '@/components/Common'
+import { useLinkUser } from '@/hooks'
 import { IComment, ICommentData, IUser } from '@/models'
 import { AppState } from '@/store'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, Paper, Stack, Typography, alpha } from '@mui/material'
-import { PayloadAction } from '@reduxjs/toolkit'
+import { TFunction } from 'i18next'
 import { enqueueSnackbar } from 'notistack'
 import { useMemo, useState } from 'react'
 import { RiChat1Line } from 'react-icons/ri'
 import { connect } from 'react-redux'
-import { CommentInput, CommentList } from '.'
-import { useLinkUser } from '@/hooks'
 import { Link } from 'react-router-dom'
+import { CommentInput, CommentList } from '.'
 
 export interface ICommentItemProps {
     pUser: IUser | null
-    pReplyComment: (data: ICommentData) => Promise<PayloadAction<unknown>>
-    pUpdateComment: (data: ICommentData) => Promise<PayloadAction<unknown>>
-    pUpdateCommentReply: (data: ICommentData) => Promise<PayloadAction<unknown>>
+    // pReplyComment: (data: ICommentData) => Promise<PayloadAction<unknown>>
+    // pUpdateComment: (data: ICommentData) => Promise<PayloadAction<unknown>>
+    // pUpdateCommentReply: (data: ICommentData) => Promise<PayloadAction<unknown>>
     comment: IComment
+    t: TFunction<'translation', undefined, 'translation'>
 }
 
-function CommentItem({ pUser, comment }: ICommentItemProps) {
+function CommentItem({ pUser, comment, t }: ICommentItemProps) {
     const [isReply, setIsReply] = useState<boolean>(false)
     const [initValue, setInitValue] = useState<string>('')
     const [edit, setEdit] = useState<IComment | null>(null)
@@ -163,7 +164,8 @@ function CommentItem({ pUser, comment }: ICommentItemProps) {
                                                     },
                                                 }}
                                             >
-                                                reply to{' '}
+                                                {' '}
+                                                {t('message.reply_to')}{' '}
                                                 <Link
                                                     to={`${handleNavReply(
                                                         replyUserData.id,
@@ -188,6 +190,7 @@ function CommentItem({ pUser, comment }: ICommentItemProps) {
                                         comment={comment}
                                         setEdit={setEdit}
                                         setInitValue={setInitValue}
+                                        t={t}
                                     />
                                 )}
                             </Stack>
@@ -226,6 +229,7 @@ function CommentItem({ pUser, comment }: ICommentItemProps) {
                             isEdit={!!edit?.id}
                             setIsReply={setIsReply}
                             setEdit={setEdit}
+                            t={t}
                         />
                     )}
 
@@ -237,6 +241,7 @@ function CommentItem({ pUser, comment }: ICommentItemProps) {
                                 onCommentChange={handleReplyComment}
                                 isReply={isReply}
                                 setIsReply={setIsReply}
+                                t={t}
                             />
                         )}
                         {loadingReply && (
@@ -269,11 +274,12 @@ function CommentItem({ pUser, comment }: ICommentItemProps) {
                             {!isReply && !edit?.id && !loadingReply && (
                                 <>
                                     <ButtonLikeComment
+                                        text={t('button.likes') as string}
                                         comment={comment}
                                         user={pUser as IUser}
                                     />
                                     <ButtonIconForm
-                                        text={'Reply'}
+                                        text={t('button.reply') as string}
                                         icon={RiChat1Line}
                                         onButtonClick={() =>
                                             handleShowInputReply(comment.user as IUser)
@@ -286,7 +292,7 @@ function CommentItem({ pUser, comment }: ICommentItemProps) {
 
                     {/* Comment Children */}
                     <Box marginTop={comment.parentCommentId ? 0 : 4}>
-                        <CommentList comments={newChildrenComments} />
+                        <CommentList comments={newChildrenComments} t={t} />
                     </Box>
                 </Box>
             </Stack>

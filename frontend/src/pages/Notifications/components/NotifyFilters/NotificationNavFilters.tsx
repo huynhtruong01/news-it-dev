@@ -4,6 +4,7 @@ import { INotifyFilters, INotifyRead } from '@/models'
 import { theme } from '@/utils'
 import { Box, Stack, alpha } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface INotificationNavFiltersProps {
     filters: INotifyFilters
@@ -14,6 +15,7 @@ export function NotificationNavFilters({
     filters,
     setFilters,
 }: INotificationNavFiltersProps) {
+    const { t } = useTranslation()
     const handleNavFilters = (value: INotifyRead) => {
         if (value === ALL) {
             setFilters((prev) => {
@@ -59,7 +61,7 @@ export function NotificationNavFilters({
                     }}
                     onClick={() => handleNavFilters(ALL)}
                 >
-                    All
+                    {t('selects.all')}
                 </Box>
                 {notifyFilters.map((notify) => (
                     <Box
@@ -78,7 +80,7 @@ export function NotificationNavFilters({
                         }}
                         onClick={() => handleNavFilters(notify.value as INotifyRead)}
                     >
-                        {notify.name}
+                        {t(notify.name as string)}
                     </Box>
                 ))}
             </Stack>

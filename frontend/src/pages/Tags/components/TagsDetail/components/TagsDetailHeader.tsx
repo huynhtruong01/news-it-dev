@@ -1,15 +1,16 @@
 import { hashTagApi } from '@/api'
-import { getProfile } from '@/store/user/thunkApi'
+import { COLOR_WHITE } from '@/consts'
 import { IsFollow } from '@/enums'
 import { IFollow, IHashTag, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
-import { theme } from '@/utils'
-import { Box, BoxProps, Paper, Stack, Typography, alpha, Button } from '@mui/material'
-import { useMemo, useState, useEffect } from 'react'
-import { connect } from 'react-redux'
-import { PayloadAction } from '@reduxjs/toolkit'
-import { COLOR_WHITE } from '@/consts'
 import { setShowModalAuth } from '@/store/common'
+import { getProfile } from '@/store/user/thunkApi'
+import { theme } from '@/utils'
+import { Box, BoxProps, Button, Paper, Stack, Typography, alpha } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
 
 export interface ITagsDetailHeaderProps extends BoxProps {
     pUser: IUser | null
@@ -25,6 +26,7 @@ function TagsDetailHeader({
     pSetShowModalAuth,
     ...rest
 }: ITagsDetailHeaderProps) {
+    const { t } = useTranslation()
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
 
     const color = useMemo(() => {
@@ -139,7 +141,7 @@ function TagsDetailHeader({
                         >
                             {!pUser?.id && (
                                 <Button variant="contained" onClick={handleShowModal}>
-                                    Follow
+                                    {t('profile.follow')}
                                 </Button>
                             )}
                             {pUser?.id &&
@@ -148,14 +150,14 @@ function TagsDetailHeader({
                                         variant="contained"
                                         onClick={handleUnfollowClick}
                                     >
-                                        Following
+                                        {t('profile.following')}
                                     </Button>
                                 ) : (
                                     <Button
                                         variant="contained"
                                         onClick={handleFollowClick}
                                     >
-                                        Follow
+                                        {t('profile.follow')}
                                     </Button>
                                 ))}
                         </Box>

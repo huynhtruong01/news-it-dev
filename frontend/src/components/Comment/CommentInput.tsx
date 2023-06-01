@@ -2,6 +2,7 @@ import { IComment, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Avatar, Box, BoxProps, Button, Stack, TextField } from '@mui/material'
+import { TFunction } from 'i18next'
 import {
     Dispatch,
     FormEvent,
@@ -22,6 +23,7 @@ export interface ICommentInputProps extends BoxProps {
     isEdit?: boolean
     setIsReply?: Dispatch<SetStateAction<boolean>>
     setEdit?: Dispatch<SetStateAction<IComment | null>>
+    t: TFunction<'translation', undefined, 'translation'>
 }
 
 function CommentInput({
@@ -33,6 +35,7 @@ function CommentInput({
     isEdit = false,
     setIsReply,
     setEdit,
+    t,
     ...rest
 }: ICommentInputProps) {
     const inputRef = useRef<HTMLElement | null>(null)
@@ -86,7 +89,7 @@ function CommentInput({
                             onChange={(e) => setValue(e.target.value)}
                             minRows={6}
                             multiline
-                            placeholder="Add to the discussion"
+                            placeholder={t('placeholder.add_discussion') as string}
                             sx={{
                                 '& fieldset': {
                                     borderRadius: theme.spacing(1),
@@ -120,7 +123,7 @@ function CommentInput({
                                 },
                             }}
                         >
-                            Submit
+                            {t('button.submit')}
                         </Button>
                         <Button
                             type="button"
@@ -133,7 +136,7 @@ function CommentInput({
                             }}
                             onClick={() => setValue('')}
                         >
-                            Clear
+                            {t('button.clear')}
                         </Button>
                         {(isReply || isEdit) && (
                             <Button
@@ -147,7 +150,7 @@ function CommentInput({
                                 }}
                                 onClick={handleCancel}
                             >
-                                Cancel
+                                {t('button.cancel')}
                             </Button>
                         )}
                     </Stack>

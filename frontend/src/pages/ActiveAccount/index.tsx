@@ -3,14 +3,13 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { enqueueSnackbar } from 'notistack'
 import { authApi } from '@/api'
-
-// export interface IActiveAccountProps {}
+import { useTranslation } from 'react-i18next'
 
 export function ActiveAccount() {
+    const { t } = useTranslation()
     const params = useParams()
     const navigate = useNavigate()
 
-    console.log('token:', params.activeToken)
     useEffect(() => {
         if (!params.activeToken) return
         ;(async () => {
@@ -22,7 +21,7 @@ export function ActiveAccount() {
                     )
                     await authApi.activeUser(activeToken)
 
-                    enqueueSnackbar('Create account success. Please login.', {
+                    enqueueSnackbar(t('message.create_account_success'), {
                         variant: 'success',
                     })
                     navigate('/login')

@@ -7,6 +7,11 @@
         "create_news": "Create News"
     },
 
+    "auth": {
+        "signout": "Sign out",
+        "login": "Login"
+    },
+
     "common": {
         "relevant": "Relevant",
         "latest": "Latest",
@@ -23,14 +28,45 @@
     },
 
     "button": {
+        "likes": "Likes",
         "like": "Like",
         "save": "Save",
         "comment": "Comment",
+        "update": "Update",
         "delete": "Delete",
         "edit": "Edit",
         "save_profile_info": "Save Profile Information",
         "set_new_password": "Set New Password",
-        "delete_account": "Delete Account"
+        "delete_account": "Delete Account",
+        "reply": "Reply",
+        "copy_link": "Copy link",
+        "copy_clipboard": "Copied to clipboard",
+        "submit": "Submit",
+        "clear": "Clear",
+        "edit_profile": "Edit profile",
+        "unsave": "Unsave",
+        "signout": "Yes, sign out",
+        "cancel": "Cancel",
+        "update_news": "Update News",
+        "create_news": "Create News"
+    },
+
+    "news": {
+        "comment": "Comment",
+        "save": "Save",
+        "read_next": "Read next",
+        "more_from": "More from"
+    },
+
+    "tags": {
+        "title": "Top tags",
+        "title_detail": "Tag Follows"
+    },
+
+    "notifications": {
+        "title": "Notifications",
+        "not_read": "Not read",
+        "read": "Read"
     },
 
     "profile": {
@@ -44,11 +80,23 @@
 
     "dashboard": {
         "dashboard": "Dashboard",
+        "news": "News",
         "followers": "Followers",
         "following_user": "Following user",
         "following_tags": "Following tags",
         "news_likes": "News likes",
-        "reading_list": "Reading list"
+        "reading_list": "Reading list",
+        "settings": "Settings",
+        "following": "Following",
+        "languages": "Languages"
+    },
+
+    "selects": {
+        "all": "All"
+    },
+
+    "label": {
+        "status": "Status"
     },
 
     "status": {
@@ -58,28 +106,85 @@
     },
 
     "settings": {
-        "settings": "Settings for",
+        "title": "Settings for",
         "Profile": "Profile",
-        "Accounts": "Accounts"
+        "Accounts": "Accounts",
+        "user": "User",
+        "other_information": "Other Information",
+        "banding": "Banding",
+        "languages": "Languages"
     },
 
     "input": {
-        "Username": "Username",
-        "First Name": "First Name",
-        "Last Name": "Last Name",
-        "Email": "Email",
-        "Profile Image": "Profile Image",
-        "Website URL": "Website URL",
-        "Bio": "Bio",
-        "Currently Learning": "Currently Learning",
-        "Skills Languages": "Skills Languages",
-        "Education": "Education",
-        "Work": "Work",
-        "Branding": "Branding",
-        "Current password": "Current password",
-        "Password": "Password",
-        "Confirm new password": "Confirm new password",
-        "Set new password": "Set new password",
-        "Delete account": "Delete account"
-    }
+        "title": "Title",
+        "sapo": "Sapo",
+        "read_times": "Read Times",
+        "status": "Status",
+        "tags": "Tags",
+        "thumbnail_image": "Thumbnail Image",
+        "cover_image": "Cover Image",
+        "content": "Content",
+        "username": "Username",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "email": "Email",
+        "profile_image": "Profile Image",
+        "website_url": "Website URL",
+        "bio": "Bio",
+        "currently_learning": "Currently Learning",
+        "skill_languages": "Skills Languages",
+        "education": "Education",
+        "work": "Work",
+        "branding": "Branding",
+        "current_password": "Current password",
+        "password": "Password",
+        "confirm_password": "Confirm new password",
+        "set_new_password": "Set new password",
+        "delete_account": "Delete account",
+        "dated_join": "Dated join",
+        "banding_color": "Banding color"
+    },
+
+    "placeholder": {
+        "search_title": "Search title...",
+        "search_username_name": "Search username or name...",
+        "add_discussion": "Add to the discussion",
+        "search_tag": "Search name tag...",
+        "what_do_you_do": "What do you do?",
+        "where_did_you_go_to_school": "Where did you go to school?",
+        "skill_languages": "Any languages, frameworks,etc...",
+        "typing_content": "Typing content...",
+        "choose_tags": "Choose tags...",
+        "sapo": "Sapo news...",
+        "title": "Title news...",
+        "drag_drop": "Drag & Drop or Choose your file here"
+    },
+
+    "dates":{
+        "posted_on": "Posted on",
+        "joined_on": "Joined on"
+    },
+
+    "message": {
+        "reply_to": "reply to",
+        "signout": "Are you sure you want to sign out?",
+        "format_password_success": "Change your password successfully",
+        "delete_success": "Delete news successfully",
+        "create_account_success": "Create account successFully. Please login",
+        "login_success": "Login successfully",
+        "signup_success": "Sign up successfully. Check your email",
+        "create_success": "Create News successfully",
+        "update_success": "Update News successfully",
+        "delete_account_success": "Delete account successfully",
+        "set_new_password_success": "Set new password successfully",
+        "update_profile_success": "Update profile success"
+    },
+
+    "signout": {
+        "success": "Sign out successfully"
+    },
+
+    "liked your news": "liked your news",
+    "reply to your comment": "reply to your comment",
+    "follow you": "follow you"
 }

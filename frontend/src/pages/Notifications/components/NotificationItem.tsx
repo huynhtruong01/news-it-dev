@@ -31,6 +31,7 @@ import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 import { NotifyAction } from '.'
+import { useTranslation } from 'react-i18next'
 
 export interface INotificationItemProps {
     pUser: IUser | null
@@ -58,6 +59,7 @@ function NotificationItem({
     pUnSaveNews,
     pLikeNewsApi,
 }: INotificationItemProps) {
+    const { t } = useTranslation()
     const [liked, setLiked] = useState<boolean>(false)
     const [saved, setSaved] = useState<boolean>(false)
     const navigate = useNavigate()
@@ -184,7 +186,9 @@ function NotificationItem({
                         >
                             <Link to={linkUser}>{notify.user?.username}</Link>{' '}
                             <Box
-                                dangerouslySetInnerHTML={{ __html: notify.text || '' }}
+                                dangerouslySetInnerHTML={{
+                                    __html: t(notify.text as string) || '',
+                                }}
                             />
                         </Typography>
                         <Box
@@ -300,7 +304,7 @@ function NotificationItem({
                             }}
                             onClick={handleLikeNews}
                         >
-                            Like
+                            {t('button.like')}
                         </Button>
                         <Button
                             variant="contained"
@@ -327,7 +331,7 @@ function NotificationItem({
                             }}
                             onClick={handleSaveNews}
                         >
-                            Save
+                            {t('button.save')}
                         </Button>
                     </Stack>
                 </Box>

@@ -320,15 +320,15 @@ export const initNewsFormValues: INewsForm = {
 
 export const selectStatus: IObjectCommon[] = [
     {
-        name: Status.DRAFT,
+        name: `status.${Status.DRAFT}`,
         value: Status.DRAFT,
     },
     {
-        name: Status.PUBLIC,
+        name: `status.${Status.PUBLIC}`,
         value: Status.PUBLIC,
     },
     {
-        name: Status.UNPUBLIC,
+        name: `status.${Status.UNPUBLIC}`,
         value: Status.UNPUBLIC,
     },
 ]

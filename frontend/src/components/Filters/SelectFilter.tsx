@@ -11,21 +11,25 @@ import { useState } from 'react'
 import { IObjectCommon } from '@/models'
 import { ALL } from '@/consts'
 import { theme } from '@/utils'
+import { useTranslation } from 'react-i18next'
 
 export interface ISelectFilterProps extends BoxProps {
     label: string
     selects: IObjectCommon[]
     initValue?: string | number
     onFilterChange: (value: string | number) => void
+    isAll?: boolean
 }
 
 export function SelectFilter({
     selects,
     label,
     initValue = ALL,
+    isAll = true,
     onFilterChange,
     ...rest
 }: ISelectFilterProps) {
+    const { t } = useTranslation()
     const [value, setValue] = useState<string>(String(initValue))
 
     const handleSelectChange = (e: SelectChangeEvent) => {
@@ -45,23 +49,25 @@ export function SelectFilter({
             {...rest}
         >
             <FormControl size="small" fullWidth>
-                <InputLabel>{label}</InputLabel>
+                <InputLabel>{label ? t(`label.${label}`) : ''}</InputLabel>
                 <Select
                     value={value}
-                    label={label}
+                    label={label ? t(`label.${label}`) : ''}
                     onChange={handleSelectChange}
                     sx={{
                         textTransform: 'capitalize',
                     }}
                 >
-                    <MenuItem
-                        value={ALL}
-                        sx={{
-                            textTransform: 'capitalize',
-                        }}
-                    >
-                        All
-                    </MenuItem>
+                    {isAll && (
+                        <MenuItem
+                            value={ALL}
+                            sx={{
+                                textTransform: 'capitalize',
+                            }}
+                        >
+                            {t('selects.all')}
+                        </MenuItem>
+                    )}
                     {selects.map((select) => (
                         <MenuItem
                             key={select.name}
@@ -70,7 +76,7 @@ export function SelectFilter({
                                 textTransform: 'capitalize',
                             }}
                         >
-                            {select.name}
+                            {t(select.name as string)}
                         </MenuItem>
                     ))}
                 </Select>

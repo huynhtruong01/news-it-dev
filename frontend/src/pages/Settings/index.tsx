@@ -12,12 +12,15 @@ import { connect } from 'react-redux'
 import { AppState } from '@/store'
 import { Routes, Route } from 'react-router-dom'
 import { SettingsModalDelete } from '@/pages/Settings/components'
+import { useTranslation } from 'react-i18next'
 
 export interface ISettingsProps {
     pUser: IUser | null
 }
 
 function Settings({ pUser }: ISettingsProps) {
+    const { t } = useTranslation()
+
     useEffect(() => {
         document.title = 'Settings - DEV Community'
     }, [])
@@ -46,7 +49,7 @@ function Settings({ pUser }: ISettingsProps) {
                         },
                     }}
                 >
-                    Settings for <Link to={'/profile'}>@{pUser?.username}</Link>
+                    {t('settings.title')} <Link to={'/profile'}>@{pUser?.username}</Link>
                 </Typography>
 
                 <Box marginTop={2}>

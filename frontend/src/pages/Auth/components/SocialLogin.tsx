@@ -21,6 +21,7 @@ import { FaFacebookSquare } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import { connect } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export interface ISocialLoginProps {
     pGoogleLogin: (token: string) => Promise<PayloadAction<unknown>>
@@ -28,6 +29,7 @@ export interface ISocialLoginProps {
 }
 
 function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -57,7 +59,7 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
         try {
             if ('tokenId' in response) {
                 await pGoogleLogin(response.tokenId)
-                enqueueSnackbar('Log in successfully.', {
+                enqueueSnackbar(t('message.login_success'), {
                     variant: 'success',
                 })
 

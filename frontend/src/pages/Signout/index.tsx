@@ -6,16 +6,19 @@ import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { enqueueSnackbar } from 'notistack'
 import { SIGNOUT_NAV } from '@/consts'
+import { useTranslation } from 'react-i18next'
 
 export interface ISignoutProps {
     pSignout: () => void
 }
 
 function Signout({ pSignout }: ISignoutProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
+
     const handleSignout = () => {
         pSignout()
-        enqueueSnackbar('Sign out successfully.', {
+        enqueueSnackbar(t('signout.success'), {
             variant: 'success',
         })
         navigate('/', { state: { from: SIGNOUT_NAV } })
@@ -38,7 +41,7 @@ function Signout({ pSignout }: ISignoutProps) {
                         marginBottom: 2,
                     }}
                 >
-                    Are you sure you want to sign out?
+                    {t('message.signout')}
                 </Typography>
                 <Button
                     variant="contained"
@@ -53,7 +56,7 @@ function Signout({ pSignout }: ISignoutProps) {
                     }}
                     onClick={handleSignout}
                 >
-                    Yes, sign out
+                    {t('button.signout')}
                 </Button>
             </Stack>
         </Stack>

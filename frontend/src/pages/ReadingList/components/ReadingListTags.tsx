@@ -2,6 +2,7 @@ import { IFiltersNewsSave, IHashTag } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack, Typography, alpha } from '@mui/material'
 import { Dispatch, SetStateAction, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface IReadingListTagsProps extends BoxProps {
     hashTags: IHashTag[]
@@ -13,10 +14,11 @@ export function ReadingListTags({
     setFilters,
     ...rest
 }: IReadingListTagsProps) {
+    const { t } = useTranslation()
     const [activeTag, setActiveTag] = useState<string>('')
 
     const handleFilters = (tag: string) => {
-        // TODO: SET TAG AND FILTERS TAGS, NEWS BY TAG
+        // SET TAG AND FILTERS TAGS, NEWS BY TAG
         if (!tag) {
             setActiveTag('')
             setFilters((prev: IFiltersNewsSave) => {
@@ -66,7 +68,7 @@ export function ReadingListTags({
                     }}
                     onClick={() => handleFilters('')}
                 >
-                    <Typography component="span">All tags</Typography>
+                    <Typography component="span">{t('common.all_tags')}</Typography>
                 </Box>
                 {hashTags.map((tag) => (
                     <Box

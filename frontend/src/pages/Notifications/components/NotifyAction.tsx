@@ -8,6 +8,7 @@ import { deleteNotify } from '@/store/notify'
 import { enqueueSnackbar } from 'notistack'
 import { notifyApi } from '@/api'
 import { theme } from '@/utils'
+import { useTranslation } from 'react-i18next'
 
 export interface INotifyActionProps {
     notify: INotify
@@ -15,6 +16,7 @@ export interface INotifyActionProps {
 }
 
 function NotifyAction({ notify, pDeleteNotify }: INotifyActionProps) {
+    const { t } = useTranslation()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
 
@@ -49,15 +51,14 @@ function NotifyAction({ notify, pDeleteNotify }: INotifyActionProps) {
                 <MoreHorizIcon />
             </IconButton>
             <Menu
-                id="long-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'long-button',
-                }}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                PaperProps={{
+                    elevation: 1,
+                }}
             >
-                <MenuItem onClick={handleDeleteNotify}>Delete</MenuItem>
+                <MenuItem onClick={handleDeleteNotify}>{t('button.delete')}</MenuItem>
             </Menu>
         </Box>
     )

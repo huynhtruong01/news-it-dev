@@ -2,7 +2,7 @@ import { SkeletonProfile } from '@/components/Common'
 import { IUser } from '@/models'
 import {
     ProfileHeader,
-    ProfileInfoItem,
+    ProfileInfo,
     ProfileLeftItem,
     ProfileNews,
 } from '@/pages/Profile/components'
@@ -10,12 +10,10 @@ import { ProfileUserNumFollow } from '@/pages/ProfileUser/components'
 import { AppDispatch, AppState } from '@/store'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
-import ArticleIcon from '@mui/icons-material/Article'
-import TagIcon from '@mui/icons-material/Tag'
-import { Box, Grid, Paper, Stack } from '@mui/material'
+import { Box, Grid, Stack } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo } from 'react'
-import { RiChat1Line } from 'react-icons/ri'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 
 export interface IProfileProps {
@@ -24,9 +22,10 @@ export interface IProfileProps {
 }
 
 function Profile({ pUser, pGetProfile }: IProfileProps) {
+    const { t } = useTranslation()
+
     useEffect(() => {
         document.title = `${pUser?.username} - DEV Community`
-        // GET PROFILE HERE
         pGetProfile()
     }, [])
 
@@ -67,36 +66,23 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
 
                             {pUser.skillLanguages && (
                                 <ProfileLeftItem
-                                    title={'Skills/Languages'}
+                                    title={t('input.skill_languages')}
                                     value={pUser.skillLanguages}
                                 />
                             )}
 
                             {pUser.currentlyLearning && (
                                 <ProfileLeftItem
-                                    title={'Currently Learning'}
+                                    title={t('input.currently_learning')}
                                     value={pUser.currentlyLearning}
                                 />
                             )}
 
-                            <Box component={Paper} elevation={1} padding={2}>
-                                <ProfileInfoItem
-                                    icon={ArticleIcon}
-                                    text={`${pUser.newsCount || 0} news`}
-                                    marginBottom={2}
-                                />
-                                <ProfileInfoItem
-                                    icon={RiChat1Line}
-                                    text={`${
-                                        pUser.comments?.length || 0
-                                    } comment written`}
-                                    marginBottom={2}
-                                />
-                                <ProfileInfoItem
-                                    icon={TagIcon}
-                                    text={`${pUser.hashTags?.length || 0} tags followed`}
-                                />
-                            </Box>
+                            <ProfileInfo
+                                numNews={pUser.newsCount as number}
+                                numComments={(pUser.comments?.length || 0) as number}
+                                numTag={pUser.hashTags?.length as number}
+                            />
                         </Stack>
                     </Grid>
                     <Grid item md={8}>

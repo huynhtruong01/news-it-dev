@@ -14,4 +14,7 @@ export const reducers = {
     setShowModalDeleteAccount(state: ICommonStore, action: PayloadAction<boolean>) {
         state.isShowModalDeleteAccount = action.payload
     },
+    setLanguages(state: ICommonStore, action: PayloadAction<string>) {
+        state.languages = action.payload
+    },
 }

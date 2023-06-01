@@ -5,6 +5,7 @@ import { INews, INewsFilters, INewsStatus } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack } from '@mui/material'
 import { Dispatch, SetStateAction, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface ITagsDetailNewsProps extends BoxProps {
     news: INews[]
@@ -18,6 +19,7 @@ export function TagsDetailNews({
     setFilters,
     ...rest
 }: ITagsDetailNewsProps) {
+    const { t } = useTranslation()
     const newNews = useMemo(() => {
         return news && news?.length ? news : []
     }, [news])
@@ -65,7 +67,7 @@ export function TagsDetailNews({
                             }}
                             onClick={() => handleSetStatus(h.value as INewsStatus)}
                         >
-                            {h.name}
+                            {t(h.name as string)}
                         </Box>
                     ))}
                 </Stack>
@@ -73,7 +75,7 @@ export function TagsDetailNews({
                 <SearchFilter
                     initValue={''}
                     onSearchChange={handleSearchFilters}
-                    placeholder={'Search title...'}
+                    placeholder={t('placeholder.search_title') as string}
                 />
             </Stack>
 

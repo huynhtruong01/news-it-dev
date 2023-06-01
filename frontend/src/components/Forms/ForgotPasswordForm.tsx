@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { theme } from '@/utils'
+import { useTranslation } from 'react-i18next'
 
 export interface IForgotPasswordFormProps {
     onSetPassword: (data: IResetPassword) => Promise<void>
@@ -27,6 +28,7 @@ const schema = yup.object().shape({
 })
 
 export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     const form = useForm<IResetPassword>({
@@ -49,7 +51,7 @@ export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) 
             await onSetPassword(values)
 
             reset()
-            enqueueSnackbar('Change your password successfully', {
+            enqueueSnackbar(`${t('message.format_password_success')}`, {
                 variant: 'success',
             })
             navigate('/login')

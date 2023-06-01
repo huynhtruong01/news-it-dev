@@ -6,21 +6,22 @@ import { useEffect, useState } from 'react'
 import { IFilters, INews } from '@/models'
 import { Order, Status } from '@/enums'
 import { newsApi } from '@/api'
+import { TFunction } from 'i18next'
 
 export interface INewsSideRightRelationProps extends BoxProps {
     newsId: number
     hashTagIds: number[]
+    t: TFunction<'translation', undefined, 'translation'>
 }
 
 export function NewsSideRightRelation({
     hashTagIds,
     newsId,
+    t,
     ...rest
 }: INewsSideRightRelationProps) {
     const [newsTagsList, setNewsTagsList] = useState<INews[]>([])
     const [newHashTagIds, setNewHashTagIds] = useState<number[]>([])
-    // CREATE STATE SAVE NEWS LIST
-    // FETCH NEWS BY HASH TAGS IDS FOR RELATIONS
 
     useEffect(() => {
         if (newHashTagIds.length === hashTagIds.length || !hashTagIds) return
@@ -60,7 +61,7 @@ export function NewsSideRightRelation({
                     },
                 }}
             >
-                Read next
+                {t('news.read_next')}
             </Typography>
 
             <Stack component="ul">

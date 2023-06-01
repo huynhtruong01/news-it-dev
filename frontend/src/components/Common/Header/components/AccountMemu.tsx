@@ -20,16 +20,27 @@ import { MouseEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleIcon from '@mui/icons-material/Article'
 import { connect } from 'react-redux'
-import { AppState } from '@/store'
+import { AppDispatch, AppState } from '@/store'
 import { IUser } from '@/models'
+import GTranslateIcon from '@mui/icons-material/GTranslate'
+import { useTranslation } from 'react-i18next'
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
+import { languagesListSelect } from '@/data'
+import { setLanguages } from '@/store/common'
+import i18next from 'i18next'
 
-export interface IAccountMemuProps extends BoxProps {
+export interface IAccountMenuProps extends BoxProps {
     pUser: IUser | null
+    pLanguages: string
+    pSetLanguages: (lang: string) => void
 }
 
-function AccountMemu({ pUser }: IAccountMemuProps) {
+function AccountMenu({ pUser, pLanguages, pSetLanguages }: IAccountMenuProps) {
+    const { t } = useTranslation()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const [anchorLang, setAnchorLang] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
+    const openLang = Boolean(anchorLang)
 
     const handleOpenClick = (e: MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget)
@@ -37,6 +48,26 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
 
     const handleCloseClick = () => {
         setAnchorEl(null)
+    }
+
+    const handleOpenLangClick = () => {
+        setAnchorLang(anchorEl)
+        setAnchorEl(null)
+    }
+
+    const handleCloseLang = () => {
+        setAnchorLang(null)
+        setAnchorEl(anchorLang)
+    }
+
+    const handleCloseAll = () => {
+        setAnchorEl(null)
+        setAnchorLang(null)
+    }
+
+    const handleSelectLang = (value: string) => {
+        i18next.changeLanguage(value)
+        pSetLanguages(value)
     }
 
     return (
@@ -61,6 +92,8 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                     />
                 </IconButton>
             </Tooltip>
+
+            {/* dashboard */}
             <Menu
                 anchorEl={anchorEl}
                 open={open}
@@ -86,6 +119,16 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                                 width: '100%',
                                 padding: theme.spacing(1, 2),
                             },
+                            '.row': {
+                                display: 'block',
+                                width: '100%',
+                                padding: theme.spacing(1, 2),
+                                '&:hover': {
+                                    span: {
+                                        textDecoration: 'none',
+                                    },
+                                },
+                            },
                             '&:hover': {
                                 backgroundColor: alpha(theme.palette.primary.dark, 0.15),
                                 color: theme.palette.primary.dark,
@@ -104,7 +147,6 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                 disableScrollLock={true}
             >
                 <MenuItem>
-                    {/* WRITE LINK HERE */}
                     <Link to={'/profile'}>
                         <Stack alignItems={'flex-start'}>
                             <Typography component="span" fontWeight={500}>
@@ -123,7 +165,7 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                             <ListItemIcon>
                                 <DashboardIcon fontSize="small" />
                             </ListItemIcon>
-                            <span>Dashboard</span>
+                            <span>{t('dashboard.dashboard')}</span>
                         </Stack>
                     </Link>
                 </MenuItem>
@@ -133,9 +175,19 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                             <ListItemIcon>
                                 <ArticleIcon fontSize="small" />
                             </ListItemIcon>
-                            <span>Reading list</span>
+                            <span>{t('dashboard.reading_list')}</span>
                         </Stack>
                     </Link>
+                </MenuItem>
+                <MenuItem>
+                    <Box className="row" onClick={handleOpenLangClick}>
+                        <Stack direction={'row'} alignItems={'center'}>
+                            <ListItemIcon>
+                                <GTranslateIcon fontSize="small" />
+                            </ListItemIcon>
+                            <span>{t('dashboard.languages')}</span>
+                        </Stack>
+                    </Box>
                 </MenuItem>
                 <MenuItem>
                     <Link to={'/settings/profile'}>
@@ -143,7 +195,7 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                             <ListItemIcon>
                                 <Settings fontSize="small" />
                             </ListItemIcon>
-                            <span>Settings</span>
+                            <span>{t('dashboard.settings')}</span>
                         </Stack>
                     </Link>
                 </MenuItem>
@@ -154,10 +206,143 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
                             <ListItemIcon>
                                 <Logout fontSize="small" />
                             </ListItemIcon>
-                            <span>Sign out</span>
+                            <span>{t('auth.signout')}</span>
                         </Stack>
                     </Link>
                 </MenuItem>
+            </Menu>
+
+            {/* languages */}
+            <Menu
+                anchorEl={anchorLang}
+                open={openLang}
+                onClose={handleCloseAll}
+                PaperProps={{
+                    elevation: 1,
+                    sx: {
+                        borderRadius: theme.spacing(0.75),
+                        overflow: 'visible',
+                        mt: 0.5,
+                        filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.2))',
+                        width: 250,
+                        padding: 1,
+                        ul: {
+                            padding: 0,
+                        },
+                        li: {
+                            borderRadius: theme.spacing(0.75),
+                            padding: 0,
+                            marginBottom: 0.5,
+
+                            a: {
+                                display: 'block',
+                                width: '100%',
+                                padding: theme.spacing(1, 2),
+                            },
+                            '.row': {
+                                display: 'block',
+                                width: '100%',
+                                padding: theme.spacing(0, 2, 0, 0),
+
+                                '.MuiListItemIcon-root': {
+                                    justifyContent: 'center',
+                                    borderRadius: theme.spacing(0.75),
+                                    padding: theme.spacing(1, 0),
+
+                                    '&:hover': {
+                                        backgroundColor: alpha(
+                                            theme.palette.primary.dark,
+                                            0.15
+                                        ),
+                                        color: theme.palette.primary.dark,
+                                    },
+                                },
+                                '&:hover': {
+                                    span: {
+                                        textDecoration: 'none',
+                                    },
+                                },
+                            },
+                            '.lang': {
+                                padding: theme.spacing(1, 2),
+                                '&:hover': {
+                                    span: {
+                                        textDecoration: 'none',
+                                    },
+                                },
+                            },
+                            '&:hover': {
+                                backgroundColor: alpha(theme.palette.primary.dark, 0.15),
+                                color: theme.palette.primary.dark,
+                                svg: {
+                                    color: theme.palette.primary.dark,
+                                },
+                                '& .lang': {
+                                    span: {
+                                        textDecoration: 'none',
+                                    },
+                                },
+                                span: {
+                                    textDecoration: 'underline',
+                                },
+                                '&.noHover': {
+                                    backgroundColor: 'transparent',
+                                    color: 'inherit',
+                                    svg: {
+                                        color: 'inherit',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                disableScrollLock={true}
+            >
+                <MenuItem className="noHover">
+                    <Box className="row">
+                        <Stack direction={'row'} alignItems={'center'}>
+                            <ListItemIcon onClick={handleCloseLang}>
+                                <ArrowBackIosIcon fontSize="small" />
+                            </ListItemIcon>
+                            <Stack flex={1} alignItems={'center'}>
+                                <Typography
+                                    component="small"
+                                    fontWeight={700}
+                                    sx={{
+                                        color: theme.palette.secondary.main,
+                                        marginLeft: -2,
+                                    }}
+                                >
+                                    {t('dashboard.languages')}
+                                </Typography>
+                            </Stack>
+                        </Stack>
+                    </Box>
+                </MenuItem>
+                <Divider />
+                {languagesListSelect.map((lang) => (
+                    <MenuItem
+                        key={lang.value}
+                        sx={{
+                            backgroundColor:
+                                pLanguages === lang.value
+                                    ? alpha(theme.palette.primary.dark, 0.15)
+                                    : 'tranparent',
+                            color:
+                                pLanguages === lang.value
+                                    ? theme.palette.primary.dark
+                                    : 'inherit',
+                            fontWeight: pLanguages === lang.value ? 500 : 400,
+                        }}
+                        onClick={() => handleSelectLang(lang.value as string)}
+                    >
+                        <Box className="lang">
+                            <span>{lang.name}</span>
+                        </Box>
+                    </MenuItem>
+                ))}
             </Menu>
         </Box>
     )
@@ -166,7 +351,14 @@ function AccountMemu({ pUser }: IAccountMemuProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pLanguages: state.common.languages,
     }
 }
 
-export default connect(mapStateToProps, null)(AccountMemu)
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSetLanguages: (lang: string) => dispatch(setLanguages(lang)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountMenu)

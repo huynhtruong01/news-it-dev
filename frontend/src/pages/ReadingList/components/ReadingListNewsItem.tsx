@@ -2,6 +2,7 @@ import { useLinkUser } from '@/hooks'
 import { INews, IUser } from '@/models'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, Button, Stack, Typography, alpha } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 export interface IReadingListNewsItemProps {
@@ -9,6 +10,7 @@ export interface IReadingListNewsItemProps {
 }
 
 export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
+    const { t } = useTranslation()
     const linkUser = useLinkUser(article?.user as IUser)
 
     return (
@@ -82,7 +84,9 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                             {formatDate(article.createdAt || new Date(), 'MMM DD')}
                         </span>
                         <span> • </span>
-                        <span>{article.readTimes} min read</span>
+                        <span>
+                            {article.readTimes} {t('common.min_read')}
+                        </span>
                         <span> • </span>
                         <Stack direction={'row'} gap={0.5}>
                             {article?.hashTags?.length &&
@@ -105,7 +109,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                                             },
                                         }}
                                     >
-                                        {/* TODO: WRITE LINK HERE */}
+                                        {/* WRITE LINK HERE */}
                                         <Link to={`/tags/${tag.name}`}>#{tag.name}</Link>
                                     </Typography>
                                 ))}
@@ -117,7 +121,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                 variant="contained"
                 sx={{
                     padding: theme.spacing(1, 2),
-                    backgroundColor: 'transparent',
+                    backgroundColor: alpha(theme.palette.secondary.main, 0.075),
                     color: theme.palette.secondary.main,
                     borderRadius: theme.spacing(0.75),
 
@@ -127,7 +131,7 @@ export function ReadingListNewsItem({ article }: IReadingListNewsItemProps) {
                     },
                 }}
             >
-                Archive
+                {t('button.unsave')}
             </Button>
         </Stack>
     )

@@ -12,11 +12,13 @@ import {
     Popper,
     PopperPlacementType,
 } from '@mui/material'
+import { TFunction } from 'i18next'
 import { Dispatch, MouseEvent, SetStateAction, useState } from 'react'
 import { connect } from 'react-redux'
 
 export interface ICommentActionProps extends BoxProps {
     comment: IComment
+    t: TFunction<'translation', undefined, 'translation'>
     setEdit?: Dispatch<SetStateAction<IComment | null>>
     setInitValue?: Dispatch<SetStateAction<string>>
     pSetModalDeleteComment: (isShow: boolean) => void
@@ -27,6 +29,7 @@ const placeholder: PopperPlacementType = 'bottom-start'
 
 function CommentAction({
     comment,
+    t,
     setEdit,
     setInitValue,
     pSetModalDeleteComment,
@@ -83,8 +86,8 @@ function CommentAction({
 
             <Popper id={'111'} anchorEl={anchorEl} open={open} placeholder={placeholder}>
                 <Box component={Paper}>
-                    <MenuItem onClick={handleUpdate}>Update</MenuItem>
-                    <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                    <MenuItem onClick={handleUpdate}>{t('button.edit')}</MenuItem>
+                    <MenuItem onClick={handleDelete}>{t('button.delete')}</MenuItem>
                 </Box>
             </Popper>
         </Box>

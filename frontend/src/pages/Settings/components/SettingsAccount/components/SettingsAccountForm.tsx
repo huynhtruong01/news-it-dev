@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { AppDispatch } from '@/store'
 import { setShowModalDeleteAccount } from '@/store/common'
 import { connect } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 export interface ISettingsAccountFormProps extends BoxProps {
     emailAddress: string
@@ -34,6 +35,7 @@ const schema = yup.object().shape({
 })
 
 function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
+    const { t } = useTranslation()
     const form = useForm<ISettingSetPassword>({
         defaultValues: {
             currentPassword: '',
@@ -60,7 +62,7 @@ function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
             await authApi.resetPassword(newValues)
 
             reset()
-            enqueueSnackbar('Set new password successfully.', {
+            enqueueSnackbar(t('message.set_new_password_success'), {
                 variant: 'success',
             })
         } catch (error) {
@@ -79,7 +81,7 @@ function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
             <Stack gap={3}>
                 <Box component={Paper} elevation={1} padding={3}>
                     <Typography component="h2" variant="h5" fontWeight={700}>
-                        Set new password
+                        {t('button.set_new_password')}
                     </Typography>
                     <Box
                         component="form"
@@ -89,19 +91,19 @@ function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
                         <Box marginBottom={2}>
                             <PasswordField
                                 form={form}
-                                label="Current password"
+                                label={t('input.current_password')}
                                 name="currentPassword"
                                 disabled={isSubmitting}
                             />
                             <PasswordField
                                 form={form}
-                                label="Password"
+                                label={t('input.password')}
                                 name="password"
                                 disabled={isSubmitting}
                             />
                             <PasswordField
                                 form={form}
-                                label="Confirm new password"
+                                label={t('input.confirm_password')}
                                 name="confirmPassword"
                                 disabled={isSubmitting}
                             />
@@ -120,14 +122,14 @@ function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
                                 },
                             }}
                         >
-                            Set New Password
+                            {t('button.set_new_password')}
                         </Button>
                     </Box>
                 </Box>
 
                 <Box component={Paper} elevation={1} padding={3}>
                     <Typography component="h2" variant="h5" fontWeight={700}>
-                        Delete account
+                        {t('button.delete_account')}
                     </Typography>
                     <Box paddingTop={2}>
                         <Button
@@ -142,7 +144,7 @@ function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
                             }}
                             onClick={handleShowModal}
                         >
-                            Delete Account
+                            {t('button.delete_account')}
                         </Button>
                     </Box>
                 </Box>

@@ -4,6 +4,7 @@ import { INews, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Box, BoxProps, Paper, Stack, Typography, alpha } from '@mui/material'
+import { TFunction } from 'i18next'
 import { useMemo } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -12,11 +13,13 @@ export interface INewsSideRightRelationUserProps extends BoxProps {
     news: INews
     user: IUser | null
     pUser: IUser | null
+    t: TFunction<'translation', undefined, 'translation'>
 }
 
 function NewsSideRightRelationUser({
     news,
     user,
+    t,
     pUser,
     ...rest
 }: INewsSideRightRelationUserProps) {
@@ -63,7 +66,7 @@ function NewsSideRightRelationUser({
                         },
                     }}
                 >
-                    More from <Link to={link}>{user.username}</Link>
+                    {t('news.more_from')} <Link to={link}>{user.username}</Link>
                 </Typography>
 
                 <Stack component="ul">
