@@ -1,6 +1,14 @@
 import { newsList } from '@/data'
 import { theme } from '@/utils'
-import { Box, BoxProps, Divider, Paper, Stack, Typography } from '@mui/material'
+import {
+    Box,
+    BoxProps,
+    Divider,
+    Paper,
+    Stack,
+    Typography,
+    useMediaQuery,
+} from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { IFilters, INews } from '@/models'
@@ -20,6 +28,7 @@ export function NewsSideRightRelation({
     t,
     ...rest
 }: INewsSideRightRelationProps) {
+    const isMiddleScreen = useMediaQuery('(min-width:320px)')
     const [newsTagsList, setNewsTagsList] = useState<INews[]>([])
     const [newHashTagIds, setNewHashTagIds] = useState<number[]>([])
 
@@ -49,7 +58,7 @@ export function NewsSideRightRelation({
         <Box {...rest} component={Paper} borderRadius={theme.spacing(0.75)}>
             <Typography
                 component="h3"
-                variant="h6"
+                variant={'h6'}
                 fontWeight={700}
                 padding={theme.spacing(1.5, 2)}
                 sx={{
@@ -71,9 +80,17 @@ export function NewsSideRightRelation({
                             <Box
                                 sx={{
                                     marginBottom: 1.5,
+                                    maxHeight: {
+                                        lg: 300,
+                                        xs: 150,
+                                    },
                                     img: {
+                                        display: 'block',
                                         borderRadius: theme.spacing(0.75),
-                                        overflow: 'hidden',
+                                        height: {
+                                            lg: 300,
+                                            xs: 150,
+                                        },
                                     },
                                 }}
                             >
@@ -85,7 +102,7 @@ export function NewsSideRightRelation({
                             <Box>
                                 <Typography
                                     component="h4"
-                                    variant="h5"
+                                    variant={isMiddleScreen ? 'h6' : 'h5'}
                                     color={theme.palette.primary.light}
                                     fontWeight={700}
                                     sx={{
@@ -102,9 +119,13 @@ export function NewsSideRightRelation({
                                 </Typography>
                                 <Typography
                                     sx={{
+                                        display: {
+                                            lg: 'block',
+                                            xs: 'none',
+                                        },
                                         fontWeight: 400,
                                         marginTop: 0.75,
-                                        marginBottom: 2.5,
+
                                         color: theme.palette.secondary.light,
                                     }}
                                 >
@@ -113,6 +134,7 @@ export function NewsSideRightRelation({
                                 <Box
                                     display={'inline-block'}
                                     sx={{
+                                        marginTop: 2.5,
                                         a: {
                                             color: theme.palette.primary.light,
                                             fontWeight: 600,

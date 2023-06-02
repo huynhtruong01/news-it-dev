@@ -100,7 +100,14 @@ function ArticleIntro({
     }, [article])
 
     return (
-        <Box width={'100%'} paddingLeft={5}>
+        <Box
+            width={'100%'}
+            paddingLeft={{
+                md: 5,
+                sm: 2.5,
+                xs: 0,
+            }}
+        >
             <Box marginBottom={2}>
                 <Typography
                     component="h2"
@@ -129,7 +136,10 @@ function ArticleIntro({
                         sx={{
                             fontSize: theme.typography.body2,
                             color: alpha(theme.palette.secondary.dark, 0.8),
-                            display: '-webkit-box',
+                            display: {
+                                md: '-webkit-box',
+                                xs: 'none',
+                            },
                             WebkitLineClamp: 1,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
@@ -158,19 +168,18 @@ function ArticleIntro({
                             alignItems: 'center',
                             padding: theme.spacing(0.75, 1.5),
                             borderRadius: theme.spacing(0.75),
-                            backgroundColor: 'transparent',
                             boxShadow: 'none',
                             fontWeight: 400,
                             color: alpha(theme.palette.secondary.dark, 0.8),
                             fontSize: theme.typography.body2,
                             lineHeight: 1,
 
+                            svg: {
+                                fontSize: theme.typography.body2,
+                            },
+
                             '&:hover': {
                                 boxShadow: 'none',
-                                backgroundColor: alpha(
-                                    theme.palette.secondary.main,
-                                    0.075
-                                ),
                             },
                         },
                     }}

@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import { languagesListSelect } from '@/data'
 import { setLanguages } from '@/store/common'
+import DescriptionIcon from '@mui/icons-material/Description'
 import i18next from 'i18next'
 
 export interface IAccountMenuProps extends BoxProps {
@@ -106,7 +107,10 @@ function AccountMenu({ pUser, pLanguages, pSetLanguages }: IAccountMenuProps) {
                         overflow: 'visible',
                         mt: 0.5,
                         filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.2))',
-                        width: 250,
+                        width: {
+                            md: 250,
+                            xs: '100%',
+                        },
                         padding: 1,
                         ul: {
                             padding: 0,
@@ -169,6 +173,23 @@ function AccountMenu({ pUser, pLanguages, pSetLanguages }: IAccountMenuProps) {
                         </Stack>
                     </Link>
                 </MenuItem>
+                <MenuItem
+                    sx={{
+                        display: {
+                            md: 'none',
+                            sm: 'block',
+                        },
+                    }}
+                >
+                    <Link to={'/create-news'}>
+                        <Stack direction={'row'} alignItems={'center'}>
+                            <ListItemIcon>
+                                <DescriptionIcon fontSize="small" />
+                            </ListItemIcon>
+                            <span>{t('dashboard.create_news')}</span>
+                        </Stack>
+                    </Link>
+                </MenuItem>
                 <MenuItem>
                     <Link to={'/reading-list'}>
                         <Stack direction={'row'} alignItems={'center'}>
@@ -224,7 +245,10 @@ function AccountMenu({ pUser, pLanguages, pSetLanguages }: IAccountMenuProps) {
                         overflow: 'visible',
                         mt: 0.5,
                         filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.2))',
-                        width: 250,
+                        width: {
+                            md: 250,
+                            xs: '100%',
+                        },
                         padding: 1,
                         ul: {
                             padding: 0,

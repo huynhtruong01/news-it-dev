@@ -18,13 +18,16 @@ export function DashboardReadingListFilters({
     }
 
     return (
-        <Box>
+        <Box width={'100%'}>
             <SearchFilter
                 initValue=""
                 onSearchChange={handleSearchReadingList}
                 placeholder={t('placeholder.search_title') as string}
                 sx={{
-                    width: 300,
+                    width: {
+                        md: 300,
+                        xs: '100%',
+                    },
                 }}
             />
         </Box>

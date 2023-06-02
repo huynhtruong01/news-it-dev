@@ -1,9 +1,9 @@
+import { ProfileInfoItem } from '@/pages/Profile/components/ProfileInfo/components'
 import { Box, Paper } from '@mui/material'
+import { useTranslation } from 'react-i18next'
+import { HiHashtag } from 'react-icons/hi'
 import { IoNewspaperOutline } from 'react-icons/io5'
 import { RiChat1Line } from 'react-icons/ri'
-import { ProfileInfoItem } from '@/pages/Profile/components/ProfileInfo/components'
-import TagIcon from '@mui/icons-material/Tag'
-import { useTranslation } from 'react-i18next'
 
 export interface IProfileInfoProps {
     numNews: number
@@ -27,7 +27,7 @@ export function ProfileInfo({ numNews, numComments, numTag }: IProfileInfoProps)
                 marginBottom={2}
             />
             <ProfileInfoItem
-                icon={TagIcon}
+                icon={HiHashtag}
                 text={`${numTag} ${t('profile.tags_followed')}`}
             />
         </Box>

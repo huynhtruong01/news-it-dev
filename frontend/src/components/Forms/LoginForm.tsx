@@ -8,6 +8,7 @@ import { initLoginValues } from '@/data'
 import { enqueueSnackbar } from 'notistack'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { theme } from '@/utils'
+import { useTranslation } from 'react-i18next'
 
 export interface ILoginFormProps {
     onLoginSubmit: (values: ILoginValues) => Promise<void>
@@ -23,6 +24,8 @@ const schema = yup.object().shape({
 })
 
 export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
+    const { t } = useTranslation()
+
     const form = useForm<ILoginValues>({
         defaultValues: initLoginValues,
         resolver: yupResolver(schema),
@@ -54,20 +57,20 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
             >
                 <InputField
                     form={form}
-                    label="Email"
+                    label={t('input.email')}
                     name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
                 />
                 <PasswordField
                     form={form}
-                    label="Password"
+                    label={t('input.password')}
                     name="password"
                     disabled={isSubmitting}
                 />
                 <CheckBoxField
                     form={form}
-                    label="Remember me"
+                    label={t('input.remember_me')}
                     name="rememberMe"
                     disabled={isSubmitting}
                 />
@@ -88,7 +91,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     },
                 }}
             >
-                Login
+                {t('auth.login')}
             </LoadingButton>
         </Box>
     )

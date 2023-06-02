@@ -26,7 +26,7 @@ export function ArticleList({ loading, articleList }: IArticleListProps) {
             {!!newArticleList.length && !loading && (
                 <Grid container spacing={2}>
                     {newArticleList.map((news) => (
-                        <Grid key={news.id} item md={6}>
+                        <Grid key={news.id} item lg={6} xs={12}>
                             <ArticleItem article={news} />
                         </Grid>
                     ))}

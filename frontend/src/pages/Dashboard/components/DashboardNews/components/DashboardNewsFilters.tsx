@@ -46,7 +46,11 @@ export function DashboardNewsFilters({ setFilters }: IDashboardNewsFiltersProps)
                 initValue={''}
                 onSearchChange={handleSearchFilters}
                 placeholder={t('placeholder.search_title') as string}
-                width={250}
+                width={{
+                    lg: 250,
+                    md: 200,
+                    xs: '100%',
+                }}
             />
         </Stack>
     )

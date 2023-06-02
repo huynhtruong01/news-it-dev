@@ -1,13 +1,16 @@
 import { SocialLogin } from '@/pages/Auth/components'
-import { Box, Container, Paper, Typography } from '@mui/material'
+import { Box, Container, Paper, Typography, alpha } from '@mui/material'
 import { theme } from '@utils/index'
 import { ReactNode, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface IAuthContainerProps {
     children: ReactNode
 }
 
 export function AuthContainer({ children }: IAuthContainerProps) {
+    const { t } = useTranslation()
+
     useEffect(() => {
         document.title = 'Welcome! - Dev Community'
     }, [])
@@ -21,32 +24,33 @@ export function AuthContainer({ children }: IAuthContainerProps) {
         >
             <Container>
                 <Paper
-                    elevation={2}
+                    elevation={1}
                     sx={{
                         width: 640,
                         margin: 'auto',
                         padding: theme.spacing(6),
                     }}
                 >
-                    <Box marginBottom={3}>
+                    <Box marginBottom={3.5}>
                         <Typography
                             component="h1"
                             variant="h4"
                             textAlign="center"
                             fontWeight={700}
                         >
-                            Welcome to News Communicate
+                            {t('message.welcome')}
                         </Typography>
                         <Typography
                             textAlign="center"
-                            color={theme.palette.secondary.main}
+                            color={alpha(theme.palette.secondary.main, 0.8)}
+                            marginTop={0.5}
                         >
-                            News Communicate is a community for amazing developers
+                            {t('message.welcome_2')}
                         </Typography>
                     </Box>
                     <Box
                         sx={{
-                            marginBottom: theme.spacing(2),
+                            marginBottom: theme.spacing(3),
                         }}
                     >
                         <SocialLogin />

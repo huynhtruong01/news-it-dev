@@ -45,6 +45,10 @@ function MainContent({
                     item
                     sx={{
                         width: '240px',
+                        display: {
+                            xs: 'none',
+                            md: 'block',
+                        },
                     }}
                 >
                     <Sidebar />

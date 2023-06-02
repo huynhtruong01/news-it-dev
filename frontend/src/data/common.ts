@@ -1,3 +1,4 @@
+import { SelectDashboard } from '@/enums'
 import { NewsFilters } from '@/enums/news'
 import { IObjectCommon } from '@/models'
 
@@ -67,5 +68,38 @@ export const navMainHome: IObjectCommon[] = [
     {
         name: 'main_home.tags',
         link: '/tags',
+    },
+]
+
+export const selectsDashboard: IObjectCommon[] = [
+    {
+        name: 'dashboard.news',
+        value: SelectDashboard.NEWS,
+        link: '/dashboard',
+    },
+    {
+        name: 'dashboard.followers',
+        value: SelectDashboard.FOLLOWERS,
+        link: '/dashboard/followers',
+    },
+    {
+        name: 'dashboard.following_user',
+        value: SelectDashboard.FOLLOWING,
+        link: '/dashboard/following',
+    },
+    {
+        name: 'dashboard.following_tags',
+        value: SelectDashboard.TAGS,
+        link: '/dashboard/tags',
+    },
+    {
+        name: 'dashboard.news_likes',
+        value: SelectDashboard.LIKES,
+        link: '/dashboard/likes',
+    },
+    {
+        name: 'dashboard.reading_list',
+        value: SelectDashboard.SAVES,
+        link: '/dashboard/reading-list',
     },
 ]

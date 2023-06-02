@@ -1,10 +1,9 @@
-import { Box, Container } from '@mui/material'
-import { ReactNode, useEffect } from 'react'
-import { theme } from '@utils/index'
-import { useNavigate } from 'react-router-dom'
 import { ModalAuth, ModalDelete, ModalDeleteComment } from '@/components'
 import { HEADER_HEIGHT } from '@/consts'
-import { ProgressBar } from '@/components/Common'
+import { Box, Container } from '@mui/material'
+import { theme } from '@utils/index'
+import { ReactNode, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export interface IMainLayoutProps {
     children: ReactNode

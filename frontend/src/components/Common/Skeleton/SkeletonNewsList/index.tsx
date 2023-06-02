@@ -13,7 +13,7 @@ export function SkeletonNewsList({
     return (
         <Grid container spacing={2}>
             {Array.from(new Array(quantities)).map((item, idx) => (
-                <Grid key={idx} item md={12 / columns}>
+                <Grid key={idx} item md={12 / columns} xs={12}>
                     <SkeletonNews />
                 </Grid>
             ))}

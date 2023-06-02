@@ -1,12 +1,13 @@
+import { EmptyList } from '@/components/Common'
 import { IHashTag, INewsFilters } from '@/models'
-import { Box, Grid, Stack, Typography } from '@mui/material'
-import { useMemo, useState } from 'react'
 import {
     DashboardTag,
     DashboardTagFilters,
 } from '@/pages/Dashboard/components/DashboardTags/components'
-import { EmptyList } from '@/components/Common'
+import { Box, Grid, Stack } from '@mui/material'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TitleDashboard } from '..'
 
 export interface IDashboardTagsProps {
     tags: IHashTag[]
@@ -35,21 +36,33 @@ export function DashboardTags({ tags, numTags }: IDashboardTagsProps) {
     return (
         <Box>
             <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
+                direction={{
+                    md: 'row',
+                    xs: 'column',
+                }}
+                justifyContent={{
+                    md: 'space-between',
+                    xs: 'center',
+                }}
+                alignItems={{
+                    md: 'center',
+                    xs: 'flex-start',
+                }}
+                gap={2}
                 marginBottom={2}
+                width={'100%'}
             >
-                <Typography component="h2" variant="h6" fontWeight={700}>
-                    {t('dashboard.following_tags')} ({numTags})
-                </Typography>
+                <TitleDashboard
+                    text={t('dashboard.following_tags') as string}
+                    nums={numTags}
+                />
                 <DashboardTagFilters setFilters={setFilters} />
             </Stack>
 
             {newTags.length === 0 && <EmptyList title={t('empty.no_hash_tag_follow')} />}
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
                 {newTags.map((tag) => (
-                    <Grid key={tag.id} item md={4}>
+                    <Grid key={tag.id} item xs={12} sm={6} md={4}>
                         <DashboardTag tag={tag} />
                     </Grid>
                 ))}

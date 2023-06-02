@@ -1,8 +1,11 @@
 import { theme } from '@/utils'
 import { Box, Button, Paper, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export function SidebarHeader() {
+    const { t } = useTranslation()
+
     return (
         <Paper
             elevation={1}
@@ -12,10 +15,10 @@ export function SidebarHeader() {
             }}
         >
             <Typography component="h2" variant="h6" fontWeight={700} marginBottom={1}>
-                DEV Community is a community of 1,060,944 amazing developers
+                {t('message.welcome_2')}
             </Typography>
             <Typography color={theme.palette.grey[700]} marginBottom={2} fontWeight={400}>
-                We're a place where coders share, stay up-to-date and grow their careers.
+                {t('message.sidebar_header_desc')}
             </Typography>
             <Box
                 sx={{
@@ -61,7 +64,7 @@ export function SidebarHeader() {
                         },
                     }}
                 >
-                    <Link to={'/signup'}>Create account</Link>
+                    <Link to={'/signup'}>{t('auth.create_account')}</Link>
                 </Button>
                 <Button
                     fullWidth
@@ -81,7 +84,7 @@ export function SidebarHeader() {
                         },
                     }}
                 >
-                    <Link to={'/login'}>Log in</Link>
+                    <Link to={'/login'}>{t('auth.login')}</Link>
                 </Button>
             </Box>
         </Paper>

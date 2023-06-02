@@ -15,3 +15,12 @@ export enum Status {
     PUBLIC = 'public',
     UNPUBLIC = 'unpublic',
 }
+
+export enum SelectDashboard {
+    NEWS = 'news',
+    FOLLOWERS = 'followers',
+    FOLLOWING = 'following',
+    TAGS = 'tags',
+    LIKES = 'likes',
+    SAVES = 'saves',
+}

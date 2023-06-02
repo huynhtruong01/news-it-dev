@@ -9,7 +9,15 @@
 
     "auth": {
         "signout": "Sign out",
-        "login": "Login"
+        "login": "Login",
+        "create_account": "Create account",
+        "sign_in_google": "Sign in with Google",
+        "sign_in_facebook": "Sign in with Google",
+        "forgot_password": "Forgot password",
+        "dont_have_account": "Don't have account by email?",
+        "already_account": "Already your account?",
+        "sign_up": "Sign up",
+        "title_have_password": "Have a password? Continue with your email address"
     },
 
     "common": {
@@ -81,6 +89,7 @@
     "dashboard": {
         "dashboard": "Dashboard",
         "news": "News",
+        "create_news": "Create News",
         "followers": "Followers",
         "following_user": "Following user",
         "following_tags": "Following tags",
@@ -142,7 +151,8 @@
         "set_new_password": "Set new password",
         "delete_account": "Delete account",
         "dated_join": "Dated join",
-        "banding_color": "Banding color"
+        "banding_color": "Banding color",
+        "remember_me": "Remember me"
     },
 
     "placeholder": {
@@ -166,6 +176,7 @@
     },
 
     "message": {
+        "search_for": "Search results for",
         "reply_to": "reply to",
         "signout": "Are you sure you want to sign out?",
         "format_password_success": "Change your password successfully",
@@ -177,7 +188,10 @@
         "update_success": "Update News successfully",
         "delete_account_success": "Delete account successfully",
         "set_new_password_success": "Set new password successfully",
-        "update_profile_success": "Update profile success"
+        "update_profile_success": "Update profile success",
+        "welcome": "Welcome to News Communicate",
+        "welcome_2": "News Communicate is a community amazing for everyone",
+        "sidebar_header_desc": "We're a place where coders share, stay up-to-date and grow their careers."
     },
 
     "signout": {
@@ -197,5 +211,6 @@
 
     "liked your news": "liked your news",
     "reply to your comment": "reply to your comment",
-    "follow you": "follow you"
+    "follow you": "follow you",
+    "has been commented your news": "has been commented your news"
 }

@@ -5,6 +5,7 @@ import {
     DashboardNewsLikes,
     DashboardReadingList,
     DashboardTags,
+    SelectionDashboard,
 } from '@/pages/Dashboard/components'
 import { AppDispatch, AppState } from '@/store'
 import { getProfile } from '@/store/user/thunkApi'
@@ -44,11 +45,27 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
                                 item
                                 sx={{
                                     width: '240px',
+                                    display: {
+                                        md: 'block',
+                                        xs: 'none',
+                                    },
                                 }}
                             >
                                 <DashboardLeftList user={pUser} />
                             </Grid>
-                            <Grid item md>
+                            <Grid
+                                item
+                                xs={12}
+                                sx={{
+                                    display: {
+                                        md: 'none',
+                                        sm: 'block',
+                                    },
+                                }}
+                            >
+                                <SelectionDashboard />
+                            </Grid>
+                            <Grid item xs={12} md>
                                 <Routes>
                                     <Route
                                         index

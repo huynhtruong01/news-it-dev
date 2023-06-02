@@ -13,7 +13,14 @@ export function SkeletonNewsDetailMain() {
             }}
         >
             <Box component="header" width={'100%'}>
-                <Box height={420} width={'100%'}>
+                <Box
+                    width={'100%'}
+                    height={{
+                        md: 420,
+                        sm: 300,
+                        xs: 150,
+                    }}
+                >
                     <Skeleton
                         variant="rounded"
                         width={'100%'}
@@ -26,7 +33,10 @@ export function SkeletonNewsDetailMain() {
 
                 <Box
                     sx={{
-                        padding: theme.spacing(4, 8, 0),
+                        padding: {
+                            md: theme.spacing(4, 8, 0),
+                            xs: theme.spacing(1.5, 1.5, 0),
+                        },
                     }}
                 >
                     <Box>
@@ -44,7 +54,7 @@ export function SkeletonNewsDetailMain() {
                                 </Skeleton>
                             </Box>
                             <Box paddingLeft={theme.spacing(1.5)} flex={1}>
-                                <Skeleton variant="text" height={20} width="15%" />
+                                <Skeleton variant="text" height={20} width="18%" />
                                 <Skeleton variant="text" height={15} width="8%" />
                             </Box>
                         </Stack>
@@ -66,7 +76,13 @@ export function SkeletonNewsDetailMain() {
                 </Box>
             </Box>
 
-            <Box component="article" padding={theme.spacing(4, 8)}>
+            <Box
+                component="article"
+                padding={{
+                    lg: theme.spacing(4, 8),
+                    xs: theme.spacing(0, 1.5, 2),
+                }}
+            >
                 <Box>
                     {Array.from(new Array(50)).map((item, idx) => (
                         <Skeleton key={idx} variant="text" width={'100%'} />

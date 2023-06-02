@@ -7,15 +7,20 @@ export function SkeletonNews() {
             elevation={1}
             sx={{
                 overflow: 'hidden',
+                width: '100%',
             }}
         >
             <Box>
                 <Skeleton
                     variant="rounded"
                     width={'100%'}
-                    height={270}
                     sx={{
                         borderRadius: 0,
+                        height: {
+                            md: 270,
+                            sm: 200,
+                            xs: 150,
+                        },
                     }}
                 />
             </Box>
@@ -64,15 +69,45 @@ export function SkeletonNews() {
                     <Stack direction="row" gap={1} marginBottom={2.5}>
                         <Skeleton variant="rounded" width={80} height={28} />
                         <Skeleton variant="rounded" width={80} height={28} />
-                        <Skeleton variant="rounded" width={80} height={28} />
-                        <Skeleton variant="rounded" width={80} height={28} />
+                        <Skeleton
+                            variant="rounded"
+                            width={80}
+                            height={28}
+                            sx={{
+                                display: {
+                                    md: 'block',
+                                    xs: 'none',
+                                },
+                            }}
+                        />
+                        <Skeleton
+                            variant="rounded"
+                            width={80}
+                            height={28}
+                            sx={{
+                                display: {
+                                    md: 'block',
+                                    xs: 'none',
+                                },
+                            }}
+                        />
                     </Stack>
                     <Stack direction="row" justifyContent={'space-between'}>
                         <Stack direction="row" gap={1}>
                             <Skeleton variant="rounded" width={100} height={40} />
                             <Skeleton variant="rounded" width={100} height={40} />
                         </Stack>
-                        <Skeleton variant="rounded" width={100} height={40} />
+                        <Skeleton
+                            variant="rounded"
+                            width={100}
+                            height={40}
+                            sx={{
+                                display: {
+                                    md: 'block',
+                                    xs: 'none',
+                                },
+                            }}
+                        />
                     </Stack>
                 </Box>
             </Box>

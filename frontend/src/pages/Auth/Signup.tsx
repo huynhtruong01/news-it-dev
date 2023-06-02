@@ -38,29 +38,28 @@ export function Signup({ pUser }: ISignupProps) {
 
     return (
         <AuthContainer>
-            <>
-                <Box>
-                    <SignupForm onSignupSubmit={handleSignupSubmit} />
-                    <Typography
-                        sx={{
-                            fontSize: '14px',
-                            color: theme.palette.secondary.main,
-                            margin: theme.spacing(2, 0),
-                            textAlign: 'center',
+            <Box>
+                <SignupForm onSignupSubmit={handleSignupSubmit} />
+                <Typography
+                    sx={{
+                        fontSize: '14px',
+                        color: theme.palette.secondary.main,
+                        margin: theme.spacing(2, 0),
+                        textAlign: 'center',
 
-                            a: {
-                                color: theme.palette.primary.main,
+                        a: {
+                            color: theme.palette.primary.main,
 
-                                '&:hover': {
-                                    textDecoration: 'underline',
-                                },
+                            '&:hover': {
+                                textDecoration: 'underline',
                             },
-                        }}
-                    >
-                        Already have an account? <Link to={'/login'}>Login</Link>
-                    </Typography>
-                </Box>
-            </>
+                        },
+                    }}
+                >
+                    {t('auth.already_account')}{' '}
+                    <Link to={'/login'}>{t('auth.login')}</Link>
+                </Typography>
+            </Box>
         </AuthContainer>
     )
 }

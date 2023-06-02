@@ -105,7 +105,7 @@ function NewsSideRightUser({
                 borderTop={`2rem solid ${theme.palette.primary.main}`}
                 borderRadius={theme.spacing(0.75)}
             >
-                <Box marginBottom={4}>
+                <Box>
                     <Stack
                         direction={'row'}
                         alignItems={'flex-end'}
@@ -183,6 +183,7 @@ function NewsSideRightUser({
                 <Box
                     component="ul"
                     sx={{
+                        marginTop: 2,
                         li: {
                             marginBottom: 2,
                             div: {

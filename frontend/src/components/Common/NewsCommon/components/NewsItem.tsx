@@ -10,7 +10,16 @@ import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import { Avatar, Box, Button, Paper, Stack, Typography, alpha } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    Button,
+    IconButton,
+    Paper,
+    Stack,
+    Typography,
+    alpha,
+} from '@mui/material'
 import { indigo, red } from '@mui/material/colors'
 import { makeStyles } from '@mui/styles'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -141,7 +150,10 @@ function NewsItem({
             component={Paper}
             elevation={1}
             sx={{
-                padding: 3,
+                padding: {
+                    md: 3,
+                    xs: 2,
+                },
             }}
         >
             <Stack direction={'row'} alignItems={'center'} gap={1} marginBottom={2}>
@@ -171,7 +183,12 @@ function NewsItem({
                 </Box>
             </Stack>
 
-            <Box paddingLeft={6}>
+            <Box
+                paddingLeft={{
+                    md: 6,
+                    xs: 0,
+                }}
+            >
                 <Typography
                     component="h2"
                     variant="h5"
@@ -194,6 +211,10 @@ function NewsItem({
                     justifyContent={'space-between'}
                     marginTop={3}
                     sx={{
+                        display: {
+                            md: 'flex',
+                            xs: 'none',
+                        },
                         button: {
                             fontSize: theme.typography.body2,
                             padding: theme.spacing(0.85, 2),
@@ -276,6 +297,70 @@ function NewsItem({
                             {t('button.save')}
                         </Button>
                     </Stack>
+                </Stack>
+                <Stack
+                    direction={'row'}
+                    justifyContent={'space-between'}
+                    sx={{
+                        svg: {
+                            fontSize: theme.typography.h5,
+                        },
+                    }}
+                >
+                    <Stack
+                        direction={'row'}
+                        justifyContent={'space-between'}
+                        alignItems={'center'}
+                        gap={1}
+                    >
+                        <IconButton
+                            sx={{
+                                backgroundColor: liked
+                                    ? alpha(red[700], 0.1)
+                                    : alpha(theme.palette.secondary.main, 0.075),
+                                '&:hover': {
+                                    backgroundColor: liked
+                                        ? alpha(red[700], 0.1)
+                                        : alpha(theme.palette.secondary.main, 0.1),
+                                },
+                            }}
+                        >
+                            {liked ? (
+                                <FavoriteIcon
+                                    sx={{
+                                        color: `${red[700]} !important`,
+                                    }}
+                                />
+                            ) : (
+                                <FavoriteBorderIcon />
+                            )}
+                        </IconButton>
+                        <IconButton className={styles.button}>
+                            <RiChat3Line />
+                        </IconButton>
+                    </Stack>
+                    <IconButton
+                        sx={{
+                            backgroundColor: saved
+                                ? alpha(indigo[700], 0.1)
+                                : alpha(theme.palette.secondary.main, 0.075),
+                            '&:hover': {
+                                backgroundColor: saved
+                                    ? alpha(indigo[700], 0.1)
+                                    : alpha(theme.palette.secondary.main, 0.1),
+                            },
+                        }}
+                    >
+                        {saved ? (
+                            <BookmarkIcon
+                                sx={{
+                                    color: `${indigo[700]} !important`,
+                                }}
+                            />
+                        ) : (
+                            <BookmarkBorderIcon />
+                        )}
+                    </IconButton>
                 </Stack>
             </Box>
         </Box>

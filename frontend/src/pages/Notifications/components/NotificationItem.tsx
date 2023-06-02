@@ -160,7 +160,10 @@ function NotificationItem({
             component={Paper}
             elevation={1}
             sx={{
-                padding: 3,
+                padding: {
+                    md: 3,
+                    xs: 1.5,
+                },
                 borderLeft: `0.5rem solid ${
                     isRead ? 'transparent' : theme.palette.primary.main
                 } `,
@@ -177,8 +180,6 @@ function NotificationItem({
                         <Typography
                             variant="body1"
                             sx={{
-                                display: 'flex',
-                                gap: 0.5,
                                 a: {
                                     fontWeight: 600,
                                 },
@@ -186,6 +187,7 @@ function NotificationItem({
                         >
                             <Link to={linkUser}>{notify.user?.username}</Link>{' '}
                             <Box
+                                component={'span'}
                                 dangerouslySetInnerHTML={{
                                     __html: t(notify.text as string) || '',
                                 }}
@@ -203,7 +205,15 @@ function NotificationItem({
                     </Box>
                 </Stack>
 
-                <NotifyAction notify={notify} />
+                <NotifyAction
+                    notify={notify}
+                    sx={{
+                        display: {
+                            md: 'inline-block',
+                            xs: 'none',
+                        },
+                    }}
+                />
             </Stack>
 
             {!notify?.news && (
@@ -236,7 +246,12 @@ function NotificationItem({
             )}
 
             {notify?.news && (
-                <Box paddingLeft={6}>
+                <Box
+                    paddingLeft={{
+                        md: 6,
+                        xs: 0,
+                    }}
+                >
                     <Typography
                         component="h2"
                         variant="h5"

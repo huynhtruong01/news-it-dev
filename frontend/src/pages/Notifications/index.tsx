@@ -64,7 +64,23 @@ export function Notifications({
                 margin: 'auto',
             }}
         >
-            <Stack direction={'row'} justifyContent={'space-between'}>
+            <Stack
+                direction={{
+                    md: 'row',
+                    xs: 'column',
+                }}
+                justifyContent={{
+                    md: 'space-between',
+                    xs: 'center',
+                }}
+                alignItems={{
+                    md: 'center',
+                    xs: 'flex-start',
+                }}
+                gap={2}
+                marginBottom={2}
+                width={'100%'}
+            >
                 <TitlePage>
                     {t('notifications.title')} ({pNotificationsTotal})
                 </TitlePage>
@@ -81,13 +97,16 @@ export function Notifications({
                 <Grid
                     item
                     sx={{
-                        width: '240px',
+                        width: {
+                            md: '240px',
+                            xs: '100%',
+                        },
                     }}
                 >
                     <NotificationNavFilters filters={filters} setFilters={setFilters} />
                 </Grid>
 
-                <Grid item md>
+                <Grid item xs={12} md>
                     {/* list */}
                     <NotificationList notifications={pNotifications || []} />
 

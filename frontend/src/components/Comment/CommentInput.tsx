@@ -1,7 +1,15 @@
 import { IComment, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
-import { Avatar, Box, BoxProps, Button, Stack, TextField } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    BoxProps,
+    Button,
+    Stack,
+    TextField,
+    useMediaQuery,
+} from '@mui/material'
 import { TFunction } from 'i18next'
 import {
     Dispatch,
@@ -38,6 +46,7 @@ function CommentInput({
     t,
     ...rest
 }: ICommentInputProps) {
+    const isSmallScreen = useMediaQuery('(min-width:320px)')
     const inputRef = useRef<HTMLElement | null>(null)
     const [value, setValue] = useState<string>(initValue)
 
@@ -68,26 +77,38 @@ function CommentInput({
 
     return (
         <Box {...rest}>
-            <Stack direction={'row'} gap={2}>
+            <Stack
+                direction={'row'}
+                gap={{
+                    md: 2,
+                    xs: 1,
+                }}
+            >
                 {!isEdit && (
                     <Box>
                         <Avatar
                             src={pUser?.avatar}
                             sx={{
-                                width: 32,
-                                height: 32,
+                                width: {
+                                    md: 32,
+                                    xs: 24,
+                                },
+                                height: {
+                                    md: 32,
+                                    xs: 24,
+                                },
                             }}
                         />
                     </Box>
                 )}
                 <Box component="form" onSubmit={handleCommentSubmit} flex={1}>
-                    <Box marginBottom={2}>
+                    <Box marginBottom={1.5}>
                         <TextField
                             inputRef={commentInputRef ? commentInputRef : inputRef}
                             value={value}
                             fullWidth
                             onChange={(e) => setValue(e.target.value)}
-                            minRows={6}
+                            minRows={isSmallScreen ? 3 : 6}
                             multiline
                             placeholder={t('placeholder.add_discussion') as string}
                             sx={{
@@ -103,10 +124,9 @@ function CommentInput({
                         sx={{
                             button: {
                                 color: theme.palette.primary.contrastText,
-                                padding: theme.spacing(1.25, 2),
+                                padding: theme.spacing(1.75, 2),
                                 borderRadius: theme.spacing(0.75),
                                 fontWeight: 500,
-                                fontSize: theme.typography.body2,
                             },
                         }}
                     >
@@ -125,7 +145,7 @@ function CommentInput({
                         >
                             {t('button.submit')}
                         </Button>
-                        <Button
+                        {/* <Button
                             type="button"
                             variant="contained"
                             sx={{
@@ -137,7 +157,7 @@ function CommentInput({
                             onClick={() => setValue('')}
                         >
                             {t('button.clear')}
-                        </Button>
+                        </Button> */}
                         {(isReply || isEdit) && (
                             <Button
                                 type="button"

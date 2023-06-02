@@ -1,9 +1,10 @@
 import { EmptyList, NewsList } from '@/components/Common'
 import { INews, INewsFilters } from '@/models'
 import { DashboardReadingListFilters } from '@/pages/Dashboard/components/DashboardReadingList/components'
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TitleDashboard } from '..'
 
 export interface IDashboardReadingListProps {
     saves: INews[]
@@ -32,14 +33,26 @@ export function DashboardReadingList({ saves, numSaves }: IDashboardReadingListP
     return (
         <Box>
             <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
+                direction={{
+                    md: 'row',
+                    xs: 'column',
+                }}
+                justifyContent={{
+                    md: 'space-between',
+                    xs: 'center',
+                }}
+                alignItems={{
+                    md: 'center',
+                    xs: 'flex-start',
+                }}
+                gap={2}
                 marginBottom={2}
+                width={'100%'}
             >
-                <Typography component="h2" variant="h6" fontWeight={700}>
-                    {t('dashboard.reading_list')} ({numSaves})
-                </Typography>
+                <TitleDashboard
+                    text={t('dashboard.reading_list') as string}
+                    nums={numSaves}
+                />
                 <DashboardReadingListFilters setFilters={setFilters} />
             </Stack>
 

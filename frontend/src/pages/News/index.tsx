@@ -57,19 +57,23 @@ function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsP
             <Box>{loading && <SkeletonNewsDetail />}</Box>
             <Box>
                 {pNewsDetail && !loading && (
-                    <Grid container spacing={3}>
+                    <Grid container spacing={2}>
                         <Grid
                             item
                             sx={{
+                                display: {
+                                    md: 'block',
+                                    xs: 'none',
+                                },
                                 width: '64px',
                             }}
                         >
                             <NewsSideLeft news={pNewsDetail} />
                         </Grid>
-                        <Grid item md={8}>
+                        <Grid item xs={12} md={8}>
                             <NewsDetail news={pNewsDetail} />
                         </Grid>
-                        <Grid item md>
+                        <Grid item xs={12} md={4}>
                             <NewsSideRight news={pNewsDetail} />
                         </Grid>
                     </Grid>

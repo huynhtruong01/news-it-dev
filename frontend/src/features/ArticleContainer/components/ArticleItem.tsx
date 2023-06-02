@@ -18,8 +18,12 @@ export function ArticleItem({ article }: IArticleItemProps) {
             <Box component="article">
                 <Box
                     sx={{
-                        maxHeight: 270,
-                        minHeight: 200,
+                        maxHeight: {
+                            md: 270,
+                            sm: 320,
+                            xs: 150,
+                        },
+                        minHeight: 150,
                         overflow: 'hidden',
 
                         img: {

@@ -1,14 +1,11 @@
-import { initNewsFormValues } from '@/data'
-import { INewsForm, IUser } from '@/models'
-import { AppDispatch, AppState } from '@/store'
-import { setInitValueForm } from '@/store/news'
+import {
+    HeaderRightLogged,
+    HeaderRightNotLogged,
+} from '@/components/Common/Header/components'
 import { theme } from '@/utils'
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
 import SearchIcon from '@mui/icons-material/Search'
 import {
-    Badge,
     Box,
-    Button,
     Container,
     IconButton,
     InputAdornment,
@@ -18,32 +15,18 @@ import {
     alpha,
 } from '@mui/material'
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
-import { connect } from 'react-redux'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { AccountMemu } from './components'
 import { useTranslation } from 'react-i18next'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-export interface IHeaderProps {
-    pUser: IUser | null
-    pSetInitValuesNewsForm: (values: INewsForm) => void
-    pNumNotifications: number
-}
-
-function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderProps) {
+export function Header() {
     const { t } = useTranslation()
     const [searchVal, setSearchVal] = useState<string>('')
-    const [showButtonCreate, setShowButtonCreate] = useState<boolean>(true)
     const searchRef = useRef<HTMLInputElement | null>(null)
     const location = useLocation()
     const navigate = useNavigate()
 
     useEffect(() => {
         if (!location.pathname.startsWith('/search')) setSearchVal('')
-        if (location.pathname.startsWith('/create-news')) {
-            setShowButtonCreate(false)
-        } else {
-            setShowButtonCreate(true)
-        }
     }, [navigate])
 
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -55,10 +38,6 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
         e.preventDefault()
         navigate(`/search?q=${encodeURIComponent(searchVal)}`)
         if (searchRef.current) searchRef.current.blur()
-    }
-
-    const handleSetInitValuesForm = () => {
-        pSetInitValuesNewsForm(initNewsFormValues)
     }
 
     return (
@@ -80,6 +59,8 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                     sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: 2,
                         padding: theme.spacing(0.75, 0),
                     }}
                 >
@@ -108,7 +89,16 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                                 />
                             </Link>
                         </Box>
-                        <Box component="form" onSubmit={handleSearchNews}>
+                        <Box
+                            component="form"
+                            onSubmit={handleSearchNews}
+                            sx={{
+                                display: {
+                                    xs: 'none',
+                                    md: 'block',
+                                },
+                            }}
+                        >
                             <TextField
                                 inputRef={searchRef}
                                 value={searchVal}
@@ -155,6 +145,61 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                             />
                         </Box>
                     </Box>
+                    <Box
+                        component="form"
+                        onSubmit={handleSearchNews}
+                        sx={{
+                            display: {
+                                xs: 'block',
+                                md: 'none',
+                            },
+                            flex: 1,
+                        }}
+                    >
+                        <TextField
+                            inputRef={searchRef}
+                            value={searchVal}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment
+                                        position="start"
+                                        sx={{
+                                            marginRight: 0,
+                                        }}
+                                    >
+                                        <IconButton
+                                            type="submit"
+                                            sx={{
+                                                '&:hover': {
+                                                    backgroundColor: alpha(
+                                                        theme.palette.primary.main,
+                                                        0.1
+                                                    ),
+                                                    svg: {
+                                                        color: theme.palette.primary.main,
+                                                    },
+                                                },
+                                            }}
+                                        >
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                            size="small"
+                            placeholder={`${t('common.search')}...`}
+                            onChange={handleSearchChange}
+                            sx={{
+                                width: '100%',
+                                '.MuiInputBase-root': {
+                                    paddingRight: 0,
+                                },
+                                fieldset: {
+                                    paddingRight: 0,
+                                },
+                            }}
+                        />
+                    </Box>
                     <Stack
                         direction={'row'}
                         sx={{
@@ -174,149 +219,17 @@ function Header({ pUser, pSetInitValuesNewsForm, pNumNotifications }: IHeaderPro
                                 a: {
                                     display: 'inline-block',
                                     fontSize: '1rem',
-                                    padding: theme.spacing(0.75, 1.75),
+                                    padding: theme.spacing(1.25, 1.75),
                                     fontWeight: 500,
                                 },
                             },
                         }}
                     >
-                        {!pUser && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                }}
-                            >
-                                <Button
-                                    variant="contained"
-                                    sx={{
-                                        a: {
-                                            color: theme.palette.secondary.main,
-                                        },
-                                        '&:hover': {
-                                            backgroundColor: '#3b49df1a',
-
-                                            '& a': {
-                                                color: theme.palette.primary.main,
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <Link to={'/login'}>Log in</Link>
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    sx={{
-                                        marginBottom: 0.5,
-                                        border: `2px solid ${theme.palette.primary.main}`,
-
-                                        a: {
-                                            color: theme.palette.primary.main,
-                                        },
-
-                                        '&:hover': {
-                                            backgroundColor: theme.palette.primary.main,
-                                            '& a': {
-                                                color: theme.palette.primary.contrastText,
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <Link to={'/signup'}>Create account</Link>
-                                </Button>
-                            </Box>
-                        )}
-
-                        {pUser && (
-                            <Stack direction={'row'} gap={1.5} alignItems={'center'}>
-                                {showButtonCreate && (
-                                    <Button
-                                        variant="contained"
-                                        sx={{
-                                            border: `1px solid ${theme.palette.primary.main}`,
-
-                                            '& > a': {
-                                                display: 'block !important',
-                                                padding: '10px 14px !important',
-                                                color: theme.palette.primary.main,
-                                            },
-
-                                            '&:hover': {
-                                                backgroundColor:
-                                                    theme.palette.primary.main,
-                                                '& a': {
-                                                    color: theme.palette.primary
-                                                        .contrastText,
-                                                },
-                                            },
-                                        }}
-                                        onClick={handleSetInitValuesForm}
-                                    >
-                                        <Link to={'/create-news'}>
-                                            {t('main_home.create_news')}
-                                        </Link>
-                                    </Button>
-                                )}
-                                <Box
-                                    sx={{
-                                        borderRadius: theme.spacing(0.75),
-                                        cursor: 'pointer',
-                                        transition: '.2s ease-in-out',
-                                        a: {
-                                            display: 'block',
-                                            padding: 1,
-                                        },
-                                        '&:hover': {
-                                            backgroundColor: alpha(
-                                                theme.palette.primary.dark,
-                                                0.1
-                                            ),
-                                            svg: {
-                                                color: theme.palette.primary.dark,
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <Link to={'/notifications'}>
-                                        <Badge
-                                            color="error"
-                                            badgeContent={pNumNotifications}
-                                            sx={{
-                                                '& .MuiBadge-badge': {
-                                                    border: `1px solid ${theme.palette.primary.contrastText}`,
-                                                },
-                                            }}
-                                        >
-                                            <NotificationsNoneOutlinedIcon
-                                                sx={{
-                                                    fontSize: '30px',
-                                                    color: theme.palette.secondary.light,
-                                                }}
-                                            />
-                                        </Badge>
-                                    </Link>
-                                </Box>
-                                <AccountMemu />
-                            </Stack>
-                        )}
+                        <HeaderRightNotLogged />
+                        <HeaderRightLogged />
                     </Stack>
                 </Box>
             </Container>
         </Paper>
     )
 }
-
-const mapStateToProps = (state: AppState) => {
-    return {
-        pUser: state.user.user,
-        pNumNotifications: state.notify.numNotifications,
-    }
-}
-
-const mapDispatchToProps = (dispatch: AppDispatch) => {
-    return {
-        pSetInitValuesNewsForm: (values: INewsForm) => dispatch(setInitValueForm(values)),
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header)

@@ -93,7 +93,7 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
                             },
                         }}
                     >
-                        <span>Have a password? Continue with your email address</span>
+                        <span>{t('auth.title_have_password')}</span>
                     </Typography>
                 </Box>
                 <Box marginTop={8}>
@@ -115,7 +115,7 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
                         }}
                     >
                         {/* WRITE LINK HERE */}
-                        <Link to={'/forgot-password'}>Forgot password?</Link>
+                        <Link to={'/forgot-password'}>{t('auth.forgot_password')}?</Link>
                     </Typography>
                     <Typography
                         sx={{
@@ -133,7 +133,8 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
                             },
                         }}
                     >
-                        Don't have account by email? <Link to={'/signup'}>Sign up</Link>
+                        {t('auth.dont_have_account')}{' '}
+                        <Link to={'/signup'}>{t('auth.sign_up')}</Link>
                     </Typography>
                 </Box>
             </>

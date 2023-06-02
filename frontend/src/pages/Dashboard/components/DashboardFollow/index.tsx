@@ -1,12 +1,13 @@
+import { EmptyList } from '@/components/Common'
 import { INewsFilters, IUser } from '@/models'
-import { Box, BoxProps, Grid, Stack, Typography } from '@mui/material'
 import {
     DashboardFollowFilters,
     DashboardFollowItem,
 } from '@/pages/Dashboard/components/DashboardFollow/components'
+import { Box, BoxProps, Grid, Stack } from '@mui/material'
 import { useMemo, useState } from 'react'
-import { EmptyList } from '@/components/Common'
 import { useTranslation } from 'react-i18next'
+import { TitleDashboard } from '..'
 
 export interface IDashboardFollowProps extends BoxProps {
     title: string
@@ -44,23 +45,32 @@ export function DashboardFollow({
     }, [follows, filters])
 
     return (
-        <Box {...rest}>
+        <Box width={'100%'} {...rest}>
             <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
+                direction={{
+                    md: 'row',
+                    xs: 'column',
+                }}
+                justifyContent={{
+                    md: 'space-between',
+                    xs: 'center',
+                }}
+                alignItems={{
+                    md: 'center',
+                    xs: 'flex-start',
+                }}
+                gap={2}
                 marginBottom={2}
+                width={'100%'}
             >
-                <Typography component="h2" variant="h6" fontWeight={700}>
-                    {title} ({numFollows})
-                </Typography>
+                <TitleDashboard text={title} nums={numFollows} />
                 <DashboardFollowFilters setFilters={setFilters} />
             </Stack>
 
             {newFollows.length === 0 && <EmptyList title={t('empty.no_user_follow')} />}
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
                 {newFollows.map((follow) => (
-                    <Grid key={follow.id} item md={4}>
+                    <Grid key={follow.id} item xs={12} sm={6} md={4}>
                         <DashboardFollowItem follow={follow} />
                     </Grid>
                 ))}

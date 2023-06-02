@@ -6,10 +6,11 @@ import { SearchNewsFilters } from '@/pages/SearchNews/components'
 import { Box, Grid } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-
-// export interface ISearchNewsProps {}
+import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa'
+import { useTranslation } from 'react-i18next'
 
 export function SearchNews() {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<IFilters>({
         page: 1,
         limit: 100,
@@ -47,7 +48,24 @@ export function SearchNews() {
             }}
         >
             <Box>
-                <TitlePage>Search results for {query}</TitlePage>
+                <TitlePage
+                    sx={{
+                        svg: {
+                            fontSize: '12px',
+                            transform: 'translateY(-10px)',
+                            '&:first-of-type': {
+                                marginRight: 0.5,
+                            },
+                            '&:last-of-type': {
+                                marginLeft: 0.5,
+                            },
+                        },
+                    }}
+                >
+                    {t('message.search_for')} <FaQuoteLeft />
+                    {query}
+                    <FaQuoteRight />
+                </TitlePage>
             </Box>
 
             <Grid
@@ -60,7 +78,10 @@ export function SearchNews() {
                 <Grid
                     item
                     sx={{
-                        width: '240px',
+                        width: {
+                            md: '240px',
+                            xs: '100%',
+                        },
                     }}
                 >
                     <SearchNewsFilters
@@ -69,7 +90,7 @@ export function SearchNews() {
                         setFilters={setFilters}
                     />
                 </Grid>
-                <Grid item md>
+                <Grid item xs={12} md>
                     <NewsList newsList={news} />
                 </Grid>
             </Grid>

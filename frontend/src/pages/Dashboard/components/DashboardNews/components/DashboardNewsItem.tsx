@@ -63,16 +63,19 @@ function DashboardNewsItem({
         <Box component={Paper} elevation={1} {...rest}>
             <Grid
                 container
-                spacing={3}
+                spacing={2}
                 sx={{
                     padding: 2,
                 }}
             >
-                <Grid item md={5}>
+                <Grid item xs={12} md={5}>
                     <Typography
                         component="h3"
                         fontWeight={700}
-                        fontSize={'19px'}
+                        fontSize={{
+                            lg: '19px',
+                            xs: '17px',
+                        }}
                         sx={{
                             color: theme.palette.primary.light,
 
@@ -91,8 +94,13 @@ function DashboardNewsItem({
                         <Link to={`/news/${news.slug}`}>{news.title}</Link>
                     </Typography>
                 </Grid>
-                <Grid item md={3}>
-                    <Stack alignItems={'center'}>
+                <Grid item xs={4} md={3}>
+                    <Stack
+                        alignItems={{
+                            md: 'center',
+                            xs: 'flex-start',
+                        }}
+                    >
                         <Typography
                             component="span"
                             sx={{
@@ -111,7 +119,7 @@ function DashboardNewsItem({
                         </Typography>
                     </Stack>
                 </Grid>
-                <Grid item md={4}>
+                <Grid item xs={8} md={4}>
                     <Stack
                         direction={'row'}
                         gap={1}

@@ -110,7 +110,13 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
 
     return (
         <Box marginBottom={2}>
-            <Stack direction={'row'} gap={2}>
+            <Stack
+                direction={'row'}
+                gap={{
+                    md: 2,
+                    xs: 1,
+                }}
+            >
                 {!loadingUpdate && (
                     <Box>
                         <Link to={linkUser}>
@@ -118,8 +124,14 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                                 src={user?.avatar}
                                 alt={user?.username}
                                 sx={{
-                                    width: 32,
-                                    height: 32,
+                                    width: {
+                                        md: 32,
+                                        xs: 24,
+                                    },
+                                    height: {
+                                        md: 32,
+                                        xs: 24,
+                                    },
                                 }}
                             />
                         </Link>
@@ -131,7 +143,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                         <Paper
                             elevation={1}
                             sx={{
-                                padding: theme.spacing(1.5, 1.75, 2.5),
+                                padding: theme.spacing(1.5),
                             }}
                         >
                             <Stack
@@ -143,7 +155,10 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                                     <Typography
                                         component="span"
                                         fontWeight={500}
-                                        fontSize={'1rem'}
+                                        fontSize={{
+                                            lg: '1rem',
+                                            xs: '14px',
+                                        }}
                                     >
                                         <Link to={linkUser}>{user?.username} </Link>
                                     </Typography>
@@ -178,10 +193,14 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                                                         : replyUserData.username}
                                                 </Link>
                                             </Typography>
-                                            <span> • </span>
                                         </>
                                     )}
-                                    <Box component="time" fontSize={'12px'}>
+                                    <span> • </span>
+                                    <Box
+                                        component="time"
+                                        fontSize={'12px'}
+                                        color={alpha(theme.palette.secondary.main, 0.7)}
+                                    >
                                         {formatDate(createdAt || new Date(), 'MMM DD')}
                                     </Box>
                                 </Box>
@@ -196,13 +215,15 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                             </Stack>
                             <Box
                                 dangerouslySetInnerHTML={{ __html: content }}
-                                marginTop={1}
+                                marginTop={1.75}
                                 sx={{
                                     p: {
                                         lineHeight: '30px',
-                                        fontSize: '20px',
-                                        margin: theme.spacing(0, 0, 2.5, 0),
-                                        color: theme.palette.secondary.main,
+                                        fontSize: {
+                                            lg: '20px',
+                                            xs: '1rem',
+                                        },
+                                        color: '#171717',
                                         fontWeight: 400,
                                     },
                                 }}
@@ -234,7 +255,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                     )}
 
                     {/* Button Comment: Like, Reply */}
-                    <Box marginTop={2}>
+                    <Box marginTop={1}>
                         {isReply && !loadingReply && (
                             <CommentInput
                                 initValue={initValue}
@@ -256,7 +277,10 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                         )}
                         <Stack
                             direction={'row'}
-                            gap={1}
+                            gap={{
+                                lg: 1,
+                                xs: 0.5,
+                            }}
                             sx={{
                                 button: {
                                     width: 'auto',
@@ -291,7 +315,16 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                     </Box>
 
                     {/* Comment Children */}
-                    <Box marginTop={comment.parentCommentId ? 0 : 4}>
+                    <Box
+                        marginTop={
+                            comment.parentCommentId
+                                ? 0
+                                : {
+                                      md: 4,
+                                      xs: 2,
+                                  }
+                        }
+                    >
                         <CommentList comments={newChildrenComments} t={t} />
                     </Box>
                 </Box>

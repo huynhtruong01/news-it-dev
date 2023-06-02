@@ -1,13 +1,14 @@
 import { InputField, PasswordField } from '@/components/FormFields'
 import { ISignupValues } from '@/models'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Box, CircularProgress } from '@mui/material'
+import { Box } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { initSignupValues } from '@data/index'
 import { enqueueSnackbar } from 'notistack'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { theme } from '@/utils'
+import { useTranslation } from 'react-i18next'
 
 export interface ISignupFormProps {
     onSignupSubmit: (values: ISignupValues) => Promise<void>
@@ -30,6 +31,8 @@ const schema = yup.object().shape({
 })
 
 export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
+    const { t } = useTranslation()
+
     const form = useForm<ISignupValues>({
         defaultValues: initSignupValues,
         resolver: yupResolver(schema),
@@ -61,7 +64,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
             >
                 <InputField<ISignupValues>
                     form={form}
-                    label="Username"
+                    label={t('input.username')}
                     name="username"
                     disabled={isSubmitting}
                     placeholder={'john.doe'}
@@ -74,14 +77,14 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                 >
                     <InputField
                         form={form}
-                        label="First Name"
+                        label={t('input.first_name')}
                         name="firstName"
                         disabled={isSubmitting}
                         placeholder={'Doe'}
                     />
                     <InputField
                         form={form}
-                        label="Last Name"
+                        label={t('input.last_name')}
                         name="lastName"
                         disabled={isSubmitting}
                         placeholder={'John'}
@@ -89,20 +92,20 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                 </Box>
                 <InputField
                     form={form}
-                    label="Email"
+                    label={t('input.email')}
                     name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
                 />
                 <PasswordField
                     form={form}
-                    label="Password"
+                    label={t('input.password')}
                     name="password"
                     disabled={isSubmitting}
                 />
                 <PasswordField
                     form={form}
-                    label="Confirm Password"
+                    label={t('input.confirm_password')}
                     name="confirmPassword"
                     disabled={isSubmitting}
                 />
@@ -111,13 +114,6 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                 type="submit"
                 fullWidth
                 loading={isSubmitting}
-                // loadingIndicator={
-                //     <CircularProgress
-                //         color="inherit"
-                //         size={16}
-                //         sx={{ paddingLeft: '5px', paddingRight: '5px' }}
-                //     />
-                // }
                 loadingPosition="start"
                 variant="contained"
                 disabled={isSubmitting}
@@ -130,7 +126,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     },
                 }}
             >
-                Sign up
+                {t('auth.sign_up')}
             </LoadingButton>
         </Box>
     )

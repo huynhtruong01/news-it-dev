@@ -1,6 +1,6 @@
 import { IIcon } from '@/models'
 import { theme } from '@/utils'
-import { Button, ButtonProps } from '@mui/material'
+import { Button, ButtonProps, Typography, alpha } from '@mui/material'
 import { red } from '@mui/material/colors'
 
 export type IButtonIconFormProps = {
@@ -39,9 +39,39 @@ export function ButtonIconForm({
                 />
             }
             onClick={handleButtonClick}
+            sx={{
+                span: {
+                    xs: theme.typography.body2,
+                },
+                backgroundColor: alpha(theme.palette.secondary.main, 0.075),
+                '&:hover': {
+                    backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+                },
+            }}
             {...rest}
         >
-            {text}
+            <Typography
+                component="span"
+                sx={{
+                    display: {
+                        xs: 'block',
+                        md: 'none',
+                    },
+                }}
+            >
+                {text.split(' ')[0]}
+            </Typography>
+            <Typography
+                component="span"
+                sx={{
+                    display: {
+                        xs: 'none',
+                        md: 'block',
+                    },
+                }}
+            >
+                {text}
+            </Typography>
         </Button>
     )
 }

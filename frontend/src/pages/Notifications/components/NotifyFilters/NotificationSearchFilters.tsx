@@ -17,12 +17,15 @@ export function NotificationSearchFilters({
     }
 
     return (
-        <Box>
+        <Box width={'100%'}>
             <SearchFilter
                 initValue={''}
                 onSearchChange={handleSearchNotify}
                 placeholder={t('placeholder.search_title') as string}
-                width={300}
+                width={{
+                    md: 300,
+                    xs: '100%',
+                }}
             />
         </Box>
     )

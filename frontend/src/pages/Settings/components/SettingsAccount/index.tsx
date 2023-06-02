@@ -9,14 +9,14 @@ export interface ISettingsAccountProps {
     pUser: IUser | null
 }
 
-function SettingsAccount({ pUser }: ISettingsProfileProps) {
+function SettingsAccount({ pUser }: ISettingsAccountProps) {
     useEffect(() => {
         document.title = 'Settings - DEV Community'
     }, [])
 
     return (
         <Box>
-            <SettingsAccountForm emailAddress={pUser.emailAddress} />
+            <SettingsAccountForm emailAddress={pUser?.emailAddress as string} />
         </Box>
     )
 }

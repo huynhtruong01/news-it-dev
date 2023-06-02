@@ -5,7 +5,7 @@ import { IComment, ICommentData, IFilters, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { getAllCommentsById } from '@/store/comment/thunkApi'
 import { theme } from '@/utils'
-import { Box, BoxProps, Button, Stack, Typography } from '@mui/material'
+import { Box, BoxProps, Button, Stack, Typography, useMediaQuery } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -30,6 +30,7 @@ function NewsComment({
     ...rest
 }: INewsCommentProps) {
     const { t } = useTranslation()
+    const isSmallScreen = useMediaQuery('(min-width:320px)')
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
@@ -122,9 +123,21 @@ function NewsComment({
     }, [pComments])
 
     return (
-        <Box {...rest} ref={commentRef} id="comments" padding={theme.spacing(4, 8)}>
+        <Box
+            {...rest}
+            ref={commentRef}
+            id="comments"
+            padding={{
+                lg: theme.spacing(4, 8),
+                xs: theme.spacing(2, 1.5, 0),
+            }}
+        >
             <Box component="header" marginBottom={3}>
-                <Typography component="h2" variant="h5" fontWeight={700}>
+                <Typography
+                    component="h2"
+                    variant={isSmallScreen ? 'h6' : 'h5'}
+                    fontWeight={700}
+                >
                     {t('news.comment')} ({commentLength})
                 </Typography>
             </Box>

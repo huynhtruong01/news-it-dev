@@ -1,5 +1,3 @@
-// export interface ISkeletonNewsDetailProps {}
-
 import { Box, Grid } from '@mui/material'
 import {
     SkeletonNewsDetailMain,
@@ -15,14 +13,18 @@ export function SkeletonNewsDetail() {
                     item
                     sx={{
                         width: '64px',
+                        display: {
+                            lg: 'block',
+                            xs: 'none',
+                        },
                     }}
                 >
                     <SkeletonNewsLeft />
                 </Grid>
-                <Grid item md={8}>
+                <Grid item xs={12} md={8}>
                     <SkeletonNewsDetailMain />
                 </Grid>
-                <Grid item md>
+                <Grid item xs={12} md>
                     <SkeletonNewsRight />
                 </Grid>
             </Grid>

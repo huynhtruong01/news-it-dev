@@ -1,7 +1,7 @@
 import { SearchFilter } from '@/components/Filters'
 import { INewsFilters } from '@/models'
 import { AppState } from '@/store'
-import { Box } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { connect } from 'react-redux'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,15 +22,20 @@ function DashboardFollowFilters({
     }
 
     return (
-        <Box>
-            <SearchFilter
-                initValue=""
-                onSearchChange={handleSearchFollow}
-                placeholder={t('placeholder.search_username_name') as string}
-                sx={{
-                    width: pLanguages === DEFAULT_LANGUAGES ? 350 : 300,
-                }}
-            />
+        <Box width={'100%'}>
+            <Stack direction={'row'} justifyContent={'flex-end'}>
+                <SearchFilter
+                    initValue=""
+                    onSearchChange={handleSearchFollow}
+                    placeholder={t('placeholder.search_username_name') as string}
+                    sx={{
+                        width: {
+                            md: pLanguages === DEFAULT_LANGUAGES ? 350 : 300,
+                            xs: '100%',
+                        },
+                    }}
+                />
+            </Stack>
         </Box>
     )
 }

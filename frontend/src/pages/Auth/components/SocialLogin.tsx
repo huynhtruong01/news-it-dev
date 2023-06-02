@@ -134,7 +134,7 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
                             },
                         }}
                     >
-                        Sign in with Google
+                        {t('auth.sign_in_google')}
                     </Button>
                 )}
                 onSuccess={handleGoogleLogin}
@@ -148,7 +148,7 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
                 scope="public_profile,user_friends"
                 callback={handleFacebookLogin}
                 cssClass="custom-facebook-login"
-                textButton="Sign in with Facebook"
+                textButton={t('auth.sign_in_facebook') as string}
                 icon={<FaFacebookSquare />}
             />
         </Box>

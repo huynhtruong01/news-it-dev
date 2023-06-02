@@ -9,7 +9,15 @@
 
     "auth": {
         "signout": "Đăng xuất",
-        "login": "Đăng nhập"
+        "login": "Đăng nhập",
+        "create_account": "Tạo tài khoản mới",
+        "sign_in_google": "Đăng nhập với Google",
+        "sign_in_facebook": "Đăng nhập với Facebook",
+        "forgot_password": "Quên mật khẩu",
+        "dont_have_account": "Không có tài khoản bằng email?",
+        "already_account": "Bạn đã có tài khoản?",
+        "sign_up": "Đăng ký",
+        "title_have_password": "Đã có mật khẩu? Tiếp tục với email của bạn"
     },
 
     "common": {
@@ -81,6 +89,7 @@
     "dashboard": {
         "dashboard": "Bảng điều khiển",
         "news": "Tin tức",
+        "create_news": "Tạo tin tức mới",
         "followers": "Người dùng theo dõi",
         "following_user": "Người dùng đang theo dõi",
         "following_tags": "Thẻ đang theo dõi",
@@ -142,7 +151,8 @@
         "set_new_password": "Đặt lại mật khẩu mới",
         "delete_account": "Xóa tài khoản",
         "dated_join": "Ngày tham gia",
-        "banding_color": "Màu sắc thương hiệu"
+        "banding_color": "Màu sắc thương hiệu",
+        "remember_me": "Nhớ tài khoản của tôi"
     },
 
     "placeholder": {
@@ -166,6 +176,7 @@
     },
 
     "message": {
+        "search_for": "Kết quả tìm kiếm cho",
         "reply_to": "phản hồi",
         "signout": "Bạn có chắc chắn muốn đăng xuất không?",
         "format_password_success": "Thay đổi mật khẩu thành công",
@@ -177,7 +188,10 @@
         "update_success": "Cập nhập tin tức thành công",
         "delete_account_success": "Xóa tài khoản thành công",
         "set_new_password_success": "Đặt lại mật khẩu thành công",
-        "update_profile_success": "Cập nhập hồ sơ thành công"
+        "update_profile_success": "Cập nhập hồ sơ thành công",
+        "welcome": "Chào mừng đến với Cộng đồng Tin tức",
+        "welcome_2": "Cộng đồng Tin tức là một cộng đồng tuyệt vời cho tất cả mọi người",
+        "sidebar_header_desc": "Chúng tôi là nơi các lập trình viên chia sẻ, cập nhật thông tin và phát triển sự nghiệp của họ."
     },
 
     "signout": {
@@ -197,5 +211,6 @@
 
     "liked your news": "đã thích bài viết của bạn",
     "reply to your comment": "đã phản hổi bình luận của bạn",
-    "follow you": "đã theo dõi bạn"
+    "follow you": "đã theo dõi bạn",
+    "has been commented your news": "đã bình luận bài tin tức của bạn"
 }

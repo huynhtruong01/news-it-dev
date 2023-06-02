@@ -4,7 +4,7 @@ import { AppDispatch } from '@/store'
 import { getProfile } from '@/store/user/thunkApi'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import { Button, ButtonProps } from '@mui/material'
+import { Button, ButtonProps, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
@@ -77,7 +77,18 @@ function ButtonLikeComment({
             }
             onClick={handleLikeComment}
         >
-            {numLikes} {text}
+            {numLikes === 0 ? '' : numLikes}{' '}
+            <Typography
+                component="span"
+                sx={{
+                    display: {
+                        md: 'block',
+                        xs: 'none',
+                    },
+                }}
+            >
+                {text}
+            </Typography>
         </Button>
     )
 }

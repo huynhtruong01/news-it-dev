@@ -57,12 +57,15 @@ function Settings({ pUser }: ISettingsProps) {
                         <Grid
                             item
                             sx={{
-                                width: 240,
+                                width: {
+                                    md: 240,
+                                    xs: '100%',
+                                },
                             }}
                         >
                             <SettingsNav />
                         </Grid>
-                        <Grid item md>
+                        <Grid item xs={12} md>
                             <Routes>
                                 <Route path="profile" element={<SettingsProfile />} />
                                 <Route path="accounts" element={<SettingsAccount />} />

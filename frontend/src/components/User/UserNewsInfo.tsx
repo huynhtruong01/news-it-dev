@@ -74,6 +74,10 @@ export function UserNewsInfo({ user, link }: IUserNewsInfoProps) {
                         <UserDetailHover
                             user={user as IUser}
                             sx={{
+                                display: {
+                                    lg: 'block',
+                                    md: 'none',
+                                },
                                 position: 'absolute',
                                 top: 20,
                                 left: 40,

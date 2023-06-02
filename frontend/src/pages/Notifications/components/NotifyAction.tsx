@@ -1,5 +1,5 @@
 import { INotify } from '@/models'
-import { Box, IconButton, Menu, MenuItem } from '@mui/material'
+import { Box, BoxProps, IconButton, Menu, MenuItem } from '@mui/material'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { useState } from 'react'
 import { connect } from 'react-redux'
@@ -10,12 +10,12 @@ import { notifyApi } from '@/api'
 import { theme } from '@/utils'
 import { useTranslation } from 'react-i18next'
 
-export interface INotifyActionProps {
+export interface INotifyActionProps extends BoxProps {
     notify: INotify
     pDeleteNotify: (data: INotify) => void
 }
 
-function NotifyAction({ notify, pDeleteNotify }: INotifyActionProps) {
+function NotifyAction({ notify, pDeleteNotify, ...rest }: INotifyActionProps) {
     const { t } = useTranslation()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -41,7 +41,7 @@ function NotifyAction({ notify, pDeleteNotify }: INotifyActionProps) {
     }
 
     return (
-        <Box>
+        <Box {...rest}>
             <IconButton
                 sx={{
                     padding: theme.spacing(0, 0.5),

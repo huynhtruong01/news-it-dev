@@ -2,6 +2,15 @@ import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 import { red } from '@mui/material/colors'
 
 let theme = createTheme({
+    breakpoints: {
+        values: {
+            xs: 320,
+            sm: 480,
+            md: 768,
+            lg: 1024,
+            xl: 1280,
+        },
+    },
     palette: {
         primary: {
             main: '#2f3ab2',
@@ -27,15 +36,21 @@ let theme = createTheme({
                 maxWidth: 'md',
             },
             styleOverrides: {
+                maxWidthXs: {
+                    maxWidth: '100%',
+                    '@media (min-width: 480px)': {
+                        maxWidth: '100%',
+                    },
+                },
                 maxWidthSm: {
-                    maxWidth: 680,
-                    '@media (min-width: 600px)': {
-                        maxWidth: 680,
+                    maxWidth: '100%',
+                    '@media (min-width: 768px)': {
+                        maxWidth: '100%',
                     },
                 },
                 maxWidthMd: {
                     maxWidth: 1264,
-                    '@media (min-width: 900px)': {
+                    '@media (min-width: 1024px)': {
                         maxWidth: 1264,
                     },
                 },
@@ -105,26 +120,33 @@ let theme = createTheme({
                 h3: {
                     fontSize: '48px',
                     lineHeight: '60px',
-                    '@media (min-width: 1200px)': {
+                    '@media (min-width: 1024px)': {
                         fontSize: '48px',
                         lineHeight: '60px',
+                    },
+                    '@media (min-width: 320px)': {
+                        fontSize: '30px',
+                        lineHeight: '35px',
                     },
                 },
                 h4: {
                     fontSize: '30px',
-                    '@media (min-width: 1200px)': {
+                    '@media (min-width: 1024px)': {
                         fontSize: '30px',
+                    },
+                    '@media (min-width: 320px)': {
+                        fontSize: '20px',
                     },
                 },
                 h5: {
                     fontSize: '24px',
-                    '@media (min-width: 1200px)': {
+                    '@media (min-width: 1024px)': {
                         fontSize: '24px',
                     },
                 },
                 h6: {
                     fontSize: '20px',
-                    '@media (min-width: 1200px)': {
+                    '@media (min-width: 1024px)': {
                         fontSize: '20px',
                     },
                 },
@@ -151,6 +173,6 @@ let theme = createTheme({
     },
 })
 
-theme = responsiveFontSizes(theme)
+theme = responsiveFontSizes({ ...theme })
 
 export { theme }

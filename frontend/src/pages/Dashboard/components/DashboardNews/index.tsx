@@ -1,13 +1,14 @@
+import { EmptyList } from '@/components/Common'
+import { ALL } from '@/consts'
 import { INews, INewsFilters } from '@/models'
-import { Box, BoxProps, Stack, Typography } from '@mui/material'
-import { useMemo, useState } from 'react'
 import {
     DashboardNewsFilters,
     DashboardNewsItem,
 } from '@/pages/Dashboard/components/DashboardNews/components'
-import { ALL } from '@/consts'
-import { EmptyList } from '@/components/Common'
+import { Box, BoxProps, Stack } from '@mui/material'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TitleDashboard } from '..'
 
 export interface IDashboardNewsProps extends BoxProps {
     newsList: INews[]
@@ -47,14 +48,22 @@ export function DashboardNews({ newsList, newsCount, ...rest }: IDashboardNewsPr
     return (
         <Box {...rest}>
             <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
+                direction={{
+                    md: 'row',
+                    xs: 'column',
+                }}
+                justifyContent={{
+                    md: 'space-between',
+                    xs: 'center',
+                }}
+                alignItems={{
+                    md: 'center',
+                    xs: 'flex-start',
+                }}
+                gap={2}
                 marginBottom={2}
             >
-                <Typography component="h2" variant="h6" fontWeight={700}>
-                    {t('dashboard.news')} ({newsCount})
-                </Typography>
+                <TitleDashboard text={t('dashboard.news') as string} nums={newsCount} />
                 <DashboardNewsFilters setFilters={setFilters} />
             </Stack>
 
