@@ -36,6 +36,10 @@ function HeaderRightNotLogged({ pUser }: IHeaderRightNotLoggedProps) {
                 <Button
                     variant="contained"
                     sx={{
+                        display: {
+                            md: 'inline-flex',
+                            xs: 'none',
+                        },
                         border: `2px solid ${theme.palette.primary.main}`,
 
                         a: {

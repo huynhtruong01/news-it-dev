@@ -1,6 +1,7 @@
 import { EmptyList, NewsList } from '@/components/Common'
-import { SearchFilter } from '@/components/Filters'
+import { SearchFilter, SelectFilter } from '@/components/Filters'
 import { tagHeader } from '@/data'
+import { NewsFilters } from '@/enums'
 import { INews, INewsFilters, INewsStatus } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack } from '@mui/material'
@@ -24,8 +25,10 @@ export function TagsDetailNews({
         return news && news?.length ? news : []
     }, [news])
 
-    const handleSetStatus = (value: INewsStatus) => {
-        setFilters((prev) => ({ ...prev, status: value }))
+    const handleSetStatus = (value: INewsStatus | string | number) => {
+        if (typeof value !== 'string' || typeof value !== 'number') {
+            setFilters((prev) => ({ ...prev, status: value as INewsStatus }))
+        }
     }
 
     const handleSearchFilters = (value: string | number) => {
@@ -34,15 +37,32 @@ export function TagsDetailNews({
 
     return (
         <Box {...rest}>
-            <Stack direction={'row'} justifyContent={'space-between'}>
+            <Stack
+                direction={{
+                    md: 'row',
+                    xs: 'column',
+                }}
+                justifyContent={{
+                    md: 'space-between',
+                    xs: 'center',
+                }}
+                gap={1}
+            >
                 <Stack
                     direction={'row'}
                     gap={1}
                     sx={{
+                        display: {
+                            md: 'flex',
+                            xs: 'none',
+                        },
+                        order: {
+                            md: 1,
+                            xs: 2,
+                        },
                         div: {
                             padding: theme.spacing(1, 2),
                             cursor: 'pointer',
-                            marginBottom: 2,
                             fontSize: '18px',
                             borderRadius: theme.spacing(0.75),
                             '&:hover': {
@@ -72,14 +92,38 @@ export function TagsDetailNews({
                     ))}
                 </Stack>
 
+                <Box
+                    sx={{
+                        display: {
+                            md: 'none',
+                            xs: 'block',
+                        },
+                    }}
+                >
+                    <SelectFilter
+                        selects={tagHeader}
+                        initValue={NewsFilters.LATEST}
+                        isAll={false}
+                        label=""
+                        onFilterChange={handleSetStatus}
+                        width={'100%'}
+                    />
+                </Box>
+
                 <SearchFilter
                     initValue={''}
                     onSearchChange={handleSearchFilters}
                     placeholder={t('placeholder.search_title') as string}
+                    sx={{
+                        order: {
+                            md: 2,
+                            xs: 1,
+                        },
+                    }}
                 />
             </Stack>
 
-            <Box>
+            <Box marginTop={2}>
                 {!newNews.length && <EmptyList title={t('empty.no_news')} />}
                 <NewsList newsList={newNews || []} />
             </Box>

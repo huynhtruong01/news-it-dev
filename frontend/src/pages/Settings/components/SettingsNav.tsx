@@ -5,6 +5,8 @@ import { theme } from '@/utils'
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { SelectFilter } from '@/components/Filters'
+import { DEFAULT_SELECT_VALUE } from '@/consts'
 
 export function SettingsNav() {
     const { t } = useTranslation()
@@ -17,9 +19,22 @@ export function SettingsNav() {
         setPathName(path.toString())
     }, [navigate])
 
+    const handleSettingSelect = (value: string | number) => {
+        if (typeof value === 'string') navigate(value as string)
+    }
+
     return (
         <Box width={'100%'}>
-            <Stack gap={1}>
+            {/* Settings Nav */}
+            <Stack
+                gap={1}
+                sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
+                }}
+            >
                 {settingsNav.map((nav) => (
                     <Box
                         key={nav.name}
@@ -50,6 +65,25 @@ export function SettingsNav() {
                     </Box>
                 ))}
             </Stack>
+
+            {/* Selection Nav */}
+            <Box
+                sx={{
+                    display: {
+                        md: 'none',
+                        xs: 'block',
+                    },
+                }}
+            >
+                <SelectFilter
+                    selects={settingsNav}
+                    label=""
+                    initValue={DEFAULT_SELECT_VALUE}
+                    onFilterChange={handleSettingSelect}
+                    isAll={false}
+                    width={'100%'}
+                />
+            </Box>
         </Box>
     )
 }

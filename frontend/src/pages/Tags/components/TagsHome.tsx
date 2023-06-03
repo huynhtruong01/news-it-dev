@@ -24,7 +24,9 @@ function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
     })
 
     useEffect(() => {
-        document.title = 'Tags - DEV Community'
+        document.title = `${t('title_document.tags')} - ${t(
+            'title_document.news_community'
+        )}`
     }, [])
 
     useEffect(() => {
@@ -42,10 +44,20 @@ function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
     return (
         <Box>
             <Stack
-                direction="row"
-                justifyContent={'space-between'}
-                alignItems={'center'}
-                marginBottom={3}
+                direction={{
+                    md: 'row',
+                    xs: 'column',
+                }}
+                justifyContent={{
+                    md: 'space-between',
+                    xs: 'flex-start',
+                }}
+                alignItems={{
+                    md: 'center',
+                    xs: 'flex-start',
+                }}
+                marginBottom={2}
+                gap={1}
             >
                 {loading ? (
                     <Skeleton variant="rounded" width={130} height={38} />
@@ -57,9 +69,7 @@ function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
                 {loading ? (
                     <Skeleton variant="rounded" width={250} height={38} />
                 ) : (
-                    <Box>
-                        <TagsFilters filters={filters} setFilters={setFilters} />
-                    </Box>
+                    <TagsFilters filters={filters} setFilters={setFilters} />
                 )}
             </Stack>
 

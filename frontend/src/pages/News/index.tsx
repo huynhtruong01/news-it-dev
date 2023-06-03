@@ -73,7 +73,7 @@ function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsP
                         <Grid item xs={12} md={8}>
                             <NewsDetail news={pNewsDetail} />
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md>
                             <NewsSideRight news={pNewsDetail} />
                         </Grid>
                     </Grid>

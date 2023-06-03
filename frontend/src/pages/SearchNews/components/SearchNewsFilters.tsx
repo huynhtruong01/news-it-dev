@@ -1,3 +1,4 @@
+import { SelectFilter } from '@/components/Filters'
 import { tagHeader } from '@/data'
 import { NewsFilters, Order } from '@/enums'
 import { IFilters, INewsStatus } from '@/models'
@@ -19,7 +20,7 @@ export function SearchNewsFilters({
 }: ISearchNewsFiltersProps) {
     const { t } = useTranslation()
 
-    const handleFiltersSearchNewsChange = (value: INewsStatus) => {
+    const handleFiltersSearchNewsChange = (value: INewsStatus | string | number) => {
         if (value === NewsFilters.LATEST) {
             setFilters((prev) => {
                 const newFilters = { ...prev }
@@ -36,15 +37,20 @@ export function SearchNewsFilters({
             })
         }
 
-        setStatus(value)
+        setStatus(value as INewsStatus)
     }
 
     return (
         <Box>
+            {/* Search Nav */}
             <Stack
                 component="ul"
                 gap={1}
                 sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
                     li: {
                         padding: theme.spacing(1.1, 1),
                         cursor: 'pointer',
@@ -80,6 +86,25 @@ export function SearchNewsFilters({
                     </Box>
                 ))}
             </Stack>
+
+            {/* Search Select */}
+            <Box
+                sx={{
+                    display: {
+                        md: 'none',
+                        xs: 'block',
+                    },
+                }}
+            >
+                <SelectFilter
+                    selects={tagHeader}
+                    initValue={NewsFilters.LATEST}
+                    label=""
+                    onFilterChange={handleFiltersSearchNewsChange}
+                    isAll={false}
+                    width={'100%'}
+                />
+            </Box>
         </Box>
     )
 }

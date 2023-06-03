@@ -70,7 +70,7 @@ export function SelectFilter({
                     )}
                     {selects.map((select) => (
                         <MenuItem
-                            key={select.name}
+                            key={select.name as string}
                             value={select.value}
                             sx={{
                                 textTransform: 'capitalize',

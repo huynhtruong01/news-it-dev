@@ -1,3 +1,4 @@
+import { SelectFilter } from '@/components/Filters'
 import { articleHeader } from '@/data'
 import { Order } from '@/enums'
 import { NewsFilters } from '@/enums/news'
@@ -28,73 +29,103 @@ function ArticleHeader({
     ...rest
 }: IArticleHeaderProps) {
     const { t } = useTranslation()
-    const handleNewsFilters = (valFilter: string) => {
-        const newFilters = { ...filters }
+    const handleNewsFilters = (valFilter: string | number) => {
+        if (typeof valFilter === 'string') {
+            const newFilters = { ...filters }
 
-        if (valFilter === NewsFilters.RELEVANT) {
-            delete newFilters.numLikes
+            if (valFilter === NewsFilters.RELEVANT) {
+                delete newFilters.numLikes
 
-            if (pUser && pUser?.hashTags?.length) {
-                newFilters.hashTag = pUser.hashTags.map((h) => h.id).join(',')
-            } else {
-                newFilters.hashTag = pHashTags.map((h) => h.id).join(',')
+                if (pUser && pUser?.hashTags?.length) {
+                    newFilters.hashTag = pUser.hashTags.map((h) => h.id).join(',')
+                } else {
+                    newFilters.hashTag = pHashTags.map((h) => h.id).join(',')
+                }
+
+                setStatus(NewsFilters.RELEVANT)
+                setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
+                return
             }
 
-            setStatus(NewsFilters.RELEVANT)
-            setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
-            return
-        }
+            if (valFilter === NewsFilters.LATEST) {
+                delete newFilters.numLikes
+                delete newFilters.hashTag
 
-        if (valFilter === NewsFilters.LATEST) {
-            delete newFilters.numLikes
+                setStatus(NewsFilters.LATEST)
+                setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
+                return
+            }
+
+            delete newFilters.createdAt
             delete newFilters.hashTag
-
-            setStatus(NewsFilters.LATEST)
-            setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
-            return
+            setStatus(NewsFilters.TOP)
+            setFilters({ ...newFilters, numLikes: Order.DESC, page: 1 })
         }
-
-        delete newFilters.createdAt
-        delete newFilters.hashTag
-        setStatus(NewsFilters.TOP)
-        setFilters({ ...newFilters, numLikes: Order.DESC, page: 1 })
     }
 
     return (
         <Box component="header" {...rest}>
-            {
-                <Stack gap={1} flexDirection={'row'} alignItems={'center'}>
-                    {articleHeader.map((item) => (
-                        <Box
-                            key={item.value}
-                            component="li"
-                            sx={{
-                                backgroundColor:
-                                    status === item.value
-                                        ? theme.palette.primary.contrastText
-                                        : 'transparent',
-                                padding: theme.spacing(1, 1.25),
-                                color:
-                                    status === item.value
-                                        ? theme.palette.primary.dark
-                                        : theme.palette.secondary.main,
-                                fontSize: '18px',
-                                cursor: 'pointer',
-                                borderRadius: theme.spacing(1),
-                                fontWeight: status === item.value ? 600 : 400,
+            {/* Main content Nav */}
+            <Stack
+                gap={1}
+                flexDirection={'row'}
+                alignItems={'center'}
+                sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
+                }}
+            >
+                {articleHeader.map((item) => (
+                    <Box
+                        key={item.value}
+                        component="li"
+                        sx={{
+                            backgroundColor:
+                                status === item.value
+                                    ? theme.palette.primary.contrastText
+                                    : 'transparent',
+                            padding: theme.spacing(1, 1.25),
+                            color:
+                                status === item.value
+                                    ? theme.palette.primary.dark
+                                    : theme.palette.secondary.main,
+                            fontSize: '18px',
+                            cursor: 'pointer',
+                            borderRadius: theme.spacing(1),
+                            fontWeight: status === item.value ? 600 : 400,
 
-                                '&:hover': {
-                                    color: theme.palette.primary.main,
-                                    backgroundColor: theme.palette.primary.contrastText,
-                                },
-                            }}
-                            onClick={() => handleNewsFilters(item.value as string)}
-                        >
-                            {t(item.name as string)}
-                        </Box>
-                    ))}
-                </Stack>
-            }
+                            '&:hover': {
+                                color: theme.palette.primary.main,
+                                backgroundColor: theme.palette.primary.contrastText,
+                            },
+                        }}
+                        onClick={() => handleNewsFilters(item.value as string)}
+                    >
+                        {t(item.name as string)}
+                    </Box>
+                ))}
+            </Stack>
+
+            {/* Main content Select */}
+            <Box
+                sx={{
+                    display: {
+                        md: 'none',
+                        xs: 'block',
+                    },
+                }}
+            >
+                <SelectFilter
+                    selects={articleHeader}
+                    label=""
+                    onFilterChange={handleNewsFilters}
+                    initValue={NewsFilters.RELEVANT}
+                    isAll={false}
+                    width={'100%'}
+                />
+            </Box>
         </Box>
     )
 }

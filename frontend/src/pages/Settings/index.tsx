@@ -22,7 +22,9 @@ function Settings({ pUser }: ISettingsProps) {
     const { t } = useTranslation()
 
     useEffect(() => {
-        document.title = 'Settings - DEV Community'
+        document.title = `${t('title_document.settings')} - ${t(
+            'title_document.news_community'
+        )}`
     }, [])
 
     return (

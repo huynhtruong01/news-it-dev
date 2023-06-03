@@ -17,7 +17,10 @@ export function TagsDetailLeft({ hashTagFollows }: ITagsDetailLeftProps) {
                 component="h3"
                 fontWeight={700}
                 fontSize={'18px'}
-                marginBottom={2}
+                marginBottom={{
+                    md: 2,
+                    xs: 1,
+                }}
                 padding={theme.spacing(1, 2, 1, 0)}
             >
                 {t('tags.title_detail')}

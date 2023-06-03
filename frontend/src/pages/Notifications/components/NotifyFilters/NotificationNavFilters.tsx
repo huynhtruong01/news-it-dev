@@ -5,6 +5,7 @@ import { theme } from '@/utils'
 import { Box, Stack, alpha } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
+import { SelectFilter } from '@/components/Filters'
 
 export interface INotificationNavFiltersProps {
     filters: INotifyFilters
@@ -16,7 +17,7 @@ export function NotificationNavFilters({
     setFilters,
 }: INotificationNavFiltersProps) {
     const { t } = useTranslation()
-    const handleNavFilters = (value: INotifyRead) => {
+    const handleNavFilters = (value: INotifyRead | string | number) => {
         if (value === ALL) {
             setFilters((prev) => {
                 const newPrev = { ...prev, page: 1 }
@@ -24,7 +25,7 @@ export function NotificationNavFilters({
                 return newPrev
             })
         } else {
-            setFilters((prev) => ({ ...prev, isRead: value, page: 1 }))
+            setFilters((prev) => ({ ...prev, isRead: value as INotifyRead, page: 1 }))
         }
     }
 
@@ -34,6 +35,10 @@ export function NotificationNavFilters({
                 gap={0.5}
                 component="ul"
                 sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
                     li: {
                         padding: theme.spacing(1.1, 1),
                         cursor: 'pointer',
@@ -84,6 +89,22 @@ export function NotificationNavFilters({
                     </Box>
                 ))}
             </Stack>
+
+            <Box
+                sx={{
+                    display: {
+                        md: 'none',
+                        xs: 'block',
+                    },
+                }}
+            >
+                <SelectFilter
+                    selects={notifyFilters}
+                    label=""
+                    onFilterChange={handleNavFilters}
+                    width={'100%'}
+                />
+            </Box>
         </Box>
     )
 }

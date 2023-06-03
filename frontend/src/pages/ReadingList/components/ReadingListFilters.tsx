@@ -19,20 +19,24 @@ export function ReadingListFilters({ setFilters, ...rest }: IReadingListFiltersP
     // }
 
     return (
-        <Box {...rest}>
+        <Box
+            width={{
+                md: 'auto',
+                xs: '100%',
+            }}
+            {...rest}
+        >
             <Stack direction={'row'} gap={2}>
-                {/* TODO: MAKE SELECT FILTERS */}
-                {/* <SelectFilter
-                    initValue={ALL}
-                    label="Status"
-                    selects={selectReadingList}
-                    onFilterChange={handleFilterStatusChange}
-                    width={120}
-                /> */}
                 <SearchFilter
                     initValue={''}
                     onSearchChange={handleSearchChange}
                     placeholder={t('placeholder.search_title') as string}
+                    sx={{
+                        width: {
+                            md: 250,
+                            xs: '100%',
+                        },
+                    }}
                 />
             </Stack>
         </Box>

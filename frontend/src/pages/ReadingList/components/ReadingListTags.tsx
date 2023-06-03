@@ -1,7 +1,9 @@
+import { SelectFilter } from '@/components/Filters'
+import { ALL } from '@/consts'
 import { IFiltersNewsSave, IHashTag } from '@/models'
 import { theme } from '@/utils'
 import { Box, BoxProps, Stack, Typography, alpha } from '@mui/material'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export interface IReadingListTagsProps extends BoxProps {
@@ -17,8 +19,14 @@ export function ReadingListTags({
     const { t } = useTranslation()
     const [activeTag, setActiveTag] = useState<string>('')
 
+    const selectHashTag = useMemo(() => {
+        return hashTags.map((tag) => ({
+            name: tag.name,
+            value: tag.name,
+        }))
+    }, [hashTags])
+
     const handleFilters = (tag: string) => {
-        // SET TAG AND FILTERS TAGS, NEWS BY TAG
         if (!tag) {
             setActiveTag('')
             setFilters((prev: IFiltersNewsSave) => {
@@ -32,12 +40,29 @@ export function ReadingListTags({
         setFilters((prev: IFiltersNewsSave) => ({ ...prev, tag }))
     }
 
+    const handleSelectChange = (value: string | number) => {
+        if (value === ALL) {
+            setFilters((prev: IFiltersNewsSave) => {
+                const newFilters = { ...prev }
+                delete newFilters.tag
+                return newFilters
+            })
+            return
+        }
+        setFilters((prev: IFiltersNewsSave) => ({ ...prev, tag: value as string }))
+    }
+
     return (
         <Box {...rest}>
+            {/* List Tags */}
             <Stack
                 gap={0.5}
                 component="ul"
                 sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
                     li: {
                         padding: theme.spacing(1),
                         borderRadius: theme.spacing(0.75),
@@ -95,6 +120,23 @@ export function ReadingListTags({
                     </Box>
                 ))}
             </Stack>
+
+            {/* Selection Filters */}
+            <Box
+                sx={{
+                    display: {
+                        md: 'none',
+                        xs: 'block',
+                    },
+                }}
+            >
+                <SelectFilter
+                    selects={selectHashTag}
+                    label=""
+                    onFilterChange={handleSelectChange}
+                    width={'100%'}
+                />
+            </Box>
         </Box>
     )
 }

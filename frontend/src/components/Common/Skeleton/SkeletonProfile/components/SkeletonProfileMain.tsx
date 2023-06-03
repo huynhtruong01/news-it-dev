@@ -5,7 +5,7 @@ import { SkeletonNewsList } from '../..'
 export function SkeletonProfileMain() {
     return (
         <Grid container spacing={2}>
-            <Grid item md={4}>
+            <Grid item xs={12} md={4}>
                 <Stack gap={2}>
                     {Array.from(new Array(3)).map((item, idx) => (
                         <Stack

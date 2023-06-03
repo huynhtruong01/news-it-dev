@@ -72,7 +72,7 @@ function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
                 status={status}
                 setStatus={setStatus}
                 setFilters={setFilters}
-                marginBottom={1}
+                marginBottom={1.5}
             />
             <ArticleList loading={loading} articleList={newsList} />
         </Box>

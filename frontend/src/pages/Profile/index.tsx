@@ -38,7 +38,10 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
             <Box
                 sx={{
                     width: '100%',
-                    height: 150,
+                    height: {
+                        md: 150,
+                        xs: 100,
+                    },
                     backgroundColor: theme.palette.primary.dark,
                 }}
             ></Box>
@@ -47,15 +50,19 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                 gap={2}
                 sx={{
                     width: '100%',
-                    maxWidth: '1024px',
+                    maxWidth: 1024,
                     margin: 'auto',
                     marginTop: '-4rem',
+                    padding: {
+                        md: 0,
+                        xs: 2,
+                    },
                 }}
             >
                 <ProfileHeader user={pUser as IUser} />
 
                 <Grid container spacing={2}>
-                    <Grid item md={4}>
+                    <Grid item xs={12} md={4}>
                         <Stack gap={2}>
                             <ProfileUserNumFollow
                                 numFollowed={pUser.numFollowers as number}
@@ -85,7 +92,7 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                             />
                         </Stack>
                     </Grid>
-                    <Grid item md={8}>
+                    <Grid item xs={12} md={8}>
                         <ProfileNews news={newNews} />
                     </Grid>
                 </Grid>

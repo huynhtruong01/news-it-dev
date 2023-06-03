@@ -47,12 +47,14 @@ export const selectReadingList: IObjectCommon[] = [
 
 export const settingsNav: IObjectCommon[] = [
     {
-        name: 'Profile',
+        name: 'settings.Profile',
         link: '/settings/profile',
+        value: '/settings/profile',
     },
     {
-        name: 'Accounts',
+        name: 'settings.Accounts',
         link: '/settings/accounts',
+        value: '/settings/accounts',
     },
 ]
 

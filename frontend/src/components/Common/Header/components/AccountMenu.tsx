@@ -21,22 +21,29 @@ import { Link } from 'react-router-dom'
 import ArticleIcon from '@mui/icons-material/Article'
 import { connect } from 'react-redux'
 import { AppDispatch, AppState } from '@/store'
-import { IUser } from '@/models'
+import { INewsForm, IUser } from '@/models'
 import GTranslateIcon from '@mui/icons-material/GTranslate'
 import { useTranslation } from 'react-i18next'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
-import { languagesListSelect } from '@/data'
+import { initNewsFormValues, languagesListSelect } from '@/data'
 import { setLanguages } from '@/store/common'
 import DescriptionIcon from '@mui/icons-material/Description'
 import i18next from 'i18next'
+import { setInitValueForm } from '@/store/news'
 
 export interface IAccountMenuProps extends BoxProps {
     pUser: IUser | null
     pLanguages: string
     pSetLanguages: (lang: string) => void
+    pSetInitValuesNewsForm: (data: INewsForm) => void
 }
 
-function AccountMenu({ pUser, pLanguages, pSetLanguages }: IAccountMenuProps) {
+function AccountMenu({
+    pUser,
+    pLanguages,
+    pSetLanguages,
+    pSetInitValuesNewsForm,
+}: IAccountMenuProps) {
     const { t } = useTranslation()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [anchorLang, setAnchorLang] = useState<null | HTMLElement>(null)
@@ -69,6 +76,10 @@ function AccountMenu({ pUser, pLanguages, pSetLanguages }: IAccountMenuProps) {
     const handleSelectLang = (value: string) => {
         i18next.changeLanguage(value)
         pSetLanguages(value)
+    }
+
+    const handleSetInitValuesForm = () => {
+        pSetInitValuesNewsForm(initNewsFormValues)
     }
 
     return (
@@ -181,7 +192,7 @@ function AccountMenu({ pUser, pLanguages, pSetLanguages }: IAccountMenuProps) {
                         },
                     }}
                 >
-                    <Link to={'/create-news'}>
+                    <Link to={'/create-news'} onClick={handleSetInitValuesForm}>
                         <Stack direction={'row'} alignItems={'center'}>
                             <ListItemIcon>
                                 <DescriptionIcon fontSize="small" />
@@ -382,6 +393,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pSetLanguages: (lang: string) => dispatch(setLanguages(lang)),
+        pSetInitValuesNewsForm: (values: INewsForm) => dispatch(setInitValueForm(values)),
     }
 }
 

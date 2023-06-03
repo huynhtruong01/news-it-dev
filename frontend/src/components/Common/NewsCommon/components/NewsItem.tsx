@@ -302,6 +302,10 @@ function NewsItem({
                     direction={'row'}
                     justifyContent={'space-between'}
                     sx={{
+                        display: {
+                            md: 'none',
+                            xs: 'flex',
+                        },
                         svg: {
                             fontSize: theme.typography.h5,
                         },

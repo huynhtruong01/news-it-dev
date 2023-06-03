@@ -1,5 +1,4 @@
 import { Box } from '@mui/material'
-import { useEffect } from 'react'
 import { IUser } from '@/models'
 import { connect } from 'react-redux'
 import { AppState } from '@/store'
@@ -10,10 +9,6 @@ export interface ISettingsAccountProps {
 }
 
 function SettingsAccount({ pUser }: ISettingsAccountProps) {
-    useEffect(() => {
-        document.title = 'Settings - DEV Community'
-    }, [])
-
     return (
         <Box>
             <SettingsAccountForm emailAddress={pUser?.emailAddress as string} />

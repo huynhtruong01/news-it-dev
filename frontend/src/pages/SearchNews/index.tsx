@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 
 export function SearchNews() {
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(true)
     const [filters, setFilters] = useState<IFilters>({
         page: 1,
         limit: 100,
@@ -22,13 +23,14 @@ export function SearchNews() {
     const query = searchParams.get('q')
 
     useEffect(() => {
-        document.title = `Search Results for ${query}`
+        document.title = `${t('title_document.search')} ${query}`
     }, [query])
 
     useEffect(() => {
         if (!query) return
         ;(async () => {
             try {
+                setLoading(true)
                 const res = await newsApi.getAllNewsPublic({
                     ...filters,
                     search: query as string,
@@ -37,6 +39,7 @@ export function SearchNews() {
             } catch (error) {
                 throw new Error(error as string)
             }
+            setLoading(false)
         })()
     }, [searchParams, query, filters])
 
@@ -91,7 +94,7 @@ export function SearchNews() {
                     />
                 </Grid>
                 <Grid item xs={12} md>
-                    <NewsList newsList={news} />
+                    <NewsList newsList={news} loading={loading} />
                 </Grid>
             </Grid>
         </Box>

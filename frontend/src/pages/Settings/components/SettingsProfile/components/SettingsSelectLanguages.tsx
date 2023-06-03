@@ -4,14 +4,16 @@ import { languagesListSelect } from '@/data'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
-import { AppDispatch } from '@/store'
+import { AppDispatch, AppState } from '@/store'
 import { setLanguages } from '@/store/common'
 
 export interface ISettingsSelectLanguagesProps {
+    pLanguages: string
     pSetLanguages: (lang: string) => void
 }
 
 export function SettingsSelectLanguages({
+    pLanguages,
     pSetLanguages,
 }: ISettingsSelectLanguagesProps) {
     const { t } = useTranslation()
@@ -34,7 +36,7 @@ export function SettingsSelectLanguages({
                     selects={languagesListSelect}
                     onFilterChange={handleLanguagesChange}
                     isAll={false}
-                    initValue={'vi'}
+                    initValue={pLanguages}
                     sx={{
                         width: '100%',
                     }}
@@ -44,10 +46,16 @@ export function SettingsSelectLanguages({
     )
 }
 
+const mapStateToProps = (state: AppState) => {
+    return {
+        pLanguages: state.common.languages,
+    }
+}
+
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pSetLanguages: (lang: string) => dispatch(setLanguages(lang)),
     }
 }
 
-export default connect(null, mapDispatchToProps)(SettingsSelectLanguages)
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsSelectLanguages)

@@ -43,7 +43,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                         width: '100%',
                         height: {
                             lg: 420,
-                            sm: 250,
+                            sm: 200,
                             xs: 150,
                         },
                         img: {

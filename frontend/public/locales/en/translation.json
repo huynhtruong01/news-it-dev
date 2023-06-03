@@ -209,6 +209,19 @@
         "no_news_reading_list": "No news reading list"
     },
 
+    "title_document": {
+        "news_community": "News Community",
+        "home": "Home",
+        "dashboard": "Dashboard",
+        "search": "Search results for",
+        "notifications": "Notifications",
+        "create_news": "Create News",
+        "update_news":"Update News",
+        "settings": "Settings",
+        "tags": "Tags",
+        "reading_list":"Reading List"
+    },
+
     "liked your news": "liked your news",
     "reply to your comment": "reply to your comment",
     "follow you": "follow you",

@@ -88,7 +88,11 @@ function CreateNewsForm({
     })
 
     useEffect(() => {
-        document.title = 'Create News - DEV Community'
+        document.title = `${
+            pInitValuesForm?.id
+                ? t('title_document.update_news')
+                : t('title_document.create_news')
+        } - ${t('title_document.news_community')}`
         pGetAllHashTags()
     }, [])
 
@@ -136,7 +140,13 @@ function CreateNewsForm({
         <Box component="form" onSubmit={handleSubmit(handleNewsSubmit)}>
             <Box marginBottom={3}>
                 <Grid container spacing={2}>
-                    <Grid item md>
+                    <Grid
+                        item
+                        md
+                        sx={{
+                            width: '100%',
+                        }}
+                    >
                         <InputField
                             form={form}
                             name={'title'}
@@ -156,7 +166,10 @@ function CreateNewsForm({
                         <Box
                             sx={{
                                 display: 'flex',
-                                gap: 2,
+                                gap: {
+                                    md: 2,
+                                    xs: 1,
+                                },
                             }}
                         >
                             <InputField
@@ -188,7 +201,10 @@ function CreateNewsForm({
                     <Grid
                         item
                         sx={{
-                            width: '350px',
+                            width: {
+                                md: 350,
+                                xs: '100%',
+                            },
                         }}
                     >
                         <ImageLargeField
@@ -220,7 +236,10 @@ function CreateNewsForm({
 
             <Stack
                 direction="row"
-                gap={2}
+                gap={{
+                    md: 2,
+                    xs: 1,
+                }}
                 sx={{
                     button: {
                         fontWeight: 500,

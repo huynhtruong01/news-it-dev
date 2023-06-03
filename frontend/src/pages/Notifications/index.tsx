@@ -29,6 +29,7 @@ export function Notifications({
     pGetNotifications,
 }: INotificationsProps) {
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(true)
     const [filters, setFilters] = useState<INotifyFilters>({
         page: 1,
         limit: 8,
@@ -36,12 +37,15 @@ export function Notifications({
     })
 
     useEffect(() => {
-        document.title = 'Notifications - DEV Community'
+        document.title = `${t('title_document.notifications')} - ${t(
+            'title_document.news_community'
+        )}`
     }, [])
 
     useEffect(() => {
         ;(async () => {
             try {
+                setLoading(true)
                 const newFilters: IFilters = {
                     ...filters,
                 }
@@ -54,6 +58,7 @@ export function Notifications({
                     variant: 'error',
                 })
             }
+            setLoading(false)
         })()
     }, [filters])
 
@@ -77,7 +82,7 @@ export function Notifications({
                     md: 'center',
                     xs: 'flex-start',
                 }}
-                gap={2}
+                gap={1.5}
                 marginBottom={2}
                 width={'100%'}
             >
@@ -108,7 +113,10 @@ export function Notifications({
 
                 <Grid item xs={12} md>
                     {/* list */}
-                    <NotificationList notifications={pNotifications || []} />
+                    <NotificationList
+                        loading={loading}
+                        notifications={pNotifications || []}
+                    />
 
                     {/* pagination */}
                     {pNotificationsTotal > 0 && (

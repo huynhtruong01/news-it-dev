@@ -25,7 +25,9 @@ export interface IDashboardProps {
 function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
     const { t } = useTranslation()
     useEffect(() => {
-        document.title = 'Dashboard - DEV Community'
+        document.title = `${t('title_document.dashboard')} - ${t(
+            'title_document.news_community'
+        )}`
         pGetProfile()
     }, [])
 

@@ -8,6 +8,7 @@ import { ArticleContainer, Sidebar } from '..'
 import { getProfile } from '@/store/user/thunkApi'
 import { getNotifies } from '@/store/notify/thunkApi'
 import { IUser } from '@/models'
+import { useTranslation } from 'react-i18next'
 
 export interface IMainContentProps {
     pUser: IUser | null
@@ -22,8 +23,12 @@ function MainContent({
     pGetProfile,
     pGetNotifies,
 }: IMainContentProps) {
+    const { t } = useTranslation()
+
     useEffect(() => {
-        document.title = 'DEV Community'
+        document.title = `${t('title_document.home')} - ${t(
+            'title_document.news_community'
+        )}`
         ;(async () => {
             try {
                 await pGetAllTagsPopular()

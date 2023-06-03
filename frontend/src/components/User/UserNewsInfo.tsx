@@ -26,7 +26,10 @@ export function UserNewsInfo({ user, link }: IUserNewsInfoProps) {
             direction={'row'}
             gap={0.5}
             alignItems={'flexStart'}
-            marginBottom={2}
+            marginBottom={{
+                md: 2,
+                xs: 1,
+            }}
             position={'relative'}
         >
             <Box>

@@ -36,8 +36,19 @@ export function ScrollTop() {
         <Box
             sx={{
                 position: 'fixed',
-                bottom: 50,
-                right: isShow ? 40 : -40,
+                bottom: {
+                    md: 50,
+                    xs: 25,
+                },
+                right: isShow
+                    ? {
+                          md: 40,
+                          xs: 20,
+                      }
+                    : {
+                          md: -40,
+                          xs: -20,
+                      },
                 opacity: isShow ? 1 : 0,
                 transition: '.2s ease-in-out',
             }}

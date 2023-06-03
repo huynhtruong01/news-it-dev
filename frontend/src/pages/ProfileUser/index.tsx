@@ -125,7 +125,10 @@ function ProfileUser({
             <Box
                 sx={{
                     width: '100%',
-                    height: 150,
+                    height: {
+                        md: 150,
+                        xs: 100,
+                    },
                     backgroundColor: theme.palette.primary.dark,
                 }}
             ></Box>
@@ -134,9 +137,13 @@ function ProfileUser({
                 gap={2}
                 sx={{
                     width: '100%',
-                    maxWidth: '1024px',
+                    maxWidth: 1024,
                     margin: 'auto',
                     marginTop: '-4rem',
+                    padding: {
+                        md: 0,
+                        xs: 2,
+                    },
                 }}
             >
                 <ProfileHeader
@@ -147,7 +154,7 @@ function ProfileUser({
                 />
 
                 <Grid container spacing={2}>
-                    <Grid item md={4}>
+                    <Grid item xs={12} md={4}>
                         <Stack gap={2}>
                             <ProfileUserNumFollow
                                 numFollowed={followers}
@@ -175,7 +182,7 @@ function ProfileUser({
                             />
                         </Stack>
                     </Grid>
-                    <Grid item md={8}>
+                    <Grid item xs={12} md={8}>
                         <ProfileNews news={newNews} />
                     </Grid>
                 </Grid>

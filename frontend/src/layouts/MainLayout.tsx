@@ -27,7 +27,10 @@ export function MainLayout({ children }: IMainLayoutProps) {
             {/* <ProgressBar marginTop={`${HEADER_HEIGHT + 4}px`} /> */}
             <Container
                 sx={{
-                    paddingTop: 2,
+                    paddingTop: {
+                        md: 2,
+                        xs: 1,
+                    },
                     paddingBottom: 2,
                     minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
                 }}

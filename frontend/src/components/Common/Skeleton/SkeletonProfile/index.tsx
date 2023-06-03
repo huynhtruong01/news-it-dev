@@ -12,7 +12,10 @@ export function SkeletonProfile() {
                     variant="rounded"
                     sx={{
                         width: '100%',
-                        height: 150,
+                        height: {
+                            md: 150,
+                            xs: 100,
+                        },
                     }}
                 />
             </Box>
@@ -23,6 +26,10 @@ export function SkeletonProfile() {
                     maxWidth: 1024,
                     margin: 'auto',
                     marginTop: '-4rem',
+                    padding: {
+                        md: 0,
+                        xs: 2,
+                    },
                 }}
             >
                 <SkeletonProfileHeader />

@@ -12,6 +12,7 @@ import {
     Stack,
     Typography,
     alpha,
+    useMediaQuery,
 } from '@mui/material'
 import { ReactNode } from 'react'
 import { connect } from 'react-redux'
@@ -29,7 +30,15 @@ interface ModalAuthTitle {
 
 function ModalAuthTitle({ children, onClose }: ModalAuthTitle) {
     return (
-        <DialogTitle sx={{ m: 0, p: 2 }}>
+        <DialogTitle
+            sx={{
+                m: 0,
+                p: {
+                    md: 2,
+                    xs: theme.spacing(1, 2),
+                },
+            }}
+        >
             <Stack
                 direction={'row'}
                 justifyContent={'space-between'}
@@ -58,6 +67,8 @@ function ModalAuthTitle({ children, onClose }: ModalAuthTitle) {
 }
 
 function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
+    const isSmallScreen = useMediaQuery('(min-width:320px)')
+
     const handleCloseModalAuth = () => {
         pSetShowModalAuth(false)
     }
@@ -72,7 +83,11 @@ function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
             }}
         >
             <ModalAuthTitle onClose={handleCloseModalAuth}>
-                <Typography component="h2" variant="h6" fontWeight={700}>
+                <Typography
+                    component="h2"
+                    variant={isSmallScreen ? 'body1' : 'h6'}
+                    fontWeight={700}
+                >
                     Log in to continue
                 </Typography>
             </ModalAuthTitle>
@@ -88,8 +103,14 @@ function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
                         alignItems={'center'}
                         sx={{
                             img: {
-                                width: 90,
-                                height: 90,
+                                width: {
+                                    md: 90,
+                                    xs: 60,
+                                },
+                                height: {
+                                    md: 90,
+                                    xs: 60,
+                                },
                                 borderRadius: theme.spacing(0.75),
                             },
                         }}

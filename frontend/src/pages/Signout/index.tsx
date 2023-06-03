@@ -39,6 +39,10 @@ function Signout({ pSignout }: ISignoutProps) {
                     fontWeight={700}
                     sx={{
                         marginBottom: 2,
+                        textAlign: {
+                            md: 'left',
+                            xs: 'center',
+                        },
                     }}
                 >
                     {t('message.signout')}

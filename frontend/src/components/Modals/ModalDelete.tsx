@@ -29,8 +29,9 @@ function ModelDelete({
     pDeleteNews,
     pSetInitValuesNewsForm,
 }: IModelDeleteProps) {
+    const { t } = useTranslation()
+
     const handleClose = () => {
-        const { t } = useTranslation()
         pSetShowModalDelete(false)
     }
 
@@ -93,7 +94,10 @@ function ModelDelete({
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 400,
+                    width: {
+                        md: 400,
+                        xs: '85%',
+                    },
                     padding: 3,
                 }}
             >
@@ -109,7 +113,7 @@ function ModelDelete({
                 <Typography
                     id="modal-modal-description"
                     sx={{
-                        mt: 2,
+                        mt: 1,
                         mb: 2,
                         a: {
                             color: yellow[700],
@@ -132,6 +136,10 @@ function ModelDelete({
                     <Button
                         variant="contained"
                         sx={{
+                            flex: {
+                                md: 'none',
+                                xs: 1,
+                            },
                             backgroundColor: alpha(theme.palette.secondary.main, 0.2),
                             color: theme.palette.secondary.main,
                             '&:hover': {
@@ -145,6 +153,10 @@ function ModelDelete({
                     <Button
                         variant="contained"
                         sx={{
+                            flex: {
+                                md: 'none',
+                                xs: 1,
+                            },
                             backgroundColor: red[500],
                             color: theme.palette.primary.contrastText,
                             '&:hover': {

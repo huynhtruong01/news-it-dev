@@ -1,3 +1,4 @@
+import { INewsStatus } from './news'
 import { IRole } from './../../../dashboard/src/models/role'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 import { SvgIconProps, SvgIconTypeMap } from '@mui/material'

@@ -1,7 +1,7 @@
 import { InputField, PasswordField } from '@/components/FormFields'
 import { ISignupValues } from '@/models'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Box } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { initSignupValues } from '@data/index'
@@ -69,10 +69,11 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     disabled={isSubmitting}
                     placeholder={'john.doe'}
                 />
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
+                <Stack
+                    direction={'row'}
+                    gap={{
+                        md: 2,
+                        xs: 1,
                     }}
                 >
                     <InputField
@@ -89,7 +90,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                         disabled={isSubmitting}
                         placeholder={'John'}
                     />
-                </Box>
+                </Stack>
                 <InputField
                     form={form}
                     label={t('input.email')}

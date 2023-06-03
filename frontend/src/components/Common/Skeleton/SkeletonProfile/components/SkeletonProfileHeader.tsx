@@ -14,18 +14,36 @@ export function SkeletonProfileHeader() {
                     <Box
                         sx={{
                             position: 'absolute',
-                            top: '-64px',
-                            left: '50%',
+                            top: {
+                                md: '-64px',
+                                xs: '-32px',
+                            },
+                            left: {
+                                md: '50%',
+                                xs: '14%',
+                            },
                             transform: 'translateX(-50%)',
-                            width: 128,
-                            height: 128,
+                            width: {
+                                md: 128,
+                                xs: 68,
+                            },
+                            height: {
+                                md: 128,
+                                xs: 68,
+                            },
                             borderRadius: '50%',
                             backgroundColor: theme.palette.primary.contrastText,
                             overflow: 'hidden',
-                            border: `8px solid ${alpha(
-                                theme.palette.secondary.main,
-                                0.2
-                            )}`,
+                            border: {
+                                md: `8px solid ${alpha(
+                                    theme.palette.secondary.main,
+                                    0.2
+                                )}`,
+                                xs: `4px solid ${alpha(
+                                    theme.palette.secondary.main,
+                                    0.2
+                                )}`,
+                            },
                         }}
                     >
                         <Skeleton
@@ -35,7 +53,13 @@ export function SkeletonProfileHeader() {
                         ></Skeleton>
                     </Box>
                 </Box>
-                <Box padding={theme.spacing(8, 3, 3)} textAlign="center">
+                <Box
+                    padding={{
+                        md: theme.spacing(8, 3, 3),
+                        xs: theme.spacing(6, 2, 2),
+                    }}
+                    textAlign="center"
+                >
                     <Typography
                         component="h1"
                         variant="h4"

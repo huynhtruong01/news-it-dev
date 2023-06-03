@@ -21,18 +21,22 @@ export interface IReadingListProps {
 
 function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListProps) {
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(true)
     const [filters, setFilters] = useState<IFiltersNewsSave>({
         search: '',
     })
 
     useEffect(() => {
-        document.title = 'Reading list - DEV Community'
+        document.title = `${t('title_document.reading_list')} - ${t(
+            'title_document.news_community'
+        )}`
     }, [])
 
     useEffect(() => {
         if (!pUser?.id) return
         ;(async () => {
             try {
+                setLoading(true)
                 if (pUser?.id) {
                     const data: IProfileFilters = {
                         id: pUser?.id,
@@ -43,6 +47,8 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
             } catch (error) {
                 throw new Error(error as string)
             }
+
+            setLoading(false)
         })()
     }, [filters])
 
@@ -66,9 +72,20 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
     return (
         <Box>
             <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
+                direction={{
+                    md: 'row',
+                    xs: 'column',
+                }}
+                justifyContent={{
+                    md: 'space-between',
+                    xs: 'center',
+                }}
+                alignItems={{
+                    md: 'center',
+                    xs: 'flex-start',
+                }}
+                gap={2}
+                width={'100%'}
                 marginBottom={3}
             >
                 <Typography component="h1" variant="h4" fontWeight={700}>
@@ -81,7 +98,10 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
                 <Grid
                     item
                     sx={{
-                        width: '240px',
+                        width: {
+                            md: 240,
+                            xs: '100%',
+                        },
                     }}
                 >
                     <ReadingListTags
@@ -89,8 +109,8 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
                         setFilters={setFilters}
                     />
                 </Grid>
-                <Grid item md>
-                    <ReadingListNews news={newsSaves} />
+                <Grid item xs={12} md>
+                    <ReadingListNews news={newsSaves} loading={loading} />
                 </Grid>
             </Grid>
         </Box>

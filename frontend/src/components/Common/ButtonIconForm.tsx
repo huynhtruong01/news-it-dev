@@ -1,6 +1,6 @@
 import { IIcon } from '@/models'
 import { theme } from '@/utils'
-import { Button, ButtonProps, Typography, alpha } from '@mui/material'
+import { Button, ButtonProps, Typography, alpha, useMediaQuery } from '@mui/material'
 import { red } from '@mui/material/colors'
 
 export type IButtonIconFormProps = {
@@ -17,6 +17,8 @@ export function ButtonIconForm({
     isLiked,
     ...rest
 }: IButtonIconFormProps) {
+    const isLargeScreen = useMediaQuery('(min-width:1024px)')
+
     const Icon = icon
 
     const handleButtonClick = async () => {
@@ -40,10 +42,13 @@ export function ButtonIconForm({
             }
             onClick={handleButtonClick}
             sx={{
+                backgroundColor: alpha(theme.palette.secondary.main, 0.075),
                 span: {
                     xs: theme.typography.body2,
                 },
-                backgroundColor: alpha(theme.palette.secondary.main, 0.075),
+                '.MuiButton-startIcon': {
+                    margin: isLargeScreen ? 0 : theme.spacing(0, 1, 0, -0.5),
+                },
                 '&:hover': {
                     backgroundColor: alpha(theme.palette.secondary.main, 0.1),
                 },
@@ -55,18 +60,18 @@ export function ButtonIconForm({
                 sx={{
                     display: {
                         xs: 'block',
-                        md: 'none',
+                        lg: 'none',
                     },
                 }}
             >
-                {text.split(' ')[0]}
+                {text.split(' ').slice(0, 2).join(' ')}
             </Typography>
             <Typography
                 component="span"
                 sx={{
                     display: {
                         xs: 'none',
-                        md: 'block',
+                        xl: 'block',
                     },
                 }}
             >

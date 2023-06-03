@@ -198,6 +198,19 @@
         "success": "Đăng xuất thành công"
     },
 
+    "title_document": {
+        "news_community": "Cộng đồng Tin Tức",
+        "home": "Trang chủ",
+        "dashboard": "Bảng điều khiển",
+        "search": "Kết quả tìm kiếm cho",
+        "notifications": "Thông báo",
+        "create_news": "Tạo tin tức mới",
+        "update_news":"Cập nhật tin tức",
+        "settings": "Cài đặt",
+        "tags": "Thẻ",
+        "reading_list":"Danh sách đọc"
+    },
+
     "empty": {
         "no_news": "Không có bài tin tức nào",
         "no_user_follow": "Không có người dùng nào theo dõi",

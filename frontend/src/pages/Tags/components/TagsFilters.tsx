@@ -16,11 +16,20 @@ export function TagsFilters({ filters, setFilters }: ITagsFiltersProps) {
     }
 
     return (
-        <Box>
+        <Box
+            width={{
+                md: 'auto',
+                xs: '100%',
+            }}
+        >
             <SearchFilter
                 initValue={filters?.search as string}
                 onSearchChange={handleSearchChange}
                 placeholder={t('placeholder.search_tag') as string}
+                width={{
+                    md: 'auto',
+                    xs: '100%',
+                }}
             />
         </Box>
     )

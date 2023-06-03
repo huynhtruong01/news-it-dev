@@ -56,7 +56,10 @@ function ModelDeleteComment({
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 400,
+                    width: {
+                        md: 400,
+                        xs: '85%',
+                    },
                     padding: 3,
                 }}
             >
@@ -65,6 +68,7 @@ function ModelDeleteComment({
                     variant="h6"
                     component="h2"
                     fontWeight={700}
+                    marginBottom={1.5}
                 >
                     Are you sure you want to delete this comment?
                 </Typography>
@@ -73,6 +77,10 @@ function ModelDeleteComment({
                     <Button
                         variant="contained"
                         sx={{
+                            flex: {
+                                md: 'none',
+                                xs: 1,
+                            },
                             backgroundColor: alpha(theme.palette.secondary.main, 0.2),
                             color: theme.palette.secondary.main,
                             '&:hover': {
@@ -86,6 +94,10 @@ function ModelDeleteComment({
                     <Button
                         variant="contained"
                         sx={{
+                            flex: {
+                                md: 'none',
+                                xs: 1,
+                            },
                             backgroundColor: red[500],
                             color: theme.palette.primary.contrastText,
                             '&:hover': {

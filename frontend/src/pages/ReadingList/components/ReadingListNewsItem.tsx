@@ -32,17 +32,33 @@ function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps
 
     return (
         <Stack
-            direction={'row'}
+            direction={{
+                md: 'row',
+                xs: 'column',
+            }}
             justifyContent={'space-between'}
-            alignItems={'center'}
+            alignItems={{
+                md: 'center',
+                xs: 'flex-start',
+            }}
+            gap={{
+                md: 0,
+                xs: 2,
+            }}
             component="article"
             sx={{
-                padding: theme.spacing(3, 3, 1),
+                width: '100%',
+                padding: 3,
+                '&:not(:last-of-type)': {
+                    borderBottom: `1px solid ${alpha(
+                        theme.palette.secondary.main,
+                        0.075
+                    )}`,
+                },
             }}
         >
             <Stack direction={'row'} gap={2}>
                 <Box>
-                    {/* WRITE LINK HERE */}
                     <Link to={linkUser}>
                         <Avatar
                             src={article.user?.avatar as string}
@@ -57,10 +73,13 @@ function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps
                 <Box>
                     <Typography
                         component="h3"
-                        fontSize={'18px'}
+                        fontSize={{
+                            md: '18px',
+                            xs: '1rem',
+                        }}
                         fontWeight={700}
                         sx={{
-                            lineHeight: 1,
+                            lineHeight: 1.25,
                             marginBottom: 0.25,
                             '&:hover': {
                                 color: theme.palette.primary.dark,
@@ -70,68 +89,95 @@ function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps
                         {/* WRITE LINK HERE */}
                         <Link to={`/news/${article.slug}`}>{article.title}</Link>
                     </Typography>
-                    <Typography
+                    <Stack
+                        direction={{
+                            md: 'row',
+                            xs: 'column',
+                        }}
+                        alignItems={{
+                            md: 'center',
+                            xs: 'flex-start',
+                        }}
+                        gap={0.5}
                         sx={{
-                            display: 'flex',
-                            alignItems: 'center',
                             fontSize: theme.typography.body2,
-                            gap: 0.5,
                             span: {
                                 display: 'inline-block',
                                 fontSize: theme.typography.body2,
                             },
                         }}
                     >
-                        {/* WRITE LINK HERE */}
-                        <Typography
-                            component="span"
+                        <Stack
+                            direction={'row'}
+                            gap={0.5}
+                            alignItems={'center'}
+                            flexWrap={'wrap'}
                             sx={{
-                                a: {
-                                    fontWeight: 600,
-                                    '&:hover': {
-                                        color: theme.palette.primary.dark,
-                                    },
+                                b: {
+                                    color: alpha(theme.palette.secondary.main, 0.4),
+                                },
+                                span: {
+                                    color: alpha(theme.palette.secondary.main, 0.8),
                                 },
                             }}
                         >
-                            <Link to={linkUser}>{article.user?.username}</Link>
-                        </Typography>
-                        <span> • </span>
-                        <span>
-                            {formatDate(article.createdAt || new Date(), 'MMM DD')}
-                        </span>
-                        <span> • </span>
-                        <span>
-                            {article.readTimes} {t('common.min_read')}
-                        </span>
-                        <span> • </span>
-                        <Stack direction={'row'} gap={0.5}>
-                            {article?.hashTags?.length &&
-                                article?.hashTags.map((tag) => (
-                                    <Typography
-                                        component="span"
-                                        key={tag.id}
-                                        sx={{
-                                            a: {
-                                                display: 'inline-block',
-                                                padding: theme.spacing(0.5, 0.9),
-                                                borderRadius: theme.spacing(0.75),
-                                                '&:hover': {
-                                                    backgroundColor: alpha(
-                                                        theme.palette.grey[700],
-                                                        0.1
+                            <Typography
+                                component="span"
+                                sx={{
+                                    a: {
+                                        fontWeight: 600,
+                                        color: theme.palette.secondary.main,
+                                        '&:hover': {
+                                            color: theme.palette.primary.dark,
+                                        },
+                                    },
+                                }}
+                            >
+                                <Link to={linkUser}>{article.user?.username}</Link>
+                            </Typography>
+                            <b> • </b>
+                            <span>
+                                {formatDate(article.createdAt || new Date(), 'MMM DD')}
+                            </span>
+                            <b> • </b>
+                            <span>
+                                {article.readTimes} {t('common.min_read')}
+                            </span>
+                            <b> • </b>
+                            <Stack direction={'row'} gap={0.5} flexWrap={'wrap'}>
+                                {article?.hashTags?.length &&
+                                    article?.hashTags.map((tag) => (
+                                        <Typography
+                                            component="span"
+                                            key={tag.id}
+                                            sx={{
+                                                a: {
+                                                    display: 'inline-block',
+                                                    padding: theme.spacing(0.5, 0.9),
+                                                    borderRadius: theme.spacing(0.75),
+                                                    color: alpha(
+                                                        theme.palette.secondary.main,
+                                                        0.9
                                                     ),
-                                                    boxShadow: `0 0 1px ${theme.palette.grey[700]}`,
+                                                    '&:hover': {
+                                                        backgroundColor: alpha(
+                                                            theme.palette.grey[700],
+                                                            0.1
+                                                        ),
+                                                        boxShadow: `0 0 1px ${theme.palette.grey[700]}`,
+                                                    },
                                                 },
-                                            },
-                                        }}
-                                    >
-                                        {/* WRITE LINK HERE */}
-                                        <Link to={`/tags/${tag.name}`}>#{tag.name}</Link>
-                                    </Typography>
-                                ))}
+                                            }}
+                                        >
+                                            {/* WRITE LINK HERE */}
+                                            <Link to={`/tags/${tag.name}`}>
+                                                #{tag.name}
+                                            </Link>
+                                        </Typography>
+                                    ))}
+                            </Stack>
                         </Stack>
-                    </Typography>
+                    </Stack>
                 </Box>
             </Stack>
             <Button
@@ -141,6 +187,10 @@ function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps
                     backgroundColor: alpha(theme.palette.secondary.main, 0.075),
                     color: theme.palette.secondary.main,
                     borderRadius: theme.spacing(0.75),
+                    width: {
+                        md: 'auto',
+                        xs: '100%',
+                    },
 
                     '&:hover': {
                         backgroundColor: alpha(theme.palette.primary.dark, 0.1),

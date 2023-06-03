@@ -13,9 +13,9 @@ export function TagsList({ tags, loading }: ITagsListProps) {
         <Box>
             {loading && <SkeletonHashTagList />}
             {!loading && (
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                     {tags.map((tag) => (
-                        <Grid key={tag.id} item md={4}>
+                        <Grid key={tag.id} item xs={12} sm={6} md={4}>
                             <TagsItem tag={tag} />
                         </Grid>
                     ))}

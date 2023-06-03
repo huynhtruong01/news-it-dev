@@ -3,7 +3,16 @@ import { IFollow, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { formatDate, theme } from '@/utils'
-import { Avatar, Box, Button, Divider, Paper, Typography, alpha } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    Button,
+    Divider,
+    Paper,
+    Stack,
+    Typography,
+    alpha,
+} from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -44,8 +53,14 @@ export function ProfileHeader({
                     <Box
                         sx={{
                             position: 'absolute',
-                            top: '-64px',
-                            left: '50%',
+                            top: {
+                                md: '-64px',
+                                xs: '-32px',
+                            },
+                            left: {
+                                md: '50%',
+                                xs: '14%',
+                            },
                             transform: 'translateX(-50%)',
                         }}
                     >
@@ -53,9 +68,18 @@ export function ProfileHeader({
                             src={user.avatar}
                             alt={user.username}
                             sx={{
-                                width: 128,
-                                height: 128,
-                                border: `8px solid ${theme.palette.primary.dark}`,
+                                width: {
+                                    md: 128,
+                                    xs: 68,
+                                },
+                                height: {
+                                    md: 128,
+                                    xs: 68,
+                                },
+                                border: {
+                                    md: `8px solid ${theme.palette.primary.dark}`,
+                                    xs: `4px solid ${theme.palette.primary.dark}`,
+                                },
                             }}
                         />
                     </Box>
@@ -66,8 +90,14 @@ export function ProfileHeader({
                                     variant="contained"
                                     sx={{
                                         position: 'absolute',
-                                        top: '1.5rem',
-                                        right: '1.5rem',
+                                        top: {
+                                            md: '1.5rem',
+                                            xs: '0.75rem',
+                                        },
+                                        right: {
+                                            md: '1.5rem',
+                                            xs: '0.75rem',
+                                        },
                                         borderRadius: theme.spacing(0.75),
                                         padding: theme.spacing(1, 2),
                                         backgroundColor: theme.palette.primary.light,
@@ -85,8 +115,14 @@ export function ProfileHeader({
                                     variant="contained"
                                     sx={{
                                         position: 'absolute',
-                                        top: '1.5rem',
-                                        right: '1.5rem',
+                                        top: {
+                                            md: '1.5rem',
+                                            xs: '0.75rem',
+                                        },
+                                        right: {
+                                            md: '1.5rem',
+                                            xs: '0.75rem',
+                                        },
                                         padding: theme.spacing(1.5, 2),
                                         backgroundColor:
                                             followed === IsFollow.FOLLOW
@@ -131,8 +167,14 @@ export function ProfileHeader({
                             variant="contained"
                             sx={{
                                 position: 'absolute',
-                                top: '1.5rem',
-                                right: '1.5rem',
+                                top: {
+                                    md: '1.5rem',
+                                    xs: '0.75rem',
+                                },
+                                right: {
+                                    md: '1.5rem',
+                                    xs: '0.75rem',
+                                },
                                 borderRadius: theme.spacing(0.75),
                                 padding: theme.spacing(1.5, 2),
                                 backgroundColor: theme.palette.primary.light,
@@ -147,7 +189,16 @@ export function ProfileHeader({
                         </Button>
                     )}
                 </Box>
-                <Box padding={theme.spacing(8, 3, 3)} textAlign="center">
+                <Stack
+                    alignItems={{
+                        md: 'center',
+                        xs: 'flex-start',
+                    }}
+                    padding={{
+                        md: theme.spacing(8, 3, 3),
+                        xs: theme.spacing(6, 2, 2),
+                    }}
+                >
                     <Typography
                         component="h1"
                         variant="h4"
@@ -178,12 +229,23 @@ export function ProfileHeader({
                         {t('dates.joined_on')}{' '}
                         {formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
                     </Typography>
-                </Box>
+                </Stack>
                 {user.work && (
                     <>
                         <Divider />
-                        <Box padding={1.5} textAlign="center">
-                            <Box padding={1.5}>
+                        <Box
+                            padding={2}
+                            textAlign={{
+                                md: 'center',
+                                xs: 'left',
+                            }}
+                        >
+                            <Box
+                                padding={{
+                                    md: 1.5,
+                                    xs: 0,
+                                }}
+                            >
                                 <Box
                                     component="strong"
                                     sx={{

@@ -98,11 +98,20 @@ function TagsDetail({ pUser }: ITagsDetailProps) {
                 >
                     <TagsDetailHeader tag={tag} />
 
-                    <Grid container spacing={2}>
+                    <Grid
+                        container
+                        spacing={{
+                            md: 2,
+                            xs: 3,
+                        }}
+                    >
                         <Grid
                             item
                             sx={{
-                                width: '240px',
+                                width: {
+                                    md: '240px',
+                                    xs: '100%',
+                                },
                             }}
                         >
                             <TagsDetailLeft hashTagFollows={hashTagFollows} />
