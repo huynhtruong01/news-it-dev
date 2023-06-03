@@ -42,7 +42,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                     sx={{
                         width: '100%',
                         height: {
-                            lg: 420,
+                            lg: 330,
                             sm: 200,
                             xs: 150,
                         },
@@ -109,12 +109,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                     </Box>
 
                     <Box>
-                        <Typography
-                            component="h1"
-                            variant="h3"
-                            fontWeight={700}
-                            marginBottom={1.5}
-                        >
+                        <Typography component="h1" variant="h3" marginBottom={1.5}>
                             {title}
                         </Typography>
                         <HashTagList tags={newTags} fontText={theme.typography.body1} />
@@ -132,6 +127,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                 <Box
                     sx={{
                         '& > p': {
+                            letterSpacing: '0.5px',
                             lineHeight: '30px !important',
                             fontSize: {
                                 md: '20px',

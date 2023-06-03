@@ -156,7 +156,15 @@ function NewsItem({
                 },
             }}
         >
-            <Stack direction={'row'} alignItems={'center'} gap={1} marginBottom={2}>
+            <Stack
+                direction={'row'}
+                alignItems={'center'}
+                gap={1}
+                marginBottom={{
+                    md: 2,
+                    xs: 1.2,
+                }}
+            >
                 <Link to={linkUser}>
                     <Avatar src={news?.user?.avatar} alt={news?.user?.username} />
                 </Link>

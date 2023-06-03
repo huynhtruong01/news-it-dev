@@ -167,7 +167,8 @@
         "choose_tags": "Choose tags...",
         "sapo": "Sapo news...",
         "title": "Title news...",
-        "drag_drop": "Drag & Drop or Choose your file here"
+        "drag_drop": "Drag & Drop or Choose your file here",
+        "short_bio": "A short bio..."
     },
 
     "dates":{

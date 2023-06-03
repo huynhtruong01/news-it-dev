@@ -55,16 +55,16 @@ let theme = createTheme({
                 },
                 maxWidthMd: {
                     maxWidth: 1264,
-                    '@media (min-width: 1024px)': {
-                        maxWidth: 1264,
+                    '@media (min-width: 480px)': {
+                        maxWidth: '100%',
+                        width: '100%',
                     },
                     '@media (min-width: 768px)': {
                         maxWidth: '100%',
                         width: '100%',
                     },
-                    '@media (min-width: 480px)': {
-                        maxWidth: '100%',
-                        width: '100%',
+                    '@media (min-width: 1024px)': {
+                        maxWidth: 1264,
                     },
                 },
             },
@@ -131,28 +131,32 @@ let theme = createTheme({
         MuiTypography: {
             styleOverrides: {
                 h3: {
+                    fontWeight: 900,
                     fontSize: '48px',
                     lineHeight: '60px',
-                    '@media (min-width: 1024px)': {
-                        fontSize: '48px',
-                        lineHeight: '60px',
-                    },
                     '@media (min-width: 320px)': {
                         fontSize: '30px',
                         lineHeight: '35px',
                     },
+                    '@media (min-width: 1024px)': {
+                        fontSize: '48px',
+                        lineHeight: '60px',
+                    },
                 },
                 h4: {
                     fontSize: '30px',
-                    '@media (min-width: 1024px)': {
-                        fontSize: '30px',
-                    },
                     '@media (min-width: 320px)': {
                         fontSize: '20px',
+                    },
+                    '@media (min-width: 1024px)': {
+                        fontSize: '30px',
                     },
                 },
                 h5: {
                     fontSize: '24px',
+                    '@media (min-width: 320px)': {
+                        fontSize: '20px',
+                    },
                     '@media (min-width: 1024px)': {
                         fontSize: '24px',
                     },

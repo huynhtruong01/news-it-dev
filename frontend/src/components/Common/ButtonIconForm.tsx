@@ -18,6 +18,7 @@ export function ButtonIconForm({
     ...rest
 }: IButtonIconFormProps) {
     const isLargeScreen = useMediaQuery('(min-width:1024px)')
+    const isBigScreen = useMediaQuery('(min-width:1280px)')
 
     const Icon = icon
 
@@ -47,7 +48,8 @@ export function ButtonIconForm({
                     xs: theme.typography.body2,
                 },
                 '.MuiButton-startIcon': {
-                    margin: isLargeScreen ? 0 : theme.spacing(0, 1, 0, -0.5),
+                    margin:
+                        isLargeScreen && !isBigScreen ? 0 : theme.spacing(0, 1, 0, -0.5),
                 },
                 '&:hover': {
                     backgroundColor: alpha(theme.palette.secondary.main, 0.1),

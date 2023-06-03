@@ -215,7 +215,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                             </Stack>
                             <Box
                                 dangerouslySetInnerHTML={{ __html: content }}
-                                marginTop={1.75}
+                                marginTop={1}
                                 sx={{
                                     p: {
                                         lineHeight: '30px',
@@ -238,7 +238,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                                 color: theme.palette.primary.main,
                             }}
                         >
-                            Update comment...
+                            Updating comment...
                         </Typography>
                     )}
 
@@ -315,16 +315,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                     </Box>
 
                     {/* Comment Children */}
-                    <Box
-                        marginTop={
-                            comment.parentCommentId
-                                ? 0
-                                : {
-                                      md: 4,
-                                      xs: 2,
-                                  }
-                        }
-                    >
+                    <Box marginTop={comment.parentCommentId ? 0 : 2.5}>
                         <CommentList comments={newChildrenComments} t={t} />
                     </Box>
                 </Box>

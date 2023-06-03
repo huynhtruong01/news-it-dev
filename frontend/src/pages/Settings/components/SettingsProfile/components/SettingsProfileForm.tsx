@@ -174,7 +174,7 @@ export function SettingsProfileForm({
                             name="bio"
                             label={t('input.bio')}
                             disabled={isSubmitting}
-                            placeholder={'A short bio...'}
+                            placeholder={t('placeholder.short_bio')}
                             minRows={4}
                             multiline
                         />

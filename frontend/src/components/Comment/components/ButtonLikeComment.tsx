@@ -2,6 +2,7 @@ import { commentApi } from '@/api'
 import { IComment, IUser } from '@/models'
 import { AppDispatch } from '@/store'
 import { getProfile } from '@/store/user/thunkApi'
+import { theme } from '@/utils'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import { Button, ButtonProps, Typography } from '@mui/material'
@@ -75,18 +76,26 @@ function ButtonLikeComment({
                     <FavoriteBorderIcon />
                 )
             }
+            sx={{
+                span: {
+                    fontSize: theme.typography.body2,
+                },
+            }}
             onClick={handleLikeComment}
         >
-            {numLikes === 0 ? '' : numLikes}{' '}
+            <Typography component={'span'} marginRight={numLikes ? 0.5 : 0}>
+                {numLikes === 0 ? '' : numLikes}
+            </Typography>
             <Typography
                 component="span"
                 sx={{
                     display: {
-                        md: 'block',
+                        md: 'inline-block',
                         xs: 'none',
                     },
                 }}
             >
+                {' '}
                 {text}
             </Typography>
         </Button>

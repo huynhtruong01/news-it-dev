@@ -2,6 +2,7 @@ import { IComment } from '@/models'
 import { AppDispatch } from '@/store'
 import { setComment } from '@/store/comment'
 import { setShowModalDeleteComment } from '@/store/common'
+import { theme } from '@/utils'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import {
     Box,
@@ -52,15 +53,6 @@ function CommentAction({
     }
 
     const handleDelete = () => {
-        // try {
-        //     handleClose()
-        //     await commentApi.deleteComment(comment.id)
-        //     enqueueSnackbar('Delete comment successfully.', {
-        //         variant: 'success',
-        //     })
-        // } catch (error) {
-        //     throw new Error(error as string)
-        // }
         pSetModalDeleteComment(true)
         pSetComment(comment)
         handleClose()
@@ -77,7 +69,7 @@ function CommentAction({
             <IconButton
                 aria-describedby={'111'}
                 sx={{
-                    padding: 0.5,
+                    padding: theme.spacing(0, 0.5),
                 }}
                 onClick={handleOpen}
             >

@@ -1,5 +1,6 @@
 import { commentApi } from '@/api'
 import { CommentInput, CommentList } from '@/components'
+import { ProgressLoading } from '@/components/Common'
 import { Order } from '@/enums'
 import { IComment, ICommentData, IFilters, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
@@ -129,7 +130,7 @@ function NewsComment({
             id="comments"
             padding={{
                 lg: theme.spacing(4, 8),
-                xs: theme.spacing(2, 1.5, 0),
+                xs: theme.spacing(2, 1.5),
             }}
         >
             <Box component="header" marginBottom={3}>
@@ -152,28 +153,10 @@ function NewsComment({
                         marginBottom: 6,
                     }}
                 />
-                {loadingComment && (
-                    <Typography
-                        sx={{
-                            textAlign: 'center',
-                            color: theme.palette.primary.main,
-                        }}
-                    >
-                        Loading comment...
-                    </Typography>
-                )}
+                {loadingComment && <ProgressLoading />}
                 {!loadingComment && <CommentList comments={pComments} t={t} />}
 
-                {loadMore && (
-                    <Typography
-                        sx={{
-                            textAlign: 'center',
-                            color: theme.palette.primary.main,
-                        }}
-                    >
-                        Loading more comment...
-                    </Typography>
-                )}
+                {loadMore && <ProgressLoading />}
                 {hasLoadMore && commentLength && (
                     <Stack alignItems={'center'}>
                         <Button variant="contained" onClick={handleLoadMore}>

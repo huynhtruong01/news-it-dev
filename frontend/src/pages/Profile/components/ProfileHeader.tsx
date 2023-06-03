@@ -199,12 +199,7 @@ export function ProfileHeader({
                         xs: theme.spacing(6, 2, 2),
                     }}
                 >
-                    <Typography
-                        component="h1"
-                        variant="h4"
-                        fontWeight={800}
-                        marginBottom={1}
-                    >
+                    <Typography component="h1" variant="h4" fontWeight={800}>
                         {user.username}
                     </Typography>
                     {user.bio && (
@@ -212,9 +207,15 @@ export function ProfileHeader({
                             fontSize={'18px'}
                             sx={{
                                 width: '100%',
-                                maxWidth: '80%',
+                                maxWidth: {
+                                    md: '80%',
+                                    xs: '100%',
+                                },
                                 margin: 'auto',
-                                marginBottom: 2,
+                                marginBottom: 1.5,
+                                marginTop: 1.5,
+                                fontSize: '1rem',
+                                color: '#242424',
                             }}
                         >
                             {user.bio}

@@ -167,7 +167,8 @@
         "choose_tags": "Chọn thẻ...",
         "sapo": "Nhập mở đầu cho tin tức...",
         "title": "Nhập tiêu đề cho tin tức...",
-        "drag_drop": "Kéo & Thả hoặc Chọn ảnh"
+        "drag_drop": "Kéo & Thả hoặc Chọn ảnh",
+        "short_bio": "Tiểu sử ngắn..."
     },
 
     "dates":{
