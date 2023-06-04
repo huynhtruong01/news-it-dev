@@ -61,7 +61,7 @@ export function SettingsNav() {
                             },
                         }}
                     >
-                        <Link to={nav.link as string}>{t(`settings.${nav.name}`)}</Link>
+                        <Link to={nav.link as string}>{t(nav.name as string)}</Link>
                     </Box>
                 ))}
             </Stack>

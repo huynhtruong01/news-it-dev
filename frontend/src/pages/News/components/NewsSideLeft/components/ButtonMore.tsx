@@ -1,3 +1,4 @@
+import { INews } from '@/models'
 import { theme } from '@/utils'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
@@ -12,13 +13,50 @@ import {
     alpha,
 } from '@mui/material'
 import { green } from '@mui/material/colors'
+import { makeStyles } from '@mui/styles'
 import { MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import {
+    FacebookShareButton,
+    WhatsappShareButton,
+    TwitterShareButton,
+    RedditShareButton,
+    TelegramShareButton,
+    FacebookIcon,
+    WhatsappIcon,
+    TelegramIcon,
+    RedditIcon,
+    TwitterIcon,
+} from 'react-share'
 
-export type IButtonMoreProps = BoxProps
+export interface IButtonMoreProps extends BoxProps {
+    news: INews
+}
 
-export function ButtonMore({ ...rest }: IButtonMoreProps) {
+const useStyles = makeStyles({
+    shareItem: {
+        width: '100%',
+        '&:hover': {
+            color: theme.palette.primary.dark,
+            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+            'span, svg': {
+                color: theme.palette.primary.dark,
+            },
+        },
+        '& svg': {
+            width: 30,
+            height: 30,
+            borderRadius: theme.spacing(0.5),
+        },
+        '& button': {
+            width: '100%',
+        },
+    },
+})
+
+export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
     const { t } = useTranslation()
+    const styles = useStyles()
     const [copied, setCopied] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -77,17 +115,7 @@ export function ButtonMore({ ...rest }: IButtonMoreProps) {
                 transformOrigin={{ horizontal: 'left', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
             >
-                <MenuItem
-                    onClick={handleCopyLink}
-                    sx={{
-                        '&:hover': {
-                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                            'span, svg': {
-                                color: theme.palette.primary.dark,
-                            },
-                        },
-                    }}
-                >
+                <MenuItem className={styles.shareItem} onClick={handleCopyLink}>
                     <Stack
                         direction={'row'}
                         justifyContent={'space-between'}
@@ -105,7 +133,12 @@ export function ButtonMore({ ...rest }: IButtonMoreProps) {
                         <Typography component="span" fontWeight={700}>
                             {t('button.copy_link')}
                         </Typography>
-                        <FileCopyIcon />
+                        <FileCopyIcon
+                            sx={{
+                                width: '24px !important',
+                                height: '24px !important',
+                            }}
+                        />
                     </Stack>
                 </MenuItem>
                 {copied && (
@@ -123,6 +156,61 @@ export function ButtonMore({ ...rest }: IButtonMoreProps) {
                         </Typography>
                     </MenuItem>
                 )}
+                <MenuItem className={styles.shareItem}>
+                    <FacebookShareButton
+                        quote={news.title}
+                        url={window.location.href}
+                        onClick={handleCloseMore}
+                    >
+                        <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                            <FacebookIcon /> Share to Facebook
+                        </Stack>
+                    </FacebookShareButton>
+                </MenuItem>
+                <MenuItem className={styles.shareItem}>
+                    <WhatsappShareButton
+                        url={window.location.href}
+                        onClick={handleCloseMore}
+                    >
+                        <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                            <WhatsappIcon />
+                            Share to Whats App
+                        </Stack>
+                    </WhatsappShareButton>
+                </MenuItem>
+                <MenuItem className={styles.shareItem}>
+                    <TwitterShareButton
+                        url={window.location.href}
+                        onClick={handleCloseMore}
+                    >
+                        <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                            <TwitterIcon />
+                            Share to Twitter
+                        </Stack>
+                    </TwitterShareButton>
+                </MenuItem>
+                <MenuItem className={styles.shareItem}>
+                    <RedditShareButton
+                        url={window.location.href}
+                        onClick={handleCloseMore}
+                    >
+                        <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                            <RedditIcon />
+                            Share to Reddit
+                        </Stack>
+                    </RedditShareButton>
+                </MenuItem>
+                <MenuItem className={styles.shareItem}>
+                    <TelegramShareButton
+                        url={window.location.href}
+                        onClick={handleCloseMore}
+                    >
+                        <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                            <TelegramIcon />
+                            Share to Telegram
+                        </Stack>
+                    </TelegramShareButton>
+                </MenuItem>
             </Menu>
         </Box>
     )

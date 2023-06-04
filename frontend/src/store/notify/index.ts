@@ -26,6 +26,11 @@ const notifySlice = createSlice({
     extraReducers,
 })
 
-export const { addNotify, resetNotify, readUserNotify, deleteNotify } =
-    notifySlice.actions
+export const {
+    addNotify,
+    resetNotify,
+    readUserNotify,
+    deleteNotify,
+    setNotificationFilters,
+} = notifySlice.actions
 export default notifySlice.reducer

@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next'
 
 export interface INewsItemProps {
     news: INews
+    user?: IUser
     pUser: IUser | null
     pSocket: Socket | null
     pSetShowModalAuth: (isShow: boolean) => void
@@ -56,6 +57,7 @@ const useStyles = makeStyles({
 
 function NewsItem({
     news,
+    user,
     pUser,
     pSocket,
     pSetShowModalAuth,
@@ -166,7 +168,10 @@ function NewsItem({
                 }}
             >
                 <Link to={linkUser}>
-                    <Avatar src={news?.user?.avatar} alt={news?.user?.username} />
+                    <Avatar
+                        src={news?.user?.avatar || user?.avatar}
+                        alt={news?.user?.username || user?.username}
+                    />
                 </Link>
                 <Box>
                     <Typography
@@ -177,7 +182,9 @@ function NewsItem({
                             },
                         }}
                     >
-                        <Link to={linkUser}>{news?.user?.username}</Link>
+                        <Link to={linkUser}>
+                            {news?.user?.username || user?.username}
+                        </Link>
                     </Typography>
                     <Box
                         component="time"

@@ -1,7 +1,6 @@
 import { AppDataSource } from '@/config'
 import { relationDataComment } from '@/data'
 import { Comment, News, User } from '@/entities'
-import { Order } from '@/enums'
 import { ICommentRes, IObjectCommon } from '@/models'
 import { commonService, newsService, notifyService, userService } from '@/services'
 import { createComment, paginationQuery, sortQuery } from '@/utils'
@@ -32,9 +31,6 @@ class CommentService {
                 relations: relationDataComment,
                 order: {
                     ...newSortQuery,
-                    childrenComments: {
-                        id: Order.DESC,
-                    },
                 },
                 ...newPaginationQuery,
             })
@@ -142,12 +138,18 @@ class CommentService {
     // get by id
     async getById(id: number): Promise<Comment | null> {
         try {
-            const comment = await this.commentRepository.findOne({
-                where: {
-                    id,
-                },
-                relations: relationDataComment,
-            })
+            const comment = await this.commentRepository
+                .createQueryBuilder('comment')
+                .leftJoinAndSelect('comment.parentComment', 'parentComment')
+                .leftJoinAndSelect('comment.childrenComments', 'childrenComments')
+                .leftJoinAndSelect('childrenComments.user', 'userComment')
+                .leftJoinAndSelect('childrenComments.likes', 'likesComment')
+                .leftJoinAndSelect('childrenComments.replyUser', 'replyUser')
+                .leftJoinAndSelect('comment.news', 'news')
+                .leftJoinAndSelect('comment.user', 'user')
+                .leftJoinAndSelect('comment.likes', 'likes')
+                .where('comment.id = :commentId', { commentId: id })
+                .getOne()
             if (!comment) return null
 
             return comment
@@ -159,15 +161,12 @@ class CommentService {
     // get by id with little relation
     async getByIdRelation(id: number): Promise<Comment | null> {
         try {
-            const comment = await this.commentRepository.findOne({
-                where: {
-                    id,
-                },
-                relations: {
-                    childrenComments: true,
-                    news: true,
-                },
-            })
+            const comment = await this.commentRepository
+                .createQueryBuilder('comment')
+                .leftJoinAndSelect('comment.childrenComments', 'childrenComments')
+                .leftJoinAndSelect('comment.news', 'news')
+                .where('comment.id = :commentId', { commentId: id })
+                .getOne()
             if (!comment) return null
 
             return comment

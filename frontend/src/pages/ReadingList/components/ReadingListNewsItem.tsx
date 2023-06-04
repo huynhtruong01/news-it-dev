@@ -145,7 +145,7 @@ function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps
                             </span>
                             <b> • </b>
                             <Stack direction={'row'} gap={0.5} flexWrap={'wrap'}>
-                                {article?.hashTags?.length &&
+                                {article?.hashTags &&
                                     article?.hashTags.map((tag) => (
                                         <Typography
                                             component="span"

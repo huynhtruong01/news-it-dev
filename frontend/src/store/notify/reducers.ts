@@ -1,4 +1,5 @@
-import { INotify, INotifyUpdateRead } from '@/models'
+import { ALL } from '@/consts'
+import { INotify, INotifyUpdateRead, ISetNotifications } from '@/models'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { INotifyStore } from '.'
 
@@ -14,6 +15,44 @@ export const reducers = {
 
         state.numNotifications = state.numNotifications + 1
         state.total = newNotifies.length
+    },
+    setNotificationFilters: (
+        state: INotifyStore,
+        action: PayloadAction<ISetNotifications>
+    ) => {
+        const { filters, userId } = action.payload
+        const notificationsFilter = [...state.notifications]
+        const newNotifications = notificationsFilter.filter((n) => {
+            const search =
+                filters.search === ''
+                    ? true
+                    : (filters.search as string)
+                          .toLowerCase()
+                          .split(' ')
+                          .filter((x) => !!x)
+                          .some((w) =>
+                              !n.news
+                                  ? false
+                                  : (n.news?.title as string).toLowerCase().includes(w)
+                          )
+
+            let isRead
+            switch (filters.isRead) {
+                case ALL:
+                    isRead = true
+                    break
+                case 0:
+                    isRead = !n.readUsers?.includes(userId.toString() as string)
+                    break
+                case 1:
+                    isRead = n.readUsers?.includes(userId.toString() as string)
+                    break
+            }
+
+            return search && isRead
+        })
+
+        state.notificationsFilter = newNotifications
     },
     resetNotify: (state: INotifyStore) => {
         state.notifications = []

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 export interface INotificationListProps {
     notifications: INotify[]
-    loading: boolean
+    loading?: boolean
 }
 
 export function NotificationList({ notifications, loading }: INotificationListProps) {
@@ -19,7 +19,7 @@ export function NotificationList({ notifications, loading }: INotificationListPr
 
     return (
         <Stack gap={2}>
-            {loading && <SkeletonNewsList />}
+            {loading && <SkeletonNewsList columns={1} />}
             {!loading && newNotifications.length === 0 && (
                 <EmptyList title={t('empty.no_notifications')} />
             )}

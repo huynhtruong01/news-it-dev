@@ -47,3 +47,8 @@ export interface INotifyUpdateReadParams {
     notifyId: number
     userId: number
 }
+
+export interface ISetNotifications {
+    filters: INotifyFilters
+    userId: number
+}

@@ -8,6 +8,7 @@ import {
     BaseEntity,
     OneToMany,
     JoinTable,
+    Index,
 } from 'typeorm'
 import { News } from '@/entities/news.entity'
 import { Comment } from '@/entities/comment.entity'
@@ -24,27 +25,32 @@ export class User extends BaseEntity {
         type: 'text',
         unique: true,
     })
+    @Index()
     username: string
 
     @Column({
         type: 'text',
     })
+    @Index()
     firstName: string
 
     @Column({
         type: 'text',
     })
+    @Index()
     lastName: string
 
     @Column({
         type: 'text',
         unique: true,
     })
+    @Index()
     emailAddress: string
 
     @Column({
         type: 'text',
     })
+    @Index()
     password?: string
 
     // @Column({
@@ -65,84 +71,98 @@ export class User extends BaseEntity {
     @Column({
         type: 'datetime',
     })
+    @Index()
     dateJoined: Date
 
     @Column({
         type: 'int',
         default: 0,
     })
+    @Index()
     newsCount: number
 
     @Column({
         type: 'text',
         default: '',
     })
+    @Index()
     avatar?: string
 
     @Column({
         type: 'text',
         default: '',
     })
+    @Index()
     websiteUrl?: string
 
     @Column({
         type: 'text',
         default: '',
     })
+    @Index()
     bio?: string
 
     @Column({
         type: 'text',
         default: '',
     })
+    @Index()
     currentlyLearning?: string
 
     @Column({
         type: 'text',
         default: '',
     })
+    @Index()
     skillLanguages?: string
 
     @Column({
         type: 'text',
         default: '',
     })
+    @Index()
     education?: string
 
     @Column({
         type: 'text',
         default: '',
     })
+    @Index()
     work?: string
 
     @Column({
         type: 'text',
         default: '#ffffff',
     })
+    @Index()
     bandingColor?: string
 
     @Column({
         type: 'int',
         default: 0,
     })
+    @Index()
     numFollowers: number
 
     @Column({
         type: 'int',
         default: 0,
     })
+    @Index()
     numFollowing: number
 
     @Column({
         type: 'int',
         default: 0,
     })
+    @Index()
     numNewsLike: number
 
     @Column({
         type: 'int',
         default: 0,
     })
+    @Index()
     numNewsSaves: number
 
     @ManyToMany(() => Role, (role) => role.users, {
@@ -158,25 +178,41 @@ export class User extends BaseEntity {
     @ManyToMany(() => User, (user) => user.followers, {
         onDelete: 'CASCADE',
     })
-    @JoinTable()
+    @JoinTable({
+        name: 'users_followers_users',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'userFollowId', referencedColumnName: 'id' },
+    })
     followers?: User[]
 
     @ManyToMany(() => User, (user) => user.following, {
         onDelete: 'CASCADE',
     })
-    @JoinTable()
+    @JoinTable({
+        name: 'users_following_users',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'userFollowedId', referencedColumnName: 'id' },
+    })
     following?: User[]
 
     @ManyToMany(() => News, (news) => news.likes, {
         cascade: true,
     })
-    @JoinTable()
+    @JoinTable({
+        name: 'users_news_likes_news',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'newsId', referencedColumnName: 'id' },
+    })
     newsLikes?: News[]
 
     @ManyToMany(() => News, (news) => news.saveUsers, {
         cascade: true,
     })
-    @JoinTable()
+    @JoinTable({
+        name: 'users_saves_news',
+        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'newsId', referencedColumnName: 'id' },
+    })
     saves?: News[]
 
     @OneToMany(() => News, (news) => news.user, {
@@ -219,7 +255,7 @@ export class User extends BaseEntity {
     })
     @JoinTable({
         name: 'user_notifications_received',
-        joinColumn: { name: 'userId', referencedColumnName: 'id' },
+        joinColumn: { name: 'userNotifyId', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'notificationId', referencedColumnName: 'id' },
     })
     notificationsReceived?: Notify[]
@@ -227,29 +263,25 @@ export class User extends BaseEntity {
     @OneToMany(() => Notify, (notify) => notify.user, {
         cascade: true,
     })
-    @JoinTable({
-        name: 'user_notifications',
-        joinColumn: { name: 'userId', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'notificationId', referencedColumnName: 'id' },
-    })
     notifications?: Notify[]
-
-    // TODO: add column role names
 
     @Column({
         type: 'boolean',
         default: true,
     })
+    @Index()
     isActive: boolean
 
     @Column({
         type: 'boolean',
     })
+    @Index()
     isAdmin: boolean
 
     @Column({
         type: 'text',
     })
+    @Index()
     slug: string
 
     roleIds?: number[]

@@ -18,15 +18,7 @@ export function NotificationNavFilters({
 }: INotificationNavFiltersProps) {
     const { t } = useTranslation()
     const handleNavFilters = (value: INotifyRead | string | number) => {
-        if (value === ALL) {
-            setFilters((prev) => {
-                const newPrev = { ...prev, page: 1 }
-                delete newPrev.isRead
-                return newPrev
-            })
-        } else {
-            setFilters((prev) => ({ ...prev, isRead: value as INotifyRead, page: 1 }))
-        }
+        setFilters((prev) => ({ ...prev, isRead: value as INotifyRead, page: 1 }))
     }
 
     return (
@@ -55,14 +47,14 @@ export function NotificationNavFilters({
                     component="li"
                     sx={{
                         backgroundColor:
-                            filters.isRead === undefined
+                            filters.isRead === ALL
                                 ? alpha(theme.palette.primary.dark, 0.1)
                                 : 'transparent',
                         color:
-                            filters.isRead === undefined
+                            filters.isRead === ALL
                                 ? theme.palette.primary.dark
                                 : theme.palette.secondary.main,
-                        fontWeight: filters.isRead === undefined ? 700 : 400,
+                        fontWeight: filters.isRead === ALL ? 700 : 400,
                     }}
                     onClick={() => handleNavFilters(ALL)}
                 >

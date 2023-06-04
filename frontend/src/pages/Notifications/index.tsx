@@ -1,65 +1,55 @@
 import { TitlePage } from '@/components/Common'
-import { IFilters, INotifiesFilter, INotify, INotifyFilters, IUser } from '@/models'
+import { ALL } from '@/consts'
+import { INotify, INotifyFilters, ISetNotifications, IUser } from '@/models'
 import {
     NotificationList,
     NotificationNavFilters,
-    NotificationPaginationFilters,
     NotificationSearchFilters,
 } from '@/pages/Notifications/components'
 import { AppDispatch, AppState } from '@/store'
-import { getNotifiesFilters } from '@/store/notify/thunkApi'
+import { setNotificationFilters } from '@/store/notify'
 import { Box, Grid, Stack } from '@mui/material'
-import { PayloadAction } from '@reduxjs/toolkit'
-import { enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 export interface INotificationsProps {
     pUser: IUser | null
     pNotifications: INotify[]
     pNotificationsTotal: number
-    pGetNotifications: (data: INotifiesFilter) => Promise<PayloadAction<unknown>>
+    pSetNotificationsFilter: (data: ISetNotifications) => void
 }
 
 export function Notifications({
     pUser,
     pNotifications,
     pNotificationsTotal,
-    pGetNotifications,
+    pSetNotificationsFilter,
 }: INotificationsProps) {
     const { t } = useTranslation()
-    const [loading, setLoading] = useState<boolean>(true)
     const [filters, setFilters] = useState<INotifyFilters>({
         page: 1,
         limit: 8,
         search: '',
+        isRead: ALL,
     })
+    const navigate = useNavigate()
 
     useEffect(() => {
-        document.title = `${t('title_document.notifications')} - ${t(
-            'title_document.news_community'
-        )}`
+        if (pUser) {
+            document.title = `${t('title_document.notifications')} - ${t(
+                'title_document.news_community'
+            )}`
+        } else {
+            navigate('/login')
+        }
     }, [])
 
     useEffect(() => {
-        ;(async () => {
-            try {
-                setLoading(true)
-                const newFilters: IFilters = {
-                    ...filters,
-                }
-                await pGetNotifications({
-                    filters: newFilters,
-                    userId: pUser?.id as number,
-                })
-            } catch (error) {
-                enqueueSnackbar((error as Error).message, {
-                    variant: 'error',
-                })
-            }
-            setLoading(false)
-        })()
+        if (pUser?.id) {
+            pSetNotificationsFilter({ filters, userId: pUser.id })
+        }
     }, [filters])
 
     return (
@@ -112,20 +102,7 @@ export function Notifications({
                 </Grid>
 
                 <Grid item xs={12} md>
-                    {/* list */}
-                    <NotificationList
-                        loading={loading}
-                        notifications={pNotifications || []}
-                    />
-
-                    {/* pagination */}
-                    {pNotificationsTotal > 0 && (
-                        <NotificationPaginationFilters
-                            filters={filters}
-                            setFilters={setFilters}
-                            total={pNotificationsTotal}
-                        />
-                    )}
+                    <NotificationList notifications={pNotifications} />
                 </Grid>
             </Grid>
         </Box>
@@ -136,13 +113,14 @@ const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
         pNotifications: state.notify.notificationsFilter,
-        pNotificationsTotal: state.notify.totalFilter,
+        pNotificationsTotal: state.notify.total,
     }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pGetNotifications: (data: INotifiesFilter) => dispatch(getNotifiesFilters(data)),
+        pSetNotificationsFilter: (data: ISetNotifications) =>
+            dispatch(setNotificationFilters(data)),
     }
 }
 

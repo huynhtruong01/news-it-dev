@@ -25,12 +25,14 @@ import { useTranslation } from 'react-i18next'
 
 export interface ICreateNewsFormProps {
     onNewsSubmit: (values: INewsForm) => Promise<void>
+    pUser: IUser | null
     pHashTagSelects: IOptionItem[]
     pInitValuesForm: INewsForm
     pGetAllHashTags: () => Promise<PayloadAction<unknown>>
 }
 
 function CreateNewsForm({
+    pUser,
     pHashTagSelects,
     pGetAllHashTags,
     pInitValuesForm,
@@ -88,12 +90,16 @@ function CreateNewsForm({
     })
 
     useEffect(() => {
-        document.title = `${
-            pInitValuesForm?.id
-                ? t('title_document.update_news')
-                : t('title_document.create_news')
-        } - ${t('title_document.news_community')}`
-        pGetAllHashTags()
+        if (pUser) {
+            document.title = `${
+                pInitValuesForm?.id
+                    ? t('title_document.update_news')
+                    : t('title_document.create_news')
+            } - ${t('title_document.news_community')}`
+            pGetAllHashTags()
+        } else {
+            navigate('/login')
+        }
     }, [])
 
     const form = useForm<INewsForm>({
@@ -287,6 +293,7 @@ function CreateNewsForm({
 
 const mapStateToProps = (state: AppState) => {
     return {
+        pUser: state.user.user,
         pHashTagSelects: state.hashTag.hashTagSelects,
         pInitValuesForm: state.news.initValuesForm,
     }

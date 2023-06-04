@@ -1,12 +1,13 @@
 import {
-    Entity,
     BaseEntity,
-    PrimaryGeneratedColumn,
     Column,
+    CreateDateColumn,
+    Entity,
+    Index,
+    JoinColumn,
     ManyToMany,
     ManyToOne,
-    JoinColumn,
-    CreateDateColumn,
+    PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm'
 import { News, User } from '.'
@@ -19,36 +20,43 @@ export class Notify extends BaseEntity {
     @Column({
         type: 'int',
     })
+    @Index()
     userId: number
 
     @Column({
         nullable: true,
     })
+    @Index()
     newsId: number | null
 
     @Column({
         type: 'text',
     })
+    @Index()
     text: string
 
     @Column({
         type: 'simple-array',
     })
+    @Index()
     readUsers?: (string | number)[]
 
     @ManyToMany(() => User, (user) => user.notificationsReceived, {
         onDelete: 'CASCADE',
+        eager: true,
     })
     recipients?: User[]
 
     @ManyToOne(() => User, (user) => user.notifications, {
         onDelete: 'CASCADE',
+        eager: true,
     })
     @JoinColumn({ name: 'userId' })
     user?: User
 
     @ManyToOne(() => News, (news) => news.notifications, {
         onDelete: 'CASCADE',
+        eager: true,
     })
     @JoinColumn({ name: 'newsId' })
     news?: News | null

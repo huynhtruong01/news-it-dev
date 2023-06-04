@@ -16,6 +16,7 @@ import { connect } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import { DashboardFollow } from './components/DashboardFollow'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 export interface IDashboardProps {
     pUser: IUser | null
@@ -24,11 +25,17 @@ export interface IDashboardProps {
 
 function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
     const { t } = useTranslation()
+    const navigate = useNavigate()
+
     useEffect(() => {
-        document.title = `${t('title_document.dashboard')} - ${t(
-            'title_document.news_community'
-        )}`
-        pGetProfile()
+        if (pUser) {
+            document.title = `${t('title_document.dashboard')} - ${t(
+                'title_document.news_community'
+            )}`
+            pGetProfile()
+        } else {
+            navigate('/login')
+        }
     }, [])
 
     return (

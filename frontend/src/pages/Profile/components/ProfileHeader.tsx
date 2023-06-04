@@ -214,8 +214,15 @@ export function ProfileHeader({
                                 margin: 'auto',
                                 marginBottom: 1.5,
                                 marginTop: 1.5,
-                                fontSize: '1rem',
+                                fontSize: {
+                                    md: '18px',
+                                    xs: '1rem',
+                                },
                                 color: '#242424',
+                                textAlign: {
+                                    md: 'center',
+                                    xs: 'left',
+                                },
                             }}
                         >
                             {user.bio}

@@ -76,12 +76,11 @@ class HashTagService {
     // get all
     async getAll(): Promise<HashTag[]> {
         try {
-            const hashTags = await this.hashTagRepository.find({
-                relations: {
-                    news: true,
-                    users: true,
-                },
-            })
+            const hashTags = await this.hashTagRepository
+                .createQueryBuilder('hashTag')
+                .leftJoinAndSelect('hashTag.news', 'news')
+                .leftJoinAndSelect('hashTag.users', 'users')
+                .getMany()
 
             return hashTags
         } catch (error) {
@@ -148,12 +147,13 @@ class HashTagService {
 
     async getById(id: number): Promise<HashTag | null> {
         try {
-            const hashTag = await this.hashTagRepository.findOne({
-                where: {
-                    id,
-                },
-                relations: relationDataHashTag,
-            })
+            const hashTag = await this.hashTagRepository
+                .createQueryBuilder('hashTag')
+                .leftJoinAndSelect('hashTag.users', 'users')
+                .leftJoinAndSelect('hashTag.news', 'news')
+                .leftJoinAndSelect('news.user', 'user')
+                .where('hashTag.id = :hashTagId', { hashTagId: id })
+                .getOne()
             if (!hashTag) return null
 
             return hashTag

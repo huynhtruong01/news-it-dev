@@ -90,12 +90,13 @@ class NotifyService {
     // get by newsId
     async getByUserId(id: number): Promise<Notify | null> {
         try {
-            const notify = await this.notifyRepository.findOne({
-                where: { id },
-                relations: {
-                    recipients: true,
-                },
-            })
+            const notify = await this.notifyRepository
+                .createQueryBuilder('notify')
+                .leftJoinAndSelect('notify.recipients', 'recipients')
+                .where('notify.id = :notifyId', {
+                    notifyId: id,
+                })
+                .getOne()
 
             if (!notify) return null
 
@@ -108,12 +109,18 @@ class NotifyService {
     // get by id
     async getById(id: number) {
         try {
-            const notify = await this.notifyRepository.findOne({
-                where: {
-                    id,
-                },
-                relations: relationDataNotify,
-            })
+            const notify = await this.notifyRepository
+                .createQueryBuilder('notify')
+                .leftJoinAndSelect('notify.user', 'user')
+                .leftJoinAndSelect('notify.news', 'news')
+                .leftJoinAndSelect('news.saveUsers', 'saves')
+                .leftJoinAndSelect('news.likes', 'likes')
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .leftJoinAndSelect('notify.recipients', 'recipients')
+                .where('notify.id = :notifyId', {
+                    notifyId: id,
+                })
+                .getOne()
 
             if (!notify) return null
 

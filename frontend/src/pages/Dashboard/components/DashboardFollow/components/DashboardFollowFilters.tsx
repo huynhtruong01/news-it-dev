@@ -22,7 +22,12 @@ function DashboardFollowFilters({
     }
 
     return (
-        <Box width={'100%'}>
+        <Box
+            width={{
+                md: 'auto',
+                xs: '100%',
+            }}
+        >
             <Stack direction={'row'} justifyContent={'flex-end'}>
                 <SearchFilter
                     initValue=""

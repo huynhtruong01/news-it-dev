@@ -73,7 +73,7 @@ class UserService {
         try {
             const user = createUserData(data)
 
-            // TODO: add role when create user
+            // add role when create user
             const roles = await roleService.getAllRolesById(data.roleIds || [])
             user.roles = roles
 
@@ -94,13 +94,22 @@ class UserService {
     // get by id
     async getById(id: number): Promise<User | null> {
         try {
-            const user = await this.userRepository.findOne({
-                where: {
-                    id,
-                },
-                // select: selectUserData,
-                relations: relationDataUser,
-            })
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.roles', 'roles')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('user.following', 'following')
+                .leftJoinAndSelect('user.hashTags', 'hashTags')
+                .leftJoinAndSelect('user.news', 'news')
+                .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
+                .leftJoinAndSelect('user.newsLikes', 'newsLikes')
+                .leftJoinAndSelect('newsLikes.hashTags', 'hashTagsNewsLikes')
+                .leftJoinAndSelect('user.saves', 'saves')
+                .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
+                .leftJoinAndSelect('user.comments', 'comments')
+                .leftJoinAndSelect('user.commentLikes', 'commentLikes')
+                .where('user.id = :userId', { userId: id })
+                .getOne()
             if (!user) return null
 
             return user
@@ -111,18 +120,13 @@ class UserService {
 
     async getByIdNoRelations(id: number): Promise<User | null> {
         try {
-            const user = await this.userRepository.findOne({
-                where: {
-                    id,
-                },
-                select: selectUserData,
-                relations: {
-                    saves: {
-                        user: true,
-                        hashTags: true,
-                    },
-                },
-            })
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.saves', 'saves')
+                .leftJoinAndSelect('saves.hashTags', 'hashTags')
+                .leftJoinAndSelect('saves.user', 'userSave')
+                .where('user.id = :userId', { userId: id })
+                .getOne()
             if (!user) return null
 
             return user
@@ -134,14 +138,11 @@ class UserService {
     // get by id for comment
     async getByIdComment(id: number) {
         try {
-            const user = await this.userRepository.findOne({
-                where: {
-                    id,
-                },
-                relations: {
-                    followers: true,
-                },
-            })
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .where('user.id = :userId', { userId: id })
+                .getOne()
             if (!user) return null
 
             return user
@@ -153,13 +154,22 @@ class UserService {
     // get by username
     async getByUsername(username: string): Promise<User | null> {
         try {
-            const user = await this.userRepository.findOne({
-                where: {
-                    username,
-                },
-                select: selectUserData,
-                relations: relationDataUser,
-            })
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.roles', 'roles')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('user.following', 'following')
+                .leftJoinAndSelect('user.hashTags', 'hashTags')
+                .leftJoinAndSelect('user.news', 'news')
+                .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
+                .leftJoinAndSelect('user.newsLikes', 'newsLikes')
+                .leftJoinAndSelect('newsLikes.hashTags', 'hashTagsNewsLikes')
+                .leftJoinAndSelect('user.saves', 'saves')
+                .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
+                .leftJoinAndSelect('user.comments', 'comments')
+                .leftJoinAndSelect('user.commentLikes', 'commentLikes')
+                .where('user.username = :username', { username })
+                .getOne()
             if (!user) return null
 
             return user

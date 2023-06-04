@@ -29,7 +29,6 @@ export const SocketServer = (socket: Socket) => {
     })
 
     socket.on('followNotify', ({ user, userFollow }) => {
-        // console.log(user.username, userFollow.username)
         const notify = {
             userId: user.id,
             newsId: null,

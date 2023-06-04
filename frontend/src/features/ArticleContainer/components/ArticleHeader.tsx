@@ -115,6 +115,7 @@ function ArticleHeader({
                         md: 'none',
                         xs: 'block',
                     },
+                    width: '100%',
                 }}
             >
                 <SelectFilter

@@ -15,6 +15,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 export interface IProfileProps {
     pUser: IUser | null
@@ -23,10 +24,15 @@ export interface IProfileProps {
 
 function Profile({ pUser, pGetProfile }: IProfileProps) {
     const { t } = useTranslation()
+    const navigate = useNavigate()
 
     useEffect(() => {
-        document.title = `${pUser?.username} - DEV Community`
-        pGetProfile()
+        if (pUser) {
+            document.title = `${pUser?.username} - DEV Community`
+            pGetProfile()
+        } else {
+            navigate('/login')
+        }
     }, [])
 
     const newNews = useMemo(() => {
@@ -93,7 +99,7 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                         </Stack>
                     </Grid>
                     <Grid item xs={12} md={8}>
-                        <ProfileNews news={newNews} />
+                        <ProfileNews news={newNews} user={pUser} />
                     </Grid>
                 </Grid>
             </Stack>

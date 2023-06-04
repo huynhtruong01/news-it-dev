@@ -1,5 +1,5 @@
 import { userApi } from '@/api'
-import { SkeletonProfile } from '@/components/Common'
+import { Seo, SkeletonProfile } from '@/components/Common'
 import { IsFollow } from '@/enums'
 import { IFollow, IFollowNotify, IUser } from '@/models'
 import {
@@ -122,6 +122,13 @@ function ProfileUser({
 
     return user ? (
         <Box>
+            {user && (
+                <Seo
+                    title={user.username}
+                    url={window.location.href}
+                    image={user.avatar}
+                />
+            )}
             <Box
                 sx={{
                     width: '100%',
@@ -183,7 +190,7 @@ function ProfileUser({
                         </Stack>
                     </Grid>
                     <Grid item xs={12} md={8}>
-                        <ProfileNews news={newNews} />
+                        <ProfileNews news={newNews} user={user} />
                     </Grid>
                 </Grid>
             </Stack>

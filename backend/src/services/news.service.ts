@@ -181,12 +181,17 @@ class NewsService {
     // get by :id
     async getById(id: number): Promise<News | null> {
         try {
-            const news = await this.newsRepository.findOne({
-                where: {
-                    id,
-                },
-                relations: relationNewsData,
-            })
+            const news = await this.newsRepository
+                .createQueryBuilder('news')
+                .leftJoinAndSelect('news.likes', 'likes')
+                .leftJoinAndSelect('news.saveUsers', 'saves')
+                .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('user.news', 'newsUser')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('newsUser.hashTags', 'hashTagsNewsUser')
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .where('news.id = :newsId', { newsId: id })
+                .getOne()
             if (!news) return null
 
             return news
@@ -198,15 +203,12 @@ class NewsService {
     // get by id news into comment
     async getByIdComment(id: number) {
         try {
-            const news = await this.newsRepository.findOne({
-                where: {
-                    id,
-                },
-                relations: {
-                    hashTags: true,
-                    user: true,
-                },
-            })
+            const news = await this.newsRepository
+                .createQueryBuilder('news')
+                .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .where('news.id = :newsId', { newsId: id })
+                .getOne()
             if (!news) return null
 
             return news
@@ -218,12 +220,17 @@ class NewsService {
     // get by :slug
     async getBySlug(slug: string): Promise<News | null> {
         try {
-            const news = await this.newsRepository.findOne({
-                where: {
-                    slug,
-                },
-                relations: relationNewsData,
-            })
+            const news = await this.newsRepository
+                .createQueryBuilder('news')
+                .leftJoinAndSelect('news.likes', 'likes')
+                .leftJoinAndSelect('news.saveUsers', 'saves')
+                .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('user.news', 'newsUser')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('newsUser.hashTags', 'hashTagsNewsUser')
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .where('news.slug = :slug', { slug })
+                .getOne()
             if (!news) return null
 
             return news
@@ -353,8 +360,7 @@ class NewsService {
             news.numLikes++
 
             const newNews = await this.updateAll(newsId, news)
-
-            io.to(newNews?.slug as string).emit('likeNews', newNews)
+            io.to(newNews?.slug as string).emit('likeNews', { ...news, ...newNews })
 
             return newNews
         } catch (error) {

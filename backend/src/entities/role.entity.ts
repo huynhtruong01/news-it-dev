@@ -38,6 +38,7 @@ export class Role extends BaseEntity {
 
     @ManyToMany(() => User, (user) => user.roles, {
         onDelete: 'CASCADE',
+        eager: true,
     })
     users?: User[]
 

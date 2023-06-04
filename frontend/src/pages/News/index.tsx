@@ -1,4 +1,4 @@
-import { SkeletonNewsDetail } from '@/components/Common'
+import { SkeletonNewsDetail, Seo } from '@/components/Common'
 import { INews } from '@/models'
 import { NewsDetail, NewsSideLeft, NewsSideRight } from '@/pages/News/components'
 import { AppDispatch, AppState } from '@/store'
@@ -38,12 +38,6 @@ function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsP
     }, [params.slug])
 
     useEffect(() => {
-        if (pNewsDetail) {
-            document.title = pNewsDetail.title
-        }
-    }, [pNewsDetail])
-
-    useEffect(() => {
         if (!params.slug || !pSocket) return
         pSocket.emit('joinRoom', params.slug)
 
@@ -54,6 +48,14 @@ function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsP
 
     return (
         <Box minHeight={'100vh'}>
+            {pNewsDetail && (
+                <Seo
+                    title={pNewsDetail.title}
+                    description={pNewsDetail.sapo}
+                    image={pNewsDetail.coverImage}
+                    url={window.location.href}
+                />
+            )}
             <Box>{loading && <SkeletonNewsDetail />}</Box>
             <Box>
                 {pNewsDetail && !loading && (

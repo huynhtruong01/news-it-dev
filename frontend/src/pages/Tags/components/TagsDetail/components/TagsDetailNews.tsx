@@ -1,4 +1,4 @@
-import { EmptyList, NewsList } from '@/components/Common'
+import { NewsList } from '@/components/Common'
 import { SearchFilter, SelectFilter } from '@/components/Filters'
 import { tagHeader } from '@/data'
 import { NewsFilters } from '@/enums'
@@ -124,7 +124,6 @@ export function TagsDetailNews({
             </Stack>
 
             <Box marginTop={2}>
-                {!newNews.length && <EmptyList title={t('empty.no_news')} />}
                 <NewsList newsList={newNews || []} />
             </Box>
         </Box>

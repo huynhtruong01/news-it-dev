@@ -33,17 +33,14 @@ export const relationDataUser = {
     following: true,
     hashTags: true,
     news: {
-        user: true,
         hashTags: true,
     },
     newsLikes: {
         user: true,
-        hashTags: true,
     },
     saves: {
-        user: true,
         hashTags: true,
     },
-    // comments: true,
+    comments: true,
     commentLikes: true,
 }

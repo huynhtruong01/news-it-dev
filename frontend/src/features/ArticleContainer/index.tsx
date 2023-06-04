@@ -66,7 +66,7 @@ function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
     }, [total, newsList])
 
     return (
-        <Box {...rest}>
+        <Box {...rest} width="100%">
             <ArticleHeader
                 filters={filters}
                 status={status}

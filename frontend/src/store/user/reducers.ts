@@ -6,7 +6,7 @@ import { IUserStore } from '.'
 
 export const reducers = {
     saveUserLogin(state: IUserStore, action: PayloadAction<IUser | null>) {
-        state.user = action.payload
+        state.user = { ...state.user, ...action.payload }
     },
     signout(state: IUserStore) {
         state.user = null

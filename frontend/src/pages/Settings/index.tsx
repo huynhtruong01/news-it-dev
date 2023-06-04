@@ -13,6 +13,7 @@ import { AppState } from '@/store'
 import { Routes, Route } from 'react-router-dom'
 import { SettingsModalDelete } from '@/pages/Settings/components'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 export interface ISettingsProps {
     pUser: IUser | null
@@ -20,11 +21,16 @@ export interface ISettingsProps {
 
 function Settings({ pUser }: ISettingsProps) {
     const { t } = useTranslation()
+    const navigate = useNavigate()
 
     useEffect(() => {
-        document.title = `${t('title_document.settings')} - ${t(
-            'title_document.news_community'
-        )}`
+        if (pUser) {
+            document.title = `${t('title_document.settings')} - ${t(
+                'title_document.news_community'
+            )}`
+        } else {
+            navigate('/login')
+        }
     }, [])
 
     return (

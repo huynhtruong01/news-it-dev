@@ -33,7 +33,7 @@ function NewsSideLeft({ news, pComment, ...rest }: INewsSideLeftProps) {
                 <ButtonNewsLike news={news} />
                 <ButtonNewsComments totalComments={commentLength} />
                 <ButtonNewsSave news={news} />
-                <ButtonMore />
+                <ButtonMore news={news} />
             </Stack>
         </Box>
     )

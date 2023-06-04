@@ -10,6 +10,7 @@ import {
     CreateDateColumn,
     JoinTable,
     OneToMany,
+    Index,
 } from 'typeorm'
 import { User } from '@/entities/user.entity'
 import { HashTag } from '@/entities/hashTag.entity'
@@ -26,6 +27,7 @@ export class News extends BaseEntity {
     @Column({
         type: 'number',
     })
+    @Index()
     userId: number
 
     @Column({
@@ -48,33 +50,47 @@ export class News extends BaseEntity {
         type: 'int',
         default: 0,
     })
+    @Index()
     newsViews: number
 
     @Column({
         type: 'int',
         default: 0,
     })
+    @Index()
     numLikes: number
 
     @Column({
         type: 'int',
         default: 0,
     })
+    @Index()
     numComments: number
 
     @Column({
         type: 'int',
         default: 0,
     })
+    @Index()
     numSaves: number
 
     @ManyToMany(() => User, (user) => user.newsLikes, {
         onDelete: 'CASCADE',
     })
+    @JoinTable({
+        name: 'users_news_likes_news',
+        joinColumn: { name: 'newsId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
+    })
     likes?: User[]
 
     @ManyToMany(() => User, (user) => user.saves, {
         onDelete: 'CASCADE',
+    })
+    @JoinTable({
+        name: 'users_saves_news',
+        joinColumn: { name: 'newsId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
     })
     saveUsers?: User[]
 
@@ -97,14 +113,22 @@ export class News extends BaseEntity {
 
     @ManyToOne(() => User, (user) => user.news, {
         onDelete: 'CASCADE',
+        eager: true,
     })
     @JoinColumn({
         name: 'userId',
     })
     user: User
 
-    @ManyToMany(() => HashTag, (hashTag) => hashTag.news)
-    @JoinTable()
+    @ManyToMany(() => HashTag, (hashTag) => hashTag.news, {
+        onDelete: 'CASCADE',
+        eager: true,
+    })
+    @JoinTable({
+        name: 'news_hash_tags_hash_tags',
+        joinColumn: { name: 'newsId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'hashTagId', referencedColumnName: 'id' },
+    })
     hashTags?: HashTag[]
 
     @OneToMany(() => Comment, (comment) => comment.news, {
@@ -120,6 +144,7 @@ export class News extends BaseEntity {
     @Column({
         type: 'int',
     })
+    @Index()
     readTimes: number
 
     @Column({

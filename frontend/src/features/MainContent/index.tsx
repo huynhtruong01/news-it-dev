@@ -9,6 +9,7 @@ import { getProfile } from '@/store/user/thunkApi'
 import { getNotifies } from '@/store/notify/thunkApi'
 import { IUser } from '@/models'
 import { useTranslation } from 'react-i18next'
+import { Seo } from '@/components/Common'
 
 export interface IMainContentProps {
     pUser: IUser | null
@@ -26,9 +27,6 @@ function MainContent({
     const { t } = useTranslation()
 
     useEffect(() => {
-        document.title = `${t('title_document.home')} - ${t(
-            'title_document.news_community'
-        )}`
         ;(async () => {
             try {
                 await pGetAllTagsPopular()
@@ -45,6 +43,12 @@ function MainContent({
 
     return (
         <Box>
+            <Seo
+                title={`${t('title_document.home')} - ${t(
+                    'title_document.news_community'
+                )}`}
+                url={window.location.href}
+            />
             <Grid container spacing={2}>
                 <Grid
                     item
@@ -59,7 +63,7 @@ function MainContent({
                     <Sidebar />
                 </Grid>
 
-                <Grid item md>
+                <Grid item xs={12} md>
                     <ArticleContainer />
                 </Grid>
             </Grid>
