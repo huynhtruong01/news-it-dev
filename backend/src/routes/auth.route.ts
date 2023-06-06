@@ -15,6 +15,7 @@ router.route('/active-user').post(authController.activeUser)
 router.route('/google-login').post(authController.googleLogin)
 router.route('/facebook-login').post(authController.facebookLogin)
 router.route('/forgot-password').post(authController.forgotPassword)
+router.route('/confirm-email').post(authController.confirmEmail)
 
 // has user to check
 router.use(authMiddleware.getUser)

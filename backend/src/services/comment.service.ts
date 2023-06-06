@@ -64,7 +64,15 @@ class CommentService {
             comment.likes = []
 
             const newComment = await this.commentRepository.save(comment)
-            newComment.user = (await userService.getByIdComment(data.userId)) as User
+
+            const user = (await userService.getByIdComment(data.userId)) as User
+            user.numComments = user.numComments + 1
+
+            newComment.user = (await userService.updateAll(
+                data.userId,
+                user,
+                true
+            )) as User
             newComment.news = (await newsService.getByIdComment(data.newsId)) as News
 
             io.to(newComment.news?.slug).emit('createComment', newComment)
@@ -102,7 +110,14 @@ class CommentService {
             comment.likes = []
 
             const replyComment = await this.commentRepository.save(comment)
-            replyComment.user = (await userService.getByIdComment(data.userId)) as User
+            const user = (await userService.getByIdComment(data.userId)) as User
+            user.numComments = user.numComments + 1
+
+            replyComment.user = (await userService.updateAll(
+                data.userId,
+                user,
+                true
+            )) as User
             replyComment.news = (await newsService.getByIdComment(data.newsId)) as News
 
             if (data.replyUserId) {
@@ -111,9 +126,7 @@ class CommentService {
                 )) as User
             }
 
-            parentComment.childrenComments
-                ?.sort((a, b) => b.id - a.id)
-                ?.unshift(replyComment)
+            parentComment.childrenComments?.push(replyComment)
 
             const newParentComment = await this.commentRepository.save(parentComment)
 

@@ -10,7 +10,7 @@ const fetch = (...args: Parameters<typeof import('node-fetch')['default']>) =>
     import('node-fetch').then(({ default: fetch }) => fetch(...args))
 
 const client = new OAuth2Client(`${process.env.CLIENT_ID}`)
-const CLIENT_URL = `${process.env.BASE_URL}`
+// const CLIENT_URL = `${process.env.BASE_URL}`
 
 // login user
 const loginUser = async (user: User, password: string, res: Response) => {
@@ -374,6 +374,7 @@ class AuthController {
                     emailAddress: email,
                     firstName: given_name,
                     lastName: family_name,
+                    type: 'google',
                 }
                 await registerUser(dataUser as User, res)
             }
@@ -413,6 +414,7 @@ class AuthController {
                     emailAddress: email,
                     firstName: first_name,
                     lastName: last_name,
+                    type: 'facebook',
                 }
                 registerUser(dataUser as User, res)
             }
@@ -438,7 +440,7 @@ class AuthController {
         }
     }
 
-    // forgot password (POST)
+    // change password (POST)
     async resetPassword(req: Request, res: Response) {
         try {
             const { emailAddress, password, confirmPassword } = req.body
@@ -594,17 +596,52 @@ class AuthController {
         }
     }
 
-    // forgot password
-    async forgotPassword(req: Request, res: Response) {
+    // confirm email
+    async confirmEmail(req: Request, res: Response) {
         try {
-            const { emailAddress, password, confirmPassword } = req.body
-
-            const user = await authService.getByEmail(emailAddress)
+            const { emailAddress } = req.body
+            const user = await userService.getByEmail(emailAddress)
             if (!user) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
-                    message: `Not found this user with email ${emailAddress}.`,
+                    message: `Not found this user with email ${emailAddress}`,
+                })
+                return
+            }
+
+            const accessToken = authService.signAccessToken(user.id)
+            const token = encodeURIComponent(accessToken).replaceAll('.', '_')
+            const url = `${process.env.BASE_URL}/forgot-password/${token}`
+            await sendEmail(emailAddress, url, 'Forgot password')
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    message: 'Check your email',
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // forgot password (POST)
+    async forgotPassword(req: RequestUser, res: Response) {
+        try {
+            const { password, confirmPassword } = req.body
+
+            const user = await authService.getByEmail(req.user?.emailAddress as string)
+            if (!user) {
+                res.status(StatusCode.NOT_FOUND).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: `Not found this user with email ${req.user?.emailAddress}`,
                 })
                 return
             }
@@ -613,7 +650,7 @@ class AuthController {
                 res.status(StatusCode.BAD_REQUEST).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
-                    message: 'Password is not equal confirm password.',
+                    message: 'Password is not equal confirm password',
                 })
                 return
             }
@@ -628,6 +665,7 @@ class AuthController {
                 status: StatusText.SUCCESS,
                 data: {
                     user: newUser,
+                    message: 'Change password successfully',
                 },
             })
         } catch (error) {

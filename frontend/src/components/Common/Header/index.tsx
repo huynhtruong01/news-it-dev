@@ -1,6 +1,7 @@
 import {
     HeaderRightLogged,
     HeaderRightNotLogged,
+    HeaderSearch,
 } from '@/components/Common/Header/components'
 import { theme } from '@/utils'
 import SearchIcon from '@mui/icons-material/Search'
@@ -89,61 +90,7 @@ export function Header() {
                                 />
                             </Link>
                         </Box>
-                        <Box
-                            component="form"
-                            onSubmit={handleSearchNews}
-                            sx={{
-                                display: {
-                                    xs: 'none',
-                                    md: 'block',
-                                },
-                            }}
-                        >
-                            <TextField
-                                inputRef={searchRef}
-                                value={searchVal}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment
-                                            position="start"
-                                            sx={{
-                                                marginRight: 0,
-                                            }}
-                                        >
-                                            <IconButton
-                                                type="submit"
-                                                sx={{
-                                                    '&:hover': {
-                                                        backgroundColor: alpha(
-                                                            theme.palette.primary.main,
-                                                            0.1
-                                                        ),
-                                                        svg: {
-                                                            color: theme.palette.primary
-                                                                .main,
-                                                        },
-                                                    },
-                                                }}
-                                            >
-                                                <SearchIcon />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                size="small"
-                                placeholder={`${t('common.search')}...`}
-                                onChange={handleSearchChange}
-                                sx={{
-                                    width: 400,
-                                    '.MuiInputBase-root': {
-                                        paddingRight: 0,
-                                    },
-                                    fieldset: {
-                                        paddingRight: 0,
-                                    },
-                                }}
-                            />
-                        </Box>
+                        <HeaderSearch searchVal={searchVal} setSearchVal={setSearchVal} />
                     </Box>
                     <Box
                         component="form"

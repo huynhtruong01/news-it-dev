@@ -1,25 +1,15 @@
 import { Box, Paper, Typography } from '@mui/material'
-import { ForgotPasswordForm } from '@/components/Forms'
-import { IForgotPassword } from '@/models'
+import { ConfirmEmailForm } from '@/components/Forms'
 import { theme } from '@/utils'
 import { useTranslation } from 'react-i18next'
 import { authApi } from '@/api'
-import { useParams } from 'react-router-dom'
-import { enqueueSnackbar } from 'notistack'
 
-export function ForgotPassword() {
+export function ConfirmEmail() {
     const { t } = useTranslation()
-    const params = useParams()
 
-    const handleSetPassword = async (values: IForgotPassword) => {
+    const handleConfirmEmail = async (values: { emailAddress: string }) => {
         try {
-            if (!params.token) return
-            const token = decodeURIComponent(params.token as string).replaceAll('_', '.')
-
-            await authApi.forgotPassword(values, token)
-            enqueueSnackbar(t('message.reset_password'), {
-                variant: 'success',
-            })
+            await authApi.confirmEmail(values.emailAddress)
         } catch (error) {
             throw new Error((error as Error).message)
         }
@@ -41,10 +31,10 @@ export function ForgotPassword() {
                     fontWeight={700}
                     marginBottom={3}
                 >
-                    {t('button.change_your_password')}
+                    {t('button.confirm_email')}
                 </Typography>
                 <Box>
-                    <ForgotPasswordForm onSetPassword={handleSetPassword} />
+                    <ConfirmEmailForm onConfirmPassword={handleConfirmEmail} />
                 </Box>
             </Box>
         </Box>

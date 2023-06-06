@@ -15,7 +15,7 @@ export function SettingsNav() {
     const location = useLocation()
 
     useEffect(() => {
-        const path = location.pathname.split('/')[2]
+        const path = location.pathname
         setPathName(path.toString())
     }, [navigate])
 
@@ -41,17 +41,14 @@ export function SettingsNav() {
                         sx={{
                             borderRadius: theme.spacing(0.75),
                             backgroundColor:
-                                pathName === (nav.name as string).toLowerCase()
+                                pathName === nav.link
                                     ? theme.palette.primary.contrastText
                                     : 'transparent',
-                            fontWeight:
-                                pathName === (nav.name as string).toLowerCase()
-                                    ? 500
-                                    : 400,
+                            fontWeight: pathName === nav.link ? 500 : 400,
                             '&:hover': {
                                 color: theme.palette.primary.main,
                                 backgroundColor:
-                                    pathName === (nav.name as string).toLowerCase()
+                                    pathName === nav.link
                                         ? theme.palette.primary.contrastText
                                         : alpha(theme.palette.primary.main, 0.075),
                             },

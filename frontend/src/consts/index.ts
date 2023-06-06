@@ -6,7 +6,7 @@ export const LOGO =
     'https://res.cloudinary.com/practicaldev/image/fetch/s--pcSkTMZL--/c_limit,f_auto,fl_progressive,q_80,w_190/https://practicaldev-herokuapp-com.freetls.fastly.net/assets/devlogo-pwa-512.png'
 export const COLOR_WHITE = '#ffffff'
 
-export const HEADER_HEIGHT = 54
+export const HEADER_HEIGHT = 52
 export const MAX_SCROLL_TOP = 200
 
 export const NEW_LIST_QUERY_KEY = 'news-list'

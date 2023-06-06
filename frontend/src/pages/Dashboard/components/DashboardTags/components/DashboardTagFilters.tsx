@@ -16,7 +16,12 @@ export function DashboardTagFilters({ setFilters }: IDashboardTagFiltersProps) {
     }
 
     return (
-        <Box width={'100%'}>
+        <Box
+            width={{
+                md: 'auto',
+                xs: '100%',
+            }}
+        >
             <SearchFilter
                 initValue=""
                 onSearchChange={handleSearchReadingList}

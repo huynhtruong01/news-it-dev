@@ -14,10 +14,6 @@ export function ReadingListFilters({ setFilters, ...rest }: IReadingListFiltersP
         setFilters((prev: IFiltersNewsSave) => ({ ...prev, search: value }))
     }
 
-    // const handleFilterStatusChange = (value: string | number) => {
-    //     console.log('filters:', value)
-    // }
-
     return (
         <Box
             width={{

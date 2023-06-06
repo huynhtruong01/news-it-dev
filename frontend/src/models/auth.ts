@@ -23,3 +23,8 @@ export interface IResetPassword {
     password: string
     confirmPassword: string
 }
+
+export interface IForgotPassword {
+    password: string
+    confirmPassword: string
+}

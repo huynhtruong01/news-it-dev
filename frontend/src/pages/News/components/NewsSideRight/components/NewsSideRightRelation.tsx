@@ -29,7 +29,7 @@ export function NewsSideRightRelation({
     ...rest
 }: INewsSideRightRelationProps) {
     const isMiddleScreen = useMediaQuery('(min-width:320px)')
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(false)
     const [newsTagsList, setNewsTagsList] = useState<INews[]>([])
     const [newHashTagIds, setNewHashTagIds] = useState<number[]>([])
 
@@ -76,7 +76,7 @@ export function NewsSideRightRelation({
                 {t('news.read_next')}
             </Typography>
 
-            {loading && <SkeletonRelationList />}
+            {loading && <SkeletonRelationList noPaper />}
             <Stack component="ul">
                 {!loading &&
                     newsTagsList.map((news) => (

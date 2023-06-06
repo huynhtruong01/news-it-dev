@@ -13,7 +13,7 @@ export const reducers = {
     },
     createComment: (state: ICommentStore, action: PayloadAction<IComment>) => {
         const newComments = [...state.comments]
-        newComments.unshift(action.payload)
+        newComments.push(action.payload)
         state.comments = newComments
     },
     replyComment: (state: ICommentStore, action: PayloadAction<IComment>) => {
@@ -68,7 +68,7 @@ export const reducers = {
     },
     likeComment: (state: ICommentStore, action: PayloadAction<IActionComment>) => {
         const newComments = [...state.comments]
-        const { user, comment } = action.payload
+        const { comment } = action.payload
 
         const updateComment = { ...comment }
 
@@ -112,7 +112,7 @@ export const reducers = {
     },
     unlikeComment: (state: ICommentStore, action: PayloadAction<IActionComment>) => {
         const newComments = [...state.comments]
-        const { user, comment } = action.payload
+        const { comment } = action.payload
 
         const updateComment = { ...comment }
 

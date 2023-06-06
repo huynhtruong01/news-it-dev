@@ -200,7 +200,11 @@ class NewsService {
             const news = createNews(data)
 
             // add hash tags array
-            news.hashTags = await hashTagService.getAllByIds(data.hashTagIds)
+            if (data.hashTagIds.length > 0) {
+                news.hashTags = await hashTagService.getAllByIds(data.hashTagIds)
+            } else {
+                news.hashTags = []
+            }
 
             // create slug
             news.slug = commonService.generateSlug(news.title)
@@ -394,8 +398,13 @@ class NewsService {
             if (this.checkUserExitsInLikes(news.likes, user.id))
                 throw new Error(`User '${user.username}' liked to '${news.title}' news.`)
 
+            const newUser = (await userService.updateAll(
+                user.id,
+                { ...user, numNewsLike: user.numNewsLike + 1 } as User,
+                true
+            )) as User
             // add user into likes
-            news.likes?.push(user)
+            news.likes?.push(newUser)
             news.numLikes++
 
             const newNews = await this.updateAll(newsId, news)
@@ -419,6 +428,11 @@ class NewsService {
                 news.numLikes--
                 if (news.numLikes < 0) news.numLikes = 0
 
+                await userService.updateAll(
+                    user.id,
+                    { ...user, numNewsLike: user.numNewsLike - 1 } as User,
+                    true
+                )
                 const newNews = await this.updateAll(newsId, news)
 
                 io.to(newNews?.slug as string).emit('unlikeNews', newNews)
@@ -440,7 +454,16 @@ class NewsService {
             if (this.checkUserExitsInSaves(news.saveUsers, user.id))
                 throw new Error(`'${news.title}' has been exits in your saves.`)
 
-            news.saveUsers?.push(user)
+            const newUser = (await userService.updateAll(
+                user.id,
+                {
+                    ...user,
+                    numNewsSaves: user.numNewsSaves + 1,
+                } as User,
+                true
+            )) as User
+
+            news.saveUsers?.push(newUser)
             news.numSaves++
 
             const newNews = await this.updateAll(newsId, news)
@@ -465,6 +488,14 @@ class NewsService {
             if (typeof idx === 'number' && idx >= 0) {
                 news.saveUsers?.splice(idx, 1)
                 if (news.numSaves > 0) news.numSaves--
+                ;(await userService.updateAll(
+                    user.id,
+                    {
+                        ...user,
+                        numNewsSaves: user.numNewsSaves - 1,
+                    } as User,
+                    true
+                )) as User
 
                 const newNews = await this.updateAll(newsId, news)
                 io.to(newNews?.slug as string).emit('unsaveNews', newNews)

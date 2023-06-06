@@ -20,18 +20,20 @@ export function MainLayout({ children }: IMainLayoutProps) {
         <Box
             sx={{
                 position: 'relative',
-                paddingTop: 8,
+                paddingTop: `${HEADER_HEIGHT}px`,
                 backgroundColor: theme.palette.grey['A100'],
             }}
         >
-            {/* <ProgressBar marginTop={`${HEADER_HEIGHT + 4}px`} /> */}
             <Container
                 sx={{
                     paddingTop: {
-                        md: 2,
-                        xs: 1,
+                        md: 3,
+                        xs: 1.5,
                     },
-                    paddingBottom: 2,
+                    paddingBottom: {
+                        md: 3,
+                        xs: 1.5,
+                    },
                     minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
                 }}
             >

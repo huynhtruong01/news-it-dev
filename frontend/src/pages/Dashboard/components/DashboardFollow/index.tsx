@@ -61,10 +61,7 @@ export function DashboardFollow({
                 }}
                 gap={2}
                 marginBottom={2}
-                width={{
-                    md: 'auto',
-                    xs: '100%',
-                }}
+                width={'100%'}
             >
                 <TitleDashboard text={title} nums={numFollows} />
                 <DashboardFollowFilters setFilters={setFilters} />

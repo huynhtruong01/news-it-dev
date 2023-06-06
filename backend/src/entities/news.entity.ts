@@ -129,7 +129,7 @@ export class News extends BaseEntity {
         joinColumn: { name: 'newsId', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'hashTagId', referencedColumnName: 'id' },
     })
-    hashTags?: HashTag[]
+    hashTags?: HashTag[] | []
 
     @OneToMany(() => Comment, (comment) => comment.news, {
         onDelete: 'CASCADE',

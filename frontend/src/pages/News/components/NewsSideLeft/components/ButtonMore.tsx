@@ -163,7 +163,7 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
                         onClick={handleCloseMore}
                     >
                         <Stack direction={'row'} alignItems={'center'} gap={1.5}>
-                            <FacebookIcon /> Share to Facebook
+                            <FacebookIcon /> {t('share_news.facebook')}
                         </Stack>
                     </FacebookShareButton>
                 </MenuItem>
@@ -174,7 +174,7 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
                     >
                         <Stack direction={'row'} alignItems={'center'} gap={1.5}>
                             <WhatsappIcon />
-                            Share to Whats App
+                            {t('share_news.whats_app')}
                         </Stack>
                     </WhatsappShareButton>
                 </MenuItem>
@@ -185,7 +185,7 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
                     >
                         <Stack direction={'row'} alignItems={'center'} gap={1.5}>
                             <TwitterIcon />
-                            Share to Twitter
+                            {t('share_news.twitter')}
                         </Stack>
                     </TwitterShareButton>
                 </MenuItem>
@@ -196,7 +196,7 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
                     >
                         <Stack direction={'row'} alignItems={'center'} gap={1.5}>
                             <RedditIcon />
-                            Share to Reddit
+                            {t('share_news.reddit')}
                         </Stack>
                     </RedditShareButton>
                 </MenuItem>
@@ -207,7 +207,7 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
                     >
                         <Stack direction={'row'} alignItems={'center'} gap={1.5}>
                             <TelegramIcon />
-                            Share to Telegram
+                            {t('share_news.telegram')}
                         </Stack>
                     </TelegramShareButton>
                 </MenuItem>

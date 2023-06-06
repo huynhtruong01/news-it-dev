@@ -60,7 +60,7 @@ export function DashboardReadingList({ saves, numSaves }: IDashboardReadingListP
                 {newSaves.length === 0 && (
                     <EmptyList title={t('empty.no_news_reading')} />
                 )}
-                {newSaves.length && <NewsList newsList={newSaves} />}
+                {newSaves.length > 0 && <NewsList newsList={newSaves} />}
             </Box>
         </Box>
     )

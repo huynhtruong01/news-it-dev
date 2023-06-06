@@ -115,7 +115,7 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
                         }}
                     >
                         {/* WRITE LINK HERE */}
-                        <Link to={'/forgot-password'}>{t('auth.forgot_password')}?</Link>
+                        <Link to={'/confirm-email'}>{t('auth.forgot_password')}?</Link>
                     </Typography>
                     <Typography
                         sx={{

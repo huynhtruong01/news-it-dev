@@ -86,7 +86,7 @@ function CreateNewsForm({
                 return checkSizeImg(file, SIZE_10_MB)
             }),
         content: yup.string().required('Please enter news content.'),
-        hashTagOptionIds: yup.array().min(1, 'At least one tag must be selected.'),
+        hashTagOptionIds: yup.array(),
     })
 
     useEffect(() => {
@@ -129,7 +129,6 @@ function CreateNewsForm({
     const handleNewsSubmit = async (values: INewsForm) => {
         try {
             await onNewsSubmit({ ...values, id: pInitValuesForm?.id })
-
             reset()
         } catch (error) {
             enqueueSnackbar(error.message, {

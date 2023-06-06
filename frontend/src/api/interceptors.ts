@@ -8,10 +8,15 @@ import { authApi } from '.'
 import { getLs, setLs } from '@/utils'
 
 const onRequestConfig = (config: InternalAxiosRequestConfig) => {
-    const token = getLs(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+    if (!config.headers['Authorization']) {
+        const token = getLs(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`
+        }
+    }
 
-    if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`
+    if (!config.headers['Content-Type']) {
+        config.headers['Content-Type'] = 'application/json'
     }
 
     return config

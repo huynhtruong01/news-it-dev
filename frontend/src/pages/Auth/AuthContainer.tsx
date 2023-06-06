@@ -12,7 +12,9 @@ export function AuthContainer({ children }: IAuthContainerProps) {
     const { t } = useTranslation()
 
     useEffect(() => {
-        document.title = 'Welcome! - Dev Community'
+        document.title = `${t('title_document.welcome_title')} - ${t(
+            'title_document.news_community'
+        )}`
     }, [])
 
     return (

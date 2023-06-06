@@ -1,39 +1,29 @@
 import { Box } from '@mui/material'
-import { PasswordField } from '@/components/FormFields'
+import { InputField } from '@/components/FormFields'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IForgotPassword } from '@/models'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { enqueueSnackbar } from 'notistack'
-import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { theme } from '@/utils'
 import { useTranslation } from 'react-i18next'
-
-export interface IForgotPasswordFormProps {
-    onSetPassword: (data: IForgotPassword) => Promise<void>
-}
+import { useNavigate } from 'react-router-dom'
 
 const schema = yup.object().shape({
-    password: yup
-        .string()
-        .required('Please enter new password')
-        .min(6, 'Please enter new password at least six characters'),
-    confirmPassword: yup
-        .string()
-        .required('Please enter confirm password')
-        .oneOf([yup.ref('password')], 'Confirm password not matched')
-        .min(6, 'Please enter confirm password at least six characters'),
+    emailAddress: yup.string().required('Please enter email').email('Invalid email'),
 })
 
-export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) {
+export interface IConfirmEmailFormProps {
+    onConfirmPassword: (data: { emailAddress: string }) => Promise<void>
+}
+
+export function ConfirmEmailForm({ onConfirmPassword }: IConfirmEmailFormProps) {
     const { t } = useTranslation()
     const navigate = useNavigate()
 
-    const form = useForm<IForgotPassword>({
+    const form = useForm<{ emailAddress: string }>({
         defaultValues: {
-            password: '',
-            confirmPassword: '',
+            emailAddress: '',
         },
         resolver: yupResolver(schema),
     })
@@ -44,15 +34,11 @@ export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) 
         formState: { isSubmitting },
     } = form
 
-    const handleSetPassword = async (values: IForgotPassword) => {
+    const handleConfirmEmail = async (values: { emailAddress: string }) => {
         try {
-            await onSetPassword(values)
-
+            await onConfirmPassword(values)
             reset()
-            enqueueSnackbar(`${t('message.format_password_success')}`, {
-                variant: 'success',
-            })
-            navigate('/login')
+            navigate('/confirm-email-message')
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',
@@ -61,18 +47,13 @@ export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) 
     }
 
     return (
-        <Box component={'form'} onSubmit={handleSubmit(handleSetPassword)}>
+        <Box component={'form'} onSubmit={handleSubmit(handleConfirmEmail)}>
             <Box marginBottom={3}>
-                <PasswordField
+                <InputField
                     form={form}
-                    label={t('input.password')}
-                    name="password"
-                    disabled={isSubmitting}
-                />
-                <PasswordField
-                    form={form}
-                    label={t('input.confirm_password')}
-                    name="Confirm password"
+                    label={t('input.email')}
+                    name="emailAddress"
+                    placeholder={'john.doe@example.com'}
                     disabled={isSubmitting}
                 />
             </Box>
@@ -92,7 +73,7 @@ export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) 
                     },
                 }}
             >
-                {t('button.change_your_password')}
+                {t('button.send')}
             </LoadingButton>
         </Box>
     )

@@ -15,6 +15,8 @@ import {
     Signout,
     Signup,
     Tags,
+    ConfirmEmail,
+    ConfirmEmailMessage,
 } from '@/pages'
 import { AppDispatch } from '@/store'
 import { setValuesSocket } from '@/store/socket'
@@ -93,10 +95,26 @@ function App({ pSetSocket, pSetLanguages }: IAppProps) {
                     }
                 />
                 <Route
-                    path={'/forgot-password'}
+                    path={'/forgot-password/:token'}
                     element={
                         <MainLayout>
                             <ForgotPassword />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/confirm-email'}
+                    element={
+                        <MainLayout>
+                            <ConfirmEmail />
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path={'/confirm-email-message'}
+                    element={
+                        <MainLayout>
+                            <ConfirmEmailMessage />
                         </MainLayout>
                     }
                 />

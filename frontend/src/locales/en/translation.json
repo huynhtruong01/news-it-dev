@@ -56,7 +56,10 @@
         "signout": "Yes, sign out",
         "cancel": "Cancel",
         "update_news": "Update News",
-        "create_news": "Create News"
+        "create_news": "Create News",
+        "change_your_password": "Change your password",
+        "confirm_email": "Confirm email",
+        "send": "Send"
     },
 
     "news": {
@@ -190,9 +193,11 @@
         "delete_account_success": "Delete account successfully",
         "set_new_password_success": "Set new password successfully",
         "update_profile_success": "Update profile success",
-        "welcome": "Welcome to News Communicate",
+        "welcome_title": "Welcome!",
         "welcome_2": "News Communicate is a community amazing for everyone",
-        "sidebar_header_desc": "We're a place where coders share, stay up-to-date and grow their careers."
+        "sidebar_header_desc": "We're a place where coders share, stay up-to-date and grow their careers.",
+        "reset_password": "Reset password successfully",
+        "check_your_email_reset_password": "Check your email to rest password"
     },
 
     "signout": {
@@ -211,6 +216,7 @@
     },
 
     "title_document": {
+        "welcome": "Welcome to News Communicate",
         "news_community": "News Community",
         "home": "Home",
         "dashboard": "Dashboard",
@@ -221,6 +227,14 @@
         "settings": "Settings",
         "tags": "Tags",
         "reading_list":"Reading List"
+    },
+
+    "share_news": {
+        "facebook": "Share to Facebook",
+        "whats_app": "Share to Whats App",
+        "twitter": "Share to Twitter",
+        "reddit": "Share to Reddit",
+        "telegram": "Share to Telegram"
     },
 
     "liked your news": "liked your news",

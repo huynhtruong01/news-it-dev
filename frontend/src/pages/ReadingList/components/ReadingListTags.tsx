@@ -27,6 +27,7 @@ export function ReadingListTags({
     }, [hashTags])
 
     const handleFilters = (tag: string) => {
+        if (!hashTags.length) return
         if (!tag) {
             setActiveTag('')
             setFilters((prev: IFiltersNewsSave) => {
@@ -41,6 +42,7 @@ export function ReadingListTags({
     }
 
     const handleSelectChange = (value: string | number) => {
+        if (!hashTags.length) return
         if (value === ALL) {
             setFilters((prev: IFiltersNewsSave) => {
                 const newFilters = { ...prev }

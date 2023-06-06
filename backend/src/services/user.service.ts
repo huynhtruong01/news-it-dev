@@ -240,6 +240,23 @@ class UserService {
         }
     }
 
+    // get by email
+    async getByEmail(email: string) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: {
+                    emailAddress: email,
+                },
+            })
+
+            if (!user) return null
+
+            return user
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     // update
     async update(userId: number, data: User): Promise<User | null> {
         try {
@@ -292,7 +309,11 @@ class UserService {
     }
 
     // update all
-    async updateAll(userId: number, data: User): Promise<User | null> {
+    async updateAll(
+        userId: number,
+        data: User,
+        noCheckUsername = false
+    ): Promise<User | null> {
         try {
             const user = await this.userRepository.findOne({
                 where: {
@@ -301,19 +322,25 @@ class UserService {
             })
             if (!user) return null
 
-            const checkUsername = await authService.checkEmailOrUsername(data.username)
-            const checkEmail = await authService.checkEmailOrUsername(data.username)
+            if (!noCheckUsername) {
+                const checkUsername = await authService.checkEmailOrUsername(
+                    data.username
+                )
+                const checkEmail = await authService.checkEmailOrUsername(data.username)
 
-            if (checkUsername && checkUsername.id !== data.id) {
-                throw new Error(`${data.username} is exits. Choose another username.`)
-            }
+                if (checkUsername && checkUsername.id !== data.id) {
+                    throw new Error(`${data.username} is exits. Choose another username.`)
+                }
 
-            if (checkEmail && checkEmail.id !== data.id) {
-                throw new Error(`${data.emailAddress} is exits. Choose another email.`)
-            }
+                if (checkEmail && checkEmail.id !== data.id) {
+                    throw new Error(
+                        `${data.emailAddress} is exits. Choose another email.`
+                    )
+                }
 
-            if (data.username) {
-                data.slug = commonService.generateSlug(data.username)
+                if (data.username) {
+                    data.slug = commonService.generateSlug(data.username)
+                }
             }
 
             const newUser = await this.userRepository.save({

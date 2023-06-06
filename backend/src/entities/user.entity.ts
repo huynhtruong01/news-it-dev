@@ -50,23 +50,13 @@ export class User extends BaseEntity {
     @Column({
         type: 'text',
     })
+    type: string
+
+    @Column({
+        type: 'text',
+    })
     @Index()
     password?: string
-
-    // @Column({
-    //     type: 'datetime',
-    // })
-    // passwordChangeAt: Date
-
-    // @Column({
-    //     type: 'text',
-    // })
-    // passwordResetToken: string
-
-    // @Column({
-    //     type: 'datetime',
-    // })
-    // passwordResetExpires: Date
 
     @Column({
         type: 'datetime',
@@ -164,6 +154,13 @@ export class User extends BaseEntity {
     })
     @Index()
     numNewsSaves: number
+
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    @Index()
+    numComments: number
 
     @ManyToMany(() => Role, (role) => role.users, {
         cascade: true,

@@ -74,7 +74,10 @@
         "signout": "Đăng xuất",
         "cancel": "Hủy",
         "update_news": "Cập nhập tin tức",
-        "create_news": "Tạo mới tin tức"
+        "create_news": "Tạo mới tin tức",
+        "change_your_password": "Thay đổi mật khẩu của bạn",
+        "confirm_email": "Xác nhận email",
+        "send": "Gửi"
     },
 
     "profile": {
@@ -190,9 +193,11 @@
         "delete_account_success": "Xóa tài khoản thành công",
         "set_new_password_success": "Đặt lại mật khẩu thành công",
         "update_profile_success": "Cập nhập hồ sơ thành công",
-        "welcome": "Chào mừng đến với Cộng đồng Tin tức",
-        "welcome_2": "Cộng đồng Tin tức là một cộng đồng tuyệt vời cho tất cả mọi người",
-        "sidebar_header_desc": "Chúng tôi là nơi các lập trình viên chia sẻ, cập nhật thông tin và phát triển sự nghiệp của họ."
+        "welcome": "Chào mừng đến với Cộng đồng Tin tức IT",
+        "welcome_2": "Cộng đồng Tin tức IT là một cộng đồng tuyệt vời cho tất cả mọi người",
+        "sidebar_header_desc": "Chúng tôi là nơi các lập trình viên chia sẻ, cập nhật thông tin và phát triển sự nghiệp của họ.",
+        "reset_password": "Đặt lại mật khẩu thành công",
+        "check_your_email_reset_password": "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu"
     },
 
     "signout": {
@@ -200,6 +205,7 @@
     },
 
     "title_document": {
+        "welcome_title": "Chào mừng",
         "news_community": "Cộng đồng Tin Tức",
         "home": "Trang chủ",
         "dashboard": "Bảng điều khiển",
@@ -221,6 +227,14 @@
         "no_hash_tag_follow": "Không theo dõi thẻ nào",
         "no_notifications": "Không có thông báo nào",
         "no_news_reading_list": "Không có bài tin tức nào đã lưu"
+    },
+
+    "share_news": {
+        "facebook": "Chia sẻ trên Facebook",
+        "whats_app": "Chia sẻ trên Whats App",
+        "twitter": "Chia sẻ trên Twitter",
+        "reddit": "Chia sẻ trên Reddit",
+        "telegram": "Chia sẻ trên Telegram"
     },
 
     "liked your news": "đã thích bài viết của bạn",

@@ -1,12 +1,16 @@
 import { theme } from '@/utils'
 import { Box, Paper, Skeleton, Typography, alpha, useMediaQuery } from '@mui/material'
 
-export function SkeletonRelationItem() {
+export interface ISkeletonRelationItem {
+    noPaper?: boolean
+}
+
+export function SkeletonRelationItem({ noPaper = false }: ISkeletonRelationItem) {
     const isMiddleScreen = useMediaQuery('(min-width:320px)')
 
     return (
         <Box
-            component={Paper}
+            component={noPaper ? 'div' : Paper}
             padding={2}
             sx={{
                 '&:not(:last-of-type)': {

@@ -15,6 +15,7 @@ export const createUserData = (data: User): User => {
     user.isAdmin = data.isAdmin
     user.bandingColor = data.bandingColor ? data.bandingColor : '#ffffff'
     user.avatar = !data.avatar ? AVATAR : data.avatar
+    user.type = data.type ? data.type : 'register'
 
     return user
 }
@@ -49,7 +50,7 @@ export const createNews = (data: News): News => {
     news.coverImage = data.coverImage
     news.readTimes = data.readTimes
     news.userId = data.userId
-    news.hashTagIds = data.hashTagIds
+    news.hashTagIds = data.hashTagIds || []
 
     return news
 }

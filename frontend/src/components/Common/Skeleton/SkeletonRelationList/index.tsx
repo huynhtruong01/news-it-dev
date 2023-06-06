@@ -3,13 +3,17 @@ import { SkeletonRelationItem } from '@/components/Common/Skeleton/SkeletonRelat
 
 export interface ISkeletonRelationListProps {
     quantities?: number
+    noPaper?: boolean
 }
 
-export function SkeletonRelationList({ quantities = 3 }: ISkeletonRelationListProps) {
+export function SkeletonRelationList({
+    quantities = 3,
+    noPaper = false,
+}: ISkeletonRelationListProps) {
     return (
         <Stack gap={2} paddingBottom={2}>
             {Array.from(new Array(quantities)).map((item, idx) => (
-                <SkeletonRelationItem key={idx} />
+                <SkeletonRelationItem key={idx} noPaper={noPaper} />
             ))}
         </Stack>
     )

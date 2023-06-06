@@ -156,15 +156,15 @@ class NewsController {
     async createNews(req: RequestUser, res: Response) {
         try {
             // check hash tag ids
-            const checkHashTags = hashTagService.checkHashTagIds(req.body.hashTagIds)
-            if (!checkHashTags) {
-                res.status(StatusCode.BAD_REQUEST).json({
-                    results: Results.ERROR,
-                    status: StatusText.FAILED,
-                    message: 'Missing hash tags or invalid type.',
-                })
-                return
-            }
+            // const checkHashTags = hashTagService.checkHashTagIds(req.body.hashTagIds)
+            // if (!checkHashTags) {
+            //     res.status(StatusCode.BAD_REQUEST).json({
+            //         results: Results.ERROR,
+            //         status: StatusText.FAILED,
+            //         message: 'Missing hash tags or invalid type.',
+            //     })
+            //     return
+            // }
 
             // check user
             const user = await userService.getById(Number(req.user?.id))
@@ -196,7 +196,10 @@ class NewsController {
                 readUsers: [],
             }
 
-            if (newNews.status === NewsStatus.PUBLIC) {
+            if (
+                newNews.status === NewsStatus.PUBLIC &&
+                (user.followers as User[]).length > 0
+            ) {
                 const newNotify = await notifyService.create(notify)
                 if (newNotify) {
                     for (const u of (user.followers as User[]) || []) {
