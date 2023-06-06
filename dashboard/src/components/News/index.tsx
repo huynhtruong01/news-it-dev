@@ -1,2 +1,2 @@
 export * from './NewsTable'
-export * from './NewsFilters'
+export { default as NewsFilters } from './NewsFilters'

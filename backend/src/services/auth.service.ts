@@ -1,6 +1,5 @@
 import { AppDataSource } from '@/config'
 import { MAX_AGE_REFRESH_TOKEN } from '@/consts'
-import { relationDataUser } from '@/data'
 import { User } from '@/entities'
 import { JwtPayloadUser } from '@/models'
 import { optionCookies } from '@/utils'
@@ -15,17 +14,19 @@ class AuthService {
         try {
             if (!usernameOrEmail) return null
 
-            const emailUser = await this.userRepository.findOne({
-                where: {
+            const emailUser = await this.userRepository
+                .createQueryBuilder('user')
+                .where('user.emailAddress = :emailAddress', {
                     emailAddress: usernameOrEmail,
-                },
-            })
+                })
+                .getOne()
 
-            const usernameUser = await this.userRepository.findOne({
-                where: {
+            const usernameUser = await this.userRepository
+                .createQueryBuilder('user')
+                .where('user.username = :username', {
                     username: usernameOrEmail,
-                },
-            })
+                })
+                .getOne()
 
             if (usernameUser) return usernameUser
             if (emailUser) return emailUser
@@ -39,12 +40,23 @@ class AuthService {
     // check email
     async getByEmail(emailAddress: string): Promise<User | null> {
         try {
-            const user = await this.userRepository.findOne({
-                where: {
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.roles', 'roles')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('user.following', 'following')
+                .leftJoinAndSelect('user.hashTags', 'hashTags')
+                .leftJoinAndSelect('user.news', 'news')
+                .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
+                .leftJoinAndSelect('user.newsLikes', 'newsLikes')
+                .leftJoinAndSelect('newsLikes.hashTags', 'hashTagsNewsLikes')
+                .leftJoinAndSelect('user.saves', 'saves')
+                .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
+                .leftJoinAndSelect('user.comments', 'comments')
+                .where('user.emailAddress = :emailAddress', {
                     emailAddress,
-                },
-                relations: relationDataUser,
-            })
+                })
+                .getOne()
 
             if (!user) return null
 
@@ -91,8 +103,6 @@ class AuthService {
             ...optionCookies({ maxAge }),
         })
     }
-
-    // TODO: change password
 }
 
 export const authService = new AuthService()

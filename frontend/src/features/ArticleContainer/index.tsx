@@ -3,15 +3,15 @@ import { NewsFilters, Order } from '@/enums'
 import { ArticleHeader, ArticleList } from '@/features/ArticleContainer/components'
 import { IFilters, INews, INewsStatus, IUser } from '@/models'
 import { AppState } from '@/store'
-import { Box, BoxProps } from '@mui/material'
+import { Box } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
-export interface IArticleContainer extends BoxProps {
+export interface IArticleContainer {
     pUser: IUser | null
 }
 
-function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
+function ArticleContainer({ pUser }: IArticleContainer) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 6,
         page: 1,
@@ -66,13 +66,12 @@ function ArticleContainer({ pUser, ...rest }: IArticleContainer) {
     }, [total, newsList])
 
     return (
-        <Box {...rest} width="100%">
+        <Box width="100%">
             <ArticleHeader
                 filters={filters}
                 status={status}
                 setStatus={setStatus}
                 setFilters={setFilters}
-                marginBottom={1.5}
             />
             <ArticleList loading={loading} articleList={newsList} />
         </Box>

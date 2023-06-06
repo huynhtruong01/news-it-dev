@@ -1,9 +1,9 @@
 import { Paper, Table, TableBody, TableContainer } from '@mui/material'
-import { MouseEvent, ReactNode, useEffect, useMemo, useState } from 'react'
+import { MouseEvent, ReactNode, useEffect, useState } from 'react'
 import { Order } from '../../enums'
 import { IFilters, IOrder, ITableHeader } from '../../models'
-import { TableHeader } from './TableHeader'
 import { PaginationTable } from '../Filters'
+import { TableHeader } from './TableHeader'
 
 export type ITableWrapperProps<ITableData> = {
     total: number
@@ -33,9 +33,7 @@ export function TableWrapper<ITableData>({
             [`${orderBy}`]: order === Order.asc ? Order.ASC : Order.DESC,
         }
 
-        console.log('new filters: ', newFilters)
-
-        onFiltersChange(newFilters)
+        onFiltersChange({ ...filters, ...newFilters })
     }, [page, rowsPerPage, order, orderBy])
 
     const handleRequestSort = (event: MouseEvent<unknown>, property: string) => {

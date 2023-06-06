@@ -1,5 +1,5 @@
-import { Controller, Path, FieldValues } from 'react-hook-form'
-import { FormControl, Select, InputLabel, FormHelperText, MenuItem } from '@mui/material'
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
+import { Controller, FieldValues, Path } from 'react-hook-form'
 import { ISelectValue } from '../../models'
 
 export type ISelectFieldProps<TFormValues> = {
@@ -42,6 +42,7 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                         onBlur={onBlur}
                         sx={{
                             textTransform: 'capitalize',
+                            backgroundColor: '#fff !important',
                         }}
                     >
                         {selects.map((select) => (

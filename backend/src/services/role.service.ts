@@ -1,14 +1,9 @@
 import { AppDataSource } from '@/config'
 import { Role } from '@/entities'
-import {
-    createRoleData,
-    filtersQuery,
-    paginationQuery,
-    sortQuery,
-    searchQuery,
-} from '@/utils'
+import { IObjectCommon, IOrder, IRoleRes } from '@/models'
+import { createRoleData, paginationQuery } from '@/utils'
 import { commonService } from './common.service'
-import { IObjectCommon, IRoleRes } from '@/models'
+import { Order } from '@/enums'
 
 class RoleService {
     constructor(private roleRepository = AppDataSource.getRepository(Role)) {}
@@ -31,24 +26,32 @@ class RoleService {
     // get all by params
     async getAllByParams(query: IObjectCommon): Promise<IRoleRes> {
         try {
-            const newFiltersQuery = filtersQuery(query)
-            const newSortQuery = sortQuery(query)
-            const newPaginationQuery = paginationQuery(query)
-            const nameSearchQuery = searchQuery(query, 'name')
+            const { take, skip } = paginationQuery(query)
+            const conditionsSearch = ((query.search as string) || '')
+                .split(' ')
+                .map((k) => k.toLowerCase())
 
-            const [roles, count] = await this.roleRepository.findAndCount({
-                order: {
-                    ...newSortQuery,
-                },
-                where: {
-                    ...newFiltersQuery,
-                    ...nameSearchQuery,
-                },
-                ...newPaginationQuery,
-                relations: {
-                    users: true,
-                },
-            })
+            const queryBuilder = this.roleRepository
+                .createQueryBuilder('role')
+                .leftJoinAndSelect('role.users', 'users')
+                .take(take)
+                .skip(skip)
+                .orderBy('role.createdAt', (query.createdAt as IOrder) || Order.DESC)
+
+            if (query.search) {
+                queryBuilder.andWhere(
+                    conditionsSearch
+                        .map((keyword) => {
+                            return `LOWER(role.name) LIKE :${keyword}`
+                        })
+                        .join(' OR '),
+                    conditionsSearch.reduce((params, keyword) => {
+                        return { ...params, [keyword]: `%${keyword}%` }
+                    }, {})
+                )
+            }
+
+            const [roles, count] = await queryBuilder.getManyAndCount()
 
             return [roles, count]
         } catch (error) {

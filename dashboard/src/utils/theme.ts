@@ -3,6 +3,12 @@ import { red } from '@mui/material/colors'
 
 let theme = createTheme({
     palette: {
+        primary: {
+            main: '#2f3ab2',
+            light: '#3b49df',
+            dark: '#2f3ab2',
+            contrastText: '#ffffff',
+        },
         error: {
             main: red.A400,
         },
@@ -64,6 +70,14 @@ let theme = createTheme({
                     },
                 },
             ],
+        },
+        MuiPaper: {
+            styleOverrides: {
+                elevation1: {
+                    boxShadow: '0 0 1px 1px rgba(0,0,0,0.1)',
+                    borderRadius: '6px',
+                },
+            },
         },
     },
 })

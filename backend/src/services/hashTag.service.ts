@@ -1,15 +1,8 @@
 import { AppDataSource } from '@/config'
-import { relationDataHashTag } from '@/data'
 import { HashTag, User } from '@/entities'
-import { NewsStatus } from '@/enums'
-import { IHashTagRes, IObjectCommon } from '@/models'
-import {
-    createHashTag,
-    filtersQuery,
-    paginationQuery,
-    searchQuery,
-    sortQuery,
-} from '@/utils'
+import { NewsStatus, Order } from '@/enums'
+import { IHashTagRes, IObjectCommon, IOrder } from '@/models'
+import { createHashTag, paginationQuery } from '@/utils'
 import { commonService } from './common.service'
 import { userService } from './user.service'
 
@@ -91,22 +84,34 @@ class HashTagService {
     // get all by params
     async getAllByParams(query: IObjectCommon): Promise<IHashTagRes> {
         try {
-            const newFiltersQuery = filtersQuery(query)
-            const newSortQuery = sortQuery(query)
-            const newPaginationQuery = paginationQuery(query)
-            const nameSearchQuery = searchQuery(query, 'name')
+            const { take, skip } = paginationQuery(query)
+            const conditionsSearch = ((query.search as string) || '')
+                .split(' ')
+                .map((k) => k.toLowerCase())
 
-            const [hashTags, count] = await this.hashTagRepository.findAndCount({
-                where: {
-                    ...newFiltersQuery,
-                    ...nameSearchQuery,
-                },
-                relations: relationDataHashTag,
-                ...newPaginationQuery,
-                order: {
-                    ...newSortQuery,
-                },
-            })
+            const queryBuilder = this.hashTagRepository
+                .createQueryBuilder('hashTag')
+                .leftJoinAndSelect('hashTag.users', 'users')
+                .leftJoinAndSelect('hashTag.news', 'news')
+                .leftJoinAndSelect('news.user', 'newsUser')
+                .take(take)
+                .skip(skip)
+                .orderBy('hashTag.createdAt', (query.createdAt as IOrder) || Order.DESC)
+
+            if (query.search) {
+                queryBuilder.andWhere(
+                    conditionsSearch
+                        .map((keyword) => {
+                            return `LOWER(hashTag.name) LIKE :${keyword}`
+                        })
+                        .join(' OR '),
+                    conditionsSearch.reduce((params, keyword) => {
+                        return { ...params, [keyword]: `%${keyword}%` }
+                    }, {})
+                )
+            }
+
+            const [hashTags, count] = await queryBuilder.getManyAndCount()
 
             return [hashTags, count]
         } catch (error) {

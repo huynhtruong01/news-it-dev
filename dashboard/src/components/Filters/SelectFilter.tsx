@@ -8,12 +8,12 @@ import {
     SelectChangeEvent,
 } from '@mui/material'
 import { useState } from 'react'
-import { ISelectValue } from '../../models'
+import { IOptionItem } from '../../models'
 import { ALL } from '../../consts'
 
 export interface ISelectFilterProps extends BoxProps {
     label: string
-    selects: ISelectValue[]
+    selects: IOptionItem[]
     initValue?: string | number
     onFilterChange: (value: string | number) => void
 }

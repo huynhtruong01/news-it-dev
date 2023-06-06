@@ -1,48 +1,38 @@
 import { Box } from '@mui/material'
-import { Header, NavBar } from '../components/Common'
-import { Outlet, useNavigate } from 'react-router-dom'
-import { isAuthenticated, theme } from '../utils'
 import { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { AppDispatch } from '../store'
-import { saveUserLogin } from '../store/user'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { Header, NavBar } from '../components/Common'
 import { IUser } from '../models'
+import { AppDispatch, AppState } from '../store'
+import { saveUserLogin } from '../store/user'
+import { theme } from '../utils'
+import { HEIGHT_HEADER, WIDTH_NAV } from '../consts'
 
 export interface IMainLayoutProps {
+    pUser: IUser | null
     pSaveUserLogin: (user: IUser) => void
 }
 
-export function MainLayout({ pSaveUserLogin }: IMainLayoutProps) {
+export function MainLayout({ pUser }: IMainLayoutProps) {
     const navigate = useNavigate()
 
     useEffect(() => {
-        ;(async () => {
-            try {
-                const user = await isAuthenticated()
-
-                if (!user) {
-                    navigate('/login')
-                }
-
-                pSaveUserLogin(user)
-            } catch (error) {
-                if (error) {
-                    navigate('/login')
-                }
-                throw new Error(error as string)
-            }
-        })()
+        if (!pUser) {
+            navigate('/login')
+        }
     }, [navigate])
 
     return (
         <Box
             sx={{
                 display: 'flex',
+                backgroundColor: theme.palette.grey['A100'],
             }}
         >
             <Box
                 sx={{
-                    width: 250,
+                    width: WIDTH_NAV,
                 }}
             >
                 <NavBar />
@@ -59,14 +49,13 @@ export function MainLayout({ pSaveUserLogin }: IMainLayoutProps) {
                 <Box
                     component="main"
                     sx={{
-                        marginTop: '77px',
+                        marginTop: HEIGHT_HEADER / 8,
                         minHeight: 'calc(100vh - 77px)',
                     }}
                 >
                     <Box
                         sx={{
                             padding: theme.spacing(4, 4, 2),
-                            minHeight: 'calc(100vh - 77px)',
                         }}
                     >
                         <Outlet />
@@ -77,10 +66,16 @@ export function MainLayout({ pSaveUserLogin }: IMainLayoutProps) {
     )
 }
 
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.userLogin,
+    }
+}
+
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pSaveUserLogin: (user: IUser) => dispatch(saveUserLogin(user)),
     }
 }
 
-export default connect(null, mapDispatchToProps)(MainLayout)
+export default connect(mapStateToProps, mapDispatchToProps)(MainLayout)

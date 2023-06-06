@@ -5,7 +5,7 @@ import {
     InternalAxiosRequestConfig,
 } from 'axios'
 import { authApi } from '.'
-import { getLS, removeFullToken, setLS } from '../utils'
+import { getLS, setLS } from '../utils'
 
 const onRequestConfig = (config: InternalAxiosRequestConfig) => {
     const token = getLS(import.meta.env.VITE_ACCESS_TOKEN_KEY)
@@ -33,12 +33,12 @@ const onResponseError = async (
 
     if (err.response?.status === 401) {
         const refreshToken = getLS(import.meta.env.VITE_REFRESH_TOKEN_KEY)
-        removeFullToken()
+        if (!refreshToken) window.location.href = '/login'
 
         const token = await authApi.refreshToken(refreshToken)
 
         setLS(import.meta.env.VITE_ACCESS_TOKEN_KEY, token.data.accessToken)
-        setLS(import.meta.env.VITE_REFRESH_TOKEN_KEY, token.data.accessToken)
+        setLS(import.meta.env.VITE_REFRESH_TOKEN_KEY, token.data.refreshToken)
 
         originalConfig.headers.Authorization = `Bearer ${token.data.accessToken}`
         return axiosInstance(originalConfig)

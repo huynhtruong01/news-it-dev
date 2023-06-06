@@ -1,6 +1,6 @@
 import { SocialLogin } from '@/pages/Auth/components'
 import { Box, Paper, Typography, alpha } from '@mui/material'
-import { theme } from '@utils/index'
+import { theme } from '@/utils'
 import { ReactNode, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 

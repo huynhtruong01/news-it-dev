@@ -16,6 +16,7 @@ export interface IHashTagModalFormProps {
 }
 
 const schema = yup.object().shape({
+    title: yup.string().required('Please enter title.'),
     name: yup.string().required('Please enter name.'),
     description: yup.string().required('Please enter description.'),
     color: yup.string().required('Please enter color.'),
@@ -57,7 +58,6 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
 
             toastSuccess(`Update tag '${values.name}' successfully.`)
         } catch (error) {
-            console.log(error)
             throw new Error(error.message as string)
         }
     }
@@ -116,6 +116,13 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
                         marginBottom: 3,
                     }}
                 >
+                    <InputField
+                        form={form}
+                        name={'title'}
+                        label={'Title'}
+                        disabled={isSubmitting}
+                        placeholder={'Enter title'}
+                    />
                     <InputField
                         form={form}
                         name={'name'}

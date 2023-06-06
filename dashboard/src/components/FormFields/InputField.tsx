@@ -1,5 +1,6 @@
 import { Controller, FieldValues, Path } from 'react-hook-form'
 import { TextField, TextFieldProps } from '@mui/material'
+import { theme } from '../../utils'
 
 export type IInputFieldProps<TFormValues> = {
     form: TFormValues
@@ -39,6 +40,11 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
                     placeholder={placeholder}
                     helperText={error?.message}
                     error={!!error?.message}
+                    sx={{
+                        '.MuiInputBase-root': {
+                            backgroundColor: theme.palette.primary.contrastText,
+                        },
+                    }}
                     {...rest}
                 />
             )}

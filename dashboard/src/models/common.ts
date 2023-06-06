@@ -46,8 +46,9 @@ export interface IObjectQuery {
 }
 
 export interface IOptionItem {
-    id: number
+    id?: number
     name: string
+    value: string | number
 }
 
 export interface IUploadImg {
@@ -56,3 +57,10 @@ export interface IUploadImg {
 }
 
 export type IImgType = string | File
+export interface IStatisticalNums {
+    numNews: number
+    numUser: number
+    numHashTag: number
+    numRole: number
+    numLikes: number
+}

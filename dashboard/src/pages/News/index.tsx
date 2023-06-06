@@ -19,11 +19,12 @@ import { getAllHashTags } from '../../store/hashTag/thunkApi'
 
 export interface INewsProps {
     pNews: INews[]
+    pTotal: number
     pGetNews: (params: IFilters) => Promise<PayloadAction<unknown>>
     pGetHashTagSelects: () => Promise<PayloadAction<unknown>>
 }
 
-function News({ pNews, pGetNews, pGetHashTagSelects }: INewsProps) {
+function News({ pNews, pTotal, pGetNews, pGetHashTagSelects }: INewsProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
@@ -32,6 +33,7 @@ function News({ pNews, pGetNews, pGetHashTagSelects }: INewsProps) {
     const [open, setOpen] = useState<boolean>(false)
     const [openDelete, setOpenDelete] = useState<boolean>(false)
     const [initValues, setInitValues] = useState<INewsData>(initNewsFormValues)
+    const [news, setNews] = useState<INews | null>(null)
     const { toastSuccess, toastError } = useToast()
 
     useEffect(() => {
@@ -113,12 +115,14 @@ function News({ pNews, pGetNews, pGetHashTagSelects }: INewsProps) {
                     }}
                 >
                     <NewsTable
+                        total={pTotal}
                         news={pNews}
                         filters={filters}
                         setFilters={setFilters}
                         setInitValues={setInitValues}
                         setOpen={setOpen}
                         setOpenDelete={setOpenDelete}
+                        setNews={setNews}
                     />
                 </Box>
             </Box>
@@ -126,7 +130,7 @@ function News({ pNews, pGetNews, pGetHashTagSelects }: INewsProps) {
             <NewsModalForm initValues={initValues} open={open} setOpen={setOpen} />
             <ModalDelete
                 title={'Delete news?'}
-                message={`Are you sure delete news "${initValues.title}"?`}
+                message={`Are you sure delete news "${news?.title}"?`}
                 open={openDelete}
                 setOpen={setOpenDelete}
                 onDelete={handleDeleteNews}
@@ -138,6 +142,7 @@ function News({ pNews, pGetNews, pGetHashTagSelects }: INewsProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pNews: state.news.news,
+        pTotal: state.news.total,
     }
 }
 

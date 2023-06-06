@@ -29,7 +29,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
     const error = errors[name]
 
     const handleFilters = () => {
-        const ids = getValues(name).map((val) => val.id)
+        const ids = getValues(name).map((val: any) => val.id)
         return list.filter((option) => !ids.includes(option.id))
     }
 
@@ -37,7 +37,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
         <Controller
             name={name}
             control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
                 <Autocomplete
                     multiple
                     options={handleFilters()}

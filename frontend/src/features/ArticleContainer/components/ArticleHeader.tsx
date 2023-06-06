@@ -5,12 +5,12 @@ import { NewsFilters } from '@/enums/news'
 import { IFilters, IHashTag, INewsStatus, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
-import { Box, BoxProps, Stack } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 
-export interface IArticleHeaderProps extends BoxProps {
+export interface IArticleHeaderProps {
     filters: IFilters
     status: INewsStatus
     setStatus: Dispatch<SetStateAction<INewsStatus>>
@@ -26,7 +26,6 @@ function ArticleHeader({
     setFilters,
     pUser,
     pHashTags,
-    ...rest
 }: IArticleHeaderProps) {
     const { t } = useTranslation()
     const handleNewsFilters = (valFilter: string | number) => {
@@ -64,7 +63,7 @@ function ArticleHeader({
     }
 
     return (
-        <Box component="header" {...rest}>
+        <Box component="header" marginBottom={1.5}>
             {/* Main content Nav */}
             <Stack
                 gap={1}

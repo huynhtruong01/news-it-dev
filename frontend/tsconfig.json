@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -15,26 +16,14 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@components/FormFields/*": ["./src/components/FormFields"],
-      "@components/common/*": ["src/components/Common/index"],
-      "@components/forms/*": ["src/components/Forms"],
-      "@components/*": ["src/components/index"],
-      "@api/*": ["src/api"],
-      "@utils/*": ["src/utils"],
-      "@hooks/*": ["src/hooks"],
-      "@pages/*": ["src/pages"],
-      "@models/*": ["src/models"],
-      "@data/*": ["src/data"],
-      "@layouts/*": ["src/layouts"],
-      "@features/*": ["src/features"],
-      "@store/*": ["src/store"],
     },
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "incremental": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

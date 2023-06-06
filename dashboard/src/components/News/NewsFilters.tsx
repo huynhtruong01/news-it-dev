@@ -1,15 +1,18 @@
-import { IFilters } from '../../models'
+import { IFilters, IOptionItem } from '../../models'
 import { selectStatus, selectTags } from '../../data'
 import { SelectFilter } from '../Filters'
 import { SetStateAction, Dispatch } from 'react'
 import { ALL } from '../../consts'
+import { connect } from 'react-redux'
+import { AppState } from '../../store'
 
 export interface INewsFiltersProps {
     filters: IFilters
     setFilters: Dispatch<SetStateAction<IFilters>>
+    pHashTags: IOptionItem[]
 }
 
-export function NewsFilters({ filters, setFilters }: INewsFiltersProps) {
+function NewsFilters({ filters, setFilters, pHashTags }: INewsFiltersProps) {
     const handleFilterStatus = (value: string | number) => {
         if (+value < 0 || !value) {
             const newFilters = { ...filters }
@@ -35,7 +38,7 @@ export function NewsFilters({ filters, setFilters }: INewsFiltersProps) {
     return (
         <>
             <SelectFilter
-                selects={selectTags}
+                selects={pHashTags}
                 initValue={ALL}
                 label={'Tags'}
                 onFilterChange={handleFilterTag}
@@ -51,3 +54,11 @@ export function NewsFilters({ filters, setFilters }: INewsFiltersProps) {
         </>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pHashTags: state.hashTag.hashTagSelects,
+    }
+}
+
+export default connect(mapStateToProps, null)(NewsFilters)

@@ -1,11 +1,11 @@
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Button, TableCell, TableRow, Box } from '@mui/material'
+import { Button, TableCell, TableRow } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, SetStateAction, MouseEvent } from 'react'
+import { Dispatch, MouseEvent, SetStateAction } from 'react'
 import { keyRoleInitValues, roleHeaders } from '../../data'
-import { IFilters, IRoleData, IRole } from '../../models'
-import { formatDate, setNewValues, theme } from '../../utils'
-import { TableWrapper, BoxColor } from '../Common'
+import { IFilters, IRole, IRoleData } from '../../models'
+import { formatDate, setNewValues } from '../../utils'
+import { BoxColor, TableWrapper } from '../Common'
 
 export interface IRoleTableProps {
     roles: IRole[]
@@ -37,7 +37,6 @@ export function RoleTable({
     }
 
     const handleFiltersChange = (filters: IFilters) => {
-        console.log('filters: ', filters)
         setFilters(filters)
     }
 
@@ -64,13 +63,6 @@ export function RoleTable({
                     key={role.id}
                     sx={{
                         cursor: 'pointer',
-                        '&:hover': {
-                            backgroundColor: theme.palette.grey[100],
-                        },
-
-                        '&:nth-of-type(odd)': {
-                            backgroundColor: theme.palette.grey[200],
-                        },
                     }}
                     onClick={() => handleSetInitValues(role)}
                 >

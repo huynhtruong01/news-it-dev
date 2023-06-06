@@ -2,6 +2,7 @@ import { IImgType } from './common'
 
 export interface IHashTagData {
     id?: number
+    title: string
     name: string
     description: string
     color: string

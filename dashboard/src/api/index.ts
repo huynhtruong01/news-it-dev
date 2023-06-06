@@ -5,6 +5,8 @@ export * as usersApi from './usersApi'
 export * as rolesApi from './rolesApi'
 export * as hashTagsApi from './hashTagsApi'
 export * as newsApi from './newsApi'
+export * as statisticalApi from './statisticalApi'
+export * as commentApi from './commentApi'
 
 const AxiosClient = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,

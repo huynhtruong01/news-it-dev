@@ -7,7 +7,7 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@mui/material'
-import { red } from '@mui/material/colors'
+import { grey } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { navList } from '../../data'
@@ -31,7 +31,7 @@ function NavBar({ pSaveUserLogin }: INavBarProps) {
     useEffect(() => {
         const firstPath = location.pathname.split('/')[1]
         setNavLink(`/${firstPath}`)
-    }, [])
+    }, [navigate])
 
     const handleNavChange = (link: string) => {
         setNavLink(link)
@@ -61,7 +61,7 @@ function NavBar({ pSaveUserLogin }: INavBarProps) {
                 left: 0,
                 minHeight: '100vh',
                 width: 250,
-                backgroundColor: theme.palette.grey[300],
+                backgroundColor: theme.palette.primary.contrastText,
                 zIndex: 50,
             }}
         >
@@ -139,12 +139,31 @@ function NavBar({ pSaveUserLogin }: INavBarProps) {
                                                     borderRadius: 1,
                                                     backgroundColor:
                                                         navLink === nav.link
-                                                            ? '#fff'
+                                                            ? theme.palette.primary.light
                                                             : 'transparent',
+                                                    color:
+                                                        navLink === nav.link
+                                                            ? theme.palette.primary
+                                                                  .contrastText
+                                                            : 'inherit',
+
+                                                    svg: {
+                                                        color:
+                                                            navLink === nav.link
+                                                                ? theme.palette.primary
+                                                                      .contrastText
+                                                                : 'inherit',
+                                                    },
 
                                                     '&:hover': {
-                                                        backgroundColor: '#fff',
-                                                        color: '#000',
+                                                        backgroundColor:
+                                                            theme.palette.primary.light,
+                                                        color: theme.palette.primary
+                                                            .contrastText,
+                                                        svg: {
+                                                            color: theme.palette.primary
+                                                                .contrastText,
+                                                        },
                                                     },
                                                 }}
                                             >
@@ -169,16 +188,12 @@ function NavBar({ pSaveUserLogin }: INavBarProps) {
                     <ListItem>
                         <ListItemButton
                             sx={{
-                                backgroundColor: red[700],
-                                color: '#fff',
+                                backgroundColor: grey[200],
                                 borderRadius: 1,
-
-                                svg: {
-                                    color: '#fff',
-                                },
+                                border: `1px solid ${grey[500]}`,
 
                                 '&:hover': {
-                                    backgroundColor: red[900],
+                                    backgroundColor: grey[300],
                                 },
                             }}
                             onClick={handleLogout}

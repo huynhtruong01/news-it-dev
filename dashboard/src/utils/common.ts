@@ -1,7 +1,9 @@
 import debounce from 'lodash.debounce'
-import { IDebounceCallback, IRole, IOptionItem } from '../models'
 import { authApi } from '../api'
+import { Status } from '../enums'
+import { IDebounceCallback, IOptionItem, IStatus } from '../models'
 import { getLS } from './localStorage'
+import { grey, green, red } from '@mui/material/colors'
 
 export const debounceFunc = (callback: IDebounceCallback, times: number) =>
     debounce(callback, times)
@@ -27,8 +29,8 @@ export const generateOptions = <IData>(options: IData[]): IOptionItem[] => {
     return options.map(
         (option) =>
             ({
-                id: option.id,
-                name: option.name,
+                id: option?.id,
+                name: option?.name,
             } as IOptionItem)
     )
 }
@@ -46,4 +48,24 @@ export const setNewValues = <IData>(values: IData, keyList: string[]) => {
 
 export const generateLinkImg = (file: File) => {
     return URL.createObjectURL(file)
+}
+
+export const statusColor = (status: IStatus) => {
+    const colors = []
+
+    switch (status) {
+        case Status.DRAFT:
+            colors.push(grey[50], grey[500])
+            break
+        case Status.PUBLIC:
+            colors.push(green[50], green[500])
+            break
+        case Status.UNPUBLIC:
+            colors.push(red[50], red[500])
+            break
+        default:
+            colors.push('transparent', '#000000')
+    }
+
+    return colors
 }

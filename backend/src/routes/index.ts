@@ -6,9 +6,11 @@ import hashTagRouter from '@/routes/hashTag.route'
 import newsRouter from '@/routes/news.route'
 import commentRouter from '@/routes/comment.route'
 import notifyRouter from '@/routes/notify.route'
+import commonRouter from '@/routes/common.route'
 const router = express.Router()
 
 const routes = [
+    router.use('/statistical', commonRouter),
     router.use('/users', userRouter),
     router.use('/auth', authRouter),
     router.use('/roles', roleRouter),

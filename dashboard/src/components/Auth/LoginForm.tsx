@@ -11,7 +11,7 @@ export interface ILoginFormProps {
 }
 
 const schema = yup.object().shape({
-    email: yup.string().required('Please enter email.').email('Invalid email'),
+    emailAddress: yup.string().required('Please enter email.').email('Invalid email'),
     password: yup
         .string()
         .required('Please enter password.')
@@ -22,7 +22,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
     const { toastError } = useToast()
     const form = useForm<ILoginValues>({
         defaultValues: {
-            email: '',
+            emailAddress: '',
             password: '',
         },
         resolver: yupResolver(schema),
@@ -53,7 +53,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                 <InputField
                     form={form}
                     label="Email"
-                    name="email"
+                    name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'Enter email'}
                 />

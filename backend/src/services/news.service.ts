@@ -7,7 +7,6 @@ import { commonService } from '@/services/common.service'
 import { hashTagService } from '@/services/hashTag.service'
 import {
     createNews,
-    filtersArrQuery,
     filtersQuery,
     paginationQuery,
     searchQuery,
@@ -111,24 +110,64 @@ class NewsService {
     // QUERY
     async getAll(query: IObjectCommon): Promise<INewsRes> {
         try {
-            const newFiltersQuery = filtersQuery(query)
-            const newSortQuery = sortQuery(query)
-            const newPaginationQuery = paginationQuery(query)
-            const titleSearchQuery = searchQuery(query, 'title')
-            const newFilterArrQuery = filtersArrQuery(query)
+            const { take, skip } = paginationQuery(query)
 
-            const [news, count] = await this.newsRepository.findAndCount({
-                order: {
-                    ...newSortQuery,
-                },
-                where: {
-                    ...titleSearchQuery,
-                    ...newFiltersQuery,
-                    ...newFilterArrQuery,
-                },
-                ...newPaginationQuery,
-                relations: relationNewsData,
-            })
+            const conditionsSearch = ((query.search as string) || '')
+                .split(' ')
+                .filter((k) => !!k)
+                .map((k) => k.toLowerCase())
+
+            const queryBuilder = this.newsRepository
+                .createQueryBuilder('news')
+                .leftJoinAndSelect('news.likes', 'likes')
+                .leftJoinAndSelect('news.saveUsers', 'saves')
+                .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('user.news', 'userNews')
+                .leftJoinAndSelect('userNews.hashTags', 'newsHashTags')
+                .leftJoinAndSelect('user.followers', 'userFollowers')
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .take(take)
+                .skip(skip)
+                .orderBy('news.createdAt', (query.createdAt as IOrder) || Order.DESC)
+
+            if (query.readTimes) {
+                queryBuilder.orderBy('news.readTimes', query.readTimes as IOrder)
+            }
+
+            if (query.newsLikes) {
+                queryBuilder.orderBy('news.newsLikes', query.newsLikes as IOrder)
+            }
+
+            if (query.newsViews) {
+                queryBuilder.orderBy('news.newsViews', query.newsViews as IOrder)
+            }
+
+            if (query.search) {
+                queryBuilder.andWhere(
+                    conditionsSearch
+                        .map((keyword) => {
+                            return `LOWER(news.title) LIKE :${keyword}`
+                        })
+                        .join(' OR '),
+                    conditionsSearch.reduce((params, keyword) => {
+                        return { ...params, [keyword]: `%${keyword}%` }
+                    }, {})
+                )
+            }
+
+            if (query.hashTag) {
+                queryBuilder.andWhere(':hashTag IN (news.hashTagIds)', {
+                    hashTag: query.hashTag.toString(),
+                })
+            }
+
+            if (query.status) {
+                queryBuilder.andWhere('news.status = :status', {
+                    status: query.status,
+                })
+            }
+
+            const [news, count] = await queryBuilder.getManyAndCount()
 
             return [news, count]
         } catch (error) {

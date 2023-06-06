@@ -1,13 +1,12 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, SetStateAction, SyntheticEvent, MouseEvent } from 'react'
+import { Dispatch, MouseEvent, SetStateAction } from 'react'
 import { userHeaders } from '../../data'
 import { ActiveSelectName, RoleSelectName } from '../../enums'
-import { IFilters, IUser, IUserData } from '../../models'
-import { formatDate, theme, generateOptions } from '../../utils'
-import { TableWrapper, TableCellImage } from '../Common'
-import { EMPTY_IMG } from '../../consts'
+import { IFilters, IRole, IUser, IUserData } from '../../models'
+import { formatDate, generateOptions } from '../../utils'
+import { TableCellImage, TableWrapper } from '../Common'
 
 export interface IUserTableProps {
     users: IUser[]
@@ -17,6 +16,7 @@ export interface IUserTableProps {
     setInitValues: Dispatch<SetStateAction<IUserData>>
     setOpen: Dispatch<SetStateAction<boolean>>
     setOpenDelete: Dispatch<SetStateAction<boolean>>
+    setUser: Dispatch<SetStateAction<IUser | null>>
 }
 
 export function UserTable({
@@ -27,9 +27,10 @@ export function UserTable({
     setInitValues,
     setOpen,
     setOpenDelete,
+    setUser,
 }: IUserTableProps) {
     const handleSetInitValues = (values: IUser) => {
-        const roleOptionIds = generateOptions(values.roles || [])
+        const roleOptionIds = generateOptions<IRole>(values.roles || [])
 
         const newInitValues: IUserData = {
             id: values.id,
@@ -46,21 +47,12 @@ export function UserTable({
     }
 
     const handleFiltersChange = (filters: IFilters) => {
-        console.log('filters: ', filters)
         setFilters(filters)
     }
 
     const handleDelete = (e: MouseEvent, values: IUser) => {
         e.stopPropagation()
-        const newInitValues: IUserData = {
-            id: values.id,
-            username: values.username,
-            firstName: values.firstName,
-            lastName: values.lastName,
-            emailAddress: values.emailAddress,
-            isAdmin: values.isAdmin,
-        }
-        setInitValues(newInitValues)
+        setUser(values)
         setOpenDelete(true)
     }
 
@@ -76,13 +68,6 @@ export function UserTable({
                     key={user.id}
                     sx={{
                         cursor: 'pointer',
-                        '&:hover': {
-                            backgroundColor: theme.palette.grey[100],
-                        },
-
-                        '&:nth-of-type(odd)': {
-                            backgroundColor: theme.palette.grey[200],
-                        },
                     }}
                     onClick={() => handleSetInitValues(user)}
                 >

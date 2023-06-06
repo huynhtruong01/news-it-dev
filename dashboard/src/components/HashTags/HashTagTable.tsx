@@ -1,11 +1,11 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, TableCell, TableRow, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, SetStateAction, MouseEvent } from 'react'
+import { Dispatch, MouseEvent, SetStateAction } from 'react'
 import { keyInitValues, tagHeaders } from '../../data'
 import { IFilters, IHashTag, IHashTagData, IHashTagTable } from '../../models'
-import { formatDate, setNewValues, theme } from '../../utils'
-import { TableWrapper, BoxColor, TableCellImage } from '../Common'
+import { formatDate, setNewValues } from '../../utils'
+import { BoxColor, TableCellImage, TableWrapper } from '../Common'
 
 export interface IHashTagTableProps {
     tags: IHashTag[]
@@ -37,7 +37,6 @@ export function HashTagTable({
     }
 
     const handleFiltersChange = (filters: IFilters) => {
-        console.log('filters: ', filters)
         setFilters(filters)
     }
 
@@ -64,18 +63,11 @@ export function HashTagTable({
                     key={tag.id}
                     sx={{
                         cursor: 'pointer',
-                        '&:hover': {
-                            backgroundColor: theme.palette.grey[100],
-                        },
-
-                        '&:nth-of-type(odd)': {
-                            backgroundColor: theme.palette.grey[200],
-                        },
                     }}
                     onClick={() => handleSetInitValues(tag)}
                 >
                     <TableCell align="center">{tag.id}</TableCell>
-                    <TableCellImage src={tag.iconImage} alt={tag.name} />
+                    <TableCellImage src={tag.iconImage as string} alt={tag.name} />
                     <TableCell align="center">{tag.name}</TableCell>
                     <TableCell
                         align="left"

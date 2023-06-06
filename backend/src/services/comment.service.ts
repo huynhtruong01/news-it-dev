@@ -1,11 +1,10 @@
 import { AppDataSource } from '@/config'
-import { relationDataComment } from '@/data'
 import { Comment, News, User } from '@/entities'
-import { ICommentRes, IObjectCommon } from '@/models'
+import { Order } from '@/enums'
+import { ICommentRes, IObjectCommon, IOrder } from '@/models'
 import { commonService, newsService, notifyService, userService } from '@/services'
-import { createComment, paginationQuery, sortQuery } from '@/utils'
+import { createComment, paginationQuery } from '@/utils'
 import { io } from 'server'
-import { IsNull } from 'typeorm'
 
 class CommentService {
     constructor(
@@ -18,22 +17,33 @@ class CommentService {
     }
 
     // --------------------- SERVICES -----------------------------------
+
     async getAll(query: IObjectCommon): Promise<ICommentRes> {
         try {
-            const newSortQuery = sortQuery(query)
-            const newPaginationQuery = paginationQuery(query)
+            const { take, skip } = paginationQuery(query)
 
-            const [comments, count] = await this.commentRepository.findAndCount({
-                where: {
-                    newsId: query.newsId as number,
-                    parentCommentId: IsNull(),
-                },
-                relations: relationDataComment,
-                order: {
-                    ...newSortQuery,
-                },
-                ...newPaginationQuery,
-            })
+            const queryBuilder = this.commentRepository
+                .createQueryBuilder('comment')
+                .leftJoinAndSelect('comment.parentComment', 'parentComment')
+                .leftJoinAndSelect('comment.childrenComments', 'childrenComments')
+                .leftJoinAndSelect('childrenComments.user', 'userComment')
+                .leftJoinAndSelect('childrenComments.likes', 'likesComment')
+                .leftJoinAndSelect('childrenComments.replyUser', 'replyUser')
+                .leftJoinAndSelect('comment.news', 'news')
+                .leftJoinAndSelect('comment.user', 'user')
+                .leftJoinAndSelect('comment.likes', 'likes')
+                .take(take)
+                .skip(skip)
+                .orderBy('comment.createdAt', (query.createdAt as IOrder) || Order.DESC)
+                .where('comment.parentCommentId IS NULL')
+
+            if (query.newsId) {
+                queryBuilder.andWhere('comment.newsId = :newsId', {
+                    newsId: query.newsId,
+                })
+            }
+
+            const [comments, count] = await queryBuilder.getManyAndCount()
 
             return [comments, count]
         } catch (error) {

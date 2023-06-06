@@ -1,29 +1,37 @@
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Button, TableCell, TableRow, Typography, Box } from '@mui/material'
+import { Box, Button, TableCell, TableRow, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, SetStateAction, MouseEvent } from 'react'
+import { Dispatch, MouseEvent, SetStateAction, useMemo } from 'react'
 import { keyNewsInitValues, newsHeaders } from '../../data'
 import { IFilters, INews, INewsData, INewsTable, IOptionItem } from '../../models'
-import { formatDate, setNewValues, theme } from '../../utils'
-import { TableWrapper, TableCellImage } from '../Common'
+import { formatDate, setNewValues } from '../../utils'
+import { TableCellImage, TableWrapper } from '../Common'
 
 export interface INewsTableProps {
     news: INews[]
+    total: number
     filters: IFilters
     setFilters: Dispatch<SetStateAction<IFilters>>
     setInitValues: Dispatch<SetStateAction<INewsData>>
     setOpen: Dispatch<SetStateAction<boolean>>
     setOpenDelete: Dispatch<SetStateAction<boolean>>
+    setNews: Dispatch<SetStateAction<INews | null>>
 }
 
 export function NewsTable({
     news,
+    total,
     filters,
     setFilters,
     setInitValues,
     setOpen,
     setOpenDelete,
+    setNews,
 }: INewsTableProps) {
+    const newNews = useMemo(() => {
+        return news.length ? news : []
+    }, [news])
+
     const handleSetInitValues = (values: INewsTable) => {
         const hashTagOptionIds: IOptionItem[] = values.hashTags.map(
             (item) =>
@@ -48,33 +56,22 @@ export function NewsTable({
     const handleDelete = (e: MouseEvent, values: INews) => {
         e.stopPropagation()
 
-        const newInitValues: INewsData = setNewValues<INewsData>(
-            values,
-            keyNewsInitValues
-        )
-        setInitValues(newInitValues)
+        setNews(values)
         setOpenDelete(true)
     }
 
     return (
         <TableWrapper<INews>
-            total={0}
+            total={total}
             listHead={newsHeaders}
             filters={filters}
             onFiltersChange={handleFiltersChange}
         >
-            {news.map((item) => (
+            {newNews.map((item) => (
                 <TableRow
                     key={item.id}
                     sx={{
                         cursor: 'pointer',
-                        '&:hover': {
-                            backgroundColor: theme.palette.grey[100],
-                        },
-
-                        '&:nth-of-type(odd)': {
-                            backgroundColor: theme.palette.grey[200],
-                        },
                     }}
                     onClick={() => handleSetInitValues(item)}
                 >

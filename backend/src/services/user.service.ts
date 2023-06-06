@@ -1,17 +1,11 @@
 import { AppDataSource } from '@/config'
-import { relationDataUser, selectUserData } from '@/data'
 import { User } from '@/entities'
-import { IObjectCommon, IUserRes } from '@/models'
+import { Order } from '@/enums'
+import { IObjectCommon, IOrder, IUserRes } from '@/models'
 import { authService } from '@/services/auth.service'
 import { commonService } from '@/services/common.service'
 import { roleService } from '@/services/role.service'
-import {
-    createUserData,
-    filtersQuery,
-    paginationQuery,
-    searchQuery,
-    sortQuery,
-} from '@/utils'
+import { createUserData, paginationQuery } from '@/utils'
 
 interface ICheckUser {
     user: User
@@ -43,24 +37,59 @@ class UserService {
 
     async getAll(query: IObjectCommon): Promise<IUserRes> {
         try {
-            const newFiltersQuery = filtersQuery(query)
-            const newSortQuery = sortQuery(query)
-            const newPaginationQuery = paginationQuery(query)
+            const { take, skip } = paginationQuery(query)
 
-            const searchUserName = searchQuery(query, 'username')
+            const conditionsSearch = ((query.search as string) || '')
+                .split(' ')
+                .map((k) => k.toLowerCase())
+            const queryBuilder = this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.roles', 'roles')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('user.following', 'following')
+                .leftJoinAndSelect('user.hashTags', 'hashTags')
+                .leftJoinAndSelect('user.news', 'news')
+                .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
+                .leftJoinAndSelect('user.newsLikes', 'newsLikes')
+                .leftJoinAndSelect('newsLikes.user', 'newsLikesUser')
+                .leftJoinAndSelect('user.saves', 'saves')
+                .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
+                .leftJoinAndSelect('user.comments', 'comments')
+                .leftJoinAndSelect('user.commentLikes', 'commentLikes')
+                .orderBy('user.createdAt', (query.createdAt as IOrder) || Order.DESC)
+                .take(take)
+                .skip(skip)
 
-            const [users, count] = await this.userRepository.findAndCount({
-                order: {
-                    ...newSortQuery,
-                },
-                where: {
-                    ...newFiltersQuery,
-                    ...searchUserName,
-                },
-                ...newPaginationQuery,
-                relations: relationDataUser,
-                select: selectUserData,
-            })
+            if (query.newsCount) {
+                queryBuilder.orderBy('user.newsCount', query.newsCount as IOrder)
+            }
+
+            if (query.search) {
+                queryBuilder.andWhere(
+                    conditionsSearch
+                        .map((keyword) => {
+                            return `LOWER(user.username) LIKE :${keyword}`
+                        })
+                        .join(' OR '),
+                    conditionsSearch.reduce((params, keyword) => {
+                        return { ...params, [keyword]: `%${keyword}%` }
+                    }, {})
+                )
+            }
+
+            if (query.isActive) {
+                queryBuilder
+                    .andWhere('user.isActive = :isActive')
+                    .setParameter('isActive', query.isActive === 'true' ? 1 : 0)
+            }
+
+            if (query.isAdmin) {
+                queryBuilder
+                    .andWhere('user.isAdmin = :isAdmin')
+                    .setParameter('isAdmin', query.isAdmin === 'true' ? 1 : 0)
+            }
+
+            const [users, count] = await queryBuilder.getManyAndCount()
 
             return [users, count]
         } catch (error) {

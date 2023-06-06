@@ -1,8 +1,9 @@
 import { Avatar, Box, Typography } from '@mui/material'
-import { grey } from '@mui/material/colors'
 import { connect } from 'react-redux'
+import { IUser } from '../../models'
 import { AppState } from '../../store'
-import { IUser, IRole } from '../../models'
+import { theme } from '../../utils'
+import { WIDTH_NAV } from '../../consts'
 
 export interface IHeaderProps {
     pUserLogin: IUser | null
@@ -13,18 +14,18 @@ function Header({ pUserLogin }: IHeaderProps) {
         <Box
             component="header"
             sx={{
-                position: 'absolute',
+                position: 'fixed',
                 top: 0,
-                left: 0,
-                width: '100%',
-                borderBottom: `1px solid ${grey[200]}`,
+                left: WIDTH_NAV,
+                width: `calc(100% - ${WIDTH_NAV}px)`,
+                backgroundColor: theme.palette.primary.contrastText,
             }}
         >
             <Box
                 sx={{
                     display: 'flex',
                     justifyContent: 'end',
-                    padding: '16px 48px',
+                    padding: theme.spacing(1.5, 3),
                 }}
             >
                 <Box
@@ -59,10 +60,11 @@ function Header({ pUserLogin }: IHeaderProps) {
                                 },
                             }}
                         >
-                            {pUserLogin?.roles?.length &&
-                                pUserLogin.roles.map((role: IRole) => (
-                                    <span key={role.id}>{role.name}</span>
-                                ))}
+                            {pUserLogin?.roles && (
+                                <span>
+                                    {pUserLogin?.roles?.map((r) => r.name).join(', ')}
+                                </span>
+                            )}
                         </Typography>
                     </Box>
                     <Box

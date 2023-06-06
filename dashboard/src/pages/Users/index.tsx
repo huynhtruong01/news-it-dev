@@ -33,6 +33,7 @@ function Users({ pUsers, pTotal, pGetUsers, pGetAllRoles }: IUsersProps) {
     const [open, setOpen] = useState<boolean>(false)
     const [openDelete, setOpenDelete] = useState<boolean>(false)
     const [initValues, setInitValues] = useState<IUserData>(initUserFormValues)
+    const [user, setUser] = useState<IUser | null>(null)
     const { toastSuccess, toastError } = useToast()
 
     useEffect(() => {
@@ -123,6 +124,7 @@ function Users({ pUsers, pTotal, pGetUsers, pGetAllRoles }: IUsersProps) {
                         setInitValues={setInitValues}
                         setOpen={setOpen}
                         setOpenDelete={setOpenDelete}
+                        setUser={setUser}
                     />
                 </Box>
             </Box>
@@ -130,7 +132,7 @@ function Users({ pUsers, pTotal, pGetUsers, pGetAllRoles }: IUsersProps) {
             <UserModalForm initValues={initValues} open={open} setOpen={setOpen} />
             <ModalDelete
                 title={'Delete user?'}
-                message={`Are you sure delete user "${initValues.username}"?`}
+                message={`Are you sure delete user "${user?.username}"?`}
                 open={openDelete}
                 setOpen={setOpenDelete}
                 onDelete={handleDeleteUser}

@@ -4,10 +4,12 @@ import { extraReducers } from './thunkApi'
 
 export interface INewsStore {
     news: INews[]
+    total: number
 }
 
 const initialState: INewsStore = {
     news: [],
+    total: 0,
 }
 
 const newsSlice = createSlice({

@@ -1,5 +1,5 @@
 export interface ILoginValues {
-    email: string
+    emailAddress: string
     password: string
 }
 
@@ -7,7 +7,7 @@ export interface ISignupValues {
     username: string
     lastName: string
     firstName: string
-    email: string
+    emailAddress: string
     password: string
     confirmPassword: string
 }

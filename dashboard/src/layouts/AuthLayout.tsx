@@ -2,23 +2,23 @@ import { Box } from '@mui/material'
 import { Outlet } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import { isAuthenticated } from '../utils'
+import { connect } from 'react-redux'
+import { AppState } from '../store'
+import { IUser } from '../models'
+
+export interface IAuthLayoutProps {
+    pUser: IUser | null
+}
 
 export function AuthLayout() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        ;(async () => {
-            try {
-                const user = await isAuthenticated()
-
-                if (user) {
-                    navigate('/')
-                }
-            } catch (error) {
-                throw new Error(error as string)
-            }
-        })()
+        if (!pUser) {
+            navigate('/login')
+        } else {
+            navigate('/')
+        }
     }, [navigate])
 
     return (
@@ -27,3 +27,11 @@ export function AuthLayout() {
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.userLogin,
+    }
+}
+
+export default connect(mapStateToProps, null)(AuthLayout)

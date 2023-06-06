@@ -14,29 +14,27 @@ import { persistStore } from 'redux-persist'
 const persistor = persistStore(store)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <Provider store={store}>
-                <PersistGate loading={null} persistor={persistor}>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline>
-                            <ToastContainer
-                                position="top-right"
-                                autoClose={2000}
-                                hideProgressBar={false}
-                                newestOnTop={false}
-                                closeOnClick
-                                rtl={false}
-                                pauseOnFocusLoss
-                                draggable
-                                pauseOnHover
-                                theme="colored"
-                            />
-                            <App />
-                        </CssBaseline>
-                    </ThemeProvider>
-                </PersistGate>
-            </Provider>
-        </BrowserRouter>
-    </React.StrictMode>
+    <BrowserRouter>
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline>
+                        <ToastContainer
+                            position="top-right"
+                            autoClose={2000}
+                            hideProgressBar={false}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="colored"
+                        />
+                        <App />
+                    </CssBaseline>
+                </ThemeProvider>
+            </PersistGate>
+        </Provider>
+    </BrowserRouter>
 )

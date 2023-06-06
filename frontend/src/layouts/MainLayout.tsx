@@ -1,7 +1,7 @@
 import { ModalAuth, ModalDelete, ModalDeleteComment } from '@/components'
 import { HEADER_HEIGHT } from '@/consts'
 import { Box, Container } from '@mui/material'
-import { theme } from '@utils/index'
+import { theme } from '@/utils'
 import { ReactNode, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 

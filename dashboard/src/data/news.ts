@@ -179,20 +179,20 @@ export const selectTags: ISelectValue[] = [
     },
 ]
 
-export const hashTagOptions: IOptionItem[] = [
-    {
-        id: 1,
-        name: 'HTML',
-    },
-    {
-        id: 2,
-        name: 'CSS',
-    },
-    {
-        id: 3,
-        name: 'Javascript',
-    },
-]
+// export const hashTagOptions: IOptionItem[] = [
+//     {
+//         id: 1,
+//         name: 'HTML',
+//     },
+//     {
+//         id: 2,
+//         name: 'CSS',
+//     },
+//     {
+//         id: 3,
+//         name: 'Javascript',
+//     },
+// ]
 
 export const keyNewsInitValues = [
     'id',
