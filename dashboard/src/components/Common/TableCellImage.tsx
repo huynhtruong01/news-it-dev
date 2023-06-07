@@ -1,7 +1,6 @@
 import { TableCell } from '@mui/material'
-import { theme } from '../../utils'
 import { EMPTY_IMG } from '../../consts'
-import { HTMLImageElement, Event } from 'react'
+import { SyntheticEvent } from 'react'
 
 export type ITableCellImageProps = {
     src: string
@@ -9,7 +8,7 @@ export type ITableCellImageProps = {
 }
 
 export function TableCellImage({ src, alt = '' }: ITableCellImageProps) {
-    const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    const handleImageError = (e: SyntheticEvent<HTMLImageElement, any>) => {
         e.currentTarget.src = EMPTY_IMG
     }
 

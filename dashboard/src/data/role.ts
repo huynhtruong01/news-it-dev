@@ -1,18 +1,5 @@
 import { IRoleData, ITableHeader } from '../models'
 
-// export const roles: IRoleTable[] = [
-//     {
-//         id: 1,
-//         name: 'Admin',
-//         createdAt: new Date(),
-//     },
-//     {
-//         id: 2,
-//         name: 'User',
-//         createdAt: new Date(),
-//     },
-// ]
-
 export const roleHeaders: readonly ITableHeader[] = [
     {
         id: 'id',

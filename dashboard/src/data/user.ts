@@ -4,82 +4,7 @@ import {
     ActiveSelectName,
     ActiveSelectValue,
 } from '../enums'
-import { ISelectValue, IUserTable, IUserData, ITableHeader, IOptionItem } from '../models'
-
-export const users: IUserTable[] = [
-    {
-        id: 1,
-        avatar: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        username: 'huynhtruong01',
-        firstName: 'Huynh',
-        lastName: 'Truong',
-        emailAddress: 'htruong01@gmail.com',
-        newsCount: 3,
-        isActive: true,
-        isAdmin: true,
-        createdAt: new Date(),
-    },
-    {
-        id: 2,
-        avatar: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        username: 'huynhtruong01',
-        firstName: 'Huynh',
-        lastName: 'Truong',
-        emailAddress: 'htruong01@gmail.com',
-        newsCount: 3,
-        isActive: true,
-        isAdmin: true,
-        createdAt: new Date(),
-    },
-    {
-        id: 3,
-        avatar: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        username: 'huynhtruong01',
-        firstName: 'Huynh',
-        lastName: 'Truong',
-        emailAddress: 'htruong01@gmail.com',
-        newsCount: 3,
-        isActive: false,
-        isAdmin: true,
-        createdAt: new Date(),
-    },
-    {
-        id: 4,
-        avatar: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        username: 'huynhtruong01',
-        firstName: 'Huynh',
-        lastName: 'Truong',
-        emailAddress: 'htruong01@gmail.com',
-        newsCount: 3,
-        isActive: false,
-        isAdmin: true,
-        createdAt: new Date(),
-    },
-    {
-        id: 5,
-        avatar: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        username: 'huynhtruong01',
-        firstName: 'Huynh',
-        lastName: 'Truong',
-        emailAddress: 'htruong01@gmail.com',
-        newsCount: 3,
-        isActive: false,
-        isAdmin: true,
-        createdAt: new Date(),
-    },
-    {
-        id: 6,
-        avatar: 'https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg',
-        username: 'huynhtruong01',
-        firstName: 'Huynh',
-        lastName: 'Truong',
-        emailAddress: 'htruong01@gmail.com',
-        newsCount: 3,
-        isActive: false,
-        isAdmin: true,
-        createdAt: new Date(),
-    },
-]
+import { ISelectValue, IUserData, ITableHeader, IOptionItem } from '../models'
 
 export const selectsRole: ISelectValue[] = [
     {
@@ -175,9 +100,11 @@ export const roleOptions: IOptionItem[] = [
     {
         id: 1,
         name: 'admin',
+        value: 'admin',
     },
     {
         id: 2,
         name: 'user',
+        value: 'user',
     },
 ]

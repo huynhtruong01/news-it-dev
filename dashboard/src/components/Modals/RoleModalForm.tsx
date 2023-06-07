@@ -1,15 +1,13 @@
-import { InputField, ColorField } from '../FormFields'
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IRoleData } from '../../models'
-import { theme } from '../../utils'
-import { useForm } from 'react-hook-form'
-import { Box, Button, Modal } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
+import { Box, Modal } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect } from 'react'
-import { useToast } from '../../hooks'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
 import { rolesApi } from '../../api'
+import { useToast } from '../../hooks'
+import { IRoleData } from '../../models'
 import { ButtonForm } from '../Common'
+import { ColorField, InputField } from '../FormFields'
 
 export interface IRoleModalFormProps {
     initValues: IRoleData
@@ -52,7 +50,6 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
 
             toastSuccess(`Update role '${values.name}' successfully.`)
         } catch (error) {
-            console.log(error)
             throw new Error((error as Error).message as string)
         }
     }
@@ -111,14 +108,14 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
                         marginBottom: 3,
                     }}
                 >
-                    <InputField
+                    <InputField<IRoleData>
                         form={form}
                         name={'name'}
                         label={'Name'}
                         disabled={isSubmitting}
                         placeholder={'Enter name'}
                     />
-                    <ColorField
+                    <ColorField<IRoleData>
                         form={form}
                         name={'color'}
                         label={'Color'}

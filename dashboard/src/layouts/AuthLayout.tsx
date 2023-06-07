@@ -10,11 +10,11 @@ export interface IAuthLayoutProps {
     pUser: IUser | null
 }
 
-export function AuthLayout() {
+export function AuthLayout({ pUser }: IAuthLayoutProps) {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (!pUser) {
+        if (!pUser?.id) {
             navigate('/login')
         } else {
             navigate('/')

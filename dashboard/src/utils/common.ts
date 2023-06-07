@@ -25,12 +25,12 @@ export const isAuthenticated = async () => {
     }
 }
 
-export const generateOptions = <IData>(options: IData[]): IOptionItem[] => {
+export const generateOptions = (options: any): IOptionItem[] => {
     return options.map(
-        (option) =>
+        (option: any) =>
             ({
-                id: option?.id,
-                name: option?.name,
+                id: option?.id as number,
+                name: option?.name as string,
             } as IOptionItem)
     )
 }

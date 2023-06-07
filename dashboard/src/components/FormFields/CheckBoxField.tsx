@@ -1,19 +1,18 @@
-import { Controller, Path, FieldValues } from 'react-hook-form'
-import { FormControlLabel, Checkbox, FormControlLabelProps } from '@mui/material'
+import { Checkbox, FormControlLabel } from '@mui/material'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 
-export type ICheckBoxFieldProps<TFormValues> = {
-    form: TFormValues
+export type ICheckBoxFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
-} & FormControlLabelProps
+}
 
 export function CheckBoxField<TFormValues extends FieldValues = FieldValues>({
     form,
     name,
     label,
     disabled,
-    ...rest
 }: ICheckBoxFieldProps<TFormValues>) {
     const { control } = form
 
@@ -23,7 +22,6 @@ export function CheckBoxField<TFormValues extends FieldValues = FieldValues>({
             name={name}
             render={({ field: { onChange, value, onBlur } }) => (
                 <FormControlLabel
-                    {...rest}
                     disabled={disabled}
                     control={
                         <Checkbox checked={value} onChange={onChange} onBlur={onBlur} />

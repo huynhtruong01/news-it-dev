@@ -1,4 +1,4 @@
-import { Path, FieldValues, Controller } from 'react-hook-form'
+import { Path, FieldValues, Controller, UseFormReturn } from 'react-hook-form'
 import {
     FormControl,
     InputLabel,
@@ -12,8 +12,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import Visibility from '@mui/icons-material/Visibility'
 import { useState } from 'react'
 
-export type IPasswordFieldProps<TFormValues> = {
-    form: TFormValues
+export type IPasswordFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
@@ -62,7 +62,7 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
                         disabled={disabled}
                     />
                     <FormHelperText error={!!error?.message}>
-                        {error?.message || ''}
+                        {(error?.message as string) || ''}
                     </FormHelperText>
                 </FormControl>
             )}

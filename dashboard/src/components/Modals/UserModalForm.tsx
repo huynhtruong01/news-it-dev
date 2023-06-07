@@ -93,7 +93,7 @@ function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFo
     const handleAdd = async (values: IUserData) => {
         try {
             const { confirmPassword, roleOptionIds, ...rest } = values
-            const roleIds = roleOptionIds.map((role) => role.id)
+            const roleIds = (roleOptionIds?.map((role) => role.id) as number[]) || []
             const res = await usersApi.addUser({ ...rest, roleIds })
 
             toastSuccess(`Add user '${res.data.user.username}' successfully.`)
@@ -112,7 +112,6 @@ function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFo
 
             resetModal()
         } catch (error) {
-            console.log(error)
             toastError((error as Error).message)
         }
     }
@@ -153,14 +152,14 @@ function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFo
                             gap: 3,
                         }}
                     >
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name={'firstName'}
                             label={'First Name'}
                             disabled={isSubmitting}
                             placeholder={'Enter first name'}
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name={'lastName'}
                             label={'Last Name'}
@@ -175,7 +174,7 @@ function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFo
                         disabled={isSubmitting}
                         placeholder={'Enter username'}
                     />
-                    <InputField
+                    <InputField<IUserData>
                         form={form}
                         name={'emailAddress'}
                         label={'Email'}
@@ -184,13 +183,13 @@ function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFo
                     />
                     {!initValues.id && (
                         <>
-                            <PasswordField
+                            <PasswordField<IUserData>
                                 form={form}
                                 name={'password'}
                                 label={'Password'}
                                 disabled={isSubmitting}
                             />
-                            <PasswordField
+                            <PasswordField<IUserData>
                                 form={form}
                                 name={'confirmPassword'}
                                 label={'Confirm Password'}
@@ -206,7 +205,7 @@ function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFo
                         placeholder={'Choose roles'}
                         list={pRoleSelects}
                     />
-                    <CheckBoxField
+                    <CheckBoxField<IUserData>
                         form={form}
                         name={'isAdmin'}
                         label={'Admin'}

@@ -1,9 +1,9 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material'
-import { Controller, FieldValues, Path } from 'react-hook-form'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { ISelectValue } from '../../models'
 
-export type ISelectFieldProps<TFormValues> = {
-    form: TFormValues
+export type ISelectFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
@@ -58,7 +58,7 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                         ))}
                     </Select>
                     <FormHelperText error={!!error?.message}>
-                        {error?.message || ''}
+                        {(error?.message as string) || ''}
                     </FormHelperText>
                 </FormControl>
             )}

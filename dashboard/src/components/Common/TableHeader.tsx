@@ -1,5 +1,5 @@
 import { TableHead, TableRow, TableCell, TableSortLabel, Box } from '@mui/material'
-import { ITableHeader, IOrder } from '../../models'
+import { ITableHeader, IOrder, IAlignTable } from '../../models'
 import { Order } from '../../enums'
 import { visuallyHidden } from '@mui/utils'
 import { MouseEvent } from 'react'
@@ -25,7 +25,10 @@ export function TableHeader({ list, order, orderBy, onRequestSort }: ITableHeade
         <TableHead>
             <TableRow>
                 {list.map((item) => (
-                    <TableCell key={item.id} align={item.align ? item.align : 'center'}>
+                    <TableCell
+                        key={item.id}
+                        align={item.align ? (item.align as IAlignTable) : 'center'}
+                    >
                         <TableSortLabel
                             active={orderBy === item.id}
                             direction={orderBy === item.id ? order : Order.asc}

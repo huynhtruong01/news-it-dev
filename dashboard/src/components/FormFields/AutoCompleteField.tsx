@@ -1,15 +1,15 @@
-import { Autocomplete, TextField, AutocompleteProps } from '@mui/material'
-import { Path, FieldValues, Controller } from 'react-hook-form'
+import { Autocomplete, TextField } from '@mui/material'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { IOptionItem } from '../../models'
 
-export type IAutoCompleteFieldProps<TFormValues> = {
-    form: TFormValues
+export type IAutoCompleteFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     placeholder?: string
     disabled: boolean
     list: IOptionItem[]
-} & AutocompleteProps<IOptionItem, false, false, false>
+}
 
 export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>({
     form,
@@ -18,7 +18,6 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
     placeholder = '',
     disabled,
     list,
-    ...rest
 }: IAutoCompleteFieldProps<TFormValues>) {
     const {
         control,
@@ -58,7 +57,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
                             label={label}
                             placeholder={placeholder}
                             error={!!error?.message}
-                            helperText={error?.message || ''}
+                            helperText={(error?.message as string) || ''}
                             margin="normal"
                         />
                     )}

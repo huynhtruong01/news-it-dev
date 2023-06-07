@@ -1,13 +1,15 @@
-import { InputField, ColorField, ImageField } from '../FormFields'
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IHashTagData } from '../../models'
-import { useForm } from 'react-hook-form'
 import { Box, Modal } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
 import { hashTagsApi } from '../../api'
+import { SIZE_10_MB } from '../../consts'
 import { useToast } from '../../hooks'
+import { IHashTagData } from '../../models'
+import { checkSizeImg, checkTypeImg } from '../../utils'
 import { ButtonForm } from '../Common'
+import { ColorField, ImageField, InputField } from '../FormFields'
 
 export interface IHashTagModalFormProps {
     initValues: IHashTagData
@@ -22,8 +24,10 @@ const schema = yup.object().shape({
     color: yup.string().required('Please enter color.'),
     iconImage: yup
         .mixed<File>()
-        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file))
-        .test('size-img', 'Maximum 10MB.', (file) => checkSizeImg(file, SIZE_10_MB)),
+        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file as File))
+        .test('size-img', 'Maximum 10MB.', (file) =>
+            checkSizeImg(file as File, SIZE_10_MB)
+        ),
 })
 
 export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFormProps) {
@@ -54,11 +58,11 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
 
     const handleUpdate = async (values: IHashTagData) => {
         try {
-            await hashTagsApi.updateHashTag({ ...values, id: initValues.id })
+            await hashTagsApi.updateHashTag({ ...values, id: initValues.id as number })
 
             toastSuccess(`Update tag '${values.name}' successfully.`)
         } catch (error) {
-            throw new Error(error.message as string)
+            throw new Error((error as Error).message as string)
         }
     }
 
@@ -68,7 +72,7 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
 
             toastSuccess(`Add tag '${res.data.hashTag.name}' successfully.`)
         } catch (error) {
-            throw new Error(error.message as string)
+            throw new Error((error as Error).message as string)
         }
     }
 
@@ -116,21 +120,21 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
                         marginBottom: 3,
                     }}
                 >
-                    <InputField
+                    <InputField<IHashTagData>
                         form={form}
                         name={'title'}
                         label={'Title'}
                         disabled={isSubmitting}
                         placeholder={'Enter title'}
                     />
-                    <InputField
+                    <InputField<IHashTagData>
                         form={form}
                         name={'name'}
                         label={'Name'}
                         disabled={isSubmitting}
                         placeholder={'Enter name'}
                     />
-                    <InputField
+                    <InputField<IHashTagData>
                         form={form}
                         name={'description'}
                         label={'Description'}
@@ -139,15 +143,15 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
                         minRows={4}
                         multiline
                     />
-                    <ImageField
+                    <ImageField<IHashTagData>
                         form={form}
                         name={'iconImage'}
                         label={'Icon Image'}
                         disabled={isSubmitting}
-                        initValue={initValues.iconImage}
+                        initValue={initValues.iconImage as string}
                         placeholder={'Enter cover image'}
                     />
-                    <ColorField
+                    <ColorField<IHashTagData>
                         form={form}
                         name={'color'}
                         label={'Color'}

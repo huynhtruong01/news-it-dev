@@ -50,14 +50,14 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     marginBottom: 3,
                 }}
             >
-                <InputField
+                <InputField<ILoginValues>
                     form={form}
                     label="Email"
                     name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'Enter email'}
                 />
-                <PasswordField
+                <PasswordField<ILoginValues>
                     form={form}
                     label="Password"
                     name="password"

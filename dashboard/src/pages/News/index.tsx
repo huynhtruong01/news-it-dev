@@ -4,7 +4,6 @@ import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { SearchFilter } from '../../components/Filters'
 import { NewsFilters, NewsTable } from '../../components/News'
-import { initNewsFormValues } from '../../data'
 import { IFilters, INews, INewsData } from '../../models'
 import { Order } from '../../enums'
 import { theme } from '../../utils'
@@ -16,6 +15,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { newsApi } from '../../api'
 import { useToast } from '../../hooks'
 import { getAllHashTags } from '../../store/hashTag/thunkApi'
+import { initNewsFormValues } from '../../data'
 
 export interface INewsProps {
     pNews: INews[]

@@ -64,3 +64,5 @@ export interface IStatisticalNums {
     numRole: number
     numLikes: number
 }
+
+export type IAlignTable = 'center' | 'inherit' | 'left' | 'right' | 'justify' | undefined

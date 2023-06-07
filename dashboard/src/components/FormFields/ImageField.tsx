@@ -1,5 +1,5 @@
 import { Box, BoxProps, Typography, FormLabel, FormHelperText } from '@mui/material'
-import { Controller, FieldValues, Path } from 'react-hook-form'
+import { Controller, FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import { theme, generateLinkImg } from '../../utils'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { indigo, red } from '@mui/material/colors'
@@ -13,8 +13,8 @@ const useStyles = makeStyles({
     },
 })
 
-export type IImageFieldProps<TFormValues> = {
-    form: TFormValues
+export type IImageFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
@@ -28,7 +28,6 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
     label,
     disabled,
     initValue,
-    placeholder = '',
     ...rest
 }: IImageFieldProps<TFormValues>) {
     const styles = useStyles()
@@ -42,8 +41,6 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
         watch,
     } = form
     const error = errors[name]
-
-    console.log('init img: ', initValue, img)
 
     useEffect(() => {
         setImg(initValue)
@@ -68,7 +65,7 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
     }
 
     const handleCancel = () => {
-        setValue(name, undefined)
+        setValue(name, undefined as PathValue<TFormValues, Path<TFormValues>>)
         setImg(undefined)
 
         trigger(name)
@@ -83,7 +80,7 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
         <Controller
             control={control}
             name={name}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange } }) => (
                 <Box
                     sx={{
                         margin: theme.spacing(2, 0, 4),
@@ -165,7 +162,7 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
                                     margin: theme.spacing(0.5, 1.75, 0),
                                 }}
                             >
-                                {error?.message || ''}
+                                {(error?.message as string) || ''}
                             </FormHelperText>
                             <input
                                 type="file"

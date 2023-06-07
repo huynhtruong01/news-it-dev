@@ -20,13 +20,11 @@ export const getRoles = createAsyncThunk('role/getRoles', async (params: IFilter
 
 export const addRole = createAsyncThunk('role/addRole', async (data: IRoleData) => {
     const result = await rolesApi.addRole(data)
-    console.log('result add role: ', result)
     return result.data.role
 })
 
 export const updateRole = createAsyncThunk('role/updateRole', async (data: IRoleData) => {
     const result = await rolesApi.updateRole(data)
-    console.log('result add role: ', result)
     return result.data.role
 })
 
@@ -41,7 +39,7 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IRoleStore>) => 
     builders.addCase(
         getAllRoles.fulfilled,
         (state: IRoleStore, action: PayloadAction<IRole[]>) => {
-            const newRoleSelects = generateOptions<IRole>(action.payload)
+            const newRoleSelects = generateOptions(action.payload)
             state.roleSelects = newRoleSelects
         }
     )

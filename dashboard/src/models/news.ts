@@ -16,6 +16,7 @@ export interface INewsData {
     user?: string
     numLikes?: number
     hashTags: IOptionItem[]
+    hashTagIds?: number[]
     readTimes: number
     hashTagOptionIds?: IOptionItem[]
 }

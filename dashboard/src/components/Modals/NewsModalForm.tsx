@@ -7,7 +7,7 @@ import {
 } from '../FormFields'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { INewsData, IOptionItem } from '../../models'
+import { INews, INewsData, IOptionItem } from '../../models'
 import { selectStatus } from '../../data'
 import { generateIds, checkTypeImg, checkSizeImg } from '../../utils'
 import { SIZE_10_MB, SIZE_4_MB } from '../../consts'
@@ -38,8 +38,10 @@ const schema = yup.object().shape({
             if (!((thumbnailImage && coverImage) || file?.name)) return
             if (file?.name) return true
         })
-        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file))
-        .test('size-img', 'Maximum 4MB.', (file) => checkSizeImg(file, SIZE_4_MB)),
+        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file as File))
+        .test('size-img', 'Maximum 4MB.', (file) =>
+            checkSizeImg(file as File, SIZE_4_MB)
+        ),
     coverImage: yup
         .mixed<File>()
         .test('is-nullable-cover', 'Please choose cover image.', function (file) {
@@ -47,14 +49,16 @@ const schema = yup.object().shape({
             if (!((thumbnailImage && coverImage) || file?.name)) return
             if (file?.name) return true
         })
-        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file))
-        .test('size-img', 'Maximum 10MB.', (file) => checkSizeImg(file, SIZE_10_MB)),
+        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file as File))
+        .test('size-img', 'Maximum 10MB.', (file) =>
+            checkSizeImg(file as File, SIZE_10_MB)
+        ),
     content: yup.string().required('Please enter news content.'),
 })
 
 const generateNewValues = (values: INewsData) => {
     const { hashTagOptionIds, ...rest } = values
-    const ids = generateIds(hashTagOptionIds)
+    const ids = generateIds(hashTagOptionIds as IOptionItem[]) as number[]
 
     return {
         newValues: rest,
@@ -101,9 +105,13 @@ function NewsModalForm({
     const handleUpdate = async (values: INewsData) => {
         try {
             const { newValues, ids } = generateNewValues(values)
-            await newsApi.updateNews({ ...newValues, hashTagIds: ids, id: initValues.id })
+            await newsApi.updateNews({
+                ...newValues,
+                hashTagIds: ids as number[],
+                id: initValues.id,
+            } as INews)
 
-            toastSuccess(`Update user '${newsValue.title}' successfully.`)
+            toastSuccess(`Update user '${newValues?.title}' successfully.`)
         } catch (error) {
             throw new Error((error as Error).message as string)
         }
@@ -176,14 +184,14 @@ function NewsModalForm({
                                 flex: 1,
                             }}
                         >
-                            <InputField
+                            <InputField<INewsData>
                                 form={form}
                                 name={'title'}
                                 label={'Title'}
                                 disabled={isSubmitting}
                                 placeholder={'Enter title'}
                             />
-                            <InputField
+                            <InputField<INewsData>
                                 form={form}
                                 name={'sapo'}
                                 label={'Sapo'}
@@ -196,15 +204,14 @@ function NewsModalForm({
                                     gap: 2,
                                 }}
                             >
-                                <InputField
+                                <InputField<INewsData>
                                     type="number"
                                     form={form}
                                     name={'readTimes'}
                                     label={'Read Times'}
                                     disabled={isSubmitting}
                                 />
-                                <SelectField
-                                    type="number"
+                                <SelectField<INewsData>
                                     form={form}
                                     name={'status'}
                                     label={'Status'}
@@ -212,7 +219,7 @@ function NewsModalForm({
                                     selects={selectStatus}
                                 />
                             </Box>
-                            <AutoCompleteField
+                            <AutoCompleteField<INewsData>
                                 form={form}
                                 name={'hashTagOptionIds'}
                                 label={'Tags'}
@@ -226,26 +233,26 @@ function NewsModalForm({
                                 width: '25%',
                             }}
                         >
-                            <ImageField
+                            <ImageField<INewsData>
                                 form={form}
                                 name={'thumbnailImage'}
                                 label={'Thumbnail Image'}
                                 disabled={isSubmitting}
-                                initValue={initValues.thumbnailImage}
+                                initValue={initValues.thumbnailImage as string}
                                 placeholder={'Enter thumbnail image'}
                             />
-                            <ImageField
+                            <ImageField<INewsData>
                                 form={form}
                                 name={'coverImage'}
                                 label={'Cover Image'}
                                 disabled={isSubmitting}
-                                initValue={initValues.coverImage}
+                                initValue={initValues.coverImage as string}
                                 placeholder={'Enter cover image'}
                             />
                         </Box>
                     </Box>
 
-                    <EditorField
+                    <EditorField<INewsData>
                         form={form}
                         name={'content'}
                         label={'Content'}

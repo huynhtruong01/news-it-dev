@@ -41,7 +41,7 @@ export function ButtonForm<InitValues>({
                 startIcon={initValues ? <EditIcon /> : <AddIcon />}
                 disabled={disabled}
             >
-                {initValues?.id ? 'Update' : 'Add'}
+                {initValues ? 'Update' : 'Add'}
             </Button>
         </Box>
     )

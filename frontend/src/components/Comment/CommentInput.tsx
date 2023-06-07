@@ -1,15 +1,7 @@
 import { IComment, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
-import {
-    Avatar,
-    Box,
-    BoxProps,
-    Button,
-    Stack,
-    TextField,
-    useMediaQuery,
-} from '@mui/material'
+import { Avatar, Box, BoxProps, Button, Stack } from '@mui/material'
 import { TFunction } from 'i18next'
 import {
     Dispatch,
@@ -17,9 +9,11 @@ import {
     MutableRefObject,
     SetStateAction,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from 'react'
+import { Mention, MentionsInput } from 'react-mentions'
 import { connect } from 'react-redux'
 
 export interface ICommentInputProps extends BoxProps {
@@ -36,7 +30,7 @@ export interface ICommentInputProps extends BoxProps {
 
 function CommentInput({
     pUser,
-    commentInputRef,
+    // commentInputRef,
     initValue,
     onCommentChange,
     isReply = false,
@@ -46,7 +40,7 @@ function CommentInput({
     t,
     ...rest
 }: ICommentInputProps) {
-    const isSmallScreen = useMediaQuery('(min-width:320px)')
+    // const isSmallScreen = useMediaQuery('(min-width:320px)')
     const inputRef = useRef<HTMLElement | null>(null)
     const [value, setValue] = useState<string>(initValue)
 
@@ -55,6 +49,10 @@ function CommentInput({
             inputRef.current.focus()
         }
     }, [isReply])
+
+    const mentions = useMemo(() => {
+        return pUser?.following?.map((u) => ({ id: u.id, display: u.username }))
+    }, [pUser])
 
     const handleCommentSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -103,7 +101,7 @@ function CommentInput({
                 )}
                 <Box component="form" onSubmit={handleCommentSubmit} flex={1}>
                     <Box marginBottom={1.5}>
-                        <TextField
+                        {/* <TextField
                             inputRef={commentInputRef ? commentInputRef : inputRef}
                             value={value}
                             fullWidth
@@ -116,7 +114,14 @@ function CommentInput({
                                     borderRadius: theme.spacing(1),
                                 },
                             }}
-                        />
+                        /> */}
+                        <MentionsInput
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            placeholder={t('placeholder.add_discussion') as string}
+                        >
+                            <Mention trigger="@" data={mentions} />
+                        </MentionsInput>
                     </Box>
                     <Stack
                         direction="row"
@@ -145,19 +150,6 @@ function CommentInput({
                         >
                             {t('button.submit')}
                         </Button>
-                        {/* <Button
-                            type="button"
-                            variant="contained"
-                            sx={{
-                                backgroundColor: theme.palette.grey[700],
-                                '&:hover': {
-                                    backgroundColor: theme.palette.grey[900],
-                                },
-                            }}
-                            onClick={() => setValue('')}
-                        >
-                            {t('button.clear')}
-                        </Button> */}
                         {(isReply || isEdit) && (
                             <Button
                                 type="button"

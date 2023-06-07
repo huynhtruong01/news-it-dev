@@ -4,7 +4,7 @@ import { red } from '@mui/material/colors'
 import { Dispatch, MouseEvent, SetStateAction } from 'react'
 import { userHeaders } from '../../data'
 import { ActiveSelectName, RoleSelectName } from '../../enums'
-import { IFilters, IRole, IUser, IUserData } from '../../models'
+import { IFilters, IUser, IUserData } from '../../models'
 import { formatDate, generateOptions } from '../../utils'
 import { TableCellImage, TableWrapper } from '../Common'
 
@@ -30,7 +30,7 @@ export function UserTable({
     setUser,
 }: IUserTableProps) {
     const handleSetInitValues = (values: IUser) => {
-        const roleOptionIds = generateOptions<IRole>(values.roles || [])
+        const roleOptionIds = generateOptions(values.roles || [])
 
         const newInitValues: IUserData = {
             id: values.id,
