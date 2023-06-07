@@ -10,6 +10,7 @@ import { getNotifies } from '@/store/notify/thunkApi'
 import { IUser } from '@/models'
 import { useTranslation } from 'react-i18next'
 import { Seo } from '@/components/Common'
+import { IMAGE_PREVIEW } from '@/consts'
 
 export interface IMainContentProps {
     pUser: IUser | null
@@ -48,6 +49,7 @@ function MainContent({
                     'title_document.news_community'
                 )}`}
                 url={window.location.href}
+                image={IMAGE_PREVIEW}
             />
             <Grid container spacing={2}>
                 <Grid

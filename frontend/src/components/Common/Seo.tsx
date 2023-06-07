@@ -1,3 +1,4 @@
+import { IMAGE_PREVIEW } from '@/consts'
 import { Helmet } from 'react-helmet'
 
 export interface ISeoProps {
@@ -7,7 +8,7 @@ export interface ISeoProps {
     url?: string
 }
 
-export function Seo({ title, description = '', image, url }: ISeoProps) {
+export function Seo({ title, description = '', image = IMAGE_PREVIEW, url }: ISeoProps) {
     return (
         <Helmet>
             <title>{title}</title>
