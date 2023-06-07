@@ -126,7 +126,7 @@ function ProfileUser({
                 <Seo
                     title={user.username}
                     url={window.location.href}
-                    image={user.avatar}
+                    image={user.avatar as string}
                 />
             )}
             <Box

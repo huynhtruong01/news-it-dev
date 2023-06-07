@@ -13,6 +13,10 @@ const schema = yup.object().shape({
     emailAddress: yup.string().required('Please enter email').email('Invalid email'),
 })
 
+export interface IResetField {
+    emailAddress: string
+}
+
 export interface IConfirmEmailFormProps {
     onConfirmPassword: (data: { emailAddress: string }) => Promise<void>
 }
@@ -21,7 +25,7 @@ export function ConfirmEmailForm({ onConfirmPassword }: IConfirmEmailFormProps) 
     const { t } = useTranslation()
     const navigate = useNavigate()
 
-    const form = useForm<{ emailAddress: string }>({
+    const form = useForm<IResetField>({
         defaultValues: {
             emailAddress: '',
         },
@@ -34,7 +38,7 @@ export function ConfirmEmailForm({ onConfirmPassword }: IConfirmEmailFormProps) 
         formState: { isSubmitting },
     } = form
 
-    const handleConfirmEmail = async (values: { emailAddress: string }) => {
+    const handleConfirmEmail = async (values: IResetField) => {
         try {
             await onConfirmPassword(values)
             reset()
@@ -49,7 +53,7 @@ export function ConfirmEmailForm({ onConfirmPassword }: IConfirmEmailFormProps) 
     return (
         <Box component={'form'} onSubmit={handleSubmit(handleConfirmEmail)}>
             <Box marginBottom={3}>
-                <InputField
+                <InputField<IResetField>
                     form={form}
                     label={t('input.email')}
                     name="emailAddress"

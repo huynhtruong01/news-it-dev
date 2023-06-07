@@ -10,7 +10,7 @@ export interface IUserData {
     lastName: string
     emailAddress: string
     isAdmin: boolean
-    avatar?: string
+    avatar?: string | File
     password?: string
     confirmPassword?: string
     roleOptionIds?: IRoleIds

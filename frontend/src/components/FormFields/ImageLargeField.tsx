@@ -1,5 +1,5 @@
 import { Box, BoxProps, Typography, FormLabel, FormHelperText } from '@mui/material'
-import { Controller, FieldValues, Path } from 'react-hook-form'
+import { Controller, FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import { theme, generateLinkImg } from '@/utils'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { indigo, red } from '@mui/material/colors'
@@ -14,8 +14,8 @@ const useStyles = makeStyles({
     },
 })
 
-export type IImageLargeFieldProps<TFormValues> = {
-    form: TFormValues
+export type IImageLargeFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
@@ -29,7 +29,6 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
     label,
     disabled,
     initValue,
-    placeholder = '',
     ...rest
 }: IImageLargeFieldProps<TFormValues>) {
     const { t } = useTranslation()
@@ -68,7 +67,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
     }
 
     const handleCancel = () => {
-        setValue(name, undefined)
+        setValue(name, undefined as PathValue<TFormValues, Path<TFormValues>>)
         setImg(undefined)
 
         trigger(name)
@@ -166,7 +165,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                                     margin: theme.spacing(0.5, 1.75, 0),
                                 }}
                             >
-                                {error?.message || ''}
+                                {(error?.message as string) || ''}
                             </FormHelperText>
                             <input
                                 ref={ref}

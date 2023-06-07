@@ -1,14 +1,14 @@
-import { InputField, PasswordField, CheckBoxField } from '@/components/FormFields'
-import { ILoginValues } from '@/models'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Box } from '@mui/material'
-import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
+import { InputField, PasswordField } from '@/components/FormFields'
 import { initLoginValues } from '@/data'
-import { enqueueSnackbar } from 'notistack'
-import LoadingButton from '@mui/lab/LoadingButton'
+import { ILoginValues } from '@/models'
 import { theme } from '@/utils'
+import { yupResolver } from '@hookform/resolvers/yup'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { Box } from '@mui/material'
+import { enqueueSnackbar } from 'notistack'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import * as yup from 'yup'
 
 export interface ILoginFormProps {
     onLoginSubmit: (values: ILoginValues) => Promise<void>
@@ -42,7 +42,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
             await onLoginSubmit(values)
             reset()
         } catch (error) {
-            enqueueSnackbar(error.message, {
+            enqueueSnackbar((error as Error).message, {
                 variant: 'error',
             })
         }
@@ -55,25 +55,25 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     marginBottom: 3,
                 }}
             >
-                <InputField
+                <InputField<ILoginValues>
                     form={form}
                     label={t('input.email')}
                     name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
                 />
-                <PasswordField
+                <PasswordField<ILoginValues>
                     form={form}
                     label={t('input.password')}
                     name="password"
                     disabled={isSubmitting}
                 />
-                <CheckBoxField
+                {/* <CheckBoxField<ILoginValues>
                     form={form}
                     label={t('input.remember_me')}
                     name="rememberMe"
                     disabled={isSubmitting}
-                />
+                /> */}
             </Box>
             <LoadingButton
                 type="submit"

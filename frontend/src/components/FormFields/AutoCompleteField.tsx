@@ -1,22 +1,16 @@
-import {
-    Autocomplete,
-    TextField,
-    AutocompleteProps,
-    Box,
-    InputLabel,
-} from '@mui/material'
-import { Path, FieldValues, Controller } from 'react-hook-form'
+import { Autocomplete, TextField, Box, InputLabel } from '@mui/material'
+import { Path, FieldValues, Controller, UseFormReturn } from 'react-hook-form'
 import { IObjectCommon, IOptionItem } from '@/models'
 import { theme } from '@/utils'
 
-export type IAutoCompleteFieldProps<TFormValues> = {
-    form: TFormValues
+export type IAutoCompleteFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     placeholder?: string
     disabled: boolean
     list: IOptionItem[]
-} & AutocompleteProps<IOptionItem, false, false, false>
+}
 
 export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>({
     form,
@@ -56,7 +50,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
                     onBlur={onBlur}
                     getOptionLabel={(option) => {
                         if (typeof option === 'string') return option
-                        return option.name
+                        return option.name as string
                     }}
                     renderInput={(params) => (
                         <Box margin={theme.spacing(2, 0, 1)} width={'100%'}>
@@ -73,7 +67,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
                                 {...params}
                                 placeholder={placeholder}
                                 error={!!error?.message}
-                                helperText={error?.message || ''}
+                                helperText={(error?.message as string) || ''}
                                 sx={{
                                     marginTop: 1,
                                     '.MuiInputBase-root': {

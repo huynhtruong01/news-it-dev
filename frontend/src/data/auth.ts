@@ -1,4 +1,4 @@
-import { ISignupValues, ILoginValues } from '@models/index'
+import { ISignupValues, ILoginValues } from '@/models'
 
 export const initSignupValues: ISignupValues = {
     firstName: '',

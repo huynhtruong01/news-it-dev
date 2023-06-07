@@ -108,7 +108,7 @@ function UserDetailHover({
                     }}
                 >
                     <Avatar
-                        src={user.avatar}
+                        src={user.avatar as string}
                         alt={user.username}
                         sx={{
                             width: 48,

@@ -5,7 +5,6 @@ import { theme } from '@/utils'
 import { useTranslation } from 'react-i18next'
 import { authApi } from '@/api'
 import { useParams } from 'react-router-dom'
-import { enqueueSnackbar } from 'notistack'
 
 export function ForgotPassword() {
     const { t } = useTranslation()
@@ -14,12 +13,11 @@ export function ForgotPassword() {
     const handleSetPassword = async (values: IForgotPassword) => {
         try {
             if (!params.token) return
-            const token = decodeURIComponent(params.token as string).replaceAll('_', '.')
+            const token = decodeURIComponent(params.token as string)
+                .split('_')
+                .join('.')
 
             await authApi.forgotPassword(values, token)
-            enqueueSnackbar(t('message.reset_password'), {
-                variant: 'success',
-            })
         } catch (error) {
             throw new Error((error as Error).message)
         }

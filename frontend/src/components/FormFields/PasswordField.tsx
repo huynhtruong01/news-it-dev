@@ -10,10 +10,10 @@ import {
     TextField,
 } from '@mui/material'
 import { useState } from 'react'
-import { Controller, FieldValues, Path } from 'react-hook-form'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 
-export type IPasswordFieldProps<TFormValues> = {
-    form: TFormValues
+export type IPasswordFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
@@ -75,7 +75,7 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
                             ),
                         }}
                         error={!!error?.message}
-                        helperText={error?.message || ''}
+                        helperText={(error?.message as string) || ''}
                         disabled={disabled}
                         size="small"
                         sx={{

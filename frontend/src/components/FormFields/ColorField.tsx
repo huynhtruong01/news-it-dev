@@ -1,14 +1,14 @@
-import { Controller, Path, FieldValues } from 'react-hook-form'
-import { TextFieldProps, Box, InputLabel } from '@mui/material'
-import { MuiColorInput } from 'mui-color-input'
 import { theme } from '@/utils'
+import { Box, BoxProps, InputLabel } from '@mui/material'
+import { MuiColorInput } from 'mui-color-input'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 
-export type IColorFieldProps<TFormValues> = {
-    form: TFormValues
+export type IColorFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
-} & TextFieldProps
+} & BoxProps
 
 export function ColorField<TFormValues extends FieldValues = FieldValues>({
     form,
@@ -28,7 +28,7 @@ export function ColorField<TFormValues extends FieldValues = FieldValues>({
             control={control}
             name={name}
             render={({ field: { onChange, value, onBlur } }) => (
-                <Box margin={theme.spacing(2, 0, 1)} width={'100%'}>
+                <Box {...rest} margin={theme.spacing(2, 0, 1)} width={'100%'}>
                     <InputLabel
                         error={!!error?.message}
                         sx={{

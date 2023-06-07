@@ -1,6 +1,5 @@
 export * from '@/data/common'
 export * from '@/data/auth'
-export * from '@/data/hashTag'
 export * from '@/data/news'
 export * from '@/data/comment'
 export * from '@/data/user'

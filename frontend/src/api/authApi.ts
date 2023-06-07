@@ -35,9 +35,15 @@ export const verifyUser = () => {
 }
 
 export const activeUser = (token: string) => {
-    return AxiosClient.post(`${BASE_URL}/active-user`, {
-        activeToken: token,
-    })
+    return AxiosClient.post(
+        `${BASE_URL}/active-user`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    )
 }
 
 export const logout = () => {

@@ -75,7 +75,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                             <Box>
                                 <Link to={linkUser}>
                                     <Avatar
-                                        src={user?.avatar}
+                                        src={user?.avatar as string}
                                         alt={user?.username}
                                         sx={{
                                             width: 40,

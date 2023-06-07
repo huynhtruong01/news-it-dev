@@ -1,11 +1,11 @@
 import { TextField, TextFieldProps, InputLabel, Box, Avatar, Stack } from '@mui/material'
 import { theme } from '@/utils'
-import { Controller, FieldValues, Path } from 'react-hook-form'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { useState } from 'react'
 import { generateLinkImg } from '@/utils'
 
-export type IImageFieldProps<TFormValues> = {
-    form: TFormValues
+export type IImageFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     placeholder?: string
@@ -69,7 +69,7 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
                             onBlur={onBlur}
                             disabled={disabled}
                             placeholder={placeholder}
-                            helperText={error?.message}
+                            helperText={(error?.message as string) || ''}
                             error={!!error?.message}
                             size="small"
                             sx={{

@@ -257,6 +257,23 @@ class UserService {
         }
     }
 
+    // get by email
+    async getByIdNoRelation(id: number) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: {
+                    id,
+                },
+            })
+
+            if (!user) return null
+
+            return user
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     // update
     async update(userId: number, data: User): Promise<User | null> {
         try {

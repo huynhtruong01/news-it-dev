@@ -1,9 +1,9 @@
-import { Controller, FieldValues, Path } from 'react-hook-form'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { TextField, TextFieldProps, InputLabel, Box } from '@mui/material'
 import { theme } from '@/utils'
 
-export type IInputFieldProps<TFormValues> = {
-    form: TFormValues
+export type IInputFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     placeholder?: string
@@ -47,7 +47,7 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
                         value={value}
                         disabled={disabled}
                         placeholder={placeholder}
-                        helperText={error?.message}
+                        helperText={(error?.message as string) || ''}
                         error={!!error?.message}
                         size="small"
                         sx={{

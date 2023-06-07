@@ -197,7 +197,8 @@
         "welcome_2": "Cộng đồng Tin tức IT là một cộng đồng tuyệt vời cho tất cả mọi người",
         "sidebar_header_desc": "Chúng tôi là nơi các lập trình viên chia sẻ, cập nhật thông tin và phát triển sự nghiệp của họ.",
         "reset_password": "Đặt lại mật khẩu thành công",
-        "check_your_email_reset_password": "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu"
+        "check_your_email_reset_password": "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu",
+        "active_account": "Kích hoạt tài khoản của bạn thành công"
     },
 
     "signout": {

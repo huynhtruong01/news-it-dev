@@ -66,14 +66,14 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                         gap: 2,
                     }}
                 >
-                    <InputField
+                    <InputField<ISignupValues>
                         form={form}
                         label="First Name"
                         name="firstName"
                         disabled={isSubmitting}
                         placeholder={'Enter first name'}
                     />
-                    <InputField
+                    <InputField<ISignupValues>
                         form={form}
                         label="Last Name"
                         name="lastName"
@@ -81,14 +81,14 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                         placeholder={'Enter last name'}
                     />
                 </Box>
-                <InputField
+                <InputField<ISignupValues>
                     form={form}
                     label="Username"
                     name="username"
                     disabled={isSubmitting}
                     placeholder={'Enter username'}
                 />
-                <InputField
+                <InputField<ISignupValues>
                     form={form}
                     label="Email"
                     name="emailAddress"
@@ -96,13 +96,13 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     placeholder={'Enter email'}
                 />
 
-                <PasswordField
+                <PasswordField<ISignupValues>
                     form={form}
                     label="Password"
                     name="password"
                     disabled={isSubmitting}
                 />
-                <PasswordField
+                <PasswordField<ISignupValues>
                     form={form}
                     label="Confirm Password"
                     name="confirmPassword"

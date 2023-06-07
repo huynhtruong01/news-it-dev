@@ -5,14 +5,14 @@ import { theme } from '@/utils'
 import { authApi } from '@/api'
 import { Link } from 'react-router-dom'
 import { AuthContainer } from '@/pages/Auth/AuthContainer'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { saveUserLogin } from '@/store/user'
 import { AppDispatch, AppState } from '@/store'
 import { setLs } from '@/utils'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect } from 'react'
-import { SIGNOUT_NAV } from '@/consts'
+// import { SIGNOUT_NAV } from '@/consts'
 import { useTranslation } from 'react-i18next'
 
 export interface ILoginProps {
@@ -23,7 +23,7 @@ export interface ILoginProps {
 function Login({ pUser, pSaveUserLogin }: ILoginProps) {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const location = useLocation()
+    // const location = useLocation()
 
     useEffect(() => {
         if (pUser) navigate(-1)
@@ -44,12 +44,13 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
                 variant: 'success',
             })
 
-            const checkPath = location.state?.from
-            if (!checkPath || checkPath === SIGNOUT_NAV) {
-                navigate('/')
-            } else {
-                navigate(-1)
-            }
+            // const checkPath = location.state?.from
+            // if (!checkPath || checkPath === SIGNOUT_NAV) {
+            //     navigate('/')
+            // } else {
+            //     navigate(-1)
+            // }
+            navigate('/')
         } catch (error) {
             throw new Error((error as Error).message)
         }

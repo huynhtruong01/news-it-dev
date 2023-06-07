@@ -49,7 +49,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
             await onSignupSubmit(values)
             reset()
         } catch (error) {
-            enqueueSnackbar(error.message, {
+            enqueueSnackbar((error as Error).message, {
                 variant: 'error',
             })
         }
@@ -76,14 +76,14 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                         xs: 1,
                     }}
                 >
-                    <InputField
+                    <InputField<ISignupValues>
                         form={form}
                         label={t('input.first_name')}
                         name="firstName"
                         disabled={isSubmitting}
                         placeholder={'Doe'}
                     />
-                    <InputField
+                    <InputField<ISignupValues>
                         form={form}
                         label={t('input.last_name')}
                         name="lastName"
@@ -91,20 +91,20 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                         placeholder={'John'}
                     />
                 </Stack>
-                <InputField
+                <InputField<ISignupValues>
                     form={form}
                     label={t('input.email')}
                     name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
                 />
-                <PasswordField
+                <PasswordField<ISignupValues>
                     form={form}
                     label={t('input.password')}
                     name="password"
                     disabled={isSubmitting}
                 />
-                <PasswordField
+                <PasswordField<ISignupValues>
                     form={form}
                     label={t('input.confirm_password')}
                     name="confirmPassword"

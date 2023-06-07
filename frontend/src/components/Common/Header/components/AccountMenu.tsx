@@ -91,7 +91,7 @@ function AccountMenu({
                     sx={{ borderRadius: '50% !important' }}
                 >
                     <Avatar
-                        src={pUser?.avatar}
+                        src={pUser?.avatar as string}
                         sx={{
                             width: 44,
                             height: 44,

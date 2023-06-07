@@ -1,10 +1,10 @@
 import { Box, FormHelperText, FormLabel } from '@mui/material'
-import { Controller, FieldValues, Path } from 'react-hook-form'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { theme } from '@/utils'
 import { TextEditor } from '@/components/Common'
 
-export type IEditorFieldProps<TFormValues> = {
-    form: TFormValues
+export type IEditorFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
@@ -51,7 +51,7 @@ export function EditorField<TFormValues extends FieldValues = FieldValues>({
                         onBlur={onBlur}
                         disabled={disabled}
                         placeholder={placeholder}
-                        error={error}
+                        error={!!error}
                     />
                     <FormHelperText
                         disabled={disabled}
@@ -60,7 +60,7 @@ export function EditorField<TFormValues extends FieldValues = FieldValues>({
                             margin: theme.spacing(0.5, 1.75, 0),
                         }}
                     >
-                        {error?.message || ''}
+                        {(error?.message as string) || ''}
                     </FormHelperText>
                 </Box>
             )}

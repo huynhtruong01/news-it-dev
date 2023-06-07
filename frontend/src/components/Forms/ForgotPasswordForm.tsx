@@ -63,16 +63,16 @@ export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) 
     return (
         <Box component={'form'} onSubmit={handleSubmit(handleSetPassword)}>
             <Box marginBottom={3}>
-                <PasswordField
+                <PasswordField<IForgotPassword>
                     form={form}
                     label={t('input.password')}
                     name="password"
                     disabled={isSubmitting}
                 />
-                <PasswordField
+                <PasswordField<IForgotPassword>
                     form={form}
                     label={t('input.confirm_password')}
-                    name="Confirm password"
+                    name="confirmPassword"
                     disabled={isSubmitting}
                 />
             </Box>

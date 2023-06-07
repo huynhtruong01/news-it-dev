@@ -44,12 +44,12 @@ export function SettingsProfileForm({
         avatar: yup
             .mixed()
             .test('type-img', 'Invalid type image.', (file) => {
-                if (user.avatar) return true
-                return checkTypeImg(file)
+                if (user?.avatar) return true
+                return checkTypeImg(file as File)
             })
             .test('size-img', 'Maximum 10MB.', (file) => {
-                if (user.avatar) return true
-                return checkSizeImg(file, SIZE_10_MB)
+                if (user?.avatar) return true
+                return checkSizeImg(file as File, SIZE_10_MB)
             }),
         bandingColor: yup.string(),
     })
@@ -80,20 +80,21 @@ export function SettingsProfileForm({
             setValue('education', user?.education)
             setValue('work', user?.work)
             setValue('avatar', user?.avatar)
+            setValue('bandingColor', user?.bandingColor)
         }
     }, [user])
 
     const handleSaveInfoSubmit = async (values: IUserData) => {
         try {
-            if (user.id) {
-                const newValues: IUser = { ...values, id: user.id }
-                if (newValues.avatar instanceof File) {
+            if (user?.id) {
+                const newValues: IUser = { ...values, id: user?.id as number }
+                if (newValues?.avatar && (newValues.avatar as File) instanceof File) {
                     // covert img by cloudinary
-                    const { url } = await uploadImage(
-                        newValues.avatar,
+                    const img = await uploadImage(
+                        newValues.avatar as File,
                         import.meta.env.VITE_UPLOAD_PRESETS_AVATAR_CLOUDINARY
                     )
-                    newValues.avatar = url
+                    newValues.avatar = img?.url as string
                 }
 
                 // FETCH API TO UPDATE PROFILE
@@ -119,40 +120,40 @@ export function SettingsProfileForm({
                         {t('settings.user')}
                     </Typography>
                     <Box paddingTop={2}>
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="username"
                             label={t('input.username')}
                             disabled={isSubmitting}
                             placeholder={'John Doe'}
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="firstName"
                             label={t('input.first_name')}
                             disabled={isSubmitting}
                             placeholder={'Doe'}
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="lastName"
                             label={t('input.last_name')}
                             disabled={isSubmitting}
                             placeholder={'John'}
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="emailAddress"
                             label={t('input.email')}
                             disabled={isSubmitting}
                             placeholder={'john.doe@example.com'}
                         />
-                        <ImageField
+                        <ImageField<IUserData>
                             form={form}
                             name="avatar"
                             label={t('input.profile_image')}
                             disabled={isSubmitting}
-                            initValue={user?.avatar}
+                            initValue={user?.avatar as string}
                         />
                     </Box>
                 </Box>
@@ -162,23 +163,23 @@ export function SettingsProfileForm({
                         {t('settings.other_information')}
                     </Typography>
                     <Box paddingTop={2}>
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="websiteUrl"
                             label={t('input.website_url')}
                             disabled={isSubmitting}
                             placeholder={'https://yoursite.com'}
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="bio"
                             label={t('input.bio')}
                             disabled={isSubmitting}
-                            placeholder={t('placeholder.short_bio')}
+                            placeholder={t('placeholder.short_bio') as string}
                             minRows={4}
                             multiline
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="currentlyLearning"
                             label={t('input.currently_learning')}
@@ -186,7 +187,7 @@ export function SettingsProfileForm({
                             minRows={4}
                             multiline
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="skillLanguages"
                             label={t('input.skill_languages')}
@@ -195,7 +196,7 @@ export function SettingsProfileForm({
                             minRows={4}
                             multiline
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="education"
                             label={t('input.education')}
@@ -204,7 +205,7 @@ export function SettingsProfileForm({
                                 t('placeholder.where_did_you_go_to_school') as string
                             }
                         />
-                        <InputField
+                        <InputField<IUserData>
                             form={form}
                             name="work"
                             label={t('input.work')}
@@ -219,9 +220,9 @@ export function SettingsProfileForm({
                         {t('settings.banding')}
                     </Typography>
                     <Box paddingTop={2}>
-                        <ColorField
+                        <ColorField<IUserData>
                             form={form}
-                            name={'brand'}
+                            name={'bandingColor'}
                             label={t('input.banding_color')}
                             disabled={isSubmitting}
                             placeholder={'Enter color'}

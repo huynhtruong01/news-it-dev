@@ -1,8 +1,8 @@
-import { Controller, Path, FieldValues } from 'react-hook-form'
+import { Controller, Path, FieldValues, UseFormReturn } from 'react-hook-form'
 import { FormControlLabel, Checkbox, FormControlLabelProps } from '@mui/material'
 
-export type ICheckBoxFieldProps<TFormValues> = {
-    form: TFormValues
+export type ICheckBoxFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean

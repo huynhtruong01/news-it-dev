@@ -87,7 +87,7 @@ function CommentInput({
                 {!isEdit && (
                     <Box>
                         <Avatar
-                            src={pUser?.avatar}
+                            src={pUser?.avatar as string}
                             sx={{
                                 width: {
                                     md: 32,

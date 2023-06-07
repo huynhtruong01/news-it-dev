@@ -169,7 +169,7 @@ function NewsItem({
             >
                 <Link to={linkUser}>
                     <Avatar
-                        src={news?.user?.avatar || user?.avatar}
+                        src={(news?.user?.avatar as string) || (user?.avatar as string)}
                         alt={news?.user?.username || user?.username}
                     />
                 </Link>

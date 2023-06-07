@@ -1,7 +1,7 @@
 import { Box, Button, Stack, alpha, Grid } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { INewsForm, IOptionItem } from '@/models'
+import { INewsForm, IOptionItem, IUser, IStatus } from '@/models'
 import { initNewsFormValues, selectStatus } from '@/data'
 import { SIZE_4_MB, SIZE_10_MB } from '@/consts'
 import { checkTypeImg, checkSizeImg, theme } from '@/utils'
@@ -59,11 +59,11 @@ function CreateNewsForm({
             )
             .test('type-img', 'Invalid type image.', (file) => {
                 if (pInitValuesForm.thumbnailImage) return true
-                return checkTypeImg(file)
+                return checkTypeImg(file as File)
             })
             .test('size-img', 'Maximum 4MB.', (file) => {
                 if (pInitValuesForm.thumbnailImage) return true
-                return checkSizeImg(file, SIZE_4_MB)
+                return checkSizeImg(file as File, SIZE_4_MB)
             }),
         coverImage: yup
             .mixed<File>()
@@ -79,11 +79,11 @@ function CreateNewsForm({
             )
             .test('type-img', 'Invalid type image.', (file) => {
                 if (pInitValuesForm.coverImage) return true
-                return checkTypeImg(file)
+                return checkTypeImg(file as File)
             })
             .test('size-img', 'Maximum 10MB.', (file) => {
                 if (pInitValuesForm.coverImage) return true
-                return checkSizeImg(file, SIZE_10_MB)
+                return checkSizeImg(file as File, SIZE_10_MB)
             }),
         content: yup.string().required('Please enter news content.'),
         hashTagOptionIds: yup.array(),
@@ -131,7 +131,7 @@ function CreateNewsForm({
             await onNewsSubmit({ ...values, id: pInitValuesForm?.id })
             reset()
         } catch (error) {
-            enqueueSnackbar(error.message, {
+            enqueueSnackbar((error as Error).message, {
                 variant: 'error',
             })
         }
@@ -152,14 +152,14 @@ function CreateNewsForm({
                             width: '100%',
                         }}
                     >
-                        <InputField
+                        <InputField<INewsForm>
                             form={form}
                             name={'title'}
                             label={t('input.title')}
                             disabled={isSubmitting}
                             placeholder={t('placeholder.title') as string}
                         />
-                        <InputField
+                        <InputField<INewsForm>
                             form={form}
                             name={'sapo'}
                             label={t('input.sapo')}
@@ -177,15 +177,14 @@ function CreateNewsForm({
                                 },
                             }}
                         >
-                            <InputField
+                            <InputField<INewsForm>
                                 type="number"
                                 form={form}
                                 name={'readTimes'}
                                 label={t('input.read_times')}
                                 disabled={isSubmitting}
                             />
-                            <SelectField
-                                type="number"
+                            <SelectField<INewsForm>
                                 form={form}
                                 name={'status'}
                                 label={t('input.status')}
@@ -193,7 +192,7 @@ function CreateNewsForm({
                                 selects={selectStatus}
                             />
                         </Box>
-                        <AutoCompleteField
+                        <AutoCompleteField<INewsForm>
                             form={form}
                             name={'hashTagOptionIds'}
                             label={t('input.tags')}
@@ -212,25 +211,25 @@ function CreateNewsForm({
                             },
                         }}
                     >
-                        <ImageLargeField
+                        <ImageLargeField<INewsForm>
                             form={form}
                             name={'thumbnailImage'}
                             label={t('input.thumbnail_image')}
                             disabled={isSubmitting}
-                            initValue={pInitValuesForm.thumbnailImage}
+                            initValue={pInitValuesForm?.thumbnailImage as string}
                             placeholder={'Enter thumbnail image'}
                         />
-                        <ImageLargeField
+                        <ImageLargeField<INewsForm>
                             form={form}
                             name={'coverImage'}
                             label={t('input.cover_image')}
                             disabled={isSubmitting}
-                            initValue={pInitValuesForm.coverImage}
+                            initValue={pInitValuesForm?.coverImage as string}
                             placeholder={'Enter cover image'}
                         />
                     </Grid>
                 </Grid>
-                <EditorField
+                <EditorField<INewsForm>
                     form={form}
                     name={'content'}
                     label={t('input.content')}

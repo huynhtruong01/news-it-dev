@@ -175,7 +175,10 @@ function NotificationItem({
                 alignItems={'flex-start'}
             >
                 <Stack direction={'row'} alignItems={'center'} gap={1} marginBottom={2}>
-                    <Avatar src={notify.user?.avatar} alt={notify.user?.username} />
+                    <Avatar
+                        src={notify.user?.avatar as string}
+                        alt={notify.user?.username}
+                    />
                     <Box>
                         <Typography
                             variant="body1"

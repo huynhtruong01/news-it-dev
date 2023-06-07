@@ -197,7 +197,8 @@
         "welcome_2": "News Communicate is a community amazing for everyone",
         "sidebar_header_desc": "We're a place where coders share, stay up-to-date and grow their careers.",
         "reset_password": "Reset password successfully",
-        "check_your_email_reset_password": "Check your email to rest password"
+        "check_your_email_reset_password": "Check your email to rest password",
+        "active_account": "Active your account successfully"
     },
 
     "signout": {

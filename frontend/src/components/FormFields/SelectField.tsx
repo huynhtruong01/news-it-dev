@@ -1,4 +1,4 @@
-import { ISelectValue } from '@/models'
+import { IObjectCommon } from '@/models'
 import { theme } from '@/utils'
 import {
     Box,
@@ -8,15 +8,15 @@ import {
     MenuItem,
     Select,
 } from '@mui/material'
-import { Controller, FieldValues, Path } from 'react-hook-form'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-export type ISelectFieldProps<TFormValues> = {
-    form: TFormValues
+export type ISelectFieldProps<TFormValues extends FieldValues> = {
+    form: UseFormReturn<TFormValues, any>
     name: Path<TFormValues>
     label: string
     disabled: boolean
-    selects: ISelectValue[]
+    selects: IObjectCommon[]
 }
 
 export function SelectField<TFormValues extends FieldValues = FieldValues>({
@@ -84,7 +84,7 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                         </Select>
                     </FormControl>
                     <FormHelperText error={!!error?.message}>
-                        {error?.message || ''}
+                        {(error?.message as string) || ''}
                     </FormHelperText>
                 </Box>
             )}

@@ -35,7 +35,7 @@ export function UserNewsInfo({ user, link }: IUserNewsInfoProps) {
             <Box>
                 <Link to={link}>
                     <Avatar
-                        src={user.avatar}
+                        src={user.avatar as string}
                         alt={user?.username}
                         sx={{
                             width: 32,

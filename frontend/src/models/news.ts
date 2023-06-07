@@ -1,5 +1,5 @@
-import { NewsFilters, Status } from '@/enums'
-import { IHashTag, IUser, IImgType, IComment, IOptionItem } from '.'
+import { NewsFilters } from '@/enums'
+import { IHashTag, IUser, IImgType, IComment, IOptionItem, IStatus } from '.'
 import { ALL } from '@/consts'
 import { Socket } from 'socket.io-client'
 
@@ -34,7 +34,7 @@ export interface INewsForm {
     thumbnailImage?: IImgType
     coverImage?: IImgType
     content: string
-    status: Status.DRAFT | Status.PUBLIC | Status.UNPUBLIC
+    status: IStatus | string
     hashTags?: IHashTag[]
     readTimes?: number
     hashTagOptionIds?: IOptionItem[]

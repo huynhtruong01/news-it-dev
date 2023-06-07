@@ -89,19 +89,19 @@ function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
                         onSubmit={handleSubmit(handleSetPassword)}
                     >
                         <Box marginBottom={2}>
-                            <PasswordField
+                            <PasswordField<ISettingSetPassword>
                                 form={form}
                                 label={t('input.current_password')}
                                 name="currentPassword"
                                 disabled={isSubmitting}
                             />
-                            <PasswordField
+                            <PasswordField<ISettingSetPassword>
                                 form={form}
                                 label={t('input.password')}
                                 name="password"
                                 disabled={isSubmitting}
                             />
-                            <PasswordField
+                            <PasswordField<ISettingSetPassword>
                                 form={form}
                                 label={t('input.confirm_password')}
                                 name="confirmPassword"

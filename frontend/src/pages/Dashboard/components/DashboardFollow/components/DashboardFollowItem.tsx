@@ -26,7 +26,7 @@ function DashboardFollowItem({ follow }: IDashboardFollowItemProps) {
                 {/* WRITE LINK HERE */}
                 <Link to={linkUser}>
                     <Avatar
-                        src={follow.avatar}
+                        src={follow.avatar as string}
                         alt={follow.username}
                         sx={{
                             width: 64,

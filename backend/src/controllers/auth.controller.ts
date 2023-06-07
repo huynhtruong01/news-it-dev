@@ -1,5 +1,5 @@
 import { AppDataSource, sendEmail } from '@/config'
-import { MAX_AGE_ACCESS_TOKEN } from '@/consts'
+import { MAX_AGE_ACCESS_TOKEN, TYPE_REGISTER } from '@/consts'
 import { User } from '@/entities'
 import { Results, StatusCode, StatusText } from '@/enums'
 import { IFacebookPayload, IGooglePayload, RequestUser } from '@/models'
@@ -94,7 +94,7 @@ class AuthController {
             // generate token & send email
             const activeToken = authService.signActiveToken(req.body)
             if (emailAddress) {
-                const token = encodeURIComponent(activeToken).replaceAll('.', '_')
+                const token = encodeURIComponent(activeToken).split('.').join('_')
                 const url = `${process.env.BASE_URL}/active/${token}`
                 await sendEmail(emailAddress, url, 'Verify your email address.')
             }
@@ -118,11 +118,18 @@ class AuthController {
     // active token
     async activeUser(req: Request, res: Response) {
         try {
-            const { activeToken } = req.body
+            const bearer: string = req.headers['authorization'] as string
+            if (!bearer) {
+                res.status(StatusCode.FORBIDDEN).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Not found authorization.',
+                })
+                return
+            }
 
-            const decode = authService.verifyToken(activeToken)
-
-            // console.log(decode)
+            const token = bearer.split('.')[1]
+            const decode = authService.verifyTokenBuffer(token)
 
             if (!decode.newUser) {
                 res.status(StatusCode.BAD_REQUEST).json({
@@ -610,6 +617,15 @@ class AuthController {
                 return
             }
 
+            if (user.type !== TYPE_REGISTER) {
+                res.status(StatusCode.ERROR).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: `Can't reset password by email of ${user.type}`,
+                })
+                return
+            }
+
             const accessToken = authService.signAccessToken(user.id)
             const token = encodeURIComponent(accessToken).replaceAll('.', '_')
             const url = `${process.env.BASE_URL}/forgot-password/${token}`
@@ -632,16 +648,29 @@ class AuthController {
     }
 
     // forgot password (POST)
-    async forgotPassword(req: RequestUser, res: Response) {
+    async forgotPassword(req: Request, res: Response) {
         try {
             const { password, confirmPassword } = req.body
 
-            const user = await authService.getByEmail(req.user?.emailAddress as string)
+            const bearer: string = req.headers['authorization'] as string
+            if (!bearer) {
+                res.status(StatusCode.FORBIDDEN).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Not found authorization.',
+                })
+                return
+            }
+
+            const token = bearer.split('.')[1]
+            const decode = authService.verifyTokenBuffer(token)
+
+            const user = await userService.getByIdNoRelation(Number(decode.id))
             if (!user) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
-                    message: `Not found this user with email ${req.user?.emailAddress}`,
+                    message: `Not found this user by id`,
                 })
                 return
             }
@@ -658,7 +687,7 @@ class AuthController {
             const hashPassword = await commonService.hashPassword(password)
             user.password = hashPassword
 
-            const newUser = await userService.update(user.id, user)
+            const newUser = (await userService.updateAll(user.id, user, true)) as User
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,

@@ -92,6 +92,11 @@ class AuthService {
         return jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayloadUser
     }
 
+    // verify token by Buffer
+    verifyTokenBuffer(token: string) {
+        return JSON.parse(Buffer.from(token, 'base64').toString('utf-8'))
+    }
+
     // set token cookies
     setCookieToken(
         res: Response,
