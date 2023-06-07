@@ -1,7 +1,7 @@
-import { EmptyList, NewsList } from '@/components/Common'
+import { EmptyList, NewsList, TitleContainerPage } from '@/components/Common'
 import { INews, INewsFilters } from '@/models'
 import { DashboardReadingListFilters } from '@/pages/Dashboard/components/DashboardReadingList/components'
-import { Box, Stack } from '@mui/material'
+import { Box } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TitleDashboard } from '..'
@@ -32,29 +32,17 @@ export function DashboardReadingList({ saves, numSaves }: IDashboardReadingListP
 
     return (
         <Box>
-            <Stack
-                direction={{
-                    md: 'row',
-                    xs: 'column',
+            <TitleContainerPage
+                sx={{
+                    marginBottom: 2,
                 }}
-                justifyContent={{
-                    md: 'space-between',
-                    xs: 'center',
-                }}
-                alignItems={{
-                    md: 'center',
-                    xs: 'flex-start',
-                }}
-                gap={2}
-                marginBottom={2}
-                width={'100%'}
             >
                 <TitleDashboard
                     text={t('dashboard.reading_list') as string}
                     nums={numSaves}
                 />
                 <DashboardReadingListFilters setFilters={setFilters} />
-            </Stack>
+            </TitleContainerPage>
 
             <Box>
                 {newSaves.length === 0 && (

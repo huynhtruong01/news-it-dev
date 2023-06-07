@@ -1,10 +1,10 @@
-import { EmptyList } from '@/components/Common'
+import { EmptyList, TitleContainerPage } from '@/components/Common'
 import { INewsFilters, IUser } from '@/models'
 import {
     DashboardFollowFilters,
     DashboardFollowItem,
 } from '@/pages/Dashboard/components/DashboardFollow/components'
-import { Box, BoxProps, Grid, Stack } from '@mui/material'
+import { Box, BoxProps, Grid } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TitleDashboard } from '..'
@@ -46,26 +46,14 @@ export function DashboardFollow({
 
     return (
         <Box width={'100%'} {...rest}>
-            <Stack
-                direction={{
-                    md: 'row',
-                    xs: 'column',
+            <TitleContainerPage
+                sx={{
+                    marginBottom: 2,
                 }}
-                justifyContent={{
-                    md: 'space-between',
-                    xs: 'center',
-                }}
-                alignItems={{
-                    md: 'center',
-                    xs: 'flex-start',
-                }}
-                gap={2}
-                marginBottom={2}
-                width={'100%'}
             >
                 <TitleDashboard text={title} nums={numFollows} />
                 <DashboardFollowFilters setFilters={setFilters} />
-            </Stack>
+            </TitleContainerPage>
 
             {newFollows.length === 0 && <EmptyList title={t('empty.no_user_follow')} />}
             <Grid container spacing={2}>

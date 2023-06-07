@@ -1,13 +1,12 @@
-import { Box } from '@mui/material'
+import { ButtonLoadingForm } from '@/components/Common'
 import { InputField } from '@/components/FormFields'
 import { yupResolver } from '@hookform/resolvers/yup'
-import LoadingButton from '@mui/lab/LoadingButton'
+import { Box } from '@mui/material'
 import { enqueueSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
-import { theme } from '@/utils'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
 
 const schema = yup.object().shape({
     emailAddress: yup.string().required('Please enter email').email('Invalid email'),
@@ -61,24 +60,7 @@ export function ConfirmEmailForm({ onConfirmPassword }: IConfirmEmailFormProps) 
                     disabled={isSubmitting}
                 />
             </Box>
-            <LoadingButton
-                type="submit"
-                fullWidth
-                loading={isSubmitting}
-                loadingPosition="start"
-                variant="contained"
-                disabled={isSubmitting}
-                sx={{
-                    backgroundColor: theme.palette.primary.light,
-                    padding: theme.spacing(1.5),
-                    fontWeight: 500,
-                    '&:hover': {
-                        backgroundColor: theme.palette.primary.dark,
-                    },
-                }}
-            >
-                {t('button.send')}
-            </LoadingButton>
+            <ButtonLoadingForm loading={isSubmitting} text={t('button.send')} />
         </Box>
     )
 }

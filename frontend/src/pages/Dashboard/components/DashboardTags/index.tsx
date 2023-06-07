@@ -1,10 +1,10 @@
-import { EmptyList } from '@/components/Common'
+import { EmptyList, TitleContainerPage } from '@/components/Common'
 import { IHashTag, INewsFilters } from '@/models'
 import {
     DashboardTag,
     DashboardTagFilters,
 } from '@/pages/Dashboard/components/DashboardTags/components'
-import { Box, Grid, Stack } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TitleDashboard } from '..'
@@ -35,29 +35,17 @@ export function DashboardTags({ tags, numTags }: IDashboardTagsProps) {
 
     return (
         <Box>
-            <Stack
-                direction={{
-                    md: 'row',
-                    xs: 'column',
+            <TitleContainerPage
+                sx={{
+                    marginBottom: 2,
                 }}
-                justifyContent={{
-                    md: 'space-between',
-                    xs: 'center',
-                }}
-                alignItems={{
-                    md: 'center',
-                    xs: 'flex-start',
-                }}
-                gap={2}
-                marginBottom={2}
-                width={'100%'}
             >
                 <TitleDashboard
                     text={t('dashboard.following_tags') as string}
                     nums={numTags}
                 />
                 <DashboardTagFilters setFilters={setFilters} />
-            </Stack>
+            </TitleContainerPage>
 
             {newTags.length === 0 && <EmptyList title={t('empty.no_hash_tag_follow')} />}
             <Grid container spacing={2}>

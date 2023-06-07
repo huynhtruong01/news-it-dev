@@ -42,7 +42,6 @@ export const extraReducers = (builders: ActionReducerMapBuilder<INewsStore>) => 
                 recipients: [news.user],
                 readUsers: [],
             }
-            console.log(action.payload)
             socket.emit('notifyLikesNews', notify)
         }
     )

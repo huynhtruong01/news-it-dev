@@ -17,6 +17,7 @@ import { Route, Routes } from 'react-router-dom'
 import { DashboardFollow } from './components/DashboardFollow'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { Seo } from '@/components/Common'
 
 export interface IDashboardProps {
     pUser: IUser | null
@@ -29,9 +30,6 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
 
     useEffect(() => {
         if (pUser) {
-            document.title = `${t('title_document.dashboard')} - ${t(
-                'title_document.news_community'
-            )}`
             pGetProfile()
         } else {
             navigate('/login')
@@ -40,6 +38,11 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
 
     return (
         <Box>
+            <Seo
+                title={`${t('title_document.dashboard')} - ${t(
+                    'title_document.news_community'
+                )}`}
+            />
             <Box>
                 <Box marginBottom={2}>
                     <Typography component="h1" variant="h4" fontWeight={700}>

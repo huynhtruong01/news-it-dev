@@ -183,6 +183,7 @@ function NotificationItem({
                         <Typography
                             variant="body1"
                             sx={{
+                                lineHeight: 1,
                                 a: {
                                     fontWeight: 600,
                                 },

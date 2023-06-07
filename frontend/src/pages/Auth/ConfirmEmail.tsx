@@ -19,10 +19,12 @@ export function ConfirmEmail() {
         <Box>
             <Box
                 component={Paper}
-                width={430}
+                width={{
+                    md: 430,
+                    xs: '100%',
+                }}
                 margin="auto"
                 padding={theme.spacing(2.25, 4, 4)}
-                marginTop={3}
             >
                 <Typography
                     component="h1"

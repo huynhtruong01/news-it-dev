@@ -1,14 +1,13 @@
-import { Box } from '@mui/material'
+import { ButtonLoadingForm } from '@/components/Common'
 import { PasswordField } from '@/components/FormFields'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { IForgotPassword } from '@/models'
-import LoadingButton from '@mui/lab/LoadingButton'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Box } from '@mui/material'
 import { enqueueSnackbar } from 'notistack'
-import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
-import { theme } from '@/utils'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
 
 export interface IForgotPasswordFormProps {
     onSetPassword: (data: IForgotPassword) => Promise<void>
@@ -76,24 +75,10 @@ export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) 
                     disabled={isSubmitting}
                 />
             </Box>
-            <LoadingButton
-                type="submit"
-                fullWidth
+            <ButtonLoadingForm
                 loading={isSubmitting}
-                loadingPosition="start"
-                variant="contained"
-                disabled={isSubmitting}
-                sx={{
-                    backgroundColor: theme.palette.primary.light,
-                    padding: theme.spacing(1.5),
-                    fontWeight: 500,
-                    '&:hover': {
-                        backgroundColor: theme.palette.primary.dark,
-                    },
-                }}
-            >
-                {t('button.change_your_password')}
-            </LoadingButton>
+                text={t('button.change_your_password')}
+            />
         </Box>
     )
 }

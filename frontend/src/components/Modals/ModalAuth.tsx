@@ -17,6 +17,7 @@ import {
 import { ReactNode } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export interface IModalAuth {
     pIsShowModalAuth: boolean
@@ -67,6 +68,7 @@ function ModalAuthTitle({ children, onClose }: ModalAuthTitle) {
 }
 
 function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
+    const { t } = useTranslation()
     const isSmallScreen = useMediaQuery('(min-width:320px)')
 
     const handleCloseModalAuth = () => {
@@ -88,7 +90,7 @@ function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
                     variant={isSmallScreen ? 'body1' : 'h6'}
                     fontWeight={700}
                 >
-                    Log in to continue
+                    {t('auth.login_continue')}
                 </Typography>
             </ModalAuthTitle>
             <DialogContent
@@ -118,8 +120,7 @@ function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
                         <img src={LOGO} alt="" />
                     </Stack>
                     <Typography textAlign={'center'}>
-                        If you want to follow, comment, like, save; you need login to
-                        continue.
+                        {t('message.modal_text_auth')}
                     </Typography>
                     <Stack
                         gap={1}
@@ -134,7 +135,7 @@ function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
 
                                 a: {
                                     display: 'block',
-                                    padding: theme.spacing(1, 2),
+                                    padding: theme.spacing(1.5, 2),
                                 },
                             },
                         }}
@@ -150,7 +151,7 @@ function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
                             }}
                             onClick={handleCloseModalAuth}
                         >
-                            <Link to={'/login'}>Login</Link>
+                            <Link to={'/login'}>{t('auth.login')}</Link>
                         </Button>
                         <Button
                             fullWidth
@@ -167,7 +168,7 @@ function ModalAuth({ pIsShowModalAuth, pSetShowModalAuth }: IModalAuth) {
                             }}
                             onClick={handleCloseModalAuth}
                         >
-                            <Link to={'/signup'}>Create account</Link>
+                            <Link to={'/signup'}>{t('auth.create_account')}</Link>
                         </Button>
                     </Stack>
                 </Stack>

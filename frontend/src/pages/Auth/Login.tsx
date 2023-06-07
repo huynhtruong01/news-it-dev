@@ -14,6 +14,7 @@ import { enqueueSnackbar } from 'notistack'
 import { useEffect } from 'react'
 // import { SIGNOUT_NAV } from '@/consts'
 import { useTranslation } from 'react-i18next'
+import { Seo } from '@/components/Common'
 
 export interface ILoginProps {
     pUser: IUser | null
@@ -44,12 +45,6 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
                 variant: 'success',
             })
 
-            // const checkPath = location.state?.from
-            // if (!checkPath || checkPath === SIGNOUT_NAV) {
-            //     navigate('/')
-            // } else {
-            //     navigate(-1)
-            // }
             navigate('/')
         } catch (error) {
             throw new Error((error as Error).message)
@@ -59,6 +54,9 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
     return (
         <AuthContainer>
             <>
+                <Seo
+                    title={`${t('auth.login')} - ${t('title_document.news_community')}`}
+                />
                 <Box
                     sx={{
                         position: 'relative',

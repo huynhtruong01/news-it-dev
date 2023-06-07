@@ -44,6 +44,6 @@ export const SocketServer = (socket: Socket) => {
 
     socket.on('notifyLikesNews', async (notify) => {
         const newNotify = await notifyService.create(notify)
-        socket.to(notify.news.user.id.toString()).emit('notifyNews', newNotify)
+        socket.to('15').emit('notifyNews', newNotify)
     })
 }

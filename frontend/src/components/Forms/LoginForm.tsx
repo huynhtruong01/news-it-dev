@@ -1,9 +1,8 @@
+import { ButtonLoadingForm } from '@/components/Common'
 import { InputField, PasswordField } from '@/components/FormFields'
 import { initLoginValues } from '@/data'
 import { ILoginValues } from '@/models'
-import { theme } from '@/utils'
 import { yupResolver } from '@hookform/resolvers/yup'
-import LoadingButton from '@mui/lab/LoadingButton'
 import { Box } from '@mui/material'
 import { enqueueSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
@@ -68,31 +67,8 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     name="password"
                     disabled={isSubmitting}
                 />
-                {/* <CheckBoxField<ILoginValues>
-                    form={form}
-                    label={t('input.remember_me')}
-                    name="rememberMe"
-                    disabled={isSubmitting}
-                /> */}
             </Box>
-            <LoadingButton
-                type="submit"
-                fullWidth
-                loading={isSubmitting}
-                loadingPosition="start"
-                variant="contained"
-                disabled={isSubmitting}
-                sx={{
-                    backgroundColor: theme.palette.primary.light,
-                    padding: theme.spacing(1.5),
-                    fontWeight: 500,
-                    '&:hover': {
-                        backgroundColor: theme.palette.primary.dark,
-                    },
-                }}
-            >
-                {t('auth.login')}
-            </LoadingButton>
+            <ButtonLoadingForm loading={isSubmitting} text={t('auth.login')} />
         </Box>
     )
 }

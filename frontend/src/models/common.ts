@@ -38,22 +38,14 @@ export interface IFilters {
     isRead?: number
 }
 
-export interface ISelectValue {
-    name: string
-    value: any
-}
-
 export interface IUploadImg {
     public_id: string
     url: string
 }
 
 export type IFollow = IsFollow.FOLLOW | IsFollow.FOLLOWING
-
 export type ISynthetic = INews | IHashTag | IUser
-
 export type IImgType = string | File
-
 export type IStatus = Status.DRAFT | Status.PUBLIC | Status.UNPUBLIC
 
 export interface ISettingSetPassword {

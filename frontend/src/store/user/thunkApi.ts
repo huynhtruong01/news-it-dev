@@ -105,8 +105,4 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IUserStore>) => 
             socket.emit('followNotify', { user, userFollow })
         }
     )
-
-    builders.addCase(unfollowUserApi.fulfilled, (state: IUserStore) => {
-        return
-    })
 }

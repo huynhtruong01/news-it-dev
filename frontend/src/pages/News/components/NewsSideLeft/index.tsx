@@ -15,7 +15,7 @@ export interface INewsSideLeftProps extends BoxProps {
     pComment: IComment[]
 }
 
-function NewsSideLeft({ news, pComment, ...rest }: INewsSideLeftProps) {
+function NewsSideLeft({ news, pComment }: INewsSideLeftProps) {
     const commentLength = useMemo(() => {
         if (pComment.length) {
             return pComment.reduce((quantities, c) => {
@@ -28,7 +28,7 @@ function NewsSideLeft({ news, pComment, ...rest }: INewsSideLeftProps) {
     }, [pComment])
 
     return (
-        <Box {...rest} component="aside" position={'relative'} height={'100%'}>
+        <Box component="aside" position={'relative'} height={'100%'}>
             <Stack alignItems={'center'} gap={2} position={'sticky'} top={120}>
                 <ButtonNewsLike news={news} />
                 <ButtonNewsComments totalComments={commentLength} />

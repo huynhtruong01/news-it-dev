@@ -17,7 +17,8 @@
         "dont_have_account": "Don't have account by email?",
         "already_account": "Already your account?",
         "sign_up": "Sign up",
-        "title_have_password": "Have a password? Continue with your email address"
+        "title_have_password": "Have a password? Continue with your email address",
+        "login_continue": "Log in to continue"
     },
 
     "common": {
@@ -198,7 +199,10 @@
         "sidebar_header_desc": "We're a place where coders share, stay up-to-date and grow their careers.",
         "reset_password": "Reset password successfully",
         "check_your_email_reset_password": "Check your email to rest password",
-        "active_account": "Active your account successfully"
+        "active_account": "Active your account successfully",
+        "please": "Please",
+        "to_comment_news": "to comment this news",
+        "modal_text_auth": "If you want to follow, comment, like, save; you need login to continue."
     },
 
     "signout": {
@@ -213,7 +217,8 @@
         "no_news_reading": "No news reading",
         "no_hash_tag_follow": "No hash tag follow",
         "no_notifications": "No notification",
-        "no_news_reading_list": "No news reading list"
+        "no_news_reading_list": "No news reading list",
+        "no_tags": "No tags"
     },
 
     "title_document": {

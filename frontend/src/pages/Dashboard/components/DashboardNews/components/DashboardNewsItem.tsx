@@ -140,6 +140,7 @@ function DashboardNewsItem({
                         <Box
                             sx={{
                                 color: red[700],
+                                backgroundColor: red[50],
                             }}
                             onClick={handleDeleteNews}
                         >
@@ -148,6 +149,7 @@ function DashboardNewsItem({
                         <Box
                             sx={{
                                 color: green[700],
+                                backgroundColor: green[50],
                             }}
                             onClick={handleSetInitValueNewsForm}
                         >

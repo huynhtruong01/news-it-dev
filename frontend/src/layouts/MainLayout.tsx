@@ -28,11 +28,11 @@ export function MainLayout({ children }: IMainLayoutProps) {
                 sx={{
                     paddingTop: {
                         md: 3,
-                        xs: 1.5,
+                        xs: 2,
                     },
                     paddingBottom: {
                         md: 3,
-                        xs: 1.5,
+                        xs: 2,
                     },
                     minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
                 }}

@@ -5,7 +5,6 @@ import { Order } from '@/enums'
 import { IComment, ICommentData, IFilters, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { getAllCommentsById } from '@/store/comment/thunkApi'
-import { theme } from '@/utils'
 import { Box, BoxProps, Button, Stack, Typography, useMediaQuery } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
@@ -124,15 +123,7 @@ function NewsComment({
     }, [pComments])
 
     return (
-        <Box
-            {...rest}
-            ref={commentRef}
-            id="comments"
-            padding={{
-                lg: theme.spacing(4, 8),
-                xs: theme.spacing(2, 1.5),
-            }}
-        >
+        <Box {...rest} ref={commentRef} id="comments">
             <Box component="header" marginBottom={3}>
                 <Typography
                     component="h2"
@@ -144,15 +135,17 @@ function NewsComment({
             </Box>
 
             <Box>
-                <CommentInput
-                    initValue={''}
-                    commentInputRef={commentInputRef}
-                    onCommentChange={handleCommentSubmit}
-                    t={t}
-                    sx={{
-                        marginBottom: 6,
-                    }}
-                />
+                {pUser && (
+                    <CommentInput
+                        initValue={''}
+                        commentInputRef={commentInputRef}
+                        onCommentChange={handleCommentSubmit}
+                        t={t}
+                        sx={{
+                            marginBottom: 6,
+                        }}
+                    />
+                )}
                 {loadingComment && <ProgressLoading />}
                 {!loadingComment && <CommentList comments={pComments} t={t} />}
 

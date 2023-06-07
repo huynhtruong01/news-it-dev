@@ -1,5 +1,5 @@
 import { IMAGE_PREVIEW } from '@/consts'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 export interface ISeoProps {
     title: string
@@ -8,7 +8,12 @@ export interface ISeoProps {
     url?: string
 }
 
-export function Seo({ title, description = '', image = IMAGE_PREVIEW, url }: ISeoProps) {
+export function Seo({
+    title,
+    description = '',
+    image = IMAGE_PREVIEW,
+    url = window.location.href,
+}: ISeoProps) {
     return (
         <Helmet>
             <title>{title}</title>
@@ -20,7 +25,7 @@ export function Seo({ title, description = '', image = IMAGE_PREVIEW, url }: ISe
             <meta property="og:url" content={url} />
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />
-            <meta property="og:image" content={image} />
+            <meta property="og:image:src" content={image} />
 
             <meta property="twitter:card" content="summary_large_image" />
             <meta property="twitter:url" content={url} />

@@ -1,19 +1,18 @@
-import { Box, Stack, Typography, Grid } from '@mui/material'
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import {
-    SettingsProfile,
-    SettingsAccount,
-    SettingsNav,
-} from '@/pages/Settings/components'
-import { theme } from '@/utils'
+import { Seo, TitlePage } from '@/components/Common'
 import { IUser } from '@/models'
-import { connect } from 'react-redux'
+import {
+    SettingsAccount,
+    SettingsModalDelete,
+    SettingsNav,
+    SettingsProfile,
+} from '@/pages/Settings/components'
 import { AppState } from '@/store'
-import { Routes, Route } from 'react-router-dom'
-import { SettingsModalDelete } from '@/pages/Settings/components'
+import { theme } from '@/utils'
+import { Box, Grid, Stack } from '@mui/material'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 
 export interface ISettingsProps {
     pUser: IUser | null
@@ -24,17 +23,16 @@ function Settings({ pUser }: ISettingsProps) {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (pUser) {
-            document.title = `${t('title_document.settings')} - ${t(
-                'title_document.news_community'
-            )}`
-        } else {
-            navigate('/login')
-        }
+        if (!pUser) navigate('/login')
     }, [])
 
     return (
         <Box>
+            <Seo
+                title={`${t('title_document.settings')} - ${t(
+                    'title_document.news_community'
+                )}`}
+            />
             <Stack
                 gap={2}
                 sx={{
@@ -43,10 +41,7 @@ function Settings({ pUser }: ISettingsProps) {
                     margin: 'auto',
                 }}
             >
-                <Typography
-                    component="h1"
-                    variant="h4"
-                    fontWeight={700}
+                <TitlePage
                     sx={{
                         a: {
                             color: theme.palette.primary.light,
@@ -58,7 +53,7 @@ function Settings({ pUser }: ISettingsProps) {
                     }}
                 >
                     {t('settings.title')} <Link to={'/profile'}>@{pUser?.username}</Link>
-                </Typography>
+                </TitlePage>
 
                 <Box marginTop={2}>
                     <Grid container spacing={2}>

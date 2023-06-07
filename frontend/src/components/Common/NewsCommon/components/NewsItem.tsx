@@ -177,6 +177,7 @@ function NewsItem({
                     <Typography
                         variant="body1"
                         sx={{
+                            lineHeight: 1,
                             a: {
                                 fontWeight: 600,
                             },
@@ -221,6 +222,8 @@ function NewsItem({
                     <Link to={`/news/${news?.slug}`}>{news?.title}</Link>
                 </Typography>
                 <HashTagList tags={news?.hashTags as IHashTag[]} />
+
+                {/* tablet, laptop */}
                 <Stack
                     direction={'row'}
                     justifyContent={'space-between'}
@@ -313,6 +316,8 @@ function NewsItem({
                         </Button>
                     </Stack>
                 </Stack>
+
+                {/* mobile */}
                 <Stack
                     direction={'row'}
                     justifyContent={'space-between'}
@@ -343,6 +348,7 @@ function NewsItem({
                                         : alpha(theme.palette.secondary.main, 0.1),
                                 },
                             }}
+                            onClick={handleLikeNews}
                         >
                             {liked ? (
                                 <FavoriteIcon
@@ -354,7 +360,10 @@ function NewsItem({
                                 <FavoriteBorderIcon />
                             )}
                         </IconButton>
-                        <IconButton className={styles.button}>
+                        <IconButton
+                            className={styles.button}
+                            onClick={handleNavigateComment}
+                        >
                             <RiChat3Line />
                         </IconButton>
                     </Stack>

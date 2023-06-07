@@ -1,4 +1,4 @@
-import { EmptyList } from '@/components/Common'
+import { EmptyList, TitleContainerPage } from '@/components/Common'
 import { ALL } from '@/consts'
 import { INews, INewsFilters } from '@/models'
 import {
@@ -47,25 +47,14 @@ export function DashboardNews({ newsList, newsCount, ...rest }: IDashboardNewsPr
 
     return (
         <Box {...rest}>
-            <Stack
-                direction={{
-                    md: 'row',
-                    xs: 'column',
+            <TitleContainerPage
+                sx={{
+                    marginBottom: 2,
                 }}
-                justifyContent={{
-                    md: 'space-between',
-                    xs: 'center',
-                }}
-                alignItems={{
-                    md: 'center',
-                    xs: 'flex-start',
-                }}
-                gap={2}
-                marginBottom={2}
             >
                 <TitleDashboard text={t('dashboard.news') as string} nums={newsCount} />
                 <DashboardNewsFilters setFilters={setFilters} />
-            </Stack>
+            </TitleContainerPage>
 
             <Stack gap={2}>
                 {newNewsList.length === 0 && (

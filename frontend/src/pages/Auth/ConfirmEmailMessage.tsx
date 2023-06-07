@@ -13,12 +13,17 @@ export function ConfirmEmailMessage() {
             justifyContent={'center'}
             alignItems={'center'}
             height={`calc(100vh - ${HEADER_HEIGHT}px - 48px)`}
+            padding={3}
         >
             <Typography
                 component="span"
                 sx={{
                     fontSize: theme.typography.h6,
                     fontWeight: 700,
+                    textAlign: {
+                        md: 'none',
+                        xs: 'center',
+                    },
                 }}
             >
                 {t('message.check_your_email_reset_password')}

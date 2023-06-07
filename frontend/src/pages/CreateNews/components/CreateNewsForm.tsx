@@ -1,27 +1,27 @@
-import { Box, Button, Stack, alpha, Grid } from '@mui/material'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
-import { INewsForm, IOptionItem, IUser, IStatus } from '@/models'
-import { initNewsFormValues, selectStatus } from '@/data'
-import { SIZE_4_MB, SIZE_10_MB } from '@/consts'
-import { checkTypeImg, checkSizeImg, theme } from '@/utils'
-import * as yup from 'yup'
 import {
+    AutoCompleteField,
     EditorField,
+    ImageLargeField,
     InputField,
     SelectField,
-    AutoCompleteField,
-    ImageLargeField,
 } from '@/components/FormFields'
-import { AppState, AppDispatch } from '@/store'
-import { connect } from 'react-redux'
+import { SIZE_10_MB, SIZE_4_MB } from '@/consts'
+import { initNewsFormValues, selectStatus } from '@/data'
+import { INewsForm, IOptionItem, IUser } from '@/models'
+import { AppDispatch, AppState } from '@/store'
 import { getAllHashTags } from '@/store/hashTag/thunkApi'
-import { PayloadAction } from '@reduxjs/toolkit'
-import { useEffect } from 'react'
-import { enqueueSnackbar } from 'notistack'
-import { useNavigate } from 'react-router-dom'
+import { checkSizeImg, checkTypeImg, theme } from '@/utils'
+import { yupResolver } from '@hookform/resolvers/yup'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { Box, Button, Grid, Stack, alpha } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { enqueueSnackbar } from 'notistack'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import * as yup from 'yup'
 
 export interface ICreateNewsFormProps {
     onNewsSubmit: (values: INewsForm) => Promise<void>
@@ -91,11 +91,6 @@ function CreateNewsForm({
 
     useEffect(() => {
         if (pUser) {
-            document.title = `${
-                pInitValuesForm?.id
-                    ? t('title_document.update_news')
-                    : t('title_document.create_news')
-            } - ${t('title_document.news_community')}`
             pGetAllHashTags()
         } else {
             navigate('/login')

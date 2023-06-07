@@ -1,7 +1,7 @@
 import { SocialLogin } from '@/pages/Auth/components'
-import { Box, Paper, Typography, alpha } from '@mui/material'
 import { theme } from '@/utils'
-import { ReactNode, useEffect } from 'react'
+import { Box, Paper, Typography, alpha } from '@mui/material'
+import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export interface IAuthContainerProps {
@@ -10,12 +10,6 @@ export interface IAuthContainerProps {
 
 export function AuthContainer({ children }: IAuthContainerProps) {
     const { t } = useTranslation()
-
-    useEffect(() => {
-        document.title = `${t('title_document.welcome_title')} - ${t(
-            'title_document.news_community'
-        )}`
-    }, [])
 
     return (
         <Box

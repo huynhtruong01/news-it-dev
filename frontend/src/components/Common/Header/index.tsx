@@ -4,42 +4,18 @@ import {
     HeaderSearch,
 } from '@/components/Common/Header/components'
 import { theme } from '@/utils'
-import SearchIcon from '@mui/icons-material/Search'
-import {
-    Box,
-    Container,
-    IconButton,
-    InputAdornment,
-    Paper,
-    Stack,
-    TextField,
-    alpha,
-} from '@mui/material'
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Box, Container, Paper, Stack } from '@mui/material'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 export function Header() {
-    const { t } = useTranslation()
     const [searchVal, setSearchVal] = useState<string>('')
-    const searchRef = useRef<HTMLInputElement | null>(null)
     const location = useLocation()
     const navigate = useNavigate()
 
     useEffect(() => {
         if (!location.pathname.startsWith('/search')) setSearchVal('')
     }, [navigate])
-
-    const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target
-        setSearchVal(value)
-    }
-
-    const handleSearchNews = (e: FormEvent<HTMLElement>) => {
-        e.preventDefault()
-        navigate(`/search?q=${encodeURIComponent(searchVal)}`)
-        if (searchRef.current) searchRef.current.blur()
-    }
 
     return (
         <Paper
@@ -90,63 +66,28 @@ export function Header() {
                                 />
                             </Link>
                         </Box>
-                        <HeaderSearch searchVal={searchVal} setSearchVal={setSearchVal} />
-                    </Box>
-                    <Box
-                        component="form"
-                        onSubmit={handleSearchNews}
-                        sx={{
-                            display: {
-                                xs: 'block',
-                                md: 'none',
-                            },
-                            flex: 1,
-                        }}
-                    >
-                        <TextField
-                            inputRef={searchRef}
-                            value={searchVal}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment
-                                        position="start"
-                                        sx={{
-                                            marginRight: 0,
-                                        }}
-                                    >
-                                        <IconButton
-                                            type="submit"
-                                            sx={{
-                                                '&:hover': {
-                                                    backgroundColor: alpha(
-                                                        theme.palette.primary.main,
-                                                        0.1
-                                                    ),
-                                                    svg: {
-                                                        color: theme.palette.primary.main,
-                                                    },
-                                                },
-                                            }}
-                                        >
-                                            <SearchIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                            }}
-                            size="small"
-                            placeholder={`${t('common.search')}...`}
-                            onChange={handleSearchChange}
+                        <HeaderSearch
+                            searchVal={searchVal}
+                            setSearchVal={setSearchVal}
                             sx={{
-                                width: '100%',
-                                '.MuiInputBase-root': {
-                                    paddingRight: 0,
-                                },
-                                fieldset: {
-                                    paddingRight: 0,
+                                display: {
+                                    xs: 'none',
+                                    md: 'block',
                                 },
                             }}
                         />
                     </Box>
+                    <HeaderSearch
+                        searchVal={searchVal}
+                        setSearchVal={setSearchVal}
+                        sx={{
+                            flex: 1,
+                            display: {
+                                md: 'none',
+                                xs: 'block',
+                            },
+                        }}
+                    />
                     <Stack
                         direction={'row'}
                         sx={{

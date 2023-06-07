@@ -1,14 +1,13 @@
+import { ButtonLoadingForm } from '@/components/Common'
 import { InputField, PasswordField } from '@/components/FormFields'
+import { initSignupValues } from '@/data'
 import { ISignupValues } from '@/models'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Stack } from '@mui/material'
-import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
-import { initSignupValues } from '@/data'
 import { enqueueSnackbar } from 'notistack'
-import LoadingButton from '@mui/lab/LoadingButton'
-import { theme } from '@/utils'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import * as yup from 'yup'
 
 export interface ISignupFormProps {
     onSignupSubmit: (values: ISignupValues) => Promise<void>
@@ -111,24 +110,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     disabled={isSubmitting}
                 />
             </Box>
-            <LoadingButton
-                type="submit"
-                fullWidth
-                loading={isSubmitting}
-                loadingPosition="start"
-                variant="contained"
-                disabled={isSubmitting}
-                sx={{
-                    backgroundColor: theme.palette.primary.light,
-                    padding: theme.spacing(1.5),
-                    fontWeight: 500,
-                    '&:hover': {
-                        backgroundColor: theme.palette.primary.dark,
-                    },
-                }}
-            >
-                {t('auth.sign_up')}
-            </LoadingButton>
+            <ButtonLoadingForm loading={isSubmitting} text={t('auth.sign_up')} />
         </Box>
     )
 }

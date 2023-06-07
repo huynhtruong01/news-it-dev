@@ -140,13 +140,13 @@ function SocketClient({
 
     // NOTIFY
     useEffect(() => {
-        if (!pSocket) return
-        pSocket.on('notifyNews', (notify: INotify) => {
+        // if (!pSocket) return
+        pSocket?.on('notifyNews', (notify: INotify) => {
             pAddNotify(notify)
         })
 
         return () => {
-            pSocket.off('notifyNews')
+            pSocket?.off('notifyNews')
         }
     }, [dispatch, pSocket])
 

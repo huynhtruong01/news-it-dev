@@ -11,6 +11,7 @@ import { AppState } from '@/store'
 import { IUser } from '@/models'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Seo } from '@/components/Common'
 
 export interface ISignupProps {
     pUser: IUser | null
@@ -38,6 +39,7 @@ export function Signup({ pUser }: ISignupProps) {
 
     return (
         <AuthContainer>
+            <Seo title={`${t('auth.sign_up')} - ${t('title_document.news_community')}`} />
             <Box>
                 <SignupForm onSignupSubmit={handleSignupSubmit} />
                 <Typography

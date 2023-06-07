@@ -1,7 +1,8 @@
 import { IHashTag } from '@/models'
 import { Box, Grid } from '@mui/material'
 import { TagsItem } from '.'
-import { SkeletonHashTagList } from '@/components/Common'
+import { EmptyList, SkeletonHashTagList } from '@/components/Common'
+import { useTranslation } from 'react-i18next'
 
 export interface ITagsListProps {
     loading: boolean
@@ -9,8 +10,11 @@ export interface ITagsListProps {
 }
 
 export function TagsList({ tags, loading }: ITagsListProps) {
+    const { t } = useTranslation()
+
     return (
         <Box>
+            {tags.length === 0 && <EmptyList title={t('empty.no_tags')} />}
             {loading && <SkeletonHashTagList />}
             {!loading && (
                 <Grid container spacing={2}>

@@ -1,9 +1,10 @@
+import { Seo, TitleContainerPage, TitlePage } from '@/components/Common'
 import { Order } from '@/enums'
 import { IFilters, IHashTag } from '@/models'
 import { TagsFilters, TagsList } from '@/pages/Tags/components'
 import { AppDispatch, AppState } from '@/store'
 import { getHashTags } from '@/store/hashTag/thunkApi'
-import { Box, Stack, Typography, Skeleton } from '@mui/material'
+import { Box, Skeleton } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -24,12 +25,6 @@ function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
     })
 
     useEffect(() => {
-        document.title = `${t('title_document.tags')} - ${t(
-            'title_document.news_community'
-        )}`
-    }, [])
-
-    useEffect(() => {
         ;(async () => {
             try {
                 setLoading(true)
@@ -43,35 +38,23 @@ function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
 
     return (
         <Box>
-            <Stack
-                direction={{
-                    md: 'row',
-                    xs: 'column',
-                }}
-                justifyContent={{
-                    md: 'space-between',
-                    xs: 'flex-start',
-                }}
-                alignItems={{
-                    md: 'center',
-                    xs: 'flex-start',
-                }}
-                marginBottom={2}
-                gap={1}
-            >
+            <Seo
+                title={`${t('title_document.tags')} - ${t(
+                    'title_document.news_community'
+                )}`}
+            />
+            <TitleContainerPage>
                 {loading ? (
                     <Skeleton variant="rounded" width={130} height={38} />
                 ) : (
-                    <Typography component="h1" variant="h4" fontWeight={700}>
-                        {t('tags.title')}
-                    </Typography>
+                    <TitlePage>{t('tags.title')}</TitlePage>
                 )}
                 {loading ? (
                     <Skeleton variant="rounded" width={250} height={38} />
                 ) : (
                     <TagsFilters filters={filters} setFilters={setFilters} />
                 )}
-            </Stack>
+            </TitleContainerPage>
 
             <Box>
                 <TagsList tags={pTags} loading={loading} />

@@ -1,4 +1,4 @@
-import { TitlePage } from '@/components/Common'
+import { Seo, TitleContainerPage, TitlePage } from '@/components/Common'
 import { ALL } from '@/consts'
 import { INotify, INotifyFilters, ISetNotifications, IUser } from '@/models'
 import {
@@ -8,7 +8,9 @@ import {
 } from '@/pages/Notifications/components'
 import { AppDispatch, AppState } from '@/store'
 import { setNotificationFilters } from '@/store/notify'
-import { Box, Grid, Stack } from '@mui/material'
+import { getNotifies } from '@/store/notify/thunkApi'
+import { Box, Grid } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
@@ -19,6 +21,7 @@ export interface INotificationsProps {
     pNotifications: INotify[]
     pNotificationsTotal: number
     pSetNotificationsFilter: (data: ISetNotifications) => void
+    pGetNotifies: (id: number) => Promise<PayloadAction<unknown>>
 }
 
 export function Notifications({
@@ -26,6 +29,7 @@ export function Notifications({
     pNotifications,
     pNotificationsTotal,
     pSetNotificationsFilter,
+    pGetNotifies,
 }: INotificationsProps) {
     const { t } = useTranslation()
     const [filters, setFilters] = useState<INotifyFilters>({
@@ -37,13 +41,12 @@ export function Notifications({
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (pUser) {
-            document.title = `${t('title_document.notifications')} - ${t(
-                'title_document.news_community'
-            )}`
-        } else {
+        if (!pUser?.id) {
             navigate('/login')
+            return
         }
+
+        pGetNotifies(pUser.id)
     }, [])
 
     useEffect(() => {
@@ -53,59 +56,56 @@ export function Notifications({
     }, [filters])
 
     return (
-        <Box
-            sx={{
-                maxWidth: 1024,
-                margin: 'auto',
-            }}
-        >
-            <Stack
-                direction={{
-                    md: 'row',
-                    xs: 'column',
-                }}
-                justifyContent={{
-                    md: 'space-between',
-                    xs: 'center',
-                }}
-                alignItems={{
-                    md: 'center',
-                    xs: 'flex-start',
-                }}
-                gap={1.5}
-                marginBottom={2}
-                width={'100%'}
-            >
-                <TitlePage>
-                    {t('notifications.title')} ({pNotificationsTotal})
-                </TitlePage>
-                <NotificationSearchFilters setFilters={setFilters} />
-            </Stack>
-
-            <Grid
-                container
-                spacing={2}
+        <>
+            <Seo
+                title={`${t('title_document.notifications')} - ${t(
+                    'title_document.news_community'
+                )}`}
+            />
+            <Box
                 sx={{
-                    marginTop: 3,
+                    maxWidth: 1024,
+                    margin: 'auto',
                 }}
             >
+                <TitleContainerPage>
+                    <TitlePage>
+                        {t('notifications.title')} ({pNotificationsTotal})
+                    </TitlePage>
+                    <NotificationSearchFilters setFilters={setFilters} />
+                </TitleContainerPage>
+
                 <Grid
-                    item
+                    container
+                    spacing={2}
                     sx={{
-                        width: {
-                            md: '240px',
-                            xs: '100%',
+                        marginTop: {
+                            md: 3,
+                            xs: 0,
                         },
                     }}
                 >
-                    <NotificationNavFilters filters={filters} setFilters={setFilters} />
-                </Grid>
+                    <Grid
+                        item
+                        sx={{
+                            width: {
+                                md: '240px',
+                                xs: '100%',
+                            },
+                        }}
+                    >
+                        <NotificationNavFilters
+                            filters={filters}
+                            setFilters={setFilters}
+                        />
+                    </Grid>
 
-                <Grid item xs={12} md>
-                    <NotificationList notifications={pNotifications} />
+                    <Grid item xs={12} md>
+                        <NotificationList notifications={pNotifications} />
+                    </Grid>
                 </Grid>
-            </Grid>
-        </Box>
+            </Box>
+        </>
     )
 }
 
@@ -121,6 +121,8 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pSetNotificationsFilter: (data: ISetNotifications) =>
             dispatch(setNotificationFilters(data)),
+        pGetNotifies: (userId: number) =>
+            dispatch(getNotifies({ filters: { page: 1, limit: 100 }, userId })),
     }
 }
 

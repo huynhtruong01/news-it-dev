@@ -1,4 +1,5 @@
 import { hashTagApi } from '@/api'
+import { Seo } from '@/components/Common'
 import { NewsFilters } from '@/enums'
 import { IHashTag, INews, INewsFilters, IUser } from '@/models'
 import {
@@ -11,12 +12,14 @@ import { Box, Grid, Stack } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export interface ITagsDetailProps {
     pUser: IUser | null
 }
 
 function TagsDetail({ pUser }: ITagsDetailProps) {
+    const { t } = useTranslation()
     const [filters, setFilters] = useState<INewsFilters>({
         status: NewsFilters.LATEST,
         search: '',
@@ -90,6 +93,7 @@ function TagsDetail({ pUser }: ITagsDetailProps) {
     return (
         tag && (
             <Box>
+                <Seo title={`${tag.title} - ${t('title_document.news_community')}`} />
                 <Stack
                     sx={{
                         width: '100%',

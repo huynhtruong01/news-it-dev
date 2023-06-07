@@ -6,10 +6,11 @@ import { enqueueSnackbar } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 import { uploadImage, generateIds } from '@/utils'
 import { setInitValueForm } from '@/store/news'
-import { AppDispatch } from '@/store'
+import { AppDispatch, AppState } from '@/store'
 import { initNewsFormValues } from '@/data'
 import { connect } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { Seo } from '@/components/Common'
 
 const generateNewValues = (values: INewsForm) => {
     const { hashTagOptionIds, hashTags, ...rest } = values
@@ -22,10 +23,11 @@ const generateNewValues = (values: INewsForm) => {
 }
 
 export interface ICreateNewsProps {
+    pInitValuesForm: INewsForm
     pSetInitValuesNewsForm: (values: INewsForm) => void
 }
 
-function CreateNews({ pSetInitValuesNewsForm }: ICreateNewsProps) {
+function CreateNews({ pSetInitValuesNewsForm, pInitValuesForm }: ICreateNewsProps) {
     const { t } = useTranslation()
     const navigate = useNavigate()
 
@@ -108,9 +110,22 @@ function CreateNews({ pSetInitValuesNewsForm }: ICreateNewsProps) {
 
     return (
         <Box>
+            <Seo
+                title={`${
+                    pInitValuesForm?.id
+                        ? t('title_document.update_news')
+                        : t('title_document.create_news')
+                } - ${t('title_document.news_community')}`}
+            />
             <CreateNewsForm onNewsSubmit={handleNewsSubmit} />
         </Box>
     )
+}
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pInitValuesForm: state.news.initValuesForm,
+    }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
@@ -119,4 +134,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CreateNews)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateNews)

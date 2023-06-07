@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { ProgressLoading, EmptyList } from '@/components/Common'
 
-export interface IHeaderSearchProps {
+export interface IHeaderSearchProps extends BoxProps {
     searchVal: string
     setSearchVal: Dispatch<SetStateAction<string>>
 }
@@ -86,7 +86,7 @@ export function ListResult({ loading, list, ...rest }: IListProps) {
     )
 }
 
-export function HeaderSearch({ searchVal, setSearchVal }: IHeaderSearchProps) {
+export function HeaderSearch({ searchVal, setSearchVal, ...rest }: IHeaderSearchProps) {
     const { t } = useTranslation()
     const searchRef = useRef<HTMLInputElement | null>(null)
     const [news, setNews] = useState<IObjectCommon[]>([])
@@ -147,11 +147,8 @@ export function HeaderSearch({ searchVal, setSearchVal }: IHeaderSearchProps) {
             sx={{
                 position: 'relative',
                 width: 300,
-                display: {
-                    xs: 'none',
-                    md: 'block',
-                },
             }}
+            {...rest}
         >
             <TextField
                 inputRef={searchRef}

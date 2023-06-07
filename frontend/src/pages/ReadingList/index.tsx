@@ -1,3 +1,4 @@
+import { Seo, TitleContainerPage, TitlePage } from '@/components/Common'
 import { IFiltersNewsSave, IHashTag, IUser } from '@/models'
 import {
     ReadingListFilters,
@@ -7,7 +8,7 @@ import {
 import { AppDispatch, AppState } from '@/store'
 import { IProfileFilters, getProfileFilters } from '@/store/user/thunkApi'
 import { removeDuplicated } from '@/utils'
-import { Box, Stack, Typography, Grid } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -25,12 +26,6 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
     const [filters, setFilters] = useState<IFiltersNewsSave>({
         search: '',
     })
-
-    useEffect(() => {
-        document.title = `${t('title_document.reading_list')} - ${t(
-            'title_document.news_community'
-        )}`
-    }, [])
 
     useEffect(() => {
         if (!pUser?.id) return
@@ -71,28 +66,17 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
 
     return (
         <Box>
-            <Stack
-                direction={{
-                    md: 'row',
-                    xs: 'column',
-                }}
-                justifyContent={{
-                    md: 'space-between',
-                    xs: 'center',
-                }}
-                alignItems={{
-                    md: 'center',
-                    xs: 'flex-start',
-                }}
-                gap={2}
-                width={'100%'}
-                marginBottom={3}
-            >
-                <Typography component="h1" variant="h4" fontWeight={700}>
+            <Seo
+                title={`${t('title_document.reading_list')} - ${t(
+                    'title_document.news_community'
+                )}`}
+            />
+            <TitleContainerPage>
+                <TitlePage>
                     {t('dashboard.reading_list')} ({numSaves})
-                </Typography>
+                </TitlePage>
                 <ReadingListFilters setFilters={setFilters} />
-            </Stack>
+            </TitleContainerPage>
 
             <Grid container spacing={2}>
                 <Grid

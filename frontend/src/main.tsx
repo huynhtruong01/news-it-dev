@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import i18n from '@/i18n'
+import { HelmetProvider } from 'react-helmet-async'
 
 const persistor = persistStore(store)
 
@@ -28,9 +29,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                             }}
                             autoHideDuration={2000}
                         >
-                            <CssBaseline>
-                                <App />
-                            </CssBaseline>
+                            <HelmetProvider>
+                                <CssBaseline>
+                                    <App />
+                                </CssBaseline>
+                            </HelmetProvider>
                         </SnackbarProvider>
                     </ThemeProvider>
                 </BrowserRouter>

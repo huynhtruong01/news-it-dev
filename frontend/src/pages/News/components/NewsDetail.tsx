@@ -3,7 +3,16 @@ import { useLinkUser } from '@/hooks'
 import { INews, IUser } from '@/models'
 import { AppState } from '@/store'
 import { formatDate, theme } from '@/utils'
-import { Avatar, Box, BoxProps, Divider, Paper, Stack, Typography } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    BoxProps,
+    Divider,
+    Paper,
+    Stack,
+    Typography,
+    alpha,
+} from '@mui/material'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
@@ -164,23 +173,36 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
 
             <Divider />
 
-            {/* COMMENT */}
-            {pUser && <NewsComment newsId={news.id} />}
-            {!pUser && (
-                <Typography
-                    sx={{
-                        padding: theme.spacing(2, 8, 8),
-                        a: {
-                            color: theme.palette.primary.main,
-                            '&:hover': {
-                                textDecoration: 'underline',
+            <Box
+                padding={{
+                    lg: theme.spacing(4, 8),
+                    xs: theme.spacing(2, 1.5),
+                }}
+            >
+                {/* COMMENT */}
+                {!pUser && (
+                    <Typography
+                        sx={{
+                            padding: 3,
+                            a: {
+                                fontWeight: 600,
+                                color: theme.palette.primary.main,
+                                '&:hover': {
+                                    textDecoration: 'underline',
+                                },
                             },
-                        },
-                    }}
-                >
-                    Please <Link to={'/login'}>login</Link> to comment this news.
-                </Typography>
-            )}
+                            marginBottom: 2,
+                            backgroundColor: alpha(theme.palette.primary.dark, 0.075),
+                            borderRadius: theme.spacing(0.75),
+                            boxShadow: `0 0 1px ${theme.palette.primary.dark}`,
+                        }}
+                    >
+                        {t('message.please')} <Link to={'/login'}>{t('auth.login')}</Link>{' '}
+                        {t('message.to_comment_news')}
+                    </Typography>
+                )}
+                <NewsComment newsId={news.id} />
+            </Box>
         </Box>
     )
 }

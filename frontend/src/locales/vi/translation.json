@@ -17,7 +17,8 @@
         "dont_have_account": "Không có tài khoản bằng email?",
         "already_account": "Bạn đã có tài khoản?",
         "sign_up": "Đăng ký",
-        "title_have_password": "Đã có mật khẩu? Tiếp tục với email của bạn"
+        "title_have_password": "Đã có mật khẩu? Tiếp tục với email của bạn",
+        "login_continue": "Đăng nhập để tiếp tục"
     },
 
     "common": {
@@ -198,7 +199,10 @@
         "sidebar_header_desc": "Chúng tôi là nơi các lập trình viên chia sẻ, cập nhật thông tin và phát triển sự nghiệp của họ.",
         "reset_password": "Đặt lại mật khẩu thành công",
         "check_your_email_reset_password": "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu",
-        "active_account": "Kích hoạt tài khoản của bạn thành công"
+        "active_account": "Kích hoạt tài khoản của bạn thành công",
+        "please": "Vui lòng",
+        "to_comment_news": "để bình luận bài viết này",
+        "modal_text_auth": "Nếu bạn muốn theo dõi, bình luận, thích, lưu lại tin tức; bạn cần đăng nhập để tiếp tục."
     },
 
     "signout": {
@@ -227,7 +231,8 @@
         "no_news_reading": "Không có bài tin tức nào đã lưu",
         "no_hash_tag_follow": "Không theo dõi thẻ nào",
         "no_notifications": "Không có thông báo nào",
-        "no_news_reading_list": "Không có bài tin tức nào đã lưu"
+        "no_news_reading_list": "Không có bài tin tức nào đã lưu",
+        "no_tags": "Không có thẻ nào"
     },
 
     "share_news": {

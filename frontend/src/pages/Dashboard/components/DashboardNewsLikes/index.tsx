@@ -1,7 +1,7 @@
-import { EmptyList, NewsList } from '@/components/Common'
+import { EmptyList, NewsList, TitleContainerPage } from '@/components/Common'
 import { INews, INewsFilters } from '@/models'
 import { DashboardNewsLikesFilters } from '@/pages/Dashboard/components/DashboardNewsLikes/components'
-import { Box, Stack } from '@mui/material'
+import { Box } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TitleDashboard } from '..'
@@ -32,29 +32,17 @@ export function DashboardNewsLikes({ newsLikes, numLikes }: IDashboardNewsLikesP
 
     return (
         <Box>
-            <Stack
-                direction={{
-                    md: 'row',
-                    xs: 'column',
+            <TitleContainerPage
+                sx={{
+                    marginBottom: 2,
                 }}
-                justifyContent={{
-                    md: 'space-between',
-                    xs: 'center',
-                }}
-                alignItems={{
-                    md: 'center',
-                    xs: 'flex-start',
-                }}
-                gap={2}
-                marginBottom={2}
-                width={'100%'}
             >
                 <TitleDashboard
                     text={t('dashboard.news_likes') as string}
                     nums={numLikes}
                 />
                 <DashboardNewsLikesFilters setFilters={setFilters} />
-            </Stack>
+            </TitleContainerPage>
 
             <Box>
                 {newNewsLikes.length === 0 && (
