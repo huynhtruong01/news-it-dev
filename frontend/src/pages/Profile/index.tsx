@@ -1,4 +1,4 @@
-import { SkeletonProfile } from '@/components/Common'
+import { Seo, SkeletonProfile } from '@/components/Common'
 import { IUser } from '@/models'
 import {
     ProfileHeader,
@@ -28,7 +28,6 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
 
     useEffect(() => {
         if (pUser) {
-            document.title = `${pUser?.username} - DEV Community`
             pGetProfile()
         } else {
             navigate('/login')
@@ -41,6 +40,14 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
 
     return pUser ? (
         <Box>
+            {pUser && (
+                <Seo
+                    title={`${pUser?.username} - ${t('title_document.news_community')}`}
+                    description=""
+                    image={pUser.avatar as string}
+                    url={window.location.href}
+                />
+            )}
             <Box
                 sx={{
                     width: '100%',

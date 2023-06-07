@@ -11,9 +11,11 @@ export interface ISeoProps {
 export function Seo({ title, description = '', image = IMAGE_PREVIEW, url }: ISeoProps) {
     return (
         <Helmet>
+            <meta charSet="UTF-8" />
             <title>{title}</title>
             <meta name="title" content={title} />
             <meta name="description" content={description} />
+            <meta name="image" content={image} />
 
             <meta property="og:type" content="website" />
             <meta property="og:url" content={url} />

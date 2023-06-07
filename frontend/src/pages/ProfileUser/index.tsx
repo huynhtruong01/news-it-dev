@@ -50,12 +50,6 @@ function ProfileUser({
     const params = useParams()
 
     useEffect(() => {
-        if (user) {
-            document.title = `${user.username} - DEV Community`
-        }
-    }, [user])
-
-    useEffect(() => {
         if (pUser?.id) {
             pGetProfile()
         }
@@ -124,7 +118,7 @@ function ProfileUser({
         <Box>
             {user && (
                 <Seo
-                    title={user.username}
+                    title={`${user.username} - ${t('title_document.news_community')}`}
                     url={window.location.href}
                     image={user.avatar as string}
                 />
