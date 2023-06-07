@@ -11,7 +11,6 @@ export interface ISeoProps {
 export function Seo({ title, description = '', image = IMAGE_PREVIEW, url }: ISeoProps) {
     return (
         <Helmet>
-            <meta charSet="UTF-8" />
             <title>{title}</title>
             <meta name="title" content={title} />
             <meta name="description" content={description} />
@@ -27,7 +26,7 @@ export function Seo({ title, description = '', image = IMAGE_PREVIEW, url }: ISe
             <meta property="twitter:url" content={url} />
             <meta property="twitter:title" content={title} />
             <meta property="twitter:description" content={description} />
-            <meta property="twitter:image" content={image} />
+            <meta property="twitter:image:src" content={image} />
         </Helmet>
     )
 }
