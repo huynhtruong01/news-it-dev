@@ -16,7 +16,11 @@ dotenv.config({
 const http = createServer(app)
 export const io = new Server(http, {
     cors: {
-        origin: process.env.HOST_FRONTEND,
+        origin: [
+            process.env.HOST_FRONTEND as string,
+            process.env.HOST_MAIN_NEWS as string,
+            process.env.HOST_DASHBOARD_NEWS as string,
+        ],
         credentials: true,
     },
 })

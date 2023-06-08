@@ -181,11 +181,20 @@ function NotificationItem({
                     />
                     <Box>
                         <Typography
-                            variant="body1"
                             sx={{
+                                fontSize: {
+                                    md: theme.typography.body1,
+                                    xs: theme.typography.body2,
+                                },
                                 lineHeight: 1,
                                 a: {
                                     fontWeight: 600,
+                                },
+                                'a, span': {
+                                    fontSize: {
+                                        md: theme.typography.body1,
+                                        xs: '15px',
+                                    },
                                 },
                             }}
                         >
@@ -197,6 +206,7 @@ function NotificationItem({
                                 }}
                                 sx={{
                                     lineHeight: 1.3,
+                                    color: alpha(theme.palette.secondary.main, 0.9),
                                 }}
                             />
                         </Typography>
