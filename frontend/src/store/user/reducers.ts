@@ -1,4 +1,4 @@
-import { IFollowNotify, INews, IUser } from '@/models'
+import { IComment, IFollowNotify, INews, IUser } from '@/models'
 import { resetNotify } from '@/store/notify'
 import { removeLs } from '@/utils'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -126,5 +126,13 @@ export const reducers = {
 
         state.userProfileFilter = userFilters
         state.user = user
+    },
+    addLikeComment(state: IUserStore, action: PayloadAction<IComment>) {
+        if (state.user) {
+            const newCommentLikes = [...(state.user?.commentLikes as IComment[])]
+            newCommentLikes.push(action.payload)
+
+            state.user.commentLikes = newCommentLikes
+        }
     },
 }

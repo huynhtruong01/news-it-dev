@@ -22,3 +22,11 @@ export const removeDuplicated = <T extends ISynthetic>(arr: T[]) => {
 export const generateIds = (options: IOptionItem[]): number[] => {
     return options.map((item) => item.id)
 }
+
+export const analystTextToUsernames = (text: string) => {
+    const mentionRegex = /@\[([\w\s]+)\]\((\d+)\)/g
+    const matches = text.matchAll(mentionRegex)
+    const mentions = Array.from(matches, (match: string[]) => match[1])
+
+    return [...new Set(mentions)]
+}

@@ -71,8 +71,9 @@ export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) =
         (state: INotifyStore, action: PayloadAction<INotifyRes>) => {
             state.notifications = action.payload.notifies
             const notifiesNotRead = action.payload.notifies.filter(
-                (n) => !n.readUsers.includes(action.payload.userId?.toString() as string)
+                (n) => !n.readUsers?.includes(action.payload.userId?.toString() as string)
             )
+            state.notificationsFilter = action.payload.notifies
             state.numNotifications = notifiesNotRead.length
             state.total = action.payload.total
         }

@@ -14,10 +14,10 @@ import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
 import { indigo } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { RiChat1Line } from 'react-icons/ri'
 import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 
 export interface IArticleIntroProps {
     article: INews
@@ -42,7 +42,7 @@ function ArticleIntro({
     const [liked, setLiked] = useState<boolean>(false)
     const navigate = useNavigate()
 
-    const { title, sapo, hashTags, readTimes, numLikes, slug, comments } = article
+    const { title, sapo, hashTags, readTimes, numLikes, slug } = article
 
     useEffect(() => {
         if (pUser?.id) {
@@ -95,9 +95,9 @@ function ArticleIntro({
         }
     }
 
-    const commentLength = useMemo(() => {
-        return comments?.length || 0
-    }, [article])
+    // const commentLength = useMemo(() => {
+    //     return comments?.length || 0
+    // }, [article])
 
     return (
         <Box
@@ -185,13 +185,15 @@ function ArticleIntro({
                     }}
                 >
                     <ButtonIconForm
-                        text={`${numLikes} ${t('button.likes')}`}
+                        text={`${t('button.likes')}`}
+                        num={numLikes}
                         icon={liked ? FavoriteIcon : FavoriteBorderIcon}
                         isLiked={liked}
                         onButtonClick={handleLikeClick}
                     />
                     <ButtonIconForm
-                        text={`${commentLength} ${t('button.comment')}`}
+                        text={`${t('button.comment')}`}
+                        num={article.numComments}
                         icon={RiChat1Line}
                         onButtonClick={handleCommentClick}
                     />

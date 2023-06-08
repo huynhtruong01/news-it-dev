@@ -1,7 +1,8 @@
 import { Results, StatusCode, StatusText } from '@/enums'
 import { IObjectCommon, RequestUser } from '@/models'
-import { notifyService } from '@/services'
+import { newsService, notifyService } from '@/services'
 import { Response } from 'express'
+import { io } from 'server'
 
 class NotifyController {
     // get all no conditions (GET)
@@ -57,6 +58,85 @@ class NotifyController {
     async createNotify(req: RequestUser, res: Response) {
         try {
             const notify = await notifyService.create(req.body)
+
+            res.status(StatusCode.CREATED).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    notify,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // create multi notify in comment mentions
+    async createNotifyForComment(req: RequestUser, res: Response) {
+        try {
+            const notify = await notifyService.createMultiForComment(
+                req.body,
+                req.body.users
+            )
+
+            res.status(StatusCode.CREATED).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    notify,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // like news notify
+    async likeNewsNotify(req: RequestUser, res: Response) {
+        try {
+            const notify = await notifyService.create(req.body)
+
+            const news = await newsService.getByIdComment(req.body.newsId)
+            if (news) {
+                notify.news = news
+            }
+
+            for (const user of req.body.recipients) {
+                io.to(user.id.toString()).emit('notifyNews', notify)
+            }
+
+            res.status(StatusCode.CREATED).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    notify,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // follow
+    async followNews(req: RequestUser, res: Response) {
+        try {
+            const notify = await notifyService.create(req.body)
+
+            for (const user of req.body.recipients) {
+                io.to(user.id.toString()).emit('notifyNews', notify)
+            }
 
             res.status(StatusCode.CREATED).json({
                 results: Results.SUCCESS,

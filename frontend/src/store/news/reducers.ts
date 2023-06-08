@@ -28,4 +28,12 @@ export const reducers = {
     resetNewsDetail: (state: INewsStore) => {
         state.newsDetail = null
     },
+    increaseNumComment: (state: INewsStore) => {
+        if (state.newsDetail) {
+            state.newsDetail = {
+                ...state.newsDetail,
+                numComments: (state.newsDetail.numComments as number) + 1,
+            }
+        }
+    },
 }

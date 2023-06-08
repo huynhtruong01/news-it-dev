@@ -3,12 +3,29 @@ import {
     PayloadAction,
     createAsyncThunk,
 } from '@reduxjs/toolkit'
-import { commentApi } from '@/api'
+import { commentApi, notifyApi } from '@/api'
 import { ICommentStore } from '.'
-import { IComment, ICommentData, ICommentRes, IFilters } from '@/models'
+import {
+    IComment,
+    ICommentData,
+    ICommentLikeNotify,
+    ICommentRes,
+    IFilters,
+    INotifyData,
+    IUser,
+} from '@/models'
 
 export const getAllCommentsById = createAsyncThunk(
     'comment/getAllCommentsById',
+    async (params: IFilters) => {
+        const results = await commentApi.getAllCommentsById(params)
+
+        return results.data
+    }
+)
+
+export const getAllCommentsByIdLoadMore = createAsyncThunk(
+    'comment/getAllCommentsByIdLoadMore',
     async (params: IFilters) => {
         const results = await commentApi.getAllCommentsById(params)
 
@@ -49,6 +66,26 @@ export const updateCommentReply = createAsyncThunk(
         const results = await commentApi.updateCommentReply(data)
 
         return results.data.comment
+    }
+)
+
+export const likeCommentNotify = createAsyncThunk(
+    'comment/likeCommentNotify',
+    async (data: ICommentLikeNotify) => {
+        const { user, comment, news } = data
+
+        await commentApi.likeComment(comment.id)
+
+        const notify: INotifyData = {
+            userId: user.id,
+            user,
+            news,
+            newsId: news.id,
+            text: 'like your comment',
+            recipients: [comment.user as IUser],
+        }
+
+        await notifyApi.likeNotify(notify)
     }
 )
 
@@ -109,22 +146,13 @@ export const extraReducers = (builders: ActionReducerMapBuilder<ICommentStore>) 
 
                 state.comments = newComments
             }
+        }
+    )
 
-            // if (comment) {
-            //     const index = comment.childrenComments?.findIndex(
-            //         (c) => c.id === action.payload.id
-            //     ) as number
-            //     if (index > -1) {
-            //         ;(comment.childrenComments as IComment[])[index] = action.payload
-
-            //         const indexComment = newComments.findIndex(
-            //             (c) => c.id === action.payload.parentCommentId
-            //         )
-            //         if (indexComment > -1) {
-            //             newComments[indexComment] = comment
-            //         }
-            //     }
-            // }
+    builders.addCase(
+        getAllCommentsByIdLoadMore.fulfilled,
+        (state: ICommentStore, action: PayloadAction<ICommentRes>) => {
+            state.comments = [...state.comments, ...action.payload.comments]
         }
     )
 }

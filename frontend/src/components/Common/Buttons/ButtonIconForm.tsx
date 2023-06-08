@@ -6,12 +6,14 @@ import { red } from '@mui/material/colors'
 export type IButtonIconFormProps = {
     text?: string
     icon: IIcon
+    num?: number
     isLiked?: boolean
     onButtonClick: (() => Promise<void>) | (() => void)
 } & ButtonProps
 
 export function ButtonIconForm({
     text = '',
+    num = 0,
     icon,
     onButtonClick,
     isLiked,
@@ -61,12 +63,12 @@ export function ButtonIconForm({
                 component="span"
                 sx={{
                     display: {
-                        xs: 'block',
                         lg: 'none',
+                        xs: 'block',
                     },
                 }}
             >
-                {text.split(' ').slice(0, 2).join(' ')}
+                {num}
             </Typography>
             <Typography
                 component="span"
@@ -77,7 +79,7 @@ export function ButtonIconForm({
                     },
                 }}
             >
-                {text}
+                {num} {text}
             </Typography>
         </Button>
     )

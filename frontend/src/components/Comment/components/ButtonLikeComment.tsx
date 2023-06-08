@@ -1,6 +1,8 @@
 import { commentApi } from '@/api'
-import { IComment, IUser } from '@/models'
+import { IComment, ICommentLikeNotify, INews, IUser } from '@/models'
 import { AppDispatch } from '@/store'
+import { likeCommentNotify } from '@/store/comment/thunkApi'
+import { addLikeComment } from '@/store/user'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -13,17 +15,22 @@ import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 export interface IButtonLikeCommentProps extends ButtonProps {
-    pGetProfile: () => Promise<PayloadAction<unknown>>
     text: string
     comment: IComment
     user: IUser
+    news: INews
+    pGetProfile: () => Promise<PayloadAction<unknown>>
+    pAddCommentLike: (data: IComment) => void
+    pLikeComment: (data: ICommentLikeNotify) => Promise<PayloadAction<unknown>>
 }
 
 function ButtonLikeComment({
-    pGetProfile,
     comment,
     user,
+    news,
     text,
+    pAddCommentLike,
+    pLikeComment,
     ...rest
 }: IButtonLikeCommentProps) {
     const [isLike, setIsLike] = useState<boolean>(false)
@@ -38,7 +45,7 @@ function ButtonLikeComment({
         }
 
         setNumLikes(comment.likes?.length || 0)
-    }, [user, comment])
+    }, [comment])
 
     const handleLikeComment = async () => {
         try {
@@ -49,10 +56,15 @@ function ButtonLikeComment({
             } else {
                 setIsLike(true)
                 setNumLikes(numLikes + 1)
-                await commentApi.likeComment(comment.id)
-            }
+                pAddCommentLike(comment)
 
-            await pGetProfile()
+                const data = {
+                    comment,
+                    user,
+                    news,
+                }
+                await pLikeComment(data)
+            }
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',
@@ -105,6 +117,8 @@ function ButtonLikeComment({
 const mapDispatchProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
+        pAddCommentLike: (data: IComment) => dispatch(addLikeComment(data)),
+        pLikeComment: (data: ICommentLikeNotify) => dispatch(likeCommentNotify(data)),
     }
 }
 

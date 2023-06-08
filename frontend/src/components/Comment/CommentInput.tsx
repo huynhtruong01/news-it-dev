@@ -1,6 +1,6 @@
 import { IComment, IUser } from '@/models'
 import { AppState } from '@/store'
-import { theme } from '@/utils'
+import { defaultInput, defaultInputStyle, theme } from '@/utils'
 import { Avatar, Box, BoxProps, Button, Stack } from '@mui/material'
 import { TFunction } from 'i18next'
 import {
@@ -17,7 +17,6 @@ import { Mention, MentionsInput } from 'react-mentions'
 import { connect } from 'react-redux'
 
 export interface ICommentInputProps extends BoxProps {
-    pUser: IUser | null
     initValue: string
     commentInputRef?: MutableRefObject<HTMLInputElement | null>
     onCommentChange: ((value: string) => Promise<void>) | ((value: string) => void)
@@ -26,11 +25,10 @@ export interface ICommentInputProps extends BoxProps {
     setIsReply?: Dispatch<SetStateAction<boolean>>
     setEdit?: Dispatch<SetStateAction<IComment | null>>
     t: TFunction<'translation', undefined, 'translation'>
+    pUser: IUser | null
 }
 
 function CommentInput({
-    pUser,
-    // commentInputRef,
     initValue,
     onCommentChange,
     isReply = false,
@@ -38,6 +36,7 @@ function CommentInput({
     setIsReply,
     setEdit,
     t,
+    pUser,
     ...rest
 }: ICommentInputProps) {
     // const isSmallScreen = useMediaQuery('(min-width:320px)')
@@ -101,7 +100,13 @@ function CommentInput({
                 )}
                 <Box component="form" onSubmit={handleCommentSubmit} flex={1}>
                     <Box marginBottom={1.5}>
-                        {/* <TextField
+                        <MentionsInput
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            placeholder={t('placeholder.add_discussion') as string}
+                            style={defaultInputStyle}
+                        >
+                            {/* <TextField
                             inputRef={commentInputRef ? commentInputRef : inputRef}
                             value={value}
                             fullWidth
@@ -115,12 +120,7 @@ function CommentInput({
                                 },
                             }}
                         /> */}
-                        <MentionsInput
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
-                            placeholder={t('placeholder.add_discussion') as string}
-                        >
-                            <Mention trigger="@" data={mentions} />
+                            <Mention trigger="@" data={mentions} style={defaultInput} />
                         </MentionsInput>
                     </Box>
                     <Stack

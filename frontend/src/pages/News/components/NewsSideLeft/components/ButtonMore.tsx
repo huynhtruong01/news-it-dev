@@ -5,12 +5,14 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import {
     Box,
     BoxProps,
+    Button,
     IconButton,
     Menu,
     MenuItem,
     Stack,
     Typography,
     alpha,
+    useMediaQuery,
 } from '@mui/material'
 import { green } from '@mui/material/colors'
 import { makeStyles } from '@mui/styles'
@@ -28,6 +30,7 @@ import {
     RedditIcon,
     TwitterIcon,
 } from 'react-share'
+import { TbShare3 } from 'react-icons/tb'
 
 export interface IButtonMoreProps extends BoxProps {
     news: INews
@@ -55,6 +58,7 @@ const useStyles = makeStyles({
 })
 
 export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
+    const isSmallScreen = useMediaQuery('(min-width:320px)')
     const { t } = useTranslation()
     const styles = useStyles()
     const [copied, setCopied] = useState<boolean>(false)
@@ -82,16 +86,43 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
             <IconButton
                 onClick={handleOpenMore}
                 sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
                     borderRadius: '50%',
                 }}
             >
                 <MoreHorizIcon />
             </IconButton>
+
+            {/* mobile */}
+            <Button
+                variant="contained"
+                startIcon={<TbShare3 />}
+                onClick={handleOpenMore}
+                sx={{
+                    color: theme.palette.secondary.main,
+                    fontSize: theme.typography.body2,
+                    backgroundColor: alpha(theme.palette.secondary.main, 0.075),
+                    padding: theme.spacing(1, 2),
+                    display: {
+                        md: 'none',
+                        xs: 'flex',
+                    },
+                    '&:hover': {
+                        backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+                    },
+                }}
+            >
+                {t('button.share')}
+            </Button>
+
             <Menu
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleCloseMore}
-                disableScrollLock={true}
+                disableScrollLock={isSmallScreen ? false : true}
                 PaperProps={{
                     elevation: 1,
                     sx: {
@@ -100,8 +131,14 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
                         width: 250,
                         overflow: 'visible',
                         filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.2))',
-                        marginLeft: '45px',
-                        marginTop: '-40px',
+                        marginLeft: {
+                            md: '45px',
+                            xs: 0,
+                        },
+                        marginTop: {
+                            md: '-40px',
+                            xs: theme.spacing(1.75),
+                        },
                         ul: {
                             padding: 0,
                         },

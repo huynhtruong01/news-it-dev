@@ -1,18 +1,27 @@
+import { newsApi } from '@/api'
+import { INews, INewsActions, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
+import { setShowModalAuth } from '@/store/common'
+import { likeNewsApi } from '@/store/news/thunkApi'
+import { likeNews, unlikeNews } from '@/store/user'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
-import { Box, BoxProps, IconButton, Stack, Typography } from '@mui/material'
-import { connect } from 'react-redux'
-import { useState, useEffect } from 'react'
-import { INews, INewsActions, IUser } from '@/models'
-import { PayloadAction } from '@reduxjs/toolkit'
-import { newsApi } from '@/api'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import {
+    Box,
+    BoxProps,
+    Button,
+    IconButton,
+    Stack,
+    Typography,
+    alpha,
+} from '@mui/material'
 import { red } from '@mui/material/colors'
-import { setShowModalAuth } from '@/store/common'
-import { likeNews, unlikeNews } from '@/store/user'
-import { likeNewsApi } from '@/store/news/thunkApi'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
 import { Socket } from 'socket.io-client'
 
 export interface IButtonNewsLikeProps extends BoxProps {
@@ -36,6 +45,7 @@ function ButtonNewsLike({
     pLikeNewsApi,
     ...rest
 }: IButtonNewsLikeProps) {
+    const { t } = useTranslation()
     const [numLikes, setNumLikes] = useState<number>(news?.numLikes || 0)
     const [liked, setLiked] = useState<boolean>(false)
 
@@ -85,8 +95,25 @@ function ButtonNewsLike({
     }
 
     return (
-        <Box {...rest} position={'relative'} width={'100%'} onClick={handleLikeNews}>
-            <Stack alignItems={'center'} padding={theme.spacing(0, 1)}>
+        <Box
+            {...rest}
+            position={'relative'}
+            width={{
+                md: '100%',
+                xs: 'auto',
+            }}
+            onClick={handleLikeNews}
+        >
+            <Stack
+                alignItems={'center'}
+                padding={theme.spacing(0, 1)}
+                sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
+                }}
+            >
                 <IconButton
                     sx={{
                         borderRadius: '50%',
@@ -122,6 +149,41 @@ function ButtonNewsLike({
                     {numLikes}
                 </Typography>
             </Stack>
+
+            {/* mobile */}
+            <Button
+                variant="contained"
+                startIcon={
+                    liked ? (
+                        <FavoriteIcon
+                            sx={{
+                                color: `${red[500]} !important`,
+                            }}
+                        />
+                    ) : (
+                        <FavoriteBorderIcon />
+                    )
+                }
+                sx={{
+                    color: theme.palette.secondary.main,
+                    fontSize: theme.typography.body2,
+                    backgroundColor: !liked
+                        ? alpha(theme.palette.secondary.main, 0.075)
+                        : red[50],
+                    padding: theme.spacing(1, 2),
+                    display: {
+                        md: 'none',
+                        xs: 'flex',
+                    },
+                    '&:hover': {
+                        backgroundColor: !liked
+                            ? alpha(theme.palette.secondary.main, 0.1)
+                            : red[50],
+                    },
+                }}
+            >
+                {t('button.like')}
+            </Button>
         </Box>
     )
 }

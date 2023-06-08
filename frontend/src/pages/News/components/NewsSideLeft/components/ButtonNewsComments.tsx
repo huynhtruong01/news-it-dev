@@ -1,5 +1,13 @@
 import { theme } from '@/utils'
-import { Box, BoxProps, IconButton, Stack, Typography } from '@mui/material'
+import {
+    Box,
+    BoxProps,
+    Button,
+    IconButton,
+    Stack,
+    Typography,
+    alpha,
+} from '@mui/material'
 import { yellow } from '@mui/material/colors'
 import { useTranslation } from 'react-i18next'
 import { RiChat1Line } from 'react-icons/ri'
@@ -13,7 +21,16 @@ export function ButtonNewsComments({ totalComments, ...rest }: IButtonNewsCommen
 
     return (
         <Box {...rest}>
-            <Stack alignItems={'center'} padding={theme.spacing(0, 1)}>
+            <Stack
+                alignItems={'center'}
+                padding={theme.spacing(0, 1)}
+                sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
+                }}
+            >
                 <a href="#comments">
                     <IconButton
                         title={t('news.comment') as string}
@@ -47,6 +64,27 @@ export function ButtonNewsComments({ totalComments, ...rest }: IButtonNewsCommen
                     {totalComments}
                 </Typography>
             </Stack>
+
+            {/* mobile */}
+            <Button
+                variant="contained"
+                startIcon={<RiChat1Line />}
+                sx={{
+                    color: theme.palette.secondary.main,
+                    fontSize: theme.typography.body2,
+                    backgroundColor: alpha(theme.palette.secondary.main, 0.075),
+                    padding: theme.spacing(1, 2),
+                    display: {
+                        md: 'none',
+                        xs: 'flex',
+                    },
+                    '&:hover': {
+                        backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+                    },
+                }}
+            >
+                {t('button.comment')}
+            </Button>
         </Box>
     )
 }

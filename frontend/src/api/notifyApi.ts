@@ -1,10 +1,22 @@
-import { IFilters, INotifyData } from '@/models'
+import { IFilters, INotifyData, INotifyDataComment } from '@/models'
 import AxiosClient from '.'
 
 const BASE_URL = '/notifies'
 
 export const createNotify = (data: INotifyData) => {
     return AxiosClient.post(`${BASE_URL}`, data).then((res) => res.data)
+}
+
+export const createNotifiesForComment = (data: INotifyDataComment) => {
+    return AxiosClient.post(`${BASE_URL}/multiple`, data).then((res) => res.data)
+}
+
+export const likeNotify = (data: INotifyData) => {
+    return AxiosClient.post(`${BASE_URL}/like`, data).then((res) => res.data)
+}
+
+export const followNotify = (data: INotifyData) => {
+    return AxiosClient.post(`${BASE_URL}/follow`, data).then((res) => res.data)
 }
 
 export const getNotifies = (params: IFilters) => {

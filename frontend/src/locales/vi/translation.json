@@ -78,7 +78,8 @@
         "create_news": "Tạo mới tin tức",
         "change_your_password": "Thay đổi mật khẩu của bạn",
         "confirm_email": "Xác nhận email",
-        "send": "Gửi"
+        "send": "Gửi",
+        "share": "Chia sẻ"
     },
 
     "profile": {
@@ -167,7 +168,7 @@
         "what_do_you_do": "Bạn làm nghề gì?",
         "where_did_you_go_to_school": "Bạn đã học ở đâu?",
         "skill_languages": "Bất kỳ ngôn ngữ, frameworks, vv ...",
-        "typing_content": "Nhập nội dung...",
+        "typing_content": "Nhập nội dung tin tức ở đây...",
         "choose_tags": "Chọn thẻ...",
         "sapo": "Nhập mở đầu cho tin tức...",
         "title": "Nhập tiêu đề cho tin tức...",
@@ -244,7 +245,9 @@
     },
 
     "liked your news": "đã thích bài viết của bạn",
-    "reply to your comment": "đã phản hổi bình luận của bạn",
+    "reply to your comment": "đã phản hồi bình luận của bạn",
     "follow you": "đã theo dõi bạn",
-    "has been commented your news": "đã bình luận bài tin tức của bạn"
+    "has been commented your news": "đã bình luận bài tin tức của bạn",
+    "mention you": "nhắc đến bạn",
+    "you": "bạn"
 }

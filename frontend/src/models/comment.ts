@@ -26,3 +26,9 @@ export interface ICommentRes {
     comments: IComment[]
     total: number
 }
+
+export interface ICommentLikeNotify {
+    user: IUser
+    news: INews
+    comment: IComment
+}

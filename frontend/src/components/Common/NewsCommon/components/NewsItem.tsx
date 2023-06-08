@@ -112,7 +112,7 @@ function NewsItem({
                     pLikeNews(news)
                     await pLikeNewsApi({
                         socket: pSocket as Socket,
-                        news,
+                        news: { ...news, user: news.user ? news.user : user },
                         user: pUser as IUser,
                     })
                 }
@@ -378,6 +378,7 @@ function NewsItem({
                                     : alpha(theme.palette.secondary.main, 0.1),
                             },
                         }}
+                        onClick={handleSaveNews}
                     >
                         {saved ? (
                             <BookmarkIcon

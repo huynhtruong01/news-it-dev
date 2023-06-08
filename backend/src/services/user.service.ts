@@ -183,22 +183,27 @@ class UserService {
     }
 
     // get by username
-    async getByUsername(username: string): Promise<User | null> {
+    async getByUsername(username: string, noRelations = false): Promise<User | null> {
         try {
-            const user = await this.userRepository
-                .createQueryBuilder('user')
-                .leftJoinAndSelect('user.roles', 'roles')
-                .leftJoinAndSelect('user.followers', 'followers')
-                .leftJoinAndSelect('user.following', 'following')
-                .leftJoinAndSelect('user.hashTags', 'hashTags')
-                .leftJoinAndSelect('user.news', 'news')
-                .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
-                .leftJoinAndSelect('user.newsLikes', 'newsLikes')
-                .leftJoinAndSelect('newsLikes.hashTags', 'hashTagsNewsLikes')
-                .leftJoinAndSelect('user.saves', 'saves')
-                .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
-                .leftJoinAndSelect('user.comments', 'comments')
-                .leftJoinAndSelect('user.commentLikes', 'commentLikes')
+            const queryBuilder = this.userRepository.createQueryBuilder('user')
+
+            if (!noRelations) {
+                queryBuilder
+                    .leftJoinAndSelect('user.roles', 'roles')
+                    .leftJoinAndSelect('user.followers', 'followers')
+                    .leftJoinAndSelect('user.following', 'following')
+                    .leftJoinAndSelect('user.hashTags', 'hashTags')
+                    .leftJoinAndSelect('user.news', 'news')
+                    .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
+                    .leftJoinAndSelect('user.newsLikes', 'newsLikes')
+                    .leftJoinAndSelect('newsLikes.hashTags', 'hashTagsNewsLikes')
+                    .leftJoinAndSelect('user.saves', 'saves')
+                    .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
+                    .leftJoinAndSelect('user.comments', 'comments')
+                    .leftJoinAndSelect('user.commentLikes', 'commentLikes')
+            }
+
+            const user = await queryBuilder
                 .where('user.username = :username', { username })
                 .getOne()
             if (!user) return null

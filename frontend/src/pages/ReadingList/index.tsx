@@ -71,7 +71,7 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
                     'title_document.news_community'
                 )}`}
             />
-            <TitleContainerPage>
+            <TitleContainerPage marginBottom={2}>
                 <TitlePage>
                     {t('dashboard.reading_list')} ({numSaves})
                 </TitlePage>

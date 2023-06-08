@@ -73,7 +73,10 @@ class CommentService {
                 user,
                 true
             )) as User
-            newComment.news = (await newsService.getByIdComment(data.newsId)) as News
+
+            const news = (await newsService.getByIdComment(data.newsId)) as News
+            news.numComments = news.numComments + 1
+            newComment.news = (await newsService.updateAll(news.id, news)) as News
 
             io.to(newComment.news?.slug).emit('createComment', newComment)
 
@@ -118,7 +121,10 @@ class CommentService {
                 user,
                 true
             )) as User
-            replyComment.news = (await newsService.getByIdComment(data.newsId)) as News
+
+            const news = (await newsService.getByIdComment(data.newsId)) as News
+            news.numComments = news.numComments + 1
+            replyComment.news = (await newsService.updateAll(news.id, news)) as News
 
             if (data.replyUserId) {
                 replyComment.replyUser = (await userService.getByIdComment(

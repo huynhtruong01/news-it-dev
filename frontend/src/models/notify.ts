@@ -4,18 +4,22 @@ import { IFilters, INews, IUser } from '.'
 export interface INotifyData {
     id?: number
     userId: number
-    newsId: number
+    newsId: number | null
     user?: IUser
-    news?: INews
+    news?: INews | null
     text?: string
     recipients?: IUser[]
-    readUsers: (string | number)[]
-    createdAt: Date
-    updatedAt: Date
+    readUsers?: (string | number)[]
+    createdAt?: Date
+    updatedAt?: Date
 }
 
 export interface INotify extends Omit<INotifyData, 'id'> {
     id: number
+}
+
+export interface INotifyDataComment extends INotifyData {
+    users?: string[]
 }
 
 export interface INotifyRes {

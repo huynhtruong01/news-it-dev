@@ -23,6 +23,11 @@ const newsSlice = createSlice({
     extraReducers,
 })
 
-export const { setInitValueForm, setNews, setNewsDetail, resetNewsDetail } =
-    newsSlice.actions
+export const {
+    setInitValueForm,
+    setNews,
+    setNewsDetail,
+    resetNewsDetail,
+    increaseNumComment,
+} = newsSlice.actions
 export default newsSlice.reducer

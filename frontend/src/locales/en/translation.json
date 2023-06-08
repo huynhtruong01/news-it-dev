@@ -60,7 +60,8 @@
         "create_news": "Create News",
         "change_your_password": "Change your password",
         "confirm_email": "Confirm email",
-        "send": "Send"
+        "send": "Send",
+        "share": "Share"
     },
 
     "news": {
@@ -246,5 +247,7 @@
     "liked your news": "liked your news",
     "reply to your comment": "reply to your comment",
     "follow you": "follow you",
-    "has been commented your news": "has been commented your news"
+    "has been commented your news": "has been commented your news",
+    "mention you": "mention you",
+    "you": "you"
 }

@@ -17,7 +17,9 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { NewsComment } from '.'
+import { NewsComment, NewsAction } from '.'
+import 'react-quill/dist/quill.snow.css'
+import 'highlight.js/styles/github.css'
 
 export interface INewsDetailProps extends BoxProps {
     pUser: IUser | null
@@ -128,12 +130,14 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
 
             <Box
                 component="article"
+                className="ql-snow"
                 padding={{
                     lg: theme.spacing(4, 8),
-                    xs: theme.spacing(0, 1.5, 2),
+                    xs: theme.spacing(0, 0, 2),
                 }}
             >
                 <Box
+                    className="ql-editor"
                     sx={{
                         '& > p': {
                             letterSpacing: '0.5px',
@@ -155,7 +159,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                             lineHeight: '30px !important',
                         },
                         img: {
-                            width: 'auto',
+                            width: '100%',
                             height: 'auto',
                             borderRadius: theme.spacing(0.75),
                             margin: 'auto',
@@ -166,10 +170,18 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                                 xs: theme.spacing(1, 0),
                             },
                         },
+                        pre: {
+                            '&.ql-syntax': {
+                                borderRadius: theme.spacing(0.75),
+                                padding: 3,
+                            },
+                        },
                     }}
                     dangerouslySetInnerHTML={{ __html: content }}
                 />
             </Box>
+
+            <NewsAction news={news} />
 
             <Divider />
 
@@ -201,7 +213,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                         {t('message.to_comment_news')}
                     </Typography>
                 )}
-                <NewsComment newsId={news.id} />
+                <NewsComment news={news} />
             </Box>
         </Box>
     )

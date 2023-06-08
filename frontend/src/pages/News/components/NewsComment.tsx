@@ -1,10 +1,12 @@
-import { commentApi } from '@/api'
+import { commentApi, notifyApi } from '@/api'
 import { CommentInput, CommentList } from '@/components'
 import { ProgressLoading } from '@/components/Common'
 import { Order } from '@/enums'
-import { IComment, ICommentData, IFilters, IUser } from '@/models'
+import { IComment, ICommentData, IFilters, INews, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
-import { getAllCommentsById } from '@/store/comment/thunkApi'
+import { getAllCommentsById, getAllCommentsByIdLoadMore } from '@/store/comment/thunkApi'
+import { increaseNumComment } from '@/store/news'
+import { analystTextToUsernames, theme } from '@/utils'
 import { Box, BoxProps, Button, Stack, Typography, useMediaQuery } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
@@ -14,19 +16,23 @@ import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
 export interface INewsCommentProps extends BoxProps {
-    newsId: number
+    news: INews
     pUser: IUser | null
     pComments: IComment[]
     pTotal: number
     pGetAllComments: (params: IFilters) => Promise<PayloadAction<unknown>>
+    pGetAllCommentsLoadMore: (params: IFilters) => Promise<PayloadAction<unknown>>
+    pIncreaseNumComments: () => void
 }
 
 function NewsComment({
-    newsId,
+    news,
     pUser,
     pComments,
     pGetAllComments,
     pTotal,
+    pGetAllCommentsLoadMore,
+    pIncreaseNumComments,
     ...rest
 }: INewsCommentProps) {
     const { t } = useTranslation()
@@ -58,7 +64,7 @@ function NewsComment({
         ;(async () => {
             setLoadingComment(true)
             try {
-                const newFilters = { ...filters, newsId }
+                const newFilters = { ...filters, newsId: news.id }
                 await pGetAllComments(newFilters)
             } catch (error) {
                 enqueueSnackbar((error as Error).message, {
@@ -73,8 +79,8 @@ function NewsComment({
         if (loadMore) {
             ;(async () => {
                 try {
-                    const newFilters = { ...filters, newsId }
-                    await pGetAllComments(newFilters)
+                    const newFilters = { ...filters, newsId: news.id }
+                    await pGetAllCommentsLoadMore(newFilters)
                 } catch (error) {
                     enqueueSnackbar((error as Error).message, {
                         variant: 'error',
@@ -94,11 +100,28 @@ function NewsComment({
         try {
             const newComment: ICommentData = {
                 userId: pUser?.id as number,
-                newsId,
+                newsId: news.id,
                 comment: value,
             }
 
             await commentApi.createComment(newComment)
+            pIncreaseNumComments()
+
+            const usernames = analystTextToUsernames(value) as string[]
+            if (usernames.length) {
+                const data = {
+                    userId: pUser?.id as number,
+                    newsId: news.id,
+                    user: pUser as IUser,
+                    news,
+                    text: 'mention you',
+                }
+
+                await notifyApi.createNotifiesForComment({
+                    ...data,
+                    users: usernames,
+                })
+            }
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',
@@ -130,7 +153,7 @@ function NewsComment({
                     variant={isSmallScreen ? 'h6' : 'h5'}
                     fontWeight={700}
                 >
-                    {t('news.comment')} ({commentLength})
+                    {t('news.comment')} ({news.numComments})
                 </Typography>
             </Box>
 
@@ -150,9 +173,16 @@ function NewsComment({
                 {!loadingComment && <CommentList comments={pComments} t={t} />}
 
                 {loadMore && <ProgressLoading />}
-                {hasLoadMore && commentLength && (
+                {hasLoadMore && !!commentLength && (
                     <Stack alignItems={'center'}>
-                        <Button variant="contained" onClick={handleLoadMore}>
+                        <Button
+                            variant="contained"
+                            onClick={handleLoadMore}
+                            sx={{
+                                padding: theme.spacing(1, 2),
+                                fontWeight: 500,
+                            }}
+                        >
                             Load more
                         </Button>
                     </Stack>
@@ -173,6 +203,9 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchProps = (dispatch: AppDispatch) => {
     return {
         pGetAllComments: (params: IFilters) => dispatch(getAllCommentsById(params)),
+        pGetAllCommentsLoadMore: (params: IFilters) =>
+            dispatch(getAllCommentsByIdLoadMore(params)),
+        pIncreaseNumComments: () => dispatch(increaseNumComment()),
     }
 }
 

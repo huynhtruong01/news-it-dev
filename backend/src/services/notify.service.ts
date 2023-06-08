@@ -3,7 +3,9 @@ import { relationDataNotify } from '@/data'
 import { Notify } from '@/entities'
 import { Order } from '@/enums'
 import { INotifyData, IObjectCommon } from '@/models'
+import { userService } from '@/services'
 import { createNotify, paginationQuery } from '@/utils'
+import { io } from 'server'
 
 class NotifyService {
     constructor(private notifyRepository = AppDataSource.getRepository(Notify)) {}
@@ -80,6 +82,41 @@ class NotifyService {
 
             notify.news = data.news ? data.news : null
             const newNotify = await this.notifyRepository.save(notify)
+
+            return newNotify
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // create multiple for comment
+    async createMultiForComment(data: INotifyData, users: string[]) {
+        try {
+            const recipients = []
+            for (const username of users) {
+                const user = await userService.getByUsername(username, true)
+                if (user) {
+                    recipients.push(user)
+                }
+            }
+
+            const notify = createNotify({
+                ...data,
+                recipients,
+            })
+
+            if (data.news) {
+                notify.news = data.news
+            }
+
+            if (data.user) {
+                notify.user = data.user
+            }
+
+            const newNotify = await this.notifyRepository.save(notify)
+            for (const user of recipients) {
+                io.to(user.id.toString()).emit('notifyNews', newNotify)
+            }
 
             return newNotify
         } catch (error) {

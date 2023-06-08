@@ -7,6 +7,8 @@ import { toolbarOptions } from '@/data'
 import { uploadImage, theme } from '@/utils'
 import { makeStyles } from '@mui/styles'
 import { red } from '@mui/material/colors'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css'
 
 export interface ITextEditorProps {
     value: string
@@ -18,11 +20,19 @@ export interface ITextEditorProps {
 }
 
 const modules = {
+    syntax: {
+        highlight: (text) => hljs.highlightElement(text),
+    },
     toolbar: toolbarOptions,
 }
 
 const useStyles = makeStyles({
     root: {
+        '& .ql-container.ql-snow': {
+            '& .ql-tooltip.ql-editing': {
+                left: '15px !important',
+            },
+        },
         '& .ql-container': {
             borderRadius: theme.spacing(0, 0, 0.5, 0.5),
             overflow: 'hidden',
@@ -37,7 +47,9 @@ const useStyles = makeStyles({
 
             '&[data-placeholder]::before': {
                 fontStyle: 'normal',
+                fontWeight: 300,
                 color: theme.palette.grey[400],
+                padding: theme.spacing(1, 0),
             },
 
             '& span': {

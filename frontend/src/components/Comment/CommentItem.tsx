@@ -2,8 +2,8 @@ import { commentApi } from '@/api'
 import { ButtonLikeComment, CommentAction } from '@/components/Comment/components'
 import { ButtonIconForm } from '@/components/Common'
 import { useLinkUser } from '@/hooks'
-import { IComment, ICommentData, IUser } from '@/models'
-import { AppState } from '@/store'
+import { IComment, ICommentData, INews, IUser } from '@/models'
+import { AppDispatch, AppState } from '@/store'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, Paper, Stack, Typography, alpha } from '@mui/material'
 import { TFunction } from 'i18next'
@@ -13,17 +13,16 @@ import { RiChat1Line } from 'react-icons/ri'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { CommentInput, CommentList } from '.'
+import { increaseNumComment } from '@/store/news'
 
 export interface ICommentItemProps {
-    pUser: IUser | null
-    // pReplyComment: (data: ICommentData) => Promise<PayloadAction<unknown>>
-    // pUpdateComment: (data: ICommentData) => Promise<PayloadAction<unknown>>
-    // pUpdateCommentReply: (data: ICommentData) => Promise<PayloadAction<unknown>>
     comment: IComment
     t: TFunction<'translation', undefined, 'translation'>
+    pUser: IUser | null
+    pIncreaseNumComments: () => void
 }
 
-function CommentItem({ pUser, comment, t }: ICommentItemProps) {
+function CommentItem({ pUser, comment, t, pIncreaseNumComments }: ICommentItemProps) {
     const [isReply, setIsReply] = useState<boolean>(false)
     const [initValue, setInitValue] = useState<string>('')
     const [edit, setEdit] = useState<IComment | null>(null)
@@ -38,6 +37,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
         user,
         childrenComments,
         newsId,
+        news,
         replyUserId,
         replyUser: replyUserData,
         createdAt,
@@ -68,6 +68,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
             }
 
             setReplyUser(null)
+            pIncreaseNumComments()
 
             await commentApi.replyComment(newComment)
         } catch (error) {
@@ -176,6 +177,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
 
                                                     a: {
                                                         fontWeight: 700,
+                                                        color: theme.palette.primary.main,
                                                     },
                                                 }}
                                             >
@@ -189,7 +191,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                                                 >
                                                     {replyUserData.username ===
                                                     pUser?.username
-                                                        ? 'you'
+                                                        ? t('you')
                                                         : replyUserData.username}
                                                 </Link>
                                             </Typography>
@@ -225,6 +227,16 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                                         },
                                         color: '#171717',
                                         fontWeight: 400,
+                                    },
+                                    '.mention': {
+                                        fontWeight: 500,
+                                        backgroundColor: alpha(
+                                            theme.palette.primary.dark,
+                                            0.125
+                                        ),
+                                        color: theme.palette.primary.dark,
+                                        padding: theme.spacing(0.25, 0.5),
+                                        borderRadius: theme.spacing(0.75),
                                     },
                                 }}
                             />
@@ -284,13 +296,16 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                             sx={{
                                 button: {
                                     width: 'auto',
-                                    backgroundColor: 'transparent',
+                                    backgroundColor: alpha(
+                                        theme.palette.secondary.dark,
+                                        0.05
+                                    ),
                                     color: alpha(theme.palette.secondary.main, 0.9),
                                     fontSize: theme.typography.body2,
                                     padding: theme.spacing(0.75, 1.5),
 
                                     '&:hover': {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
                                     },
                                 },
                             }}
@@ -301,6 +316,7 @@ function CommentItem({ pUser, comment, t }: ICommentItemProps) {
                                         text={t('button.likes') as string}
                                         comment={comment}
                                         user={pUser as IUser}
+                                        news={news as INews}
                                     />
                                     <ButtonIconForm
                                         text={t('button.reply') as string}
@@ -330,4 +346,10 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-export default connect(mapStateToProps, null)(CommentItem)
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pIncreaseNumComments: () => dispatch(increaseNumComment()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CommentItem)

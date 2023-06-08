@@ -2,7 +2,7 @@ import { sendEmail } from '@/config'
 import { User } from '@/entities'
 import { NewsStatus, Results, StatusCode, StatusText } from '@/enums'
 import { IObjectCommon, RequestUser } from '@/models'
-import { hashTagService, newsService, notifyService, userService } from '@/services'
+import { newsService, notifyService, userService } from '@/services'
 import { Request, Response } from 'express'
 import { io } from 'server'
 

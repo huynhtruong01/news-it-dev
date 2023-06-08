@@ -7,7 +7,7 @@ import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
-import { Box, BoxProps, IconButton, Stack, Typography } from '@mui/material'
+import { Box, BoxProps, Button, IconButton, Stack, Typography } from '@mui/material'
 import { indigo } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
@@ -76,8 +76,25 @@ function ButtonNewsSave({
     }
 
     return (
-        <Box {...rest} position={'relative'} width={'100%'} onClick={handleSaveNews}>
-            <Stack alignItems={'center'} padding={theme.spacing(0, 1)}>
+        <Box
+            {...rest}
+            position={'relative'}
+            width={{
+                md: '100%',
+                xs: 'auto',
+            }}
+            onClick={handleSaveNews}
+        >
+            <Stack
+                alignItems={'center'}
+                padding={theme.spacing(0, 1)}
+                sx={{
+                    display: {
+                        md: 'flex',
+                        xs: 'none',
+                    },
+                }}
+            >
                 <IconButton
                     title={t('news.save') as string}
                     sx={{
@@ -113,6 +130,32 @@ function ButtonNewsSave({
                     {numSaves}
                 </Typography>
             </Stack>
+
+            {/* mobile */}
+            <Button
+                variant="contained"
+                startIcon={
+                    saved ? (
+                        <BookmarkIcon
+                            sx={{
+                                color: `${indigo[500]} !important`,
+                            }}
+                        />
+                    ) : (
+                        <BookmarkBorderIcon />
+                    )
+                }
+                sx={{
+                    fontSize: theme.typography.caption,
+                    display: {
+                        md: 'none',
+                        xs: 'flex',
+                    },
+                    padding: theme.spacing(0.5, 0.5, 0.5, 0),
+                }}
+            >
+                {numSaves} {t('button.save')}
+            </Button>
         </Box>
     )
 }

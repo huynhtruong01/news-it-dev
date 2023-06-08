@@ -43,7 +43,7 @@ function TagsHome({ pTags, pGetAllTags }: ITagsProps) {
                     'title_document.news_community'
                 )}`}
             />
-            <TitleContainerPage>
+            <TitleContainerPage marginBottom={2}>
                 {loading ? (
                     <Skeleton variant="rounded" width={130} height={38} />
                 ) : (

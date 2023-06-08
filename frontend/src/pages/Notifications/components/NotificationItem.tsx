@@ -141,7 +141,7 @@ function NotificationItem({
             if (!pUser?.id) return
 
             navigate(link)
-            if (notify.readUsers.includes(pUser.id.toString())) return
+            if (notify.readUsers?.includes(pUser.id.toString())) return
 
             pUpdateReadUserNotify({
                 notify,
@@ -194,6 +194,9 @@ function NotificationItem({
                                 component={'span'}
                                 dangerouslySetInnerHTML={{
                                     __html: t(notify.text as string) || '',
+                                }}
+                                sx={{
+                                    lineHeight: 1.3,
                                 }}
                             />
                         </Typography>

@@ -69,12 +69,12 @@ export const reducers = {
 
         const indexFilters = newNotifiesFilters.findIndex((n) => n.id === notify.id)
         if (indexFilters > -1) {
-            newNotifiesFilters[indexFilters].readUsers.push(userId.toString())
+            newNotifiesFilters[indexFilters].readUsers?.push(userId.toString())
         }
 
         const index = newNotifies.findIndex((n) => n.id === notify.id)
         if (index > -1) {
-            newNotifies[indexFilters].readUsers.push(userId.toString())
+            newNotifies[indexFilters].readUsers?.push(userId.toString())
         }
 
         state.numNotifications =

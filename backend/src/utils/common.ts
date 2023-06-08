@@ -4,6 +4,13 @@ import { NewsStatus } from '@/enums'
 import { INotifyData } from '@/models'
 import { CookieOptions } from 'express'
 
+export const convertMentionToHtml = (text: string) => {
+    const mentionRegex = /@\[([\w\s]+)\]\((\d+)\)/g
+    const convertedText = text.replace(mentionRegex, "<span class='mention'>@$1</span>")
+
+    return convertedText
+}
+
 export const createUserData = (data: User): User => {
     const user = new User()
     user.username = data.username
@@ -57,7 +64,7 @@ export const createNews = (data: News): News => {
 
 export const createComment = (data: Comment): Comment => {
     const comment = new Comment()
-    comment.comment = data.comment
+    comment.comment = convertMentionToHtml(data.comment)
     comment.parentCommentId = data.parentCommentId || null
     comment.newsId = data.newsId
     comment.userId = data.userId
