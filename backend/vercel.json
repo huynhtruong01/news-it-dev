@@ -1,4 +1,5 @@
 {
+    "public": "public",
     "version": 2,
     "builds": [
       {
