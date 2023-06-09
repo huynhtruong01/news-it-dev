@@ -1,5 +1,5 @@
 {
-    "public": "public",
+    "public": false,
     "version": 2,
     "builds": [
       {
