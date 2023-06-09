@@ -39,11 +39,11 @@ function ModelDelete({
         try {
             if (pNews?.id) {
                 pDeleteNews(pNews.id)
+                pSetShowModalDelete(false)
+                pSetNews(null)
                 await newsApi.deleteNews(pNews?.id)
             }
 
-            pSetNews(null)
-            pSetShowModalDelete(false)
             enqueueSnackbar(`${t('message.delete_success')}`, {
                 variant: 'success',
             })
