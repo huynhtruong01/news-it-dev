@@ -139,6 +139,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                 <Box
                     className="ql-editor"
                     sx={{
+                        padding: 0,
                         '& > p': {
                             letterSpacing: '0.5px',
                             lineHeight: '30px !important',

@@ -69,7 +69,7 @@ function SettingsModalDelete({
                     component="h2"
                     fontWeight={700}
                 >
-                    Are you sure delete your account?
+                    {t('modal.delete_account')}
                 </Typography>
 
                 <Stack direction="row" gap={1} justifyContent="flex-end" marginTop={2}>
@@ -79,12 +79,12 @@ function SettingsModalDelete({
                             backgroundColor: alpha(theme.palette.secondary.main, 0.2),
                             color: theme.palette.secondary.main,
                             '&:hover': {
-                                backgroundColor: alpha(theme.palette.secondary.main, 0.5),
+                                backgroundColor: alpha(theme.palette.secondary.main, 0.3),
                             },
                         }}
                         onClick={handleClose}
                     >
-                        Cancel
+                        {t('button.cancel')}
                     </Button>
                     <Button
                         variant="contained"
@@ -97,7 +97,7 @@ function SettingsModalDelete({
                         }}
                         onClick={handleDeleteAccount}
                     >
-                        Delete
+                        {t('button.delete')}
                     </Button>
                 </Stack>
             </Box>

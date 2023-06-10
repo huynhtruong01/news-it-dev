@@ -2,4 +2,4 @@ export { default as AccountMenu } from '@/components/Common/Header/components/Ac
 export { default as HeaderRightLogged } from '@/components/Common/Header/components/HeaderRightLogged'
 export { default as HeaderRightNotLogged } from '@/components/Common/Header/components/HeaderRightNotLogged'
 export * from '@/components/Common/Header/components/HeaderSearch'
-export * from '@/components/Common/Header/components/DrawerList'
+export { default as DrawerList } from '@/components/Common/Header/components/DrawerList'

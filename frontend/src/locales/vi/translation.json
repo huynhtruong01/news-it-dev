@@ -244,6 +244,13 @@
         "telegram": "Chia sẻ trên Telegram"
     },
 
+    "modal": {
+        "delete_news": "Bạn có chắc chắn muốn xóa bài viết này?",
+        "news_undo": "Bạn không thể hoàn tác hành động này, có lẽ bạn chỉ muốn",
+        "instead": "thay vì",
+        "delete_account": "Bạn có chắc chắn muốn xóa tài khoản của bạn?"
+    },
+
     "liked your news": "đã thích bài viết của bạn",
     "reply to your comment": "đã phản hồi bình luận của bạn",
     "follow you": "đã theo dõi bạn",

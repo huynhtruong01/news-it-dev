@@ -14,7 +14,7 @@ export function TagsList({ tags, loading }: ITagsListProps) {
 
     return (
         <Box>
-            {tags.length === 0 && <EmptyList title={t('empty.no_tags')} />}
+            {!loading && tags.length === 0 && <EmptyList title={t('empty.no_tags')} />}
             {loading && <SkeletonHashTagList />}
             {!loading && (
                 <Grid container spacing={2}>

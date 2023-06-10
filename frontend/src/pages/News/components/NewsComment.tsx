@@ -107,6 +107,7 @@ function NewsComment({
             await commentApi.createComment(newComment)
             pIncreaseNumComments()
 
+            // notify create new comment
             const usernames = analystTextToUsernames(value) as string[]
             if (usernames.length) {
                 const data = {

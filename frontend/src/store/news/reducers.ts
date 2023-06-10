@@ -36,4 +36,12 @@ export const reducers = {
             }
         }
     },
+    decreaseNumComment: (state: INewsStore) => {
+        if (state.newsDetail) {
+            state.newsDetail = {
+                ...state.newsDetail,
+                numComments: (state.newsDetail.numComments as number) - 1,
+            }
+        }
+    },
 }

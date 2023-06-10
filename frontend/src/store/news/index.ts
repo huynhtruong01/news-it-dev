@@ -29,5 +29,6 @@ export const {
     setNewsDetail,
     resetNewsDetail,
     increaseNumComment,
+    decreaseNumComment,
 } = newsSlice.actions
 export default newsSlice.reducer

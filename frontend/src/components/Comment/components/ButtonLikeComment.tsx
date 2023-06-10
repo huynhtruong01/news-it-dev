@@ -2,6 +2,7 @@ import { commentApi } from '@/api'
 import { IComment, ICommentLikeNotify, INews, IUser } from '@/models'
 import { AppDispatch } from '@/store'
 import { likeCommentNotify } from '@/store/comment/thunkApi'
+import { setShowModalAuth } from '@/store/common'
 import { addLikeComment } from '@/store/user'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
@@ -22,6 +23,7 @@ export interface IButtonLikeCommentProps extends ButtonProps {
     pGetProfile: () => Promise<PayloadAction<unknown>>
     pAddCommentLike: (data: IComment) => void
     pLikeComment: (data: ICommentLikeNotify) => Promise<PayloadAction<unknown>>
+    pSetShowModalAuth: (isShow: boolean) => void
 }
 
 function ButtonLikeComment({
@@ -31,6 +33,7 @@ function ButtonLikeComment({
     text,
     pAddCommentLike,
     pLikeComment,
+    pSetShowModalAuth,
     ...rest
 }: IButtonLikeCommentProps) {
     const [isLike, setIsLike] = useState<boolean>(false)
@@ -49,6 +52,11 @@ function ButtonLikeComment({
 
     const handleLikeComment = async () => {
         try {
+            if (!user?.id) {
+                pSetShowModalAuth(true)
+                return
+            }
+
             if (isLike) {
                 setIsLike(false)
                 setNumLikes(numLikes - 1)
@@ -119,6 +127,7 @@ const mapDispatchProps = (dispatch: AppDispatch) => {
         pGetProfile: () => dispatch(getProfile()),
         pAddCommentLike: (data: IComment) => dispatch(addLikeComment(data)),
         pLikeComment: (data: ICommentLikeNotify) => dispatch(likeCommentNotify(data)),
+        pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
     }
 }
 

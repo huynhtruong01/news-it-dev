@@ -14,15 +14,23 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { CommentInput, CommentList } from '.'
 import { increaseNumComment } from '@/store/news'
+import { setShowModalAuth } from '@/store/common'
 
 export interface ICommentItemProps {
     comment: IComment
     t: TFunction<'translation', undefined, 'translation'>
     pUser: IUser | null
     pIncreaseNumComments: () => void
+    pSetShowModalAuth: (isShow: boolean) => void
 }
 
-function CommentItem({ pUser, comment, t, pIncreaseNumComments }: ICommentItemProps) {
+function CommentItem({
+    pUser,
+    comment,
+    t,
+    pIncreaseNumComments,
+    pSetShowModalAuth,
+}: ICommentItemProps) {
     const [isReply, setIsReply] = useState<boolean>(false)
     const [initValue, setInitValue] = useState<string>('')
     const [edit, setEdit] = useState<IComment | null>(null)
@@ -48,6 +56,11 @@ function CommentItem({ pUser, comment, t, pIncreaseNumComments }: ICommentItemPr
     }, [comment])
 
     const handleShowInputReply = (user: IUser) => {
+        if (!pUser?.id) {
+            pSetShowModalAuth(true)
+            return
+        }
+
         setReplyUser(user)
         setIsReply(true)
     }
@@ -349,6 +362,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pIncreaseNumComments: () => dispatch(increaseNumComment()),
+        pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
     }
 }
 

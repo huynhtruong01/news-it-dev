@@ -106,8 +106,9 @@ function ModelDelete({
                     variant="h6"
                     component="h2"
                     fontWeight={700}
+                    lineHeight={1.3}
                 >
-                    Are you sure you want to delete this article?
+                    {t('modal.delete_news')}
                 </Typography>
 
                 <Typography
@@ -125,11 +126,11 @@ function ModelDelete({
                         },
                     }}
                 >
-                    You cannot undo this action, perhaps you just want to{' '}
+                    {t('modal.news_undo')}{' '}
                     <Link to={`/update-news`} onClick={handleSetInitValuesNews}>
-                        edit
+                        {t('button.edit')}
                     </Link>{' '}
-                    instead?
+                    {t('modal.instead')}?
                 </Typography>
 
                 <Stack direction="row" gap={1} justifyContent="flex-end">
@@ -148,7 +149,7 @@ function ModelDelete({
                         }}
                         onClick={handleClose}
                     >
-                        Cancel
+                        {t('button.cancel')}
                     </Button>
                     <Button
                         variant="contained"
@@ -165,7 +166,7 @@ function ModelDelete({
                         }}
                         onClick={handleDeleteNews}
                     >
-                        Delete
+                        {t('button.delete')}
                     </Button>
                 </Stack>
             </Box>
