@@ -203,7 +203,8 @@
         "active_account": "Kích hoạt tài khoản của bạn thành công",
         "please": "Vui lòng",
         "to_comment_news": "để bình luận bài viết này",
-        "modal_text_auth": "Nếu bạn muốn theo dõi, bình luận, thích, lưu lại tin tức; bạn cần đăng nhập để tiếp tục."
+        "modal_text_auth": "Nếu bạn muốn theo dõi, bình luận, thích, lưu lại tin tức; bạn cần đăng nhập để tiếp tục.",
+        "loading_sign_up": "Đang đăng ký tài khoản của bạn..."
     },
 
     "signout": {
@@ -248,7 +249,8 @@
         "delete_news": "Bạn có chắc chắn muốn xóa bài viết này?",
         "news_undo": "Bạn không thể hoàn tác hành động này, có lẽ bạn chỉ muốn",
         "instead": "thay vì",
-        "delete_account": "Bạn có chắc chắn muốn xóa tài khoản của bạn?"
+        "delete_account": "Bạn có chắc chắn muốn xóa tài khoản của bạn?",
+        "delete_comment": "Bạn có chắc chắn muốn xóa bình luận này?"
     },
 
     "liked your news": "đã thích bài viết của bạn",

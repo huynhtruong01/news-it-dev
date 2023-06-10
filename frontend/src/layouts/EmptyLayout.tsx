@@ -21,6 +21,7 @@ export function EmptyLayout({ children, ...rest }: IEmptyLayoutProps) {
                 paddingTop: `${HEADER_HEIGHT}px`,
                 paddingBottom: 2,
                 backgroundColor: theme.palette.grey['A100'],
+                minHeight: '100vh',
             }}
             {...rest}
         >

@@ -1,4 +1,4 @@
-import { INotify } from '@/models'
+import { INotify, INotifyUpdateRead, IUser } from '@/models'
 import { Box, BoxProps, IconButton, Menu, MenuItem } from '@mui/material'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { useState } from 'react'
@@ -12,10 +12,11 @@ import { useTranslation } from 'react-i18next'
 
 export interface INotifyActionProps extends BoxProps {
     notify: INotify
-    pDeleteNotify: (data: INotify) => void
+    user: IUser | null
+    pDeleteNotify: (data: INotifyUpdateRead) => void
 }
 
-function NotifyAction({ notify, pDeleteNotify, ...rest }: INotifyActionProps) {
+function NotifyAction({ notify, pDeleteNotify, user, ...rest }: INotifyActionProps) {
     const { t } = useTranslation()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -30,7 +31,7 @@ function NotifyAction({ notify, pDeleteNotify, ...rest }: INotifyActionProps) {
 
     const handleDeleteNotify = async () => {
         try {
-            pDeleteNotify(notify)
+            pDeleteNotify({ notify, userId: user?.id as number })
             handleClose()
             await notifyApi.deleteNotify(notify.id)
         } catch (error) {
@@ -66,7 +67,7 @@ function NotifyAction({ notify, pDeleteNotify, ...rest }: INotifyActionProps) {
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pDeleteNotify: (data: INotify) => dispatch(deleteNotify(data)),
+        pDeleteNotify: (data: INotifyUpdateRead) => dispatch(deleteNotify(data)),
     }
 }
 

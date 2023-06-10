@@ -91,7 +91,7 @@ export const reducers = {
 
         const includesNews = user?.saves?.find((n) => n.id === news.id)
         if (!includesNews) {
-            user?.saves?.push(news)
+            user?.saves?.unshift(news)
         }
 
         state.user = user

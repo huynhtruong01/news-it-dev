@@ -45,7 +45,9 @@ export function ButtonIconForm({
             }
             onClick={handleButtonClick}
             sx={{
-                backgroundColor: alpha(theme.palette.secondary.main, 0.075),
+                backgroundColor: isLiked
+                    ? red[50]
+                    : alpha(theme.palette.secondary.main, 0.075),
                 span: {
                     xs: theme.typography.body2,
                 },

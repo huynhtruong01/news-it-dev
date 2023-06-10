@@ -143,7 +143,7 @@ function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps
                             <span>
                                 {article.readTimes} {t('common.min_read')}
                             </span>
-                            <b> • </b>
+                            {(article?.hashTags?.length as number) > 0 && <b> • </b>}
                             <Stack direction={'row'} gap={0.5} flexWrap={'wrap'}>
                                 {article?.hashTags &&
                                     article?.hashTags.map((tag) => (

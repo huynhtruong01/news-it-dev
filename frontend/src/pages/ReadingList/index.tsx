@@ -13,6 +13,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 export interface IReadingListProps {
     pUser: IUser | null
@@ -22,13 +23,18 @@ export interface IReadingListProps {
 
 function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListProps) {
     const { t } = useTranslation()
+    const navigate = useNavigate()
     const [loading, setLoading] = useState<boolean>(true)
     const [filters, setFilters] = useState<IFiltersNewsSave>({
         search: '',
     })
 
     useEffect(() => {
-        if (!pUser?.id) return
+        if (!pUser?.id) {
+            navigate('/login')
+            return
+        }
+
         ;(async () => {
             try {
                 setLoading(true)

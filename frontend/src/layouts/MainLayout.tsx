@@ -20,7 +20,10 @@ export function MainLayout({ children }: IMainLayoutProps) {
         <Box
             sx={{
                 position: 'relative',
-                paddingTop: `${HEADER_HEIGHT}px`,
+                paddingTop: {
+                    md: `${HEADER_HEIGHT + 20}px`,
+                    xs: `${HEADER_HEIGHT}px`,
+                },
                 backgroundColor: theme.palette.grey['A100'],
             }}
         >

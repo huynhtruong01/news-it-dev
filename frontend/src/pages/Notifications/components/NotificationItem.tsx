@@ -181,20 +181,11 @@ function NotificationItem({
                     />
                     <Box>
                         <Typography
+                            variant="body2"
                             sx={{
-                                fontSize: {
-                                    md: theme.typography.body1,
-                                    xs: theme.typography.body2,
-                                },
                                 lineHeight: 1,
                                 a: {
                                     fontWeight: 600,
-                                },
-                                'a, span': {
-                                    fontSize: {
-                                        md: theme.typography.body1,
-                                        xs: '15px',
-                                    },
                                 },
                             }}
                         >
@@ -224,6 +215,7 @@ function NotificationItem({
 
                 <NotifyAction
                     notify={notify}
+                    user={pUser}
                     sx={{
                         display: {
                             md: 'inline-block',

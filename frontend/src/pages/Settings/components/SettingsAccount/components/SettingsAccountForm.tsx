@@ -1,17 +1,17 @@
-import { PasswordField } from '@/components/FormFields'
-import { ISettingSetPassword, IResetPassword } from '@/models'
-import { Box, Stack, BoxProps, Typography, Button, Paper } from '@mui/material'
-import { red } from '@mui/material/colors'
-import { useForm } from 'react-hook-form'
-import { theme } from '@/utils'
 import { authApi } from '@/api'
-import { enqueueSnackbar } from 'notistack'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { ButtonLoadingForm } from '@/components/Common'
+import { PasswordField } from '@/components/FormFields'
+import { IResetPassword, ISettingSetPassword } from '@/models'
 import { AppDispatch } from '@/store'
 import { setShowModalDeleteAccount } from '@/store/common'
-import { connect } from 'react-redux'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Box, BoxProps, Button, Paper, Stack, Typography } from '@mui/material'
+import { red } from '@mui/material/colors'
+import { enqueueSnackbar } from 'notistack'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
+import * as yup from 'yup'
 
 export interface ISettingsAccountFormProps extends BoxProps {
     emailAddress: string
@@ -88,7 +88,7 @@ function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
                         paddingTop={2}
                         onSubmit={handleSubmit(handleSetPassword)}
                     >
-                        <Box marginBottom={2}>
+                        <Box marginBottom={3}>
                             <PasswordField<ISettingSetPassword>
                                 form={form}
                                 label={t('input.current_password')}
@@ -108,22 +108,11 @@ function SettingsAccountForm({ emailAddress, pSetShowModal, ...rest }) {
                                 disabled={isSubmitting}
                             />
                         </Box>
-                        <Button
-                            variant="contained"
-                            type="submit"
-                            disabled={isSubmitting}
-                            sx={{
-                                fontWeight: 500,
-                                padding: 1.5,
-                                backgroundColor: theme.palette.primary.light,
-
-                                '&:hover': {
-                                    backgroundColor: theme.palette.primary.dark,
-                                },
-                            }}
-                        >
-                            {t('button.set_new_password')}
-                        </Button>
+                        <ButtonLoadingForm
+                            loading={isSubmitting}
+                            text={t('button.set_new_password')}
+                            fullWidth={false}
+                        />
                     </Box>
                 </Box>
 

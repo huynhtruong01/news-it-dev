@@ -20,6 +20,8 @@ export function Seo({
             <meta name="title" content={title} />
             <meta name="description" content={description} />
             <meta name="image" content={image} />
+            <meta property="og:image:width" content="600" />
+            <meta property="og:image:height" content="314" />
 
             <meta property="og:type" content="website" />
             <meta property="og:url" content={url} />

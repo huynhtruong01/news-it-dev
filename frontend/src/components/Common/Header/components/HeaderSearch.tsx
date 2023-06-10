@@ -27,7 +27,7 @@ import {
     useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ProgressLoading, EmptyList } from '@/components/Common'
 
 export interface IHeaderSearchProps extends BoxProps {
@@ -91,7 +91,9 @@ export function HeaderSearch({ searchVal, setSearchVal, ...rest }: IHeaderSearch
     const searchRef = useRef<HTMLInputElement | null>(null)
     const [news, setNews] = useState<IObjectCommon[]>([])
     const [searchList, setSearchList] = useState<string>('')
+    const [noShow, setNoShow] = useState<boolean>(false)
     const navigate = useNavigate()
+    const location = useLocation()
 
     useEffect(() => {
         if (!searchList) return
@@ -117,6 +119,9 @@ export function HeaderSearch({ searchVal, setSearchVal, ...rest }: IHeaderSearch
 
     useEffect(() => {
         setSearchList('')
+        if (location.pathname.startsWith('/search')) {
+            setNoShow(true)
+        }
     }, [navigate])
 
     const handleSearchListChange = (value: string) => {
@@ -193,10 +198,12 @@ export function HeaderSearch({ searchVal, setSearchVal, ...rest }: IHeaderSearch
                     },
                 }}
             />
-            <ListResult
-                list={news as IObjectCommon[]}
-                display={searchList ? 'block' : 'none'}
-            />
+            {!noShow && (
+                <ListResult
+                    list={news as IObjectCommon[]}
+                    display={searchList ? 'block' : 'none'}
+                />
+            )}
         </Box>
     )
 }

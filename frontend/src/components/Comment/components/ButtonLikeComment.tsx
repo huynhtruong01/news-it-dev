@@ -8,7 +8,7 @@ import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import { Button, ButtonProps, Typography } from '@mui/material'
+import { Button, ButtonProps, Typography, alpha } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
@@ -97,6 +97,9 @@ function ButtonLikeComment({
                 )
             }
             sx={{
+                backgroundColor: isLike
+                    ? `${red[50]} !important`
+                    : alpha(theme.palette.secondary.dark, 0.05),
                 span: {
                     fontSize: theme.typography.body2,
                 },

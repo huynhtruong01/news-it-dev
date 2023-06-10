@@ -1,4 +1,5 @@
 import { Seo, SkeletonProfile } from '@/components/Common'
+import { COLOR_WHITE } from '@/consts'
 import { IUser } from '@/models'
 import {
     ProfileHeader,
@@ -55,7 +56,10 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                         md: 150,
                         xs: 100,
                     },
-                    backgroundColor: theme.palette.primary.dark,
+                    backgroundColor:
+                        pUser?.bandingColor !== COLOR_WHITE
+                            ? pUser?.bandingColor
+                            : theme.palette.primary.dark,
                 }}
             ></Box>
 
@@ -68,7 +72,7 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
                     marginTop: '-4rem',
                     padding: {
                         md: 0,
-                        xs: 2,
+                        xs: 1,
                     },
                 }}
             >

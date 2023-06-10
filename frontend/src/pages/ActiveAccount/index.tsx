@@ -2,12 +2,13 @@ import { authApi } from '@/api'
 import { theme } from '@/utils'
 import { Box, Paper, Typography, alpha } from '@mui/material'
 import { enqueueSnackbar } from 'notistack'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 
 export function ActiveAccount() {
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(false)
     const params = useParams()
 
     useEffect(() => {
@@ -15,6 +16,7 @@ export function ActiveAccount() {
         ;(async () => {
             try {
                 if (params.activeToken) {
+                    setLoading(true)
                     const activeToken = (decodeURIComponent(params.activeToken) as string)
                         .split('_')
                         .join('.')
@@ -29,6 +31,8 @@ export function ActiveAccount() {
                     variant: 'error',
                 })
             }
+
+            setLoading(false)
         })()
     }, [params.activeToken])
 
@@ -48,8 +52,10 @@ export function ActiveAccount() {
                     },
                 }}
             >
-                {t('message.active_account')}🎉🎉.{' '}
-                <Link to={'/login'}>{t('auth.login')}</Link>
+                {loading
+                    ? `${t('message.loading_sign_up')}`
+                    : `${t('message.active_account')}🎉🎉`}
+                . <Link to={'/login'}>{t('auth.login')}</Link>
             </Typography>
         </Box>
     )

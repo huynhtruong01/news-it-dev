@@ -105,21 +105,8 @@ function CommentInput({
                             onChange={(e) => setValue(e.target.value)}
                             placeholder={t('placeholder.add_discussion') as string}
                             style={defaultInputStyle}
+                            a11ySuggestionsListLabel={'Suggested mentions'}
                         >
-                            {/* <TextField
-                            inputRef={commentInputRef ? commentInputRef : inputRef}
-                            value={value}
-                            fullWidth
-                            onChange={(e) => setValue(e.target.value)}
-                            minRows={isSmallScreen ? 3 : 6}
-                            multiline
-                            placeholder={t('placeholder.add_discussion') as string}
-                            sx={{
-                                '& fieldset': {
-                                    borderRadius: theme.spacing(1),
-                                },
-                            }}
-                        /> */}
                             <Mention trigger="@" data={mentions} style={defaultInput} />
                         </MentionsInput>
                     </Box>

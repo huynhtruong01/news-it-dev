@@ -2,26 +2,24 @@ import { alpha } from '@mui/material'
 import { theme } from '.'
 
 export const defaultInputStyle = {
+    minHeight: 150,
     control: {
         backgroundColor: '#fff',
-        fontSize: 14,
-        fontWeight: 'normal',
+        fontSize: 16,
     },
 
     '&multiLine': {
         control: {
-            fontFamily: 'Roboto, sans-serif',
-            minHeight: 150,
+            fontFamily: 'monospace',
         },
         highlighter: {
-            padding: theme.spacing(1),
+            padding: 9,
             border: '1px solid transparent',
         },
         input: {
-            padding: theme.spacing(1),
+            padding: 9,
+            border: '1px solid silver',
             borderRadius: theme.spacing(0.75),
-            fontSize: '1rem',
-            top: '1px',
         },
     },
 
@@ -31,13 +29,11 @@ export const defaultInputStyle = {
 
         highlighter: {
             padding: 1,
+            border: '2px inset transparent',
         },
         input: {
-            padding: theme.spacing(0.25, 0.5),
-            borderRadius: theme.spacing(0.75),
-            color: theme.palette.primary.dark,
-            fontSize: '1rem',
-            top: '1px',
+            padding: 1,
+            border: '2px inset',
         },
     },
 
@@ -45,23 +41,18 @@ export const defaultInputStyle = {
         list: {
             backgroundColor: 'white',
             border: '1px solid rgba(0,0,0,0.15)',
-            fontSize: 14,
-            borderRadius: theme.spacing(0.75),
+            fontSize: 16,
         },
         item: {
-            padding: theme.spacing(0.25, 0.5),
+            padding: '5px 15px',
+            borderBottom: '1px solid rgba(0,0,0,0.15)',
             '&focused': {
-                backgroundColor: alpha(theme.palette.primary.dark, 0.125),
-                color: theme.palette.primary.dark,
+                backgroundColor: alpha(theme.palette.primary.main, 0.1),
             },
-            borderRadius: theme.spacing(0.75),
-            color: theme.palette.primary.dark,
         },
     },
 }
 
 export const defaultInput = {
-    backgroundColor: alpha(theme.palette.primary.dark, 0.15),
-    borderRadius: theme.spacing(0.75),
-    fontSize: '1rem',
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
 }

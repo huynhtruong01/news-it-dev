@@ -1,13 +1,15 @@
 import { commentApi } from '@/api'
+import { ModalAction, ModalIconDelete } from '@/components/Modals/components'
 import { IComment } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setComment } from '@/store/comment'
 import { setShowModalDeleteComment } from '@/store/common'
 import { decreaseNumComment } from '@/store/news'
 import { theme } from '@/utils'
-import { Box, Button, Modal, Paper, Stack, Typography, alpha } from '@mui/material'
-import { red } from '@mui/material/colors'
+import { Box, Modal, Paper, Typography } from '@mui/material'
 import { enqueueSnackbar } from 'notistack'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 
 export interface IModelDeleteCommentProps {
@@ -25,6 +27,9 @@ function ModelDeleteComment({
     pSetShowModalDeleteComment,
     pSetNumNewsComments,
 }: IModelDeleteCommentProps) {
+    const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(false)
+
     const handleClose = () => {
         pSetShowModalDeleteComment(false)
     }
@@ -32,17 +37,19 @@ function ModelDeleteComment({
     const handleDeleteComment = async () => {
         try {
             if (pComment?.id) {
+                setLoading(true)
+                await commentApi.deleteComment(pComment.id)
+
                 pSetComment(null)
                 pSetShowModalDeleteComment(false)
                 pSetNumNewsComments()
-
-                await commentApi.deleteComment(pComment.id)
             }
         } catch (error) {
             enqueueSnackbar('Delete comment failed.', {
                 variant: 'error',
             })
         }
+        setLoading(false)
     }
 
     return (
@@ -61,57 +68,41 @@ function ModelDeleteComment({
                     transform: 'translate(-50%, -50%)',
                     width: {
                         md: 400,
-                        xs: '85%',
+                        xs: '95%',
                     },
-                    padding: 3,
+                    padding: {
+                        md: 3,
+                        xs: 2,
+                    },
                 }}
             >
+                <ModalIconDelete />
+
                 <Typography
-                    id="modal-modal-title"
                     variant="h6"
                     component="h2"
                     fontWeight={700}
-                    marginBottom={1.5}
+                    marginBottom={2.5}
+                    sx={{
+                        padding: {
+                            md: theme.spacing(0, 4),
+                            xs: theme.spacing(0, 1),
+                        },
+                        textAlign: 'center',
+                        lineHeight: 1.5,
+                        color: theme.palette.secondary.dark,
+                    }}
                 >
-                    Are you sure you want to delete this comment?
+                    {t('modal.delete_comment')}
                 </Typography>
 
-                <Stack direction="row" gap={1} justifyContent="flex-end">
-                    <Button
-                        variant="contained"
-                        sx={{
-                            flex: {
-                                md: 'none',
-                                xs: 1,
-                            },
-                            backgroundColor: alpha(theme.palette.secondary.main, 0.2),
-                            color: theme.palette.secondary.main,
-                            '&:hover': {
-                                backgroundColor: alpha(theme.palette.secondary.main, 0.5),
-                            },
-                        }}
-                        onClick={handleClose}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            flex: {
-                                md: 'none',
-                                xs: 1,
-                            },
-                            backgroundColor: red[500],
-                            color: theme.palette.primary.contrastText,
-                            '&:hover': {
-                                backgroundColor: red[700],
-                            },
-                        }}
-                        onClick={handleDeleteComment}
-                    >
-                        Delete
-                    </Button>
-                </Stack>
+                {/* actions */}
+                <ModalAction
+                    onClose={handleClose}
+                    onDelete={handleDeleteComment}
+                    isCallApi
+                    loading={loading}
+                />
             </Box>
         </Modal>
     )

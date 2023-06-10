@@ -35,7 +35,12 @@ export function Header() {
                     zIndex: 10,
                 }}
             >
-                <Container>
+                <Container
+                    sx={{
+                        paddingTop: '0 !important',
+                        paddingBottom: '0 !important',
+                    }}
+                >
                     <Box
                         sx={{
                             display: 'flex',

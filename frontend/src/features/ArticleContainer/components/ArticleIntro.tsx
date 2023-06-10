@@ -95,10 +95,6 @@ function ArticleIntro({
         }
     }
 
-    // const commentLength = useMemo(() => {
-    //     return comments?.length || 0
-    // }, [article])
-
     return (
         <Box
             width={'100%'}
@@ -114,7 +110,7 @@ function ArticleIntro({
                     variant="h4"
                     fontWeight={'bold'}
                     sx={{
-                        marginBottom: 1,
+                        marginBottom: 0.5,
                         a: {
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
@@ -135,7 +131,7 @@ function ArticleIntro({
                     <Typography
                         sx={{
                             fontSize: theme.typography.body2,
-                            color: alpha(theme.palette.secondary.dark, 0.8),
+                            color: alpha(theme.palette.secondary.dark, 0.7),
                             display: {
                                 md: '-webkit-box',
                                 xs: 'none',

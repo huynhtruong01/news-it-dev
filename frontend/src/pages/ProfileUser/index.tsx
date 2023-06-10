@@ -1,5 +1,6 @@
 import { userApi } from '@/api'
 import { Seo, SkeletonProfile } from '@/components/Common'
+import { COLOR_WHITE } from '@/consts'
 import { IsFollow } from '@/enums'
 import { IFollow, IFollowNotify, IUser } from '@/models'
 import {
@@ -130,7 +131,10 @@ function ProfileUser({
                         md: 150,
                         xs: 100,
                     },
-                    backgroundColor: theme.palette.primary.dark,
+                    backgroundColor:
+                        user?.bandingColor !== COLOR_WHITE
+                            ? pUser?.bandingColor
+                            : theme.palette.primary.dark,
                 }}
             ></Box>
 
@@ -143,7 +147,7 @@ function ProfileUser({
                     marginTop: '-4rem',
                     padding: {
                         md: 0,
-                        xs: 2,
+                        xs: 1,
                     },
                 }}
             >

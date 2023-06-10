@@ -82,18 +82,21 @@ export const reducers = {
         state.notifications = newNotifies
         state.notificationsFilter = newNotifiesFilters
     },
-    deleteNotify: (state: INotifyStore, action: PayloadAction<INotify>) => {
+    deleteNotify: (state: INotifyStore, action: PayloadAction<INotifyUpdateRead>) => {
+        const { notify, userId } = action.payload
         const notifies = [...state.notifications]
         const notifiesFilters = [...state.notificationsFilter]
 
-        const indexNotifiesFilters = notifiesFilters.findIndex(
-            (n) => n.id === action.payload.id
-        )
-        const indexNotifies = notifies.findIndex((n) => n.id === action.payload.id)
+        const indexNotifiesFilters = notifiesFilters.findIndex((n) => n.id === notify.id)
+        const indexNotifies = notifies.findIndex((n) => n.id === notify.id)
 
         if (indexNotifies > -1) notifies.splice(indexNotifies, 1)
         if (indexNotifiesFilters > -1) notifiesFilters.splice(indexNotifiesFilters, 1)
 
+        const filtersNotifyNotRead = notifies.filter((n) => n.readUsers?.includes(userId))
+
+        state.numNotifications = filtersNotifyNotRead.length
+        state.total = notifies.length
         state.notifications = [...notifies]
         state.notificationsFilter = [...notifiesFilters]
     },

@@ -1,16 +1,17 @@
+import { newsApi } from '@/api'
+import { ModalAction, ModalIconDelete } from '@/components/Modals/components'
+import { INews, INewsForm, IOptionItem, IStatus } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalDelete } from '@/store/common'
-import { Box, Modal, Typography, Button, Stack, alpha, Paper } from '@mui/material'
-import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { red, yellow } from '@mui/material/colors'
-import { theme } from '@/utils'
-import { enqueueSnackbar } from 'notistack'
-import { newsApi } from '@/api'
-import { INews, INewsForm, IOptionItem, IStatus } from '@/models'
 import { setInitValueForm, setNews } from '@/store/news'
 import { deleteNewsUser } from '@/store/user'
+import { theme } from '@/utils'
+import { Box, Modal, Paper, Typography, alpha } from '@mui/material'
+import { yellow } from '@mui/material/colors'
+import { enqueueSnackbar } from 'notistack'
 import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 export interface IModelDeleteProps {
     pShowModalDelete: boolean
@@ -85,6 +86,9 @@ function ModelDelete({
             open={!!pShowModalDelete}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
+            sx={{
+                padding: 1,
+            }}
         >
             <Box
                 component={Paper}
@@ -96,26 +100,41 @@ function ModelDelete({
                     transform: 'translate(-50%, -50%)',
                     width: {
                         md: 400,
-                        xs: '85%',
+                        xs: '95%',
                     },
-                    padding: 3,
+                    padding: {
+                        md: 3,
+                        xs: 2,
+                    },
                 }}
             >
+                <ModalIconDelete />
+
                 <Typography
-                    id="modal-modal-title"
                     variant="h6"
                     component="h2"
                     fontWeight={700}
-                    lineHeight={1.3}
+                    marginBottom={1.5}
+                    sx={{
+                        padding: {
+                            md: theme.spacing(0, 4),
+                            xs: theme.spacing(0, 1),
+                        },
+                        textAlign: 'center',
+                        lineHeight: 1.5,
+                        color: theme.palette.secondary.dark,
+                    }}
                 >
                     {t('modal.delete_news')}
                 </Typography>
 
                 <Typography
-                    id="modal-modal-description"
                     sx={{
-                        mt: 1,
-                        mb: 2,
+                        padding: theme.spacing(0, 4),
+                        textAlign: 'center',
+                        fontSize: theme.typography.body2,
+                        color: alpha(theme.palette.secondary.dark, 0.7),
+                        marginBottom: 3,
                         a: {
                             color: yellow[700],
                         },
@@ -133,42 +152,7 @@ function ModelDelete({
                     {t('modal.instead')}?
                 </Typography>
 
-                <Stack direction="row" gap={1} justifyContent="flex-end">
-                    <Button
-                        variant="contained"
-                        sx={{
-                            flex: {
-                                md: 'none',
-                                xs: 1,
-                            },
-                            backgroundColor: alpha(theme.palette.secondary.main, 0.2),
-                            color: theme.palette.secondary.main,
-                            '&:hover': {
-                                backgroundColor: alpha(theme.palette.secondary.main, 0.5),
-                            },
-                        }}
-                        onClick={handleClose}
-                    >
-                        {t('button.cancel')}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            flex: {
-                                md: 'none',
-                                xs: 1,
-                            },
-                            backgroundColor: red[500],
-                            color: theme.palette.primary.contrastText,
-                            '&:hover': {
-                                backgroundColor: red[700],
-                            },
-                        }}
-                        onClick={handleDeleteNews}
-                    >
-                        {t('button.delete')}
-                    </Button>
-                </Stack>
+                <ModalAction onClose={handleClose} onDelete={handleDeleteNews} />
             </Box>
         </Modal>
     )

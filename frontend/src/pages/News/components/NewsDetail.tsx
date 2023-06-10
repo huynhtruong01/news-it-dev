@@ -139,7 +139,10 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                 <Box
                     className="ql-editor"
                     sx={{
-                        padding: 0,
+                        padding: {
+                            md: 0,
+                            xs: 2,
+                        },
                         '& > p': {
                             letterSpacing: '0.5px',
                             lineHeight: '30px !important',
@@ -184,7 +187,11 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
 
             <NewsAction news={news} />
 
-            <Divider />
+            <Divider
+                sx={{
+                    borderColor: alpha(theme.palette.secondary.dark, 0.1),
+                }}
+            />
 
             <Box
                 padding={{

@@ -157,15 +157,15 @@ function CommentItem({
                         <Paper
                             elevation={1}
                             sx={{
-                                padding: theme.spacing(1.5),
+                                padding: 1,
                             }}
                         >
                             <Stack
                                 direction={'row'}
                                 justifyContent={'space-between'}
-                                alignItems={'flex-start'}
+                                alignItems={'center'}
                             >
-                                <Box>
+                                <Stack direction={'row'} alignItems={'center'} gap={0.5}>
                                     <Typography
                                         component="span"
                                         fontWeight={500}
@@ -210,7 +210,18 @@ function CommentItem({
                                             </Typography>
                                         </>
                                     )}
-                                    <span> • </span>
+                                    <Typography
+                                        component={'span'}
+                                        sx={{
+                                            color: alpha(
+                                                theme.palette.secondary.dark,
+                                                0.5
+                                            ),
+                                        }}
+                                    >
+                                        {' '}
+                                        •{' '}
+                                    </Typography>
                                     <Box
                                         component="time"
                                         fontSize={'12px'}
@@ -218,7 +229,7 @@ function CommentItem({
                                     >
                                         {formatDate(createdAt || new Date(), 'MMM DD')}
                                     </Box>
-                                </Box>
+                                </Stack>
                                 {pUser?.id === comment.userId && (
                                     <CommentAction
                                         comment={comment}

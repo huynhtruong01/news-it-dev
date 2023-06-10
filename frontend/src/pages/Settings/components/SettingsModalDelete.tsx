@@ -1,14 +1,15 @@
 import { authApi } from '@/api'
+import { ModalAction, ModalIconDelete } from '@/components/Modals/components'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalDeleteAccount } from '@/store/common'
 import { signout } from '@/store/user'
 import { theme } from '@/utils'
-import { Box, Button, Modal, Paper, Stack, Typography, alpha } from '@mui/material'
-import { red } from '@mui/material/colors'
+import { Box, Modal, Paper, Typography } from '@mui/material'
 import { enqueueSnackbar } from 'notistack'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 
 export interface ISettingsModalDeleteProps {
     pShowModalDeleteAccount: boolean
@@ -22,6 +23,7 @@ function SettingsModalDelete({
     pResetValueRedux,
 }: ISettingsModalDeleteProps) {
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
 
     const handleClose = () => {
@@ -30,19 +32,22 @@ function SettingsModalDelete({
 
     const handleDeleteAccount = async () => {
         try {
+            setLoading(true)
+            await authApi.deleteMe()
+
             pResetValueRedux()
             enqueueSnackbar(t('message.delete_account_success'), {
                 variant: 'success',
             })
             handleClose()
             navigate('/')
-
-            await authApi.deleteMe()
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',
             })
         }
+
+        setLoading(false)
     }
 
     return (
@@ -59,47 +64,41 @@ function SettingsModalDelete({
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    padding: 3,
+                    width: {
+                        md: 400,
+                        xs: '95%',
+                    },
+                    padding: {
+                        md: 3,
+                        xs: 2,
+                    },
                 }}
             >
+                <ModalIconDelete />
+
                 <Typography
-                    id="modal-modal-title"
                     variant="h6"
                     component="h2"
                     fontWeight={700}
+                    sx={{
+                        padding: {
+                            md: theme.spacing(0, 4),
+                            xs: theme.spacing(0, 1),
+                        },
+                        textAlign: 'center',
+                        lineHeight: 1.5,
+                        marginBottom: 3,
+                    }}
                 >
                     {t('modal.delete_account')}
                 </Typography>
 
-                <Stack direction="row" gap={1} justifyContent="flex-end" marginTop={2}>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            backgroundColor: alpha(theme.palette.secondary.main, 0.2),
-                            color: theme.palette.secondary.main,
-                            '&:hover': {
-                                backgroundColor: alpha(theme.palette.secondary.main, 0.3),
-                            },
-                        }}
-                        onClick={handleClose}
-                    >
-                        {t('button.cancel')}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            backgroundColor: red[500],
-                            color: theme.palette.primary.contrastText,
-                            '&:hover': {
-                                backgroundColor: red[700],
-                            },
-                        }}
-                        onClick={handleDeleteAccount}
-                    >
-                        {t('button.delete')}
-                    </Button>
-                </Stack>
+                <ModalAction
+                    onClose={handleClose}
+                    onDelete={handleDeleteAccount}
+                    isCallApi
+                    loading={loading}
+                />
             </Box>
         </Modal>
     )

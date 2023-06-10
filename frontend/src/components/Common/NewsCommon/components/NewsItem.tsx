@@ -175,7 +175,7 @@ function NewsItem({
                 </Link>
                 <Box>
                     <Typography
-                        variant="body1"
+                        variant="body2"
                         sx={{
                             lineHeight: 1,
                             a: {

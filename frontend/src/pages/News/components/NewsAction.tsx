@@ -32,7 +32,10 @@ export function NewsAction({ news, pComment }: INewsActionProps) {
             component="aside"
             width={'100%'}
             sx={{
-                padding: theme.spacing(0, 1.5),
+                padding: {
+                    sm: theme.spacing(0, 2),
+                    xs: theme.spacing(0, 2),
+                },
                 marginBottom: 3,
                 display: {
                     md: 'none',
@@ -43,18 +46,35 @@ export function NewsAction({ news, pComment }: INewsActionProps) {
             <Stack
                 direction={'row'}
                 alignItems={'center'}
-                gap={0.75}
+                justifyContent={'space-between'}
+                gap={1.25}
                 sx={{
                     '& button': {
+                        width: '100%',
                         fontSize: {
                             xs: theme.typography.body2,
                         },
                     },
                 }}
             >
-                <ButtonNewsLike news={news} />
-                <ButtonNewsComments totalComments={commentLength} />
-                <ButtonMore news={news} />
+                <ButtonNewsLike
+                    news={news}
+                    sx={{
+                        flex: 1,
+                    }}
+                />
+                <ButtonNewsComments
+                    totalComments={commentLength}
+                    sx={{
+                        flex: 1,
+                    }}
+                />
+                <ButtonMore
+                    news={news}
+                    sx={{
+                        flex: 1,
+                    }}
+                />
             </Stack>
         </Box>
     )

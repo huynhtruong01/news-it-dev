@@ -55,9 +55,15 @@ let theme = createTheme({
                 },
                 maxWidthMd: {
                     maxWidth: 1264,
+                    '@media (min-width: 320px)': {
+                        maxWidth: '100%',
+                        width: '100%',
+                        padding: '8px',
+                    },
                     '@media (min-width: 480px)': {
                         maxWidth: '100%',
                         width: '100%',
+                        padding: '8px',
                     },
                     '@media (min-width: 768px)': {
                         maxWidth: '100%',
