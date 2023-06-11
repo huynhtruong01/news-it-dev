@@ -40,7 +40,7 @@ function ButtonLikeComment({
     const [numLikes, setNumLikes] = useState<number>(comment.likes?.length || 0)
 
     useEffect(() => {
-        const isLike = comment.likes?.some((u) => u.id === user?.id)
+        const isLike = user?.commentLikes?.some((u) => u.id === comment.id)
         if (isLike) {
             setIsLike(true)
         } else {

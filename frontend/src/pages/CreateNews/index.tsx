@@ -16,10 +16,19 @@ const generateNewValues = (values: INewsForm) => {
     const { hashTagOptionIds, hashTags, ...rest } = values
     const ids = generateIds(hashTagOptionIds as IOptionItem[])
 
+    const newContent = handleCleanContent(rest.content)
+    rest.content = newContent
+
     return {
         newValues: rest,
         ids,
     }
+}
+
+const handleCleanContent = (content: string) => {
+    // replace empty p tag
+    const newContent = content.replace(/<p><\/p>/g, '')
+    return newContent
 }
 
 export interface ICreateNewsProps {

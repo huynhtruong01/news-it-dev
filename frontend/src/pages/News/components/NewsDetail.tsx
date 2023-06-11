@@ -17,9 +17,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { NewsComment, NewsAction } from '.'
-import 'react-quill/dist/quill.snow.css'
-import 'highlight.js/styles/github.css'
+import { NewsComment, NewsAction, NewsContent } from '.'
 
 export interface INewsDetailProps extends BoxProps {
     pUser: IUser | null
@@ -128,63 +126,7 @@ function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
                 </Box>
             </Box>
 
-            <Box
-                component="article"
-                className="ql-snow"
-                padding={{
-                    lg: theme.spacing(4, 8),
-                    xs: theme.spacing(0, 0, 2),
-                }}
-            >
-                <Box
-                    className="ql-editor"
-                    sx={{
-                        padding: {
-                            md: 0,
-                            xs: 2,
-                        },
-                        '& > p': {
-                            letterSpacing: '0.5px',
-                            lineHeight: '30px !important',
-                            fontSize: {
-                                md: '20px',
-                                sm: '18px',
-                                xs: '1rem',
-                            },
-                            color: '#171717',
-                            overflowWrap: 'break-word',
-                            margin: {
-                                lg: theme.spacing(0, 0, 2.5, 0),
-                                md: theme.spacing(0, 0, 1, 0),
-                                xs: 0,
-                            },
-                        },
-                        span: {
-                            lineHeight: '30px !important',
-                        },
-                        img: {
-                            width: '100%',
-                            height: 'auto',
-                            borderRadius: theme.spacing(0.75),
-                            margin: 'auto',
-                        },
-                        'h1,h2,h3,h4,h5,h6': {
-                            margin: {
-                                md: theme.spacing(1.25, 0),
-                                xs: theme.spacing(1, 0),
-                            },
-                        },
-                        pre: {
-                            '&.ql-syntax': {
-                                borderRadius: theme.spacing(0.75),
-                                padding: 3,
-                            },
-                        },
-                    }}
-                    dangerouslySetInnerHTML={{ __html: content }}
-                />
-            </Box>
-
+            <NewsContent content={news.content} />
             <NewsAction news={news} />
 
             <Divider

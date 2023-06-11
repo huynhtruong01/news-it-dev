@@ -46,7 +46,13 @@
     "notifications": {
         "title": "Các thông báo",
         "not_read": "Chưa đọc",
-        "read": "Đã đọc"
+        "read": "Đã đọc",
+        "like_news": "Các tin tức đã thích",
+        "followers": "Những người theo dõi",
+        "comments": "Các bình luận",
+        "like_comment": "Các bình luận đã thích",
+        "news": "Các tin tức",
+        "reply": "Các bình luận đã trả lời"
     },
 
     "tags": {

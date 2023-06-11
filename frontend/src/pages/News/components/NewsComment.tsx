@@ -121,6 +121,7 @@ function NewsComment({
                 await notifyApi.createNotifiesForComment({
                     ...data,
                     users: usernames,
+                    commentText: value,
                 })
             }
         } catch (error) {

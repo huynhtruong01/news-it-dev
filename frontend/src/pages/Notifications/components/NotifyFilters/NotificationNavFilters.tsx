@@ -18,7 +18,15 @@ export function NotificationNavFilters({
 }: INotificationNavFiltersProps) {
     const { t } = useTranslation()
     const handleNavFilters = (value: INotifyRead | string | number) => {
-        setFilters((prev) => ({ ...prev, isRead: value as INotifyRead, page: 1 }))
+        const newFilters = { ...filters }
+        if (typeof value === 'number') {
+            delete newFilters.type
+            setFilters({ ...newFilters, isRead: value as INotifyRead, page: 1 })
+            return
+        }
+
+        delete newFilters.isRead
+        setFilters({ ...newFilters, type: value, page: 1 })
     }
 
     return (
@@ -66,14 +74,20 @@ export function NotificationNavFilters({
                         component="li"
                         sx={{
                             backgroundColor:
-                                filters.isRead === notify.value
+                                filters.isRead === notify.value ||
+                                filters.type === notify.value
                                     ? alpha(theme.palette.primary.dark, 0.1)
                                     : 'transparent',
                             color:
-                                filters.isRead === notify.value
+                                filters.isRead === notify.value ||
+                                filters.type === notify.value
                                     ? theme.palette.primary.dark
                                     : theme.palette.secondary.main,
-                            fontWeight: filters.isRead === notify.value ? 700 : 400,
+                            fontWeight:
+                                filters.isRead === notify.value ||
+                                filters.type === notify.value
+                                    ? 700
+                                    : 400,
                         }}
                         onClick={() => handleNavFilters(notify.value as INotifyRead)}
                     >

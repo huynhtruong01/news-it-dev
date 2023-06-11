@@ -22,7 +22,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import { Avatar, Box, Button, Paper, Stack, Typography, alpha } from '@mui/material'
-import { indigo, red } from '@mui/material/colors'
+import { green, indigo, red } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
 import { enqueueSnackbar } from 'notistack'
@@ -32,6 +32,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 import { NotifyAction } from '.'
 import { useTranslation } from 'react-i18next'
+import { RiChat1Fill } from 'react-icons/ri'
 
 export interface INotificationItemProps {
     pUser: IUser | null
@@ -291,6 +292,40 @@ function NotificationItem({
                         </Typography>
                     </Typography>
                     <HashTagList tags={notify.news?.hashTags as IHashTag[]} />
+                    {notify.commentText && (
+                        <Stack
+                            direction={'row'}
+                            alignItems={'center'}
+                            gap={1.5}
+                            sx={{
+                                marginTop: 1,
+                                padding: 2,
+                                borderLeft: `4px solid ${green[500]}`,
+                                borderRadius: theme.spacing(0.75),
+                                backgroundColor: alpha(
+                                    theme.palette.secondary.light,
+                                    0.075
+                                ),
+                                color: theme.palette.secondary.light,
+                            }}
+                        >
+                            <Box
+                                display={'inline-flex'}
+                                sx={{
+                                    padding: 0.5,
+                                    backgroundColor: green[100],
+                                    borderRadius: '50%',
+                                    svg: {
+                                        fontSize: '20px',
+                                        color: green[500],
+                                    },
+                                }}
+                            >
+                                <RiChat1Fill />
+                            </Box>
+                            <Typography>{notify.commentText}</Typography>
+                        </Stack>
+                    )}
                     <Stack
                         direction={'row'}
                         justifyContent={'space-between'}

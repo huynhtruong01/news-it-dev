@@ -36,20 +36,26 @@ export const reducers = {
                                   : (n.news?.title as string).toLowerCase().includes(w)
                           )
 
-            let isRead
-            switch (filters.isRead) {
-                case ALL:
-                    isRead = true
-                    break
-                case 0:
-                    isRead = !n.readUsers?.includes(userId.toString() as string)
-                    break
-                case 1:
-                    isRead = n.readUsers?.includes(userId.toString() as string)
-                    break
+            if (typeof filters.isRead === 'number' && (filters.isRead as number) > -2) {
+                let isRead
+                switch (filters.isRead) {
+                    case ALL:
+                        isRead = true
+                        break
+                    case 0:
+                        isRead = !n.readUsers?.includes(userId.toString() as string)
+                        break
+                    case 1:
+                        isRead = n.readUsers?.includes(userId.toString() as string)
+                        break
+                }
+
+                return search && isRead
             }
 
-            return search && isRead
+            if (filters.type) {
+                return filters.type === n.type && search
+            }
         })
 
         state.notificationsFilter = newNotifications

@@ -19,6 +19,10 @@ export const followNotify = (data: INotifyData) => {
     return AxiosClient.post(`${BASE_URL}/follow`, data).then((res) => res.data)
 }
 
+export const replyCommentNotify = (data: INotifyData) => {
+    return AxiosClient.post(`${BASE_URL}/reply`, data).then((res) => res.data)
+}
+
 export const getNotifies = (params: IFilters) => {
     return AxiosClient.get(`${BASE_URL}`, { params }).then((res) => res.data)
 }

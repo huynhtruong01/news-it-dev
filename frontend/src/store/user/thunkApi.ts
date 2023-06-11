@@ -13,6 +13,7 @@ import {
     IUser,
 } from '@/models'
 import { setLs } from '@/utils'
+import { NotifyType } from '@/enums'
 
 export interface IProfileFilters {
     id: number
@@ -70,6 +71,7 @@ export const followUserApi = createAsyncThunk(
             recipients: [userFollow],
             readUsers: [],
             text: 'follow you',
+            type: NotifyType.FOLLOW,
         }
         await notifyApi.followNotify(notify)
         return data

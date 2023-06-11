@@ -79,7 +79,13 @@
     "notifications": {
         "title": "Notifications",
         "not_read": "Not read",
-        "read": "Read"
+        "read": "Read",
+        "like_news": "Liked news",
+        "followers": "Followers",
+        "comments": "Comments",
+        "like_comment": "Liked comment",
+        "news": "News",
+        "reply": "Reply comments"
     },
 
     "profile": {

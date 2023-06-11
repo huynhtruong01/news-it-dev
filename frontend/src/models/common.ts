@@ -36,6 +36,7 @@ export interface IFilters {
     hashTagIds?: string
     newsId?: number
     isRead?: number
+    userId?: number
 }
 
 export interface IUploadImg {

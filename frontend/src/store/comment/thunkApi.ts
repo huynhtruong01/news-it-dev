@@ -1,10 +1,5 @@
-import {
-    ActionReducerMapBuilder,
-    PayloadAction,
-    createAsyncThunk,
-} from '@reduxjs/toolkit'
 import { commentApi, notifyApi } from '@/api'
-import { ICommentStore } from '.'
+import { NotifyType } from '@/enums'
 import {
     IComment,
     ICommentData,
@@ -14,6 +9,13 @@ import {
     INotifyData,
     IUser,
 } from '@/models'
+import {
+    ActionReducerMapBuilder,
+    PayloadAction,
+    createAsyncThunk,
+} from '@reduxjs/toolkit'
+import { ICommentStore } from '.'
+import {} from './../../models/notify'
 
 export const getAllCommentsById = createAsyncThunk(
     'comment/getAllCommentsById',
@@ -73,9 +75,6 @@ export const likeCommentNotify = createAsyncThunk(
     'comment/likeCommentNotify',
     async (data: ICommentLikeNotify) => {
         const { user, comment, news } = data
-
-        await commentApi.likeComment(comment.id)
-
         const notify: INotifyData = {
             userId: user.id,
             user,
@@ -83,8 +82,10 @@ export const likeCommentNotify = createAsyncThunk(
             newsId: news.id,
             text: 'like your comment',
             recipients: [comment.user as IUser],
+            type: NotifyType.LIKE_COMMENT,
         }
 
+        await commentApi.likeComment(comment.id)
         await notifyApi.likeNotify(notify)
     }
 )
@@ -155,4 +156,8 @@ export const extraReducers = (builders: ActionReducerMapBuilder<ICommentStore>) 
             state.comments = [...state.comments, ...action.payload.comments]
         }
     )
+
+    builders.addCase(likeCommentNotify.fulfilled, () => {
+        return
+    })
 }

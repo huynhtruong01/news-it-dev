@@ -1,5 +1,5 @@
-import { newsApi } from '@/api'
-import { IObjectCommon } from '@/models'
+import { newsApi, searchHistoryApi } from '@/api'
+import { IObjectCommon, ISearchHistoryData, IUser } from '@/models'
 import { debounceFunc, theme } from '@/utils'
 import SearchIcon from '@mui/icons-material/Search'
 import {
@@ -29,10 +29,13 @@ import {
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ProgressLoading, EmptyList } from '@/components/Common'
+import { connect } from 'react-redux'
+import { AppState } from '@/store'
 
 export interface IHeaderSearchProps extends BoxProps {
     searchVal: string
     setSearchVal: Dispatch<SetStateAction<string>>
+    pUser: IUser | null
 }
 
 interface IListProps extends BoxProps {
@@ -86,7 +89,7 @@ export function ListResult({ loading, list, ...rest }: IListProps) {
     )
 }
 
-export function HeaderSearch({ searchVal, setSearchVal, ...rest }: IHeaderSearchProps) {
+function HeaderSearch({ searchVal, setSearchVal, pUser, ...rest }: IHeaderSearchProps) {
     const { t } = useTranslation()
     const searchRef = useRef<HTMLInputElement | null>(null)
     const [news, setNews] = useState<IObjectCommon[]>([])
@@ -121,6 +124,8 @@ export function HeaderSearch({ searchVal, setSearchVal, ...rest }: IHeaderSearch
         setSearchList('')
         if (location.pathname.startsWith('/search')) {
             setNoShow(true)
+        } else {
+            setNoShow(false)
         }
     }, [navigate])
 
@@ -139,10 +144,23 @@ export function HeaderSearch({ searchVal, setSearchVal, ...rest }: IHeaderSearch
         debounceSearch(value)
     }
 
-    const handleSearchNews = (e: FormEvent<HTMLElement>) => {
+    const handleSearchNews = async (e: FormEvent<HTMLElement>) => {
         e.preventDefault()
         navigate(`/search?q=${encodeURIComponent(searchVal)}`)
         if (searchRef.current) searchRef.current.blur()
+
+        try {
+            if (pUser?.id) {
+                const searchHistory: ISearchHistoryData = {
+                    userId: pUser?.id as number,
+                    user: pUser as IUser,
+                    searchQuery: searchVal,
+                }
+                await searchHistoryApi.createSearchHistory(searchHistory)
+            }
+        } catch (error) {
+            throw new Error(error as string)
+        }
     }
 
     return (
@@ -207,3 +225,11 @@ export function HeaderSearch({ searchVal, setSearchVal, ...rest }: IHeaderSearch
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(HeaderSearch)

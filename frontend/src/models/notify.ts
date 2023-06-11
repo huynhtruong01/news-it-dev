@@ -1,5 +1,14 @@
 import { ALL } from '@/consts'
 import { IFilters, INews, IUser } from '.'
+import { NotifyType } from '@/enums'
+
+export type INotifyType =
+    | NotifyType.COMMENT
+    | NotifyType.FOLLOW
+    | NotifyType.LIKE
+    | NotifyType.LIKE_COMMENT
+    | NotifyType.REPLY
+    | NotifyType.DEFAULT
 
 export interface INotifyData {
     id?: number
@@ -8,8 +17,10 @@ export interface INotifyData {
     user?: IUser
     news?: INews | null
     text?: string
+    commentText?: string
     recipients?: IUser[]
     readUsers?: (string | number)[]
+    type?: INotifyType
     createdAt?: Date
     updatedAt?: Date
 }
@@ -35,6 +46,7 @@ export interface INotifyFilters {
     limit: number
     isRead?: INotifyRead
     search?: string
+    type?: string
 }
 
 export interface INotifiesFilter {

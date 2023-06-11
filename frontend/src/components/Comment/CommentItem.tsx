@@ -1,8 +1,8 @@
-import { commentApi } from '@/api'
+import { commentApi, notifyApi } from '@/api'
 import { ButtonLikeComment, CommentAction } from '@/components/Comment/components'
 import { ButtonIconForm } from '@/components/Common'
 import { useLinkUser } from '@/hooks'
-import { IComment, ICommentData, INews, IUser } from '@/models'
+import { IComment, ICommentData, INews, INotifyData, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, Paper, Stack, Typography, alpha } from '@mui/material'
@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom'
 import { CommentInput, CommentList } from '.'
 import { increaseNumComment } from '@/store/news'
 import { setShowModalAuth } from '@/store/common'
+import { NotifyType } from '@/enums'
 
 export interface ICommentItemProps {
     comment: IComment
@@ -80,10 +81,25 @@ function CommentItem({
                     : comment.id,
             }
 
-            setReplyUser(null)
             pIncreaseNumComments()
 
             await commentApi.replyComment(newComment)
+            setLoadingReply(false)
+
+            const notify: INotifyData = {
+                userId: pUser?.id as number,
+                newsId: newsId,
+                user: pUser as IUser,
+                news: news as INews,
+                recipients: [replyUser as IUser],
+                commentText: value,
+                readUsers: [],
+                text: 'reply to your comment',
+                type: NotifyType.REPLY,
+            }
+            await notifyApi.replyCommentNotify(notify)
+
+            setReplyUser(null)
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',

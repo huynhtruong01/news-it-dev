@@ -6,6 +6,7 @@ import {
 } from '@reduxjs/toolkit'
 import { INewsStore } from '.'
 import { INews, INewsActions, INotifyData, IUser } from '@/models'
+import { NotifyType } from '@/enums'
 
 export const getNews = createAsyncThunk('news/getNews', async (slug: string) => {
     const result = await newsApi.getNewsBySlug(slug)
@@ -26,6 +27,7 @@ export const likeNewsApi = createAsyncThunk(
             text: 'liked your news',
             recipients: [news.user as IUser],
             readUsers: [],
+            type: NotifyType.LIKE,
         }
 
         await notifyApi.likeNotify(notify)

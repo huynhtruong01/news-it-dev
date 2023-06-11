@@ -28,10 +28,11 @@ function ArticleContainer({ pUser }: IArticleContainer) {
         ;(async () => {
             try {
                 if (filters.page === 1) setLoading(true)
+                const newFilters = pUser?.id
+                    ? { ...filters, userId: pUser?.id }
+                    : { ...filters }
 
-                const res = await newsApi.getAllNewsPublic({
-                    ...filters,
-                })
+                const res = await newsApi.getAllNewsPublic(newFilters)
                 if (filters.page === 1) {
                     setNewsList(res.data.news)
                 } else {
