@@ -9,6 +9,7 @@ import { theme } from '@/utils'
 import { Box, Modal, Paper, Typography, alpha } from '@mui/material'
 import { yellow } from '@mui/material/colors'
 import { enqueueSnackbar } from 'notistack'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -31,6 +32,7 @@ function ModelDelete({
     pSetInitValuesNewsForm,
 }: IModelDeleteProps) {
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleClose = () => {
         pSetShowModalDelete(false)
@@ -39,20 +41,23 @@ function ModelDelete({
     const handleDeleteNews = async () => {
         try {
             if (pNews?.id) {
+                setLoading(true)
+                await newsApi.deleteNews(pNews?.id)
+                setLoading(false)
                 pDeleteNews(pNews.id)
                 pSetShowModalDelete(false)
                 pSetNews(null)
-                await newsApi.deleteNews(pNews?.id)
             }
 
             enqueueSnackbar(`${t('message.delete_success')}`, {
                 variant: 'success',
             })
         } catch (error) {
-            enqueueSnackbar('Delete failed.', {
+            enqueueSnackbar('Delete failed', {
                 variant: 'error',
             })
         }
+        setLoading(false)
     }
 
     const handleSetInitValuesNews = () => {
@@ -152,7 +157,12 @@ function ModelDelete({
                     {t('modal.instead')}?
                 </Typography>
 
-                <ModalAction onClose={handleClose} onDelete={handleDeleteNews} />
+                <ModalAction
+                    onClose={handleClose}
+                    onDelete={handleDeleteNews}
+                    loading={loading}
+                    isCallApi
+                />
             </Box>
         </Modal>
     )

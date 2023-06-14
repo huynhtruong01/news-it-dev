@@ -57,11 +57,11 @@ export function ListResult({ loading, list, ...rest }: IListProps) {
             }}
             {...rest}
         >
-            {loading && <ProgressLoading />}
-            {list.length === 0 && (
+            {loading && <ProgressLoading padding={1.5} />}
+            {list.length === 0 && !loading && (
                 <EmptyList title={'No results'} noPaper padding={1.5} />
             )}
-            {list.length > 0 && (
+            {!loading && list.length > 0 && (
                 <List>
                     {list.map((item) => (
                         <Link to={`/news/${item.slug}`} key={item.id}>
@@ -95,6 +95,7 @@ function HeaderSearch({ searchVal, setSearchVal, pUser, ...rest }: IHeaderSearch
     const [news, setNews] = useState<IObjectCommon[]>([])
     const [searchList, setSearchList] = useState<string>('')
     const [noShow, setNoShow] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -102,6 +103,7 @@ function HeaderSearch({ searchVal, setSearchVal, pUser, ...rest }: IHeaderSearch
         if (!searchList) return
         ;(async () => {
             try {
+                setLoading(true)
                 const res = await newsApi.getAllNewsPublic({
                     limit: 5,
                     page: 1,
@@ -117,6 +119,7 @@ function HeaderSearch({ searchVal, setSearchVal, pUser, ...rest }: IHeaderSearch
             } catch (error) {
                 throw new Error(error as string)
             }
+            setLoading(false)
         })()
     }, [searchList])
 
@@ -218,6 +221,7 @@ function HeaderSearch({ searchVal, setSearchVal, pUser, ...rest }: IHeaderSearch
             />
             {!noShow && (
                 <ListResult
+                    loading={loading}
                     list={news as IObjectCommon[]}
                     display={searchList ? 'block' : 'none'}
                 />

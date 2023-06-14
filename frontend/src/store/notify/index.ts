@@ -9,6 +9,7 @@ export interface INotifyStore {
     numNotifications: number
     total: number
     totalFilter: number
+    notify: INotify | null
 }
 
 const initialState: INotifyStore = {
@@ -17,6 +18,7 @@ const initialState: INotifyStore = {
     numNotifications: 0,
     total: 0,
     totalFilter: 0,
+    notify: null,
 }
 
 const notifySlice = createSlice({
@@ -32,5 +34,6 @@ export const {
     readUserNotify,
     deleteNotify,
     setNotificationFilters,
+    setNotify,
 } = notifySlice.actions
 export default notifySlice.reducer

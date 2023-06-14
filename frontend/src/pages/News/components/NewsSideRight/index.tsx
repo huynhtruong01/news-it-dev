@@ -20,7 +20,7 @@ export function NewsSideRight({ news, ...rest }: INewsSideRightProps) {
                 <NewsSideRightUser user={news.user as IUser} t={t} />
                 <NewsSideRightRelationUser news={news} user={news.user as IUser} t={t} />
                 <NewsSideRightRelation
-                    newsId={news.id}
+                    news={news}
                     hashTagIds={news.hashTagIds as number[]}
                     t={t}
                 />

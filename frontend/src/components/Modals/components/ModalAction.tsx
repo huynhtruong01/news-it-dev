@@ -53,7 +53,6 @@ export function ModalAction({
             {isCallApi ? (
                 <LoadingButton
                     loading={loading}
-                    loadingPosition="start"
                     variant="contained"
                     disabled={loading}
                     sx={{

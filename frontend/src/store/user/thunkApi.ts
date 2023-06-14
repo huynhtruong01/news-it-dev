@@ -4,11 +4,12 @@ import {
     createAsyncThunk,
 } from '@reduxjs/toolkit'
 import { IUserStore } from '.'
-import { authApi, notifyApi, userApi } from '@/api'
+import { authApi, hashTagApi, notifyApi, userApi } from '@/api'
 import {
     IFacebookLoginParams,
     IFiltersUserNews,
     IFollowNotify,
+    IHashTag,
     INotifyData,
     IUser,
 } from '@/models'
@@ -88,6 +89,24 @@ export const unfollowUserApi = createAsyncThunk(
     }
 )
 
+export const followHashTag = createAsyncThunk(
+    'user/followHashTag',
+    async (data: IHashTag) => {
+        await hashTagApi.followHashTag(data.id)
+
+        return data
+    }
+)
+
+export const unfollowHashTag = createAsyncThunk(
+    'user/unfollowHashTag',
+    async (data: IHashTag) => {
+        await hashTagApi.unfollowHashTag(data.id)
+
+        return data
+    }
+)
+
 export const extraReducers = (builders: ActionReducerMapBuilder<IUserStore>) => {
     builders.addCase(
         getProfile.fulfilled,
@@ -120,4 +139,27 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IUserStore>) => 
     builders.addCase(followUserApi.fulfilled, () => {
         return
     })
+
+    builders.addCase(
+        followHashTag.fulfilled,
+        (state: IUserStore, action: PayloadAction<IHashTag>) => {
+            const newUser = { ...state.user }
+            newUser.hashTags?.push(action.payload)
+            state.user = newUser as IUser
+        }
+    )
+
+    builders.addCase(
+        unfollowHashTag.fulfilled,
+        (state: IUserStore, action: PayloadAction<IHashTag>) => {
+            const newUser = { ...state.user }
+            const index = newUser.hashTags?.findIndex(
+                (t) => t.id === action.payload.id
+            ) as number
+            if (index > 0) {
+                newUser.hashTags?.splice(index, 1)
+                state.user = newUser as IUser
+            }
+        }
+    )
 }

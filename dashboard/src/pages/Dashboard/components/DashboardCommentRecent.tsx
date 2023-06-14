@@ -41,9 +41,10 @@ function DashboardCommentRecent({ pCommentsDashboard }: IDashboardCommentRecentP
                                 >
                                     {comment.user?.username}
                                 </Typography>
-                                <Typography component="span">
-                                    {comment.comment}
-                                </Typography>
+                                <Typography
+                                    component="span"
+                                    dangerouslySetInnerHTML={{ __html: comment.comment }}
+                                />
                             </Stack>
                         </Stack>
                     </Box>

@@ -17,24 +17,22 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export interface INewsSideRightRelationProps extends BoxProps {
-    newsId: number
+    news: INews
     hashTagIds: number[]
     t: TFunction<'translation', undefined, 'translation'>
 }
 
 export function NewsSideRightRelation({
     hashTagIds,
-    newsId,
+    news,
     t,
     ...rest
 }: INewsSideRightRelationProps) {
     const isMiddleScreen = useMediaQuery('(min-width:320px)')
     const [loading, setLoading] = useState<boolean>(false)
     const [newsTagsList, setNewsTagsList] = useState<INews[]>([])
-    const [newHashTagIds, setNewHashTagIds] = useState<number[]>([])
 
     useEffect(() => {
-        if (newHashTagIds.length === hashTagIds.length || !hashTagIds) return
         ;(async () => {
             try {
                 setLoading(true)
@@ -44,12 +42,12 @@ export function NewsSideRightRelation({
                     createdAt: Order.DESC,
                     hashTagIds: hashTagIds.join(','),
                     status: Status.PUBLIC,
+                    title: news.title,
                 }
                 const res = await newsApi.getNewsByTagIds(filters)
 
-                const newNewsList = res.data.news.filter((n: INews) => n.id !== newsId)
+                const newNewsList = res.data.news.filter((n: INews) => n.id !== news.id)
                 setNewsTagsList(newNewsList)
-                setNewHashTagIds(hashTagIds)
             } catch (error) {
                 throw new Error(error as string)
             }

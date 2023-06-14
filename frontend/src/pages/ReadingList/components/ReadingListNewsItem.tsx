@@ -1,33 +1,31 @@
 import { useLinkUser } from '@/hooks'
 import { INews, IUser } from '@/models'
+import { AppDispatch } from '@/store'
+import { setShowModalUnSaveReading } from '@/store/common'
 import { formatDate, theme } from '@/utils'
 import { Avatar, Box, Button, Stack, Typography, alpha } from '@mui/material'
+import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
-import { enqueueSnackbar } from 'notistack'
-import { AppDispatch } from '@/store'
-import { unsaveUserFiltersNews } from '@/store/user'
 import { connect } from 'react-redux'
-import { newsApi } from '@/api'
+import { Link } from 'react-router-dom'
 
 export interface IReadingListNewsItemProps {
     article: INews
-    pUnSaveNews: (data: INews) => void
+    setArticleUnSave?: Dispatch<SetStateAction<INews | null>>
+    pSetShowModalUnSaveReading: (isShow: boolean) => void
 }
 
-function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps) {
+function ReadingListNewsItem({
+    article,
+    setArticleUnSave,
+    pSetShowModalUnSaveReading,
+}: IReadingListNewsItemProps) {
     const { t } = useTranslation()
     const linkUser = useLinkUser(article?.user as IUser)
 
-    const handleUnSaveNews = async () => {
-        try {
-            pUnSaveNews(article)
-            await newsApi.unsaveNews(article.id)
-        } catch (error) {
-            enqueueSnackbar((error as Error).message, {
-                variant: 'error',
-            })
-        }
+    const handleUnSaveNews = () => {
+        setArticleUnSave?.(article)
+        pSetShowModalUnSaveReading(true)
     }
 
     return (
@@ -207,7 +205,8 @@ function ReadingListNewsItem({ article, pUnSaveNews }: IReadingListNewsItemProps
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pUnSaveNews: (data: INews) => dispatch(unsaveUserFiltersNews(data)),
+        pSetShowModalUnSaveReading: (isShow: boolean) =>
+            dispatch(setShowModalUnSaveReading(isShow)),
     }
 }
 

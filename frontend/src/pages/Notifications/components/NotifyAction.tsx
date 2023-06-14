@@ -1,22 +1,26 @@
-import { INotify, INotifyUpdateRead, IUser } from '@/models'
-import { Box, BoxProps, IconButton, Menu, MenuItem } from '@mui/material'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
-import { useState } from 'react'
-import { connect } from 'react-redux'
+import { INotify } from '@/models'
 import { AppDispatch } from '@/store'
-import { deleteNotify } from '@/store/notify'
-import { enqueueSnackbar } from 'notistack'
-import { notifyApi } from '@/api'
+import { setShowModalDeleteNotify } from '@/store/common'
+import { setNotify } from '@/store/notify'
 import { theme } from '@/utils'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import { Box, BoxProps, IconButton, Menu, MenuItem } from '@mui/material'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
 
 export interface INotifyActionProps extends BoxProps {
     notify: INotify
-    user: IUser | null
-    pDeleteNotify: (data: INotifyUpdateRead) => void
+    pSetShowModalDeleteNotify: (isShow: boolean) => void
+    pSetNotify: (data: INotify | null) => void
 }
 
-function NotifyAction({ notify, pDeleteNotify, user, ...rest }: INotifyActionProps) {
+function NotifyAction({
+    notify,
+    pSetShowModalDeleteNotify,
+    pSetNotify,
+    ...rest
+}: INotifyActionProps) {
     const { t } = useTranslation()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -29,15 +33,11 @@ function NotifyAction({ notify, pDeleteNotify, user, ...rest }: INotifyActionPro
         setAnchorEl(null)
     }
 
-    const handleDeleteNotify = async () => {
-        try {
-            pDeleteNotify({ notify, userId: user?.id as number })
+    const handleDeleteNotify = () => {
+        if (notify) {
+            pSetShowModalDeleteNotify(true)
+            pSetNotify(notify)
             handleClose()
-            await notifyApi.deleteNotify(notify.id)
-        } catch (error) {
-            enqueueSnackbar((error as Error).message, {
-                variant: 'error',
-            })
         }
     }
 
@@ -58,6 +58,17 @@ function NotifyAction({ notify, pDeleteNotify, user, ...rest }: INotifyActionPro
                 PaperProps={{
                     elevation: 1,
                 }}
+                sx={{
+                    '& ul': {
+                        padding: 0,
+                    },
+                    '& li': {
+                        padding: {
+                            md: theme.spacing(0.75, 2),
+                            xs: theme.spacing(0.75, 1),
+                        },
+                    },
+                }}
             >
                 <MenuItem onClick={handleDeleteNotify}>{t('button.delete')}</MenuItem>
             </Menu>
@@ -67,7 +78,9 @@ function NotifyAction({ notify, pDeleteNotify, user, ...rest }: INotifyActionPro
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pDeleteNotify: (data: INotifyUpdateRead) => dispatch(deleteNotify(data)),
+        pSetShowModalDeleteNotify: (isShow: boolean) =>
+            dispatch(setShowModalDeleteNotify(isShow)),
+        pSetNotify: (data: INotify | null) => dispatch(setNotify(data)),
     }
 }
 

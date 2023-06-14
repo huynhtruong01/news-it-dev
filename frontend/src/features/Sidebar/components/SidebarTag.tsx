@@ -1,18 +1,24 @@
-import { IHashTag } from '@/models'
+import { IHashTag, IUser } from '@/models'
 import { AppState } from '@/store'
 import { theme } from '@/utils'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Box, IconButton, Stack, Typography, alpha } from '@mui/material'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 export interface ISidebarTagProps {
     pTags: IHashTag[]
+    pUser: IUser | null
 }
 
-function SidebarTag({ pTags }: ISidebarTagProps) {
+function SidebarTag({ pTags, pUser }: ISidebarTagProps) {
     const { t } = useTranslation()
+
+    const tags = useMemo(() => {
+        return pUser?.hashTags?.length ? pUser?.hashTags : []
+    }, [pUser])
 
     return (
         <Box>
@@ -22,7 +28,7 @@ function SidebarTag({ pTags }: ISidebarTagProps) {
                 alignItems={'center'}
             >
                 <Typography component="h3" variant="subtitle1" fontWeight={700}>
-                    {t('main_home.popular_tags')}
+                    {t('main_home.follow_tags')}
                 </Typography>
                 <Link to={'/tags'}>
                     <IconButton
@@ -48,7 +54,7 @@ function SidebarTag({ pTags }: ISidebarTagProps) {
                     marginTop: 0.5,
                 }}
             >
-                {pTags.map((tag) => (
+                {tags.map((tag) => (
                     <Box
                         component="li"
                         key={tag.id}
@@ -84,6 +90,7 @@ function SidebarTag({ pTags }: ISidebarTagProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pTags: state.hashTag.hashTagsPopular || [],
+        pUser: state.user.user,
     }
 }
 

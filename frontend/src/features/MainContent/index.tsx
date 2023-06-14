@@ -21,7 +21,7 @@ export interface IMainContentProps {
 
 function MainContent({
     pUser,
-    pGetAllTagsPopular,
+    // pGetAllTagsPopular,
     pGetProfile,
     pGetNotifies,
 }: IMainContentProps) {
@@ -30,7 +30,7 @@ function MainContent({
     useEffect(() => {
         ;(async () => {
             try {
-                await pGetAllTagsPopular()
+                // await pGetAllTagsPopular()
 
                 if (pUser?.id) {
                     await pGetProfile()

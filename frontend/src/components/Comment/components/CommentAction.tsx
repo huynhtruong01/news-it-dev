@@ -67,7 +67,7 @@ function CommentAction({
     return (
         <Box>
             <IconButton
-                aria-describedby={'111'}
+                aria-describedby={'action'}
                 sx={{
                     padding: theme.spacing(0, 0.5),
                 }}
@@ -76,7 +76,12 @@ function CommentAction({
                 <MoreHorizIcon />
             </IconButton>
 
-            <Popper id={'111'} anchorEl={anchorEl} open={open} placeholder={placeholder}>
+            <Popper
+                id={'action'}
+                anchorEl={anchorEl}
+                open={open}
+                placeholder={placeholder}
+            >
                 <Box component={Paper}>
                     <MenuItem onClick={handleUpdate}>{t('button.edit')}</MenuItem>
                     <MenuItem onClick={handleDelete}>{t('button.delete')}</MenuItem>

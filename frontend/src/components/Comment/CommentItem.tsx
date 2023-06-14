@@ -4,7 +4,7 @@ import { ButtonIconForm } from '@/components/Common'
 import { useLinkUser } from '@/hooks'
 import { IComment, ICommentData, INews, INotifyData, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
-import { formatDate, theme } from '@/utils'
+import { convertMentionToHtml, formatDate, theme } from '@/utils'
 import { Avatar, Box, Paper, Stack, Typography, alpha } from '@mui/material'
 import { TFunction } from 'i18next'
 import { enqueueSnackbar } from 'notistack'
@@ -92,7 +92,7 @@ function CommentItem({
                 user: pUser as IUser,
                 news: news as INews,
                 recipients: [replyUser as IUser],
-                commentText: value,
+                commentText: convertMentionToHtml(value),
                 readUsers: [],
                 text: 'reply to your comment',
                 type: NotifyType.REPLY,

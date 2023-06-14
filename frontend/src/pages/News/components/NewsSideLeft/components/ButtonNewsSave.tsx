@@ -7,7 +7,15 @@ import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
-import { Box, BoxProps, Button, IconButton, Stack, Typography } from '@mui/material'
+import {
+    Box,
+    BoxProps,
+    Button,
+    IconButton,
+    Stack,
+    Tooltip,
+    Typography,
+} from '@mui/material'
 import { indigo } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
@@ -95,30 +103,31 @@ function ButtonNewsSave({
                     },
                 }}
             >
-                <IconButton
-                    title={t('news.save') as string}
-                    sx={{
-                        borderRadius: '50%',
-                        svg: {
-                            transition: '.2s ease-in-out',
-                        },
-                        '&:hover': {
+                <Tooltip title={t('news.save') as string}>
+                    <IconButton
+                        sx={{
+                            borderRadius: '50%',
                             svg: {
-                                color: indigo[700],
+                                transition: '.2s ease-in-out',
                             },
-                        },
-                    }}
-                >
-                    {saved ? (
-                        <BookmarkIcon
-                            sx={{
-                                color: `${indigo[500]} !important`,
-                            }}
-                        />
-                    ) : (
-                        <BookmarkBorderIcon />
-                    )}
-                </IconButton>
+                            '&:hover': {
+                                svg: {
+                                    color: indigo[700],
+                                },
+                            },
+                        }}
+                    >
+                        {saved ? (
+                            <BookmarkIcon
+                                sx={{
+                                    color: `${indigo[500]} !important`,
+                                }}
+                            />
+                        ) : (
+                            <BookmarkBorderIcon />
+                        )}
+                    </IconButton>
+                </Tooltip>
                 <Typography
                     component="span"
                     sx={{

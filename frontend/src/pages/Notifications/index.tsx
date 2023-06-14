@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { ModalDeleteNotify } from '@/pages/Notifications/components'
 
 export interface INotificationsProps {
     pUser: IUser | null
@@ -105,6 +106,8 @@ export function Notifications({
                     </Grid>
                 </Grid>
             </Box>
+
+            <ModalDeleteNotify />
         </>
     )
 }

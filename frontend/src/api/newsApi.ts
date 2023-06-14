@@ -18,13 +18,13 @@ export const getNewsBySlug = (slug: string) => {
 }
 
 export const getNewsByTagIds = (params: IFilters) => {
-    return AxiosClient.get(`${BASE_URL}/tagIds`, {
+    return AxiosClient.get(`${BASE_URL}/recommend-news`, {
         params,
     }).then((res) => res.data)
 }
 
 export const addNews = (data: INewsForm) => {
-    return AxiosClient.post(`${BASE_URL}`, data)
+    return AxiosClient.post(`${BASE_URL}`, data).then((res) => res.data)
 }
 
 export const deleteNews = (id: number) => {

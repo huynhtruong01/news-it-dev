@@ -32,6 +32,7 @@ export const initRoleFormValues: IRoleData = {
     id: undefined,
     name: '',
     color: '#fff',
+    description: '',
 }
 
-export const keyRoleInitValues = ['id', 'name', 'color']
+export const keyRoleInitValues = ['id', 'name', 'color', 'description']

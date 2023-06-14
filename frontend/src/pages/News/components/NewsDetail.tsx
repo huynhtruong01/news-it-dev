@@ -17,16 +17,16 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { NewsComment, NewsAction, NewsContent } from '.'
+import { NewsAction, NewsComment, NewsContent } from '.'
 
 export interface INewsDetailProps extends BoxProps {
-    pUser: IUser | null
     news: INews
+    pUser: IUser | null
 }
 
-function NewsDetail({ pUser, news, ...rest }: INewsDetailProps) {
+function NewsDetail({ news, pUser, ...rest }: INewsDetailProps) {
     const { t } = useTranslation()
-    const { user, title, content, hashTags, thumbnailImage, createdAt } = news
+    const { user, title, hashTags, thumbnailImage, createdAt } = news
 
     const newTags = useMemo(() => {
         return hashTags?.length ? hashTags : []

@@ -14,6 +14,7 @@ import {
     Button,
     IconButton,
     Stack,
+    Tooltip,
     Typography,
     alpha,
 } from '@mui/material'
@@ -114,30 +115,32 @@ function ButtonNewsLike({
                     },
                 }}
             >
-                <IconButton
-                    sx={{
-                        borderRadius: '50%',
+                <Tooltip title={t('button.like') as string}>
+                    <IconButton
+                        sx={{
+                            borderRadius: '50%',
 
-                        svg: {
-                            transition: '.2s ease-in-out',
-                        },
-                        '&:hover': {
                             svg: {
-                                color: red[700],
+                                transition: '.2s ease-in-out',
                             },
-                        },
-                    }}
-                >
-                    {liked ? (
-                        <FavoriteIcon
-                            sx={{
-                                color: `${red[500]} !important`,
-                            }}
-                        />
-                    ) : (
-                        <FavoriteBorderIcon />
-                    )}
-                </IconButton>
+                            '&:hover': {
+                                svg: {
+                                    color: red[700],
+                                },
+                            },
+                        }}
+                    >
+                        {liked ? (
+                            <FavoriteIcon
+                                sx={{
+                                    color: `${red[500]} !important`,
+                                }}
+                            />
+                        ) : (
+                            <FavoriteBorderIcon />
+                        )}
+                    </IconButton>
+                </Tooltip>
                 <Typography
                     component="span"
                     sx={{

@@ -9,7 +9,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { INews, INewsData, IOptionItem } from '../../models'
 import { selectStatus } from '../../data'
-import { generateIds, checkTypeImg, checkSizeImg } from '../../utils'
+import { generateIds, checkTypeImg, checkSizeImg, uploadImage } from '../../utils'
 import { SIZE_10_MB, SIZE_4_MB } from '../../consts'
 import { useForm } from 'react-hook-form'
 import { Box, Modal } from '@mui/material'
@@ -26,35 +26,6 @@ export interface INewsModalFormProps {
     setOpen: Dispatch<SetStateAction<boolean>>
     pHashTagSelects: IOptionItem[]
 }
-
-const schema = yup.object().shape({
-    title: yup.string().required('Please enter name.'),
-    sapo: yup.string(),
-    readTimes: yup.number(),
-    thumbnailImage: yup
-        .mixed<File>()
-        .test('is-nullable-thumbnail', 'Please choose thumbnail image.', function (file) {
-            const { thumbnailImage, coverImage } = this.parent
-            if (!((thumbnailImage && coverImage) || file?.name)) return
-            if (file?.name) return true
-        })
-        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file as File))
-        .test('size-img', 'Maximum 4MB.', (file) =>
-            checkSizeImg(file as File, SIZE_4_MB)
-        ),
-    coverImage: yup
-        .mixed<File>()
-        .test('is-nullable-cover', 'Please choose cover image.', function (file) {
-            const { thumbnailImage, coverImage } = this.parent
-            if (!((thumbnailImage && coverImage) || file?.name)) return
-            if (file?.name) return true
-        })
-        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file as File))
-        .test('size-img', 'Maximum 10MB.', (file) =>
-            checkSizeImg(file as File, SIZE_10_MB)
-        ),
-    content: yup.string().required('Please enter news content.'),
-})
 
 const generateNewValues = (values: INewsData) => {
     const { hashTagOptionIds, ...rest } = values
@@ -73,6 +44,51 @@ function NewsModalForm({
     pHashTagSelects,
 }: INewsModalFormProps) {
     const { toastSuccess, toastError } = useToast()
+
+    const schema = yup.object().shape({
+        title: yup.string().required('Please enter name.'),
+        sapo: yup.string(),
+        readTimes: yup.number(),
+        thumbnailImage: yup
+            .mixed<File>()
+            .test(
+                'is-nullable-thumbnail',
+                'Please choose thumbnail image.',
+                function (file) {
+                    if (initValues.thumbnailImage) return true
+                    const { thumbnailImage, coverImage } = this.parent
+                    if (!((thumbnailImage && coverImage) || file?.name)) return
+                    if (file?.name) return true
+                }
+            )
+            .test('type-img', 'Invalid type image.', function (file) {
+                if (initValues.thumbnailImage) return true
+                return checkTypeImg(file as File)
+            })
+            .test('size-img', 'Maximum 4MB.', function (file) {
+                if (initValues.thumbnailImage) return true
+                return checkSizeImg(file as File, SIZE_4_MB)
+            }),
+        coverImage: yup
+            .mixed<File>()
+            .test('is-nullable-cover', 'Please choose cover image.', function (file) {
+                if (initValues.coverImage) return true
+                const { thumbnailImage, coverImage } = this.parent
+                if (!((thumbnailImage && coverImage) || file?.name)) return
+                if (file?.name) return true
+            })
+            .test('type-img', 'Invalid type image.', (file) => {
+                if (initValues.coverImage) return true
+                return checkTypeImg(file as File)
+            })
+            .test('size-img', 'Maximum 10MB.', (file) => {
+                if (initValues.coverImage) return true
+                return checkSizeImg(file as File, SIZE_10_MB)
+            }),
+        content: yup.string().required('Please enter news content.'),
+        hashTagOptionIds: yup.array(),
+    })
+
     const form = useForm<INewsData>({
         defaultValues: initValues,
         resolver: yupResolver(schema),
@@ -105,6 +121,22 @@ function NewsModalForm({
     const handleUpdate = async (values: INewsData) => {
         try {
             const { newValues, ids } = generateNewValues(values)
+            if (newValues.thumbnailImage instanceof File) {
+                const thumbnailImg = await uploadImage(
+                    newValues.thumbnailImage,
+                    import.meta.env.VITE_UPLOAD_PRESETS_NEWS_CLOUDINARY
+                )
+                newValues.thumbnailImage = thumbnailImg?.url
+            }
+
+            if (newValues.coverImage instanceof File) {
+                const coverImg = await uploadImage(
+                    newValues.coverImage,
+                    import.meta.env.VITE_UPLOAD_PRESETS_NEWS_CLOUDINARY
+                )
+                newValues.coverImage = coverImg?.url
+            }
+
             await newsApi.updateNews({
                 ...newValues,
                 hashTagIds: ids as number[],
@@ -120,6 +152,22 @@ function NewsModalForm({
     const handleAdd = async (values: INewsData) => {
         try {
             const { newValues, ids } = generateNewValues(values)
+            if (newValues.thumbnailImage instanceof File) {
+                const thumbnailImg = await uploadImage(
+                    newValues.thumbnailImage,
+                    import.meta.env.VITE_UPLOAD_PRESETS_NEWS_CLOUDINARY
+                )
+                newValues.thumbnailImage = thumbnailImg?.url
+            }
+
+            if (newValues.coverImage instanceof File) {
+                const coverImg = await uploadImage(
+                    newValues.coverImage,
+                    import.meta.env.VITE_UPLOAD_PRESETS_NEWS_CLOUDINARY
+                )
+                newValues.coverImage = coverImg?.url
+            }
+
             const res = await newsApi.addNews({ ...newValues, hashTagIds: ids })
 
             toastSuccess(`Add user '${res.data.news.title}' successfully.`)

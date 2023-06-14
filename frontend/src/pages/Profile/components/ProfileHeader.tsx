@@ -1,3 +1,4 @@
+import { COLOR_WHITE } from '@/consts'
 import { IsFollow } from '@/enums'
 import { IFollow, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
@@ -77,8 +78,16 @@ export function ProfileHeader({
                                     xs: 68,
                                 },
                                 border: {
-                                    md: `8px solid ${theme.palette.primary.dark}`,
-                                    xs: `4px solid ${theme.palette.primary.dark}`,
+                                    md: `8px solid ${
+                                        user?.bandingColor !== COLOR_WHITE
+                                            ? user?.bandingColor
+                                            : theme.palette.primary.dark
+                                    }`,
+                                    xs: `4px solid ${
+                                        user?.bandingColor !== COLOR_WHITE
+                                            ? user?.bandingColor
+                                            : theme.palette.primary.dark
+                                    }`,
                                 },
                             }}
                         />

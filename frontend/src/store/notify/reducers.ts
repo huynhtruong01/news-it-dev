@@ -106,4 +106,7 @@ export const reducers = {
         state.notifications = [...notifies]
         state.notificationsFilter = [...notifiesFilters]
     },
+    setNotify: (state: INotifyStore, action: PayloadAction<INotify | null>) => {
+        state.notify = action.payload
+    },
 }

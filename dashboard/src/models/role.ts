@@ -2,6 +2,7 @@ export interface IRoleData {
     id?: number
     name: string
     color: string
+    description: string
 }
 
 export interface IRoleTable extends IRoleData {

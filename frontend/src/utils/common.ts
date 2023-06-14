@@ -30,3 +30,25 @@ export const analystTextToUsernames = (text: string) => {
 
     return [...new Set(mentions)]
 }
+
+export const convertMentionToHtml = (text: string) => {
+    const mentionRegex = /@\[([\w\s]+)\]\((\d+)\)/g
+    const convertedText = text.replace(mentionRegex, "<span class='mention'>@$1</span>")
+
+    return convertedText
+}
+
+export const convertHTMLToLowercase = (htmlString) => {
+    return htmlString.replace(/<([^>]+)>/g, (match, p1) => {
+        const tag = p1.toLowerCase()
+        const attributes =
+            tag.match(/(?:\s+([^=\s]+)(?:(=)(?:"([^"]*)|'([^']*)'|([^>\s]+)))?)?/g) || []
+        console.log(attributes)
+
+        const convertedAttributes = attributes.map((attribute) => {
+            return attribute.toLowerCase()
+        })
+
+        return `<${tag}${convertedAttributes.join(' ')}>`
+    })
+}

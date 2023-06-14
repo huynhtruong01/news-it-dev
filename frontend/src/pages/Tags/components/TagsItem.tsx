@@ -1,26 +1,33 @@
-import { hashTagApi } from '@/api'
 import { COLOR_WHITE } from '@/consts'
 import { IsFollow } from '@/enums'
 import { IFollow, IHashTag, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
-import { getProfile } from '@/store/user/thunkApi'
+import { followHashTag, getProfile, unfollowHashTag } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import { Box, Button, Paper, Typography, alpha } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { useMemo, useState, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 export interface ITagsItemProps {
+    tag: IHashTag
     pUser: IUser | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
     pSetShowModalAuth: (isShow: boolean) => void
-    tag: IHashTag
+    pFollowHashTag: (data: IHashTag) => Promise<PayloadAction<unknown>>
+    pUnFollowHashTag: (data: IHashTag) => Promise<PayloadAction<unknown>>
 }
 
-function TagsItem({ tag, pUser, pGetProfile, pSetShowModalAuth }: ITagsItemProps) {
+function TagsItem({
+    tag,
+    pUser,
+    pSetShowModalAuth,
+    pFollowHashTag,
+    pUnFollowHashTag,
+}: ITagsItemProps) {
     const { t } = useTranslation()
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
     const color = useMemo(() => {
@@ -49,13 +56,11 @@ function TagsItem({ tag, pUser, pGetProfile, pSetShowModalAuth }: ITagsItemProps
 
             if (followed === IsFollow.FOLLOW && tag.id) {
                 setFollowed(IsFollow.FOLLOWING)
-                await hashTagApi.followHashTag(tag.id)
+                await pFollowHashTag(tag)
             } else {
                 setFollowed(IsFollow.FOLLOW)
-                await hashTagApi.unfollowHashTag(tag.id)
+                await pUnFollowHashTag(tag)
             }
-
-            await pGetProfile()
         } catch (error) {
             throw new Error(error as string)
         }
@@ -106,7 +111,18 @@ function TagsItem({ tag, pUser, pGetProfile, pSetShowModalAuth }: ITagsItemProps
                         {tag.name}
                     </Link>
                 </Typography>
-                <Typography marginBottom={1.5}>{tag.description}</Typography>
+                <Typography
+                    marginBottom={1.5}
+                    sx={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        color: alpha(theme.palette.secondary.main, 0.9),
+                    }}
+                >
+                    {tag.description}
+                </Typography>
                 <Typography
                     sx={{
                         marginBottom: 2,
@@ -193,6 +209,8 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
+        pFollowHashTag: (data: IHashTag) => dispatch(followHashTag(data)),
+        pUnFollowHashTag: (data: IHashTag) => dispatch(unfollowHashTag(data)),
     }
 }
 

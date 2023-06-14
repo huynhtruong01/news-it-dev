@@ -1,7 +1,16 @@
+import { COLOR_WHITE } from '@/consts'
 import { IComment, IUser } from '@/models'
 import { AppState } from '@/store'
 import { defaultInput, defaultInputStyle, theme } from '@/utils'
-import { Avatar, Box, BoxProps, Button, Stack } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    BoxProps,
+    Button,
+    CircularProgress,
+    Stack,
+    alpha,
+} from '@mui/material'
 import { TFunction } from 'i18next'
 import {
     Dispatch,
@@ -24,6 +33,7 @@ export interface ICommentInputProps extends BoxProps {
     isEdit?: boolean
     setIsReply?: Dispatch<SetStateAction<boolean>>
     setEdit?: Dispatch<SetStateAction<IComment | null>>
+    loading?: boolean
     t: TFunction<'translation', undefined, 'translation'>
     pUser: IUser | null
 }
@@ -37,9 +47,9 @@ function CommentInput({
     setEdit,
     t,
     pUser,
+    loading = false,
     ...rest
 }: ICommentInputProps) {
-    // const isSmallScreen = useMediaQuery('(min-width:320px)')
     const inputRef = useRef<HTMLElement | null>(null)
     const [value, setValue] = useState<string>(initValue)
 
@@ -115,7 +125,6 @@ function CommentInput({
                         gap={1}
                         sx={{
                             button: {
-                                color: theme.palette.primary.contrastText,
                                 padding: theme.spacing(1.75, 2),
                                 borderRadius: theme.spacing(0.75),
                                 fontWeight: 500,
@@ -124,8 +133,18 @@ function CommentInput({
                     >
                         <Button
                             type="submit"
-                            disabled={!value}
                             variant="contained"
+                            disabled={!value}
+                            startIcon={
+                                loading ? (
+                                    <CircularProgress
+                                        size={16}
+                                        sx={{
+                                            color: COLOR_WHITE,
+                                        }}
+                                    />
+                                ) : null
+                            }
                             sx={{
                                 '&.Mui-disabled': {
                                     cursor: 'not-allowed',
@@ -133,18 +152,29 @@ function CommentInput({
                                     opacity: 0.6,
                                     color: theme.palette.primary.contrastText,
                                 },
+                                span: {
+                                    margin: 0,
+                                },
                             }}
                         >
-                            {t('button.submit')}
+                            {loading ? '' : t('button.submit')}
                         </Button>
                         {(isReply || isEdit) && (
                             <Button
                                 type="button"
                                 variant="contained"
                                 sx={{
-                                    backgroundColor: theme.palette.grey[500],
+                                    backgroundColor: 'transparent',
+                                    color: theme.palette.secondary.main,
+                                    border: `1px solid ${alpha(
+                                        theme.palette.secondary.main,
+                                        0.3
+                                    )}`,
                                     '&:hover': {
-                                        backgroundColor: theme.palette.grey[700],
+                                        backgroundColor: alpha(
+                                            theme.palette.secondary.main,
+                                            0.1
+                                        ),
                                     },
                                 }}
                                 onClick={handleCancel}

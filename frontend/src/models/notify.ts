@@ -68,3 +68,8 @@ export interface ISetNotifications {
     filters: INotifyFilters
     userId: number
 }
+
+export interface INotifyNewNews {
+    news: INews
+    notify: INotifyData
+}

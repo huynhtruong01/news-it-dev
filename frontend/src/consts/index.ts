@@ -17,3 +17,5 @@ export const DEFAULT_SELECT_VALUE = '/settings/profile'
 
 export const IMAGE_PREVIEW =
     'https://thepracticaldev.s3.amazonaws.com/i/6hqmcjaxbgbon8ydw93z.png'
+
+export const TYPE_ACCOUNT = 'register'

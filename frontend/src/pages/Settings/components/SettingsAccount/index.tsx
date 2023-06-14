@@ -11,7 +11,10 @@ export interface ISettingsAccountProps {
 function SettingsAccount({ pUser }: ISettingsAccountProps) {
     return (
         <Box>
-            <SettingsAccountForm emailAddress={pUser?.emailAddress as string} />
+            <SettingsAccountForm
+                emailAddress={pUser?.emailAddress as string}
+                type={pUser?.type}
+            />
         </Box>
     )
 }

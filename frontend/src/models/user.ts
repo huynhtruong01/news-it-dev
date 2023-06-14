@@ -35,6 +35,7 @@ export interface IUserData {
     hashTags?: IHashTag[]
     isActive?: boolean
     slug?: string
+    type?: string
     dateJoined?: Date
     createdAt?: Date
     updatedAt?: Date

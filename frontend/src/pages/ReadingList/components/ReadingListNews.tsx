@@ -1,8 +1,9 @@
 import { INews } from '@/models'
 import { Box, BoxProps, Paper } from '@mui/material'
-import { ReadingListNewsItem } from '.'
+import { ReadingListNewsItem, ModalUnsaveReading } from '.'
 import { EmptyList, SkeletonReadingList } from '@/components/Common'
 import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
 
 export interface IReadingListNewsProps extends BoxProps {
     news: INews[]
@@ -11,6 +12,7 @@ export interface IReadingListNewsProps extends BoxProps {
 
 export function ReadingListNews({ news, loading }: IReadingListNewsProps) {
     const { t } = useTranslation()
+    const [articleUnSave, setArticleUnSave] = useState<INews | null>(null)
 
     return (
         <>
@@ -21,9 +23,19 @@ export function ReadingListNews({ news, loading }: IReadingListNewsProps) {
             {!loading && news.length > 0 && (
                 <Box component={Paper} elevation={1} paddingBottom={2}>
                     {news.map((article) => (
-                        <ReadingListNewsItem key={article.id} article={article} />
+                        <ReadingListNewsItem
+                            key={article.id}
+                            article={article}
+                            setArticleUnSave={setArticleUnSave}
+                        />
                     ))}
                 </Box>
+            )}
+            {articleUnSave && (
+                <ModalUnsaveReading
+                    article={articleUnSave}
+                    setArticleUnSave={setArticleUnSave}
+                />
             )}
         </>
     )

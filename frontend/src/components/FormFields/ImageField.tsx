@@ -72,6 +72,9 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
                             helperText={(error?.message as string) || ''}
                             error={!!error?.message}
                             size="small"
+                            inputProps={{
+                                accept: 'image/*',
+                            }}
                             sx={{
                                 '& .MuiInputBase-input': {
                                     padding: 1.5,

@@ -22,17 +22,16 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import { Avatar, Box, Button, Paper, Stack, Typography, alpha } from '@mui/material'
-import { green, indigo, red } from '@mui/material/colors'
+import { indigo, red } from '@mui/material/colors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 import { NotifyAction } from '.'
-import { useTranslation } from 'react-i18next'
-import { RiChat1Fill } from 'react-icons/ri'
 
 export interface INotificationItemProps {
     pUser: IUser | null
@@ -175,7 +174,15 @@ function NotificationItem({
                 justifyContent={'space-between'}
                 alignItems={'flex-start'}
             >
-                <Stack direction={'row'} alignItems={'center'} gap={1} marginBottom={2}>
+                <Stack
+                    direction={'row'}
+                    alignItems={'center'}
+                    gap={{
+                        md: 1,
+                        xs: 2,
+                    }}
+                    marginBottom={2}
+                >
                     <Avatar
                         src={notify.user?.avatar as string}
                         alt={notify.user?.username}
@@ -216,12 +223,8 @@ function NotificationItem({
 
                 <NotifyAction
                     notify={notify}
-                    user={pUser}
                     sx={{
-                        display: {
-                            md: 'inline-block',
-                            xs: 'none',
-                        },
+                        display: 'inline-block',
                     }}
                 />
             </Stack>
@@ -298,9 +301,9 @@ function NotificationItem({
                             alignItems={'center'}
                             gap={1.5}
                             sx={{
+                                borderLeft: `4px solid ${theme.palette.primary.main}`,
                                 marginTop: 1,
                                 padding: 2,
-                                borderLeft: `4px solid ${green[500]}`,
                                 borderRadius: theme.spacing(0.75),
                                 backgroundColor: alpha(
                                     theme.palette.secondary.light,
@@ -309,21 +312,21 @@ function NotificationItem({
                                 color: theme.palette.secondary.light,
                             }}
                         >
-                            <Box
-                                display={'inline-flex'}
+                            <Typography
+                                dangerouslySetInnerHTML={{ __html: notify.commentText }}
                                 sx={{
-                                    padding: 0.5,
-                                    backgroundColor: green[100],
-                                    borderRadius: '50%',
-                                    svg: {
-                                        fontSize: '20px',
-                                        color: green[500],
+                                    '.mention': {
+                                        fontWeight: 500,
+                                        backgroundColor: alpha(
+                                            theme.palette.primary.dark,
+                                            0.125
+                                        ),
+                                        color: theme.palette.primary.dark,
+                                        padding: theme.spacing(0.25, 0.5),
+                                        borderRadius: theme.spacing(0.75),
                                     },
                                 }}
-                            >
-                                <RiChat1Fill />
-                            </Box>
-                            <Typography>{notify.commentText}</Typography>
+                            />
                         </Stack>
                     )}
                     <Stack

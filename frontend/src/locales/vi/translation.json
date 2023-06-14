@@ -3,7 +3,7 @@
         "home": "Trang chủ",
         "reading_list": "Danh sách đọc",
         "tags": "Các thẻ ",
-        "popular_tags": "Các thẻ phổ biến",
+        "follow_tags": "Các thẻ theo dõi",
         "create_news": "Tạo tin tức mới"
     },
 
@@ -256,7 +256,9 @@
         "news_undo": "Bạn không thể hoàn tác hành động này, có lẽ bạn chỉ muốn",
         "instead": "thay vì",
         "delete_account": "Bạn có chắc chắn muốn xóa tài khoản của bạn?",
-        "delete_comment": "Bạn có chắc chắn muốn xóa bình luận này?"
+        "delete_comment": "Bạn có chắc chắn muốn xóa bình luận này?",
+        "delete_notify": "Bạn có chắc chắn muốn xóa thông báo này?",
+        "unsave_reading": "Bạn có chắc chắn không lưu bài tin tức này?"
     },
 
     "liked your news": "đã thích bài viết của bạn",
@@ -265,5 +267,6 @@
     "has been commented your news": "đã bình luận bài tin tức của bạn",
     "mention you": "nhắc đến bạn",
     "you": "bạn",
-    "like your comment": "thích bình luận của bạn"
+    "like your comment": "thích bình luận của bạn",
+    "add new news": "đã thêm bài viết mới"
 }

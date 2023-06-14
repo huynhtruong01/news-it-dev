@@ -12,7 +12,7 @@ export const addUser = (data: IUserData) => {
 }
 
 export const updateUser = (data: IUserData) => {
-    return AxiosClient.put(`${BASE_URL}/${data.id}`, data)
+    return AxiosClient.put(`${BASE_URL}/${data.id}`, data).then((res) => res.data)
 }
 
 export const deleteUser = (id: number) => {

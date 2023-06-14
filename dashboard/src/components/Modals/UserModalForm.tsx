@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 import * as yup from 'yup'
 import { usersApi } from '../../api'
 import { useToast } from '../../hooks'
-import { IUserData, IOptionItem } from '../../models'
-import { AppState } from '../../store'
+import { IUserData, IOptionItem, IUser } from '../../models'
+import { AppDispatch, AppState } from '../../store'
 import { ButtonForm } from '../Common'
 import {
     AutoCompleteField,
@@ -15,15 +15,25 @@ import {
     InputField,
     PasswordField,
 } from '../FormFields'
+import { addUser, updateUser } from '../../store/user'
 
 export interface IUserModalFormProps {
     initValues: IUserData
     open: boolean
     setOpen: Dispatch<SetStateAction<boolean>>
     pRoleSelects: IOptionItem[]
+    pAddUser: (data: IUser) => void
+    pUpdateUser: (data: IUser) => void
 }
 
-function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFormProps) {
+function UserModalForm({
+    initValues,
+    open,
+    setOpen,
+    pRoleSelects,
+    pAddUser,
+    pUpdateUser,
+}: IUserModalFormProps) {
     const { toastSuccess, toastError } = useToast()
 
     const schema = yup.object().shape({
@@ -81,8 +91,10 @@ function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFo
 
     const handleUpdate = async (values: IUserData) => {
         try {
-            const { password, confirmPassword, ...rest } = values
-            await usersApi.updateUser({ ...rest, id: initValues.id })
+            const { password, confirmPassword, roleOptionIds, ...rest } = values
+            const roleIds = (roleOptionIds?.map((role) => role.id) as number[]) || []
+            const res = await usersApi.updateUser({ ...rest, id: initValues.id, roleIds })
+            pUpdateUser(res.data.user)
 
             toastSuccess(`Update user '${values.username}' successfully.`)
         } catch (error) {
@@ -95,6 +107,7 @@ function UserModalForm({ initValues, open, setOpen, pRoleSelects }: IUserModalFo
             const { confirmPassword, roleOptionIds, ...rest } = values
             const roleIds = (roleOptionIds?.map((role) => role.id) as number[]) || []
             const res = await usersApi.addUser({ ...rest, roleIds })
+            pAddUser(res.data.user)
 
             toastSuccess(`Add user '${res.data.user.username}' successfully.`)
         } catch (error) {
@@ -228,4 +241,11 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-export default connect(mapStateToProps, null)(UserModalForm)
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pAddUser: (data: IUser) => dispatch(addUser(data)),
+        pUpdateUser: (data: IUser) => dispatch(updateUser(data)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserModalForm)

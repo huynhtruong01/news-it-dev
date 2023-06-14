@@ -155,17 +155,6 @@ class NewsController {
     // create (POST)
     async createNews(req: RequestUser, res: Response) {
         try {
-            // check hash tag ids
-            // const checkHashTags = hashTagService.checkHashTagIds(req.body.hashTagIds)
-            // if (!checkHashTags) {
-            //     res.status(StatusCode.BAD_REQUEST).json({
-            //         results: Results.ERROR,
-            //         status: StatusText.FAILED,
-            //         message: 'Missing hash tags or invalid type.',
-            //     })
-            //     return
-            // }
-
             // check user
             const user = await userService.getById(Number(req.user?.id))
             if (!user) {

@@ -250,10 +250,11 @@ function CreateNewsForm({
                     variant="contained"
                     fullWidth
                     sx={{
-                        backgroundColor: alpha(theme.palette.secondary.main, 0.2),
+                        backgroundColor: 'transparent',
                         color: theme.palette.secondary.main,
+                        border: `1px solid ${alpha(theme.palette.secondary.main, 0.3)}`,
                         '&:hover': {
-                            backgroundColor: alpha(theme.palette.secondary.main, 0.5),
+                            backgroundColor: alpha(theme.palette.secondary.main, 0.1),
                         },
                     }}
                     disabled={isSubmitting}
@@ -270,6 +271,7 @@ function CreateNewsForm({
                     disabled={isSubmitting}
                     sx={{
                         backgroundColor: theme.palette.primary.light,
+                        border: '1px solid transparent',
                         '&:hover': {
                             backgroundColor: theme.palette.primary.dark,
                         },

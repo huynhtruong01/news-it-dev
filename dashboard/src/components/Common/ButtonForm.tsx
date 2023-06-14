@@ -3,13 +3,13 @@ import AddIcon from '@mui/icons-material/Add'
 import { Box, Button } from '@mui/material'
 import { theme } from '../../utils'
 
-export type IButtonFormProps<InitValues> = {
+export type IButtonFormProps<InitValues extends { id?: number }> = {
     initValues: InitValues
     disabled: boolean
     onClose: () => void
 }
 
-export function ButtonForm<InitValues>({
+export function ButtonForm<InitValues extends { id?: number }>({
     initValues,
     disabled,
     onClose,
@@ -25,6 +25,7 @@ export function ButtonForm<InitValues>({
                 fullWidth
                 variant="contained"
                 onClick={onClose}
+                disabled={disabled}
                 sx={{
                     backgroundColor: theme.palette.grey[500],
                     '&:hover': {
@@ -41,7 +42,7 @@ export function ButtonForm<InitValues>({
                 startIcon={initValues ? <EditIcon /> : <AddIcon />}
                 disabled={disabled}
             >
-                {initValues ? 'Update' : 'Add'}
+                {initValues?.id ? 'Update' : 'Add'}
             </Button>
         </Box>
     )

@@ -37,6 +37,7 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
     useEffect(() => {
         setValue('name', initValues.name)
         setValue('color', initValues.color)
+        setValue('description', initValues.description)
     }, [initValues, setValue])
 
     const resetModal = () => {
@@ -121,6 +122,15 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
                         label={'Color'}
                         disabled={isSubmitting}
                         placeholder={'Enter color'}
+                    />
+                    <InputField<IRoleData>
+                        form={form}
+                        name={'description'}
+                        label={'Description'}
+                        disabled={isSubmitting}
+                        placeholder={'Enter description'}
+                        multiline
+                        minRows={2}
                     />
                 </Box>
                 <ButtonForm<IRoleData>

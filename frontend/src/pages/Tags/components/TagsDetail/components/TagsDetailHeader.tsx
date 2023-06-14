@@ -163,7 +163,15 @@ function TagsDetailHeader({
                         </Box>
                     </Stack>
 
-                    <Typography marginTop={3}>{tag.description}</Typography>
+                    <Typography
+                        marginTop={3}
+                        sx={{
+                            maxWidth: '75%',
+                            color: theme.palette.secondary.main,
+                        }}
+                    >
+                        {tag.description}
+                    </Typography>
                 </Stack>
             </Box>
         </Box>

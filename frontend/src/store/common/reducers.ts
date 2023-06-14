@@ -17,4 +17,10 @@ export const reducers = {
     setLanguages(state: ICommonStore, action: PayloadAction<string>) {
         state.languages = action.payload
     },
+    setShowModalDeleteNotify(state: ICommonStore, action: PayloadAction<boolean>) {
+        state.isShowModalDeleteNotify = action.payload
+    },
+    setShowModalUnSaveReading(state: ICommonStore, action: PayloadAction<boolean>) {
+        state.isShowModalUnSaveReading = action.payload
+    },
 }

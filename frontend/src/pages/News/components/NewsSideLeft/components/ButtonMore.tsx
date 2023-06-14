@@ -10,6 +10,7 @@ import {
     Menu,
     MenuItem,
     Stack,
+    Tooltip,
     Typography,
     alpha,
     useMediaQuery,
@@ -83,18 +84,20 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
 
     return (
         <Box {...rest}>
-            <IconButton
-                onClick={handleOpenMore}
-                sx={{
-                    display: {
-                        md: 'flex',
-                        xs: 'none',
-                    },
-                    borderRadius: '50%',
-                }}
-            >
-                <MoreHorizIcon />
-            </IconButton>
+            <Tooltip title="More">
+                <IconButton
+                    onClick={handleOpenMore}
+                    sx={{
+                        display: {
+                            md: 'flex',
+                            xs: 'none',
+                        },
+                        borderRadius: '50%',
+                    }}
+                >
+                    <MoreHorizIcon />
+                </IconButton>
+            </Tooltip>
 
             {/* mobile */}
             <Button

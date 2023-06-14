@@ -8,6 +8,8 @@ export interface ICommonStore {
     isShowModalDelete: boolean
     isShowModalDeleteComment: boolean
     isShowModalDeleteAccount: boolean
+    isShowModalDeleteNotify: boolean
+    isShowModalUnSaveReading: boolean
 }
 
 const initialState: ICommonStore = {
@@ -16,6 +18,8 @@ const initialState: ICommonStore = {
     isShowModalDelete: false,
     isShowModalDeleteComment: false,
     isShowModalDeleteAccount: false,
+    isShowModalDeleteNotify: false,
+    isShowModalUnSaveReading: false,
 }
 
 export const commonSlice = createSlice({
@@ -30,5 +34,7 @@ export const {
     setShowModalDeleteComment,
     setShowModalDeleteAccount,
     setLanguages,
+    setShowModalDeleteNotify,
+    setShowModalUnSaveReading,
 } = commonSlice.actions
 export default commonSlice.reducer

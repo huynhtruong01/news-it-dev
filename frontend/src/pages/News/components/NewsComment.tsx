@@ -6,7 +6,7 @@ import { IComment, ICommentData, IFilters, INews, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { getAllCommentsById, getAllCommentsByIdLoadMore } from '@/store/comment/thunkApi'
 import { increaseNumComment } from '@/store/news'
-import { analystTextToUsernames, theme } from '@/utils'
+import { analystTextToUsernames, convertMentionToHtml, theme } from '@/utils'
 import { Box, BoxProps, Button, Stack, Typography, useMediaQuery } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { enqueueSnackbar } from 'notistack'
@@ -46,6 +46,7 @@ function NewsComment({
     const commentRef = useRef<HTMLDivElement | null>(null)
     const [loadingComment, setLoadingComment] = useState<boolean>(true)
     const [loadMore, setLoadMore] = useState<boolean>(false)
+    const [loadingCreateComment, setLoadingCreateComment] = useState<boolean>(false)
 
     const location = useLocation()
 
@@ -98,6 +99,7 @@ function NewsComment({
 
     const handleCommentSubmit = async (value: string) => {
         try {
+            setLoadingCreateComment(true)
             const newComment: ICommentData = {
                 userId: pUser?.id as number,
                 newsId: news.id,
@@ -105,6 +107,7 @@ function NewsComment({
             }
 
             await commentApi.createComment(newComment)
+            setLoadingCreateComment(false)
             pIncreaseNumComments()
 
             // notify create new comment
@@ -121,7 +124,7 @@ function NewsComment({
                 await notifyApi.createNotifiesForComment({
                     ...data,
                     users: usernames,
-                    commentText: value,
+                    commentText: convertMentionToHtml(value),
                 })
             }
         } catch (error) {
@@ -129,6 +132,7 @@ function NewsComment({
                 variant: 'error',
             })
         }
+        setLoadingCreateComment(false)
     }
 
     const handleLoadMore = () => {
@@ -166,6 +170,7 @@ function NewsComment({
                         commentInputRef={commentInputRef}
                         onCommentChange={handleCommentSubmit}
                         t={t}
+                        loading={loadingCreateComment}
                         sx={{
                             marginBottom: 6,
                         }}

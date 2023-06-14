@@ -49,17 +49,19 @@ export function ModalImageNews({
             open={open}
             onClose={handleClose}
             closeAfterTransition
+            sx={{
+                '& img': {
+                    width: {
+                        md: 'auto',
+                        xs: '95% !important',
+                    },
+                    height: 'auto',
+                    borderRadius: '6px',
+                },
+            }}
         >
             <Fade in={open} timeout={500} className={style.imgContainer}>
-                <img
-                    src={srcImg}
-                    style={{
-                        width: 'auto',
-                        height: 'auto',
-                        borderRadius: '6px',
-                    }}
-                    alt=""
-                />
+                <img src={srcImg} alt="" />
             </Fade>
         </Modal>
     )

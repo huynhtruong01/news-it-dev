@@ -42,13 +42,19 @@ function ArticleHeader({
                 }
 
                 setStatus(NewsFilters.RELEVANT)
-                setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
+                setFilters({
+                    ...newFilters,
+                    createdAt: Order.DESC,
+                    page: 1,
+                    type: NewsFilters.RELEVANT,
+                })
                 return
             }
 
             if (valFilter === NewsFilters.LATEST) {
                 delete newFilters.numLikes
                 delete newFilters.hashTag
+                delete newFilters.type
 
                 setStatus(NewsFilters.LATEST)
                 setFilters({ ...newFilters, createdAt: Order.DESC, page: 1 })
@@ -57,6 +63,7 @@ function ArticleHeader({
 
             delete newFilters.createdAt
             delete newFilters.hashTag
+            delete newFilters.type
             setStatus(NewsFilters.TOP)
             setFilters({ ...newFilters, numLikes: Order.DESC, page: 1 })
         }

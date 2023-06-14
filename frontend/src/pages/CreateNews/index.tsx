@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { CreateNewsForm } from '@/pages/CreateNews/components'
-import { INewsForm, IOptionItem } from '@/models'
-import { newsApi } from '@/api'
+import { INewsForm, IOptionItem, IUser } from '@/models'
+import { newsApi, notifyApi } from '@/api'
 import { enqueueSnackbar } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 import { uploadImage, generateIds } from '@/utils'
@@ -32,11 +32,16 @@ const handleCleanContent = (content: string) => {
 }
 
 export interface ICreateNewsProps {
+    pUser: IUser | null
     pInitValuesForm: INewsForm
     pSetInitValuesNewsForm: (values: INewsForm) => void
 }
 
-function CreateNews({ pSetInitValuesNewsForm, pInitValuesForm }: ICreateNewsProps) {
+function CreateNews({
+    pUser,
+    pSetInitValuesNewsForm,
+    pInitValuesForm,
+}: ICreateNewsProps) {
     const { t } = useTranslation()
     const navigate = useNavigate()
 
@@ -60,12 +65,24 @@ function CreateNews({ pSetInitValuesNewsForm, pInitValuesForm }: ICreateNewsProp
                 newValues.coverImage = coverImg?.url
             }
 
-            await newsApi.addNews({ ...newValues, hashTagIds: ids })
-
+            const res = await newsApi.addNews({ ...newValues, hashTagIds: ids })
             enqueueSnackbar(t('message.create_success'), {
                 variant: 'success',
             })
             navigate('/')
+
+            if (pUser) {
+                const notify = {
+                    userId: pUser.id,
+                    newsId: res.data.news.id,
+                    text: 'add new news',
+                    user: pUser,
+                    news: res.data.news,
+                    recipients: pUser.followers,
+                    readUsers: [],
+                }
+                await notifyApi.newNewsNotify({ news: res.data.news, notify })
+            }
         } catch (error) {
             throw new Error((error as Error).message)
         }
@@ -134,6 +151,7 @@ function CreateNews({ pSetInitValuesNewsForm, pInitValuesForm }: ICreateNewsProp
 const mapStateToProps = (state: AppState) => {
     return {
         pInitValuesForm: state.news.initValuesForm,
+        pUser: state.user.user,
     }
 }
 

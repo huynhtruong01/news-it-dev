@@ -5,6 +5,7 @@ import {
     Button,
     IconButton,
     Stack,
+    Tooltip,
     Typography,
     alpha,
 } from '@mui/material'
@@ -32,26 +33,27 @@ export function ButtonNewsComments({ totalComments, ...rest }: IButtonNewsCommen
                 }}
             >
                 <a href="#comments">
-                    <IconButton
-                        title={t('news.comment') as string}
-                        sx={{
-                            borderRadius: '50%',
+                    <Tooltip title={t('news.comment') as string}>
+                        <IconButton
+                            sx={{
+                                borderRadius: '50%',
 
-                            svg: {
-                                transition: '.2s ease-in-out',
-                            },
-                            '&:hover': {
                                 svg: {
-                                    color: yellow[700],
+                                    transition: '.2s ease-in-out',
                                 },
-                            },
-                            a: {
-                                display: 'inline-block',
-                            },
-                        }}
-                    >
-                        <RiChat1Line />
-                    </IconButton>
+                                '&:hover': {
+                                    svg: {
+                                        color: yellow[700],
+                                    },
+                                },
+                                a: {
+                                    display: 'inline-block',
+                                },
+                            }}
+                        >
+                            <RiChat1Line />
+                        </IconButton>
+                    </Tooltip>
                 </a>
                 <Typography
                     component={'span'}
