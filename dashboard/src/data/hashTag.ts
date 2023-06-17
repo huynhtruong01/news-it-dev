@@ -10,16 +10,19 @@ export const tagHeaders: readonly ITableHeader[] = [
         id: 'iconImage',
         label: 'Icon',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'name',
         label: 'Name',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'description',
         label: 'Description',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'color',
@@ -38,7 +41,7 @@ export const tagHeaders: readonly ITableHeader[] = [
     },
 ]
 
-export const keyInitValues = ['id', 'name', 'description', 'color', 'iconImage']
+export const keyInitValues = ['id', 'title', 'name', 'description', 'color', 'iconImage']
 
 export const initHashTagFormValues: IHashTagData = {
     id: undefined,

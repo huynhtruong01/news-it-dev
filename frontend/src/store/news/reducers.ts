@@ -14,7 +14,7 @@ export const reducers = {
         const newsDetail = state.newsDetail
 
         if (newsDetail && newsDetail.id === news.id) {
-            state.newsDetail = news
+            state.newsDetail = { ...newsDetail, ...news }
         }
     },
     setSaveNewsDetail: (state: INewsStore, action: PayloadAction<INews>) => {

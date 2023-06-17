@@ -1,45 +1,58 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { LoadingButton } from '@mui/lab'
-import { Box, Button, Paper, Stack, Typography, alpha, Modal } from '@mui/material'
-import { red, yellow } from '@mui/material/colors'
-import { Dispatch, SetStateAction, useState } from 'react'
-import { theme } from '../../utils'
+import { Box, Button, Modal, Paper, Stack, Typography, alpha } from '@mui/material'
+import { red } from '@mui/material/colors'
+import { connect } from 'react-redux'
+import { authApi } from '../../api'
+import { AppDispatch, AppState } from '../../store'
+import { showModalLogout } from '../../store/common'
+import { saveUserLogin } from '../../store/user'
+import { removeLS, theme } from '../../utils'
+import { useToast } from '../../hooks'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
-export interface IModalDeleteProps {
-    title: string
-    message: string
-    open: boolean
-    setOpen: Dispatch<SetStateAction<boolean>>
-    onDelete: () => Promise<void>
+export interface IModalLogoutProps {
+    pIsShowModalLogout: boolean
+    pSaveUserLogin: () => void
+    pShowModalLogout: (isShow: boolean) => void
 }
 
-export function ModalDelete({
-    title,
-    message,
-    open,
-    setOpen,
-    onDelete,
-}: IModalDeleteProps) {
+function ModalLogout({
+    pIsShowModalLogout,
+    pSaveUserLogin,
+    pShowModalLogout,
+}: IModalLogoutProps) {
     const [loading, setLoading] = useState<boolean>(false)
+    const navigate = useNavigate()
+
+    const { toastSuccess, toastError } = useToast()
 
     const handleClose = () => {
-        setOpen(false)
+        pShowModalLogout(false)
     }
 
-    const handleDelete = async () => {
+    const handleLogout = async () => {
         try {
             setLoading(true)
-            await onDelete()
-            setOpen(false)
+            removeLS(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+            removeLS(import.meta.env.VITE_ACCESS_TOKEN_KEY)
+
+            await authApi.logout()
+            pSaveUserLogin()
+            navigate('/login')
+            handleClose()
+
+            toastSuccess('Logout successfully.')
         } catch (error) {
-            throw new Error(error as string)
+            toastError((error as Error).message)
         }
-        setLoading(false)
+        setLoading(true)
     }
 
     return (
         <Modal
-            open={!!open}
+            open={!!pIsShowModalLogout}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
             sx={{
@@ -93,27 +106,7 @@ export function ModalDelete({
                         color: theme.palette.secondary.dark,
                     }}
                 >
-                    {title}
-                </Typography>
-
-                <Typography
-                    sx={{
-                        padding: theme.spacing(0, 4),
-                        textAlign: 'center',
-                        fontSize: theme.typography.body2,
-                        color: alpha(theme.palette.secondary.dark, 0.7),
-                        marginBottom: 3,
-                        a: {
-                            color: yellow[700],
-                        },
-                        '&:hover': {
-                            a: {
-                                textDecoration: 'underline',
-                            },
-                        },
-                    }}
-                >
-                    {message}
+                    Are you sure want to logout?
                 </Typography>
 
                 <Stack
@@ -161,7 +154,7 @@ export function ModalDelete({
                                     backgroundColor: red[700],
                                 },
                             }}
-                            onClick={handleDelete}
+                            onClick={handleLogout}
                         >
                             Delete
                         </LoadingButton>
@@ -177,7 +170,7 @@ export function ModalDelete({
                                     backgroundColor: red[700],
                                 },
                             }}
-                            onClick={handleDelete}
+                            onClick={handleLogout}
                         >
                             Delete
                         </Button>
@@ -187,3 +180,18 @@ export function ModalDelete({
         </Modal>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pIsShowModalLogout: state.common.isShowModalLogout,
+    }
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSaveUserLogin: () => dispatch(saveUserLogin(null)),
+        pShowModalLogout: (isShow: boolean) => dispatch(showModalLogout(isShow)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModalLogout)

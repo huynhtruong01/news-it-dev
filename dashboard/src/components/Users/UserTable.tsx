@@ -73,10 +73,10 @@ export function UserTable({
                 >
                     <TableCell align="center">{user.id}</TableCell>
                     <TableCellImage src={user.avatar} alt={user.username} />
-                    <TableCell align="center">{user.username}</TableCell>
-                    <TableCell align="center">{user.firstName}</TableCell>
-                    <TableCell align="center">{user.lastName}</TableCell>
-                    <TableCell align="center">{user.emailAddress}</TableCell>
+                    <TableCell>{user.username}</TableCell>
+                    <TableCell>{user.firstName}</TableCell>
+                    <TableCell>{user.lastName}</TableCell>
+                    <TableCell>{user.emailAddress}</TableCell>
                     <TableCell align="center">{user.newsCount}</TableCell>
                     <TableCell align="center">{formatDate(user.createdAt)}</TableCell>
                     <TableCell align="center">

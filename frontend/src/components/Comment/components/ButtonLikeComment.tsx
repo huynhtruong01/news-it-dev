@@ -3,7 +3,7 @@ import { IComment, ICommentLikeNotify, INews, IUser } from '@/models'
 import { AppDispatch } from '@/store'
 import { likeCommentNotify } from '@/store/comment/thunkApi'
 import { setShowModalAuth } from '@/store/common'
-import { addLikeComment } from '@/store/user'
+import { addLikeComment, removeLikeComment } from '@/store/user'
 import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -22,6 +22,7 @@ export interface IButtonLikeCommentProps extends ButtonProps {
     news: INews
     pGetProfile: () => Promise<PayloadAction<unknown>>
     pAddCommentLike: (data: IComment) => void
+    pRemoveCommentLike: (data: IComment) => void
     pLikeComment: (data: ICommentLikeNotify) => Promise<PayloadAction<unknown>>
     pSetShowModalAuth: (isShow: boolean) => void
 }
@@ -32,6 +33,7 @@ function ButtonLikeComment({
     news,
     text,
     pAddCommentLike,
+    pRemoveCommentLike,
     pLikeComment,
     pSetShowModalAuth,
     ...rest
@@ -60,6 +62,7 @@ function ButtonLikeComment({
             if (isLike) {
                 setIsLike(false)
                 setNumLikes(numLikes - 1)
+                pRemoveCommentLike(comment)
                 await commentApi.unlikeComment(comment.id)
             } else {
                 setIsLike(true)
@@ -129,6 +132,7 @@ const mapDispatchProps = (dispatch: AppDispatch) => {
     return {
         pGetProfile: () => dispatch(getProfile()),
         pAddCommentLike: (data: IComment) => dispatch(addLikeComment(data)),
+        pRemoveCommentLike: (data: IComment) => dispatch(removeLikeComment(data)),
         pLikeComment: (data: ICommentLikeNotify) => dispatch(likeCommentNotify(data)),
         pSetShowModalAuth: (isShow: boolean) => dispatch(setShowModalAuth(isShow)),
     }

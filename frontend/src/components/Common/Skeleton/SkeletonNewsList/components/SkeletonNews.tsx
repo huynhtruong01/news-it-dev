@@ -1,6 +1,10 @@
 import { Box, Skeleton, Stack, Paper } from '@mui/material'
 
-export function SkeletonNews() {
+export interface ISkeletonNewsProps {
+    noImage?: boolean
+}
+
+export function SkeletonNews({ noImage = false }: ISkeletonNewsProps) {
     return (
         <Box
             component={Paper}
@@ -10,20 +14,22 @@ export function SkeletonNews() {
                 width: '100%',
             }}
         >
-            <Box>
-                <Skeleton
-                    variant="rounded"
-                    width={'100%'}
-                    sx={{
-                        borderRadius: 0,
-                        height: {
-                            md: 270,
-                            sm: 200,
-                            xs: 150,
-                        },
-                    }}
-                />
-            </Box>
+            {!noImage && (
+                <Box>
+                    <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        sx={{
+                            borderRadius: 0,
+                            height: {
+                                md: 270,
+                                sm: 200,
+                                xs: 150,
+                            },
+                        }}
+                    />
+                </Box>
+            )}
 
             <Box padding={2.5}>
                 <Stack direction="row" gap={1} marginBottom={2}>
@@ -51,7 +57,12 @@ export function SkeletonNews() {
                     </Box>
                 </Stack>
 
-                <Box>
+                <Box
+                    paddingLeft={{
+                        md: 5,
+                        xs: 0,
+                    }}
+                >
                     <Box marginBottom={0.5}>
                         <Skeleton
                             variant="text"

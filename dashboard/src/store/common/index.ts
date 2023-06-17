@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IStatisticalNums } from './../../models'
 import { extraReducers } from './thunkApi'
+import { reducers } from './reducer'
 
 export interface ICommonStore {
     statisticalNums: IStatisticalNums
+    isShowModalLogout: boolean
 }
 
 const initialState: ICommonStore = {
@@ -14,13 +16,15 @@ const initialState: ICommonStore = {
         numRole: 0,
         numLikes: 0,
     },
+    isShowModalLogout: false,
 }
 
-const roleSlice = createSlice({
+const commonSlice = createSlice({
     name: 'common',
     initialState,
-    reducers: {},
+    reducers,
     extraReducers,
 })
 
-export default roleSlice.reducer
+export const { showModalLogout } = commonSlice.actions
+export default commonSlice.reducer

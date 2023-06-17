@@ -43,21 +43,25 @@ export const userHeaders: readonly ITableHeader[] = [
         id: 'username',
         label: 'Username',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'firstName',
         label: 'First Name',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'lastName',
         label: 'Last Name',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'emailAddress',
         label: 'Email',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'newsCount',

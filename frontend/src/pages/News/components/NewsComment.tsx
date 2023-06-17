@@ -1,7 +1,7 @@
 import { commentApi, notifyApi } from '@/api'
 import { CommentInput, CommentList } from '@/components'
-import { ProgressLoading } from '@/components/Common'
-import { Order } from '@/enums'
+import { ProgressLoading, SkeletonCommentList } from '@/components/Common'
+import { NotifyType, Order } from '@/enums'
 import { IComment, ICommentData, IFilters, INews, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { getAllCommentsById, getAllCommentsByIdLoadMore } from '@/store/comment/thunkApi'
@@ -107,6 +107,16 @@ function NewsComment({
             }
 
             await commentApi.createComment(newComment)
+            await notifyApi.createCommentNotify({
+                userId: pUser?.id as number,
+                newsId: news.id,
+                user: pUser as IUser,
+                news: news as INews,
+                text: 'has been commented your news',
+                recipients: [news?.user as IUser],
+                readUsers: [],
+                type: NotifyType.COMMENT,
+            })
             setLoadingCreateComment(false)
             pIncreaseNumComments()
 
@@ -176,7 +186,7 @@ function NewsComment({
                         }}
                     />
                 )}
-                {loadingComment && <ProgressLoading />}
+                {loadingComment && <SkeletonCommentList quantities={5} />}
                 {!loadingComment && <CommentList comments={pComments} t={t} />}
 
                 {loadMore && <ProgressLoading />}

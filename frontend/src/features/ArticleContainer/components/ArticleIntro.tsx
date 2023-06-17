@@ -110,7 +110,6 @@ function ArticleIntro({
                     variant="h4"
                     fontWeight={'bold'}
                     sx={{
-                        marginBottom: 0.5,
                         a: {
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
@@ -121,6 +120,7 @@ function ArticleIntro({
                         '&:hover': {
                             a: {
                                 color: theme.palette.primary.main,
+                                textDecoration: 'underline',
                             },
                         },
                     }}
@@ -139,7 +139,11 @@ function ArticleIntro({
                             WebkitLineClamp: 1,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
-                            paddingRight: 3,
+                            marginTop: 1.5,
+                            padding: 1.5,
+                            backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+                            borderRadius: theme.spacing(0.75),
+                            borderLeft: `6px solid ${theme.palette.primary.main}`,
                         }}
                     >
                         {sapo}
@@ -153,6 +157,7 @@ function ArticleIntro({
                 direction={'row'}
                 justifyContent={'space-between'}
                 alignItems={'center'}
+                marginTop={2}
             >
                 <Stack
                     direction={'row'}

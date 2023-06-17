@@ -52,7 +52,7 @@ export function RoleTable({
     }
 
     return (
-        <TableWrapper<IRole>
+        <TableWrapper
             total={total}
             listHead={roleHeaders}
             filters={filters}

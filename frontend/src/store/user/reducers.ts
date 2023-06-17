@@ -3,6 +3,7 @@ import { resetNotify } from '@/store/notify'
 import { removeLs } from '@/utils'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { IUserStore } from '.'
+import { Status } from '@/enums'
 
 export const reducers = {
     saveUserLogin(state: IUserStore, action: PayloadAction<IUser | null>) {
@@ -16,6 +17,16 @@ export const reducers = {
         removeLs(import.meta.env.VITE_REFRESH_TOKEN_KEY)
 
         resetNotify()
+    },
+    publicNews: (state: IUserStore, action: PayloadAction<number>) => {
+        const newUser = state.user
+        const newNewsUser = newUser?.news as INews[]
+        const index = newNewsUser.findIndex((n) => n.id === action.payload) as number
+        if (index >= 0) {
+            const news = { ...newNewsUser[index], status: Status.PUBLIC }
+            newNewsUser[index] = news
+            state.user = { ...newUser, news: newNewsUser } as IUser
+        }
     },
     deleteNewsUser: (state: IUserStore, action: PayloadAction<number>) => {
         const newsList = [...((state.user?.news as INews[]) || [])]
@@ -131,6 +142,15 @@ export const reducers = {
         if (state.user) {
             const newCommentLikes = [...(state.user?.commentLikes as IComment[])]
             newCommentLikes.push(action.payload)
+
+            state.user.commentLikes = newCommentLikes
+        }
+    },
+    removeLikeComment(state: IUserStore, action: PayloadAction<IComment>) {
+        if (state.user) {
+            const newCommentLikes = state.user.commentLikes?.filter(
+                (c) => c.id !== action.payload.id
+            )
 
             state.user.commentLikes = newCommentLikes
         }

@@ -118,14 +118,20 @@ function TagsDetail({ pUser }: ITagsDetailProps) {
                                 },
                             }}
                         >
-                            <TagsDetailLeft hashTagFollows={hashTagFollows} />
+                            <TagsDetailLeft tag={tag} hashTagFollows={hashTagFollows} />
                         </Grid>
 
-                        <Grid item md>
+                        <Grid item xs={12} md>
                             <TagsDetailNews
                                 filters={filters}
                                 setFilters={setFilters}
                                 news={tagNews}
+                                sx={{
+                                    width: {
+                                        md: 'auto',
+                                        xs: '100%',
+                                    },
+                                }}
                             />
                         </Grid>
                     </Grid>

@@ -15,14 +15,16 @@ import { theme } from '../../utils'
 import { useToast } from '../../hooks'
 import { rolesApi } from '../../api'
 import { Order } from '../../enums'
+import { deleteRole } from '../../store/role'
 
 export interface IRolesProps {
     pRoles: IRole[]
     pTotal: number
     pGetRoles: (params: IFilters) => Promise<PayloadAction<unknown>>
+    pDeleteRole: (data: number) => void
 }
 
-function Roles({ pRoles, pTotal, pGetRoles }: IRolesProps) {
+function Roles({ pRoles, pTotal, pGetRoles, pDeleteRole }: IRolesProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
@@ -41,7 +43,7 @@ function Roles({ pRoles, pTotal, pGetRoles }: IRolesProps) {
         if (open || openDelete) return
 
         pGetRoles(filters)
-    }, [filters, open, openDelete])
+    }, [filters])
 
     const handleSearchChange = (value: string) => {
         setFilters({ ...filters, search: value })
@@ -56,6 +58,7 @@ function Roles({ pRoles, pTotal, pGetRoles }: IRolesProps) {
         try {
             if (initValues.id) {
                 await rolesApi.deleteRole(initValues.id)
+                pDeleteRole(initValues.id)
                 toastSuccess(`Delete role ${initValues.name} successfully.`)
                 setInitValues(initRoleFormValues)
             }
@@ -142,6 +145,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetRoles: (params: IFilters) => dispatch(getRoles(params)),
+        pDeleteRole: (data: number) => dispatch(deleteRole(data)),
     }
 }
 

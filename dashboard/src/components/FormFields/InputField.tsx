@@ -40,6 +40,7 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
                     placeholder={placeholder}
                     helperText={(error?.message as string) || ''}
                     error={!!error?.message}
+                    size="small"
                     sx={{
                         '.MuiInputBase-root': {
                             backgroundColor: theme.palette.primary.contrastText,

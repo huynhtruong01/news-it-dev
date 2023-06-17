@@ -47,7 +47,7 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
         <Box component="form" onSubmit={handleSubmit(handleLoginSubmit)}>
             <Box
                 sx={{
-                    marginBottom: 3,
+                    marginBottom: 2,
                 }}
             >
                 <InputField<ILoginValues>
@@ -64,7 +64,15 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     disabled={isSubmitting}
                 />
             </Box>
-            <Button type="submit" fullWidth variant="contained" disabled={isSubmitting}>
+            <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                disabled={isSubmitting}
+                sx={{
+                    padding: 1.5,
+                }}
+            >
                 Login
             </Button>
         </Box>

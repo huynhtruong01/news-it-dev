@@ -72,10 +72,7 @@ function Header({ pUserLogin }: IHeaderProps) {
                             cursor: 'pointer',
                         }}
                     >
-                        <Avatar
-                            alt="Admin"
-                            src="https://vnn-imgs-f.vgcloud.vn/2020/03/23/11/trend-avatar-1.jpg"
-                        />
+                        <Avatar alt={pUserLogin?.username} src={pUserLogin?.avatar} />
                     </Box>
                 </Box>
             </Box>

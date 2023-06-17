@@ -1,6 +1,7 @@
 import { IRole, IOptionItem } from './../../models'
 import { createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from './thunkApi'
+import { reducers } from './reducer'
 
 export interface IRoleStore {
     roleSelects: IOptionItem[]
@@ -17,8 +18,9 @@ const initialState: IRoleStore = {
 const roleSlice = createSlice({
     name: 'role',
     initialState,
-    reducers: {},
+    reducers,
     extraReducers,
 })
 
+export const { addRole, updateRole, deleteRole } = roleSlice.actions
 export default roleSlice.reducer

@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Seo } from '@/components/Common'
 
-const generateNewValues = (values: INewsForm) => {
+export const generateNewValues = (values: INewsForm) => {
     const { hashTagOptionIds, hashTags, ...rest } = values
     const ids = generateIds(hashTagOptionIds as IOptionItem[])
 

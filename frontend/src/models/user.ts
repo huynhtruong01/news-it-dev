@@ -3,6 +3,14 @@ import { IComment, IHashTag, INews, IOptionItem } from '.'
 
 export type IRoleIds = IOptionItem[]
 
+export interface IUserLike {
+    id: number
+    userId: number
+    newsId: number
+    user?: IUser
+    news?: INews
+}
+
 export interface IUserData {
     id?: number
     username: string

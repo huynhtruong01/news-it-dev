@@ -18,6 +18,7 @@ import {
 } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
@@ -48,6 +49,7 @@ function UserDetailHover({
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
     const linkUser = useLinkUser(user)
     const checkSelf = useCheckSelf(user)
+    const { t } = useTranslation()
 
     useEffect(() => {
         if (Array.isArray(pUser?.following)) {
@@ -101,8 +103,7 @@ function UserDetailHover({
                 <Stack
                     direction={'row'}
                     alignItems={'flex-end'}
-                    gap={1}
-                    marginBottom={1}
+                    gap={0.5}
                     sx={{
                         transform: 'translateY(-30%)',
                     }}
@@ -119,8 +120,12 @@ function UserDetailHover({
                         sx={{
                             a: {
                                 padding: theme.spacing(0, 0.5),
-                                fontSize: theme.typography.h5,
+                                fontSize: theme.typography.h6,
                                 fontWeight: 700,
+                                '&:hover': {
+                                    color: theme.palette.primary.main,
+                                    background: 'none',
+                                },
                             },
                         }}
                     >
@@ -133,7 +138,7 @@ function UserDetailHover({
                         variant="contained"
                         fullWidth
                         sx={{
-                            padding: theme.spacing(1.5, 0),
+                            padding: theme.spacing(1.2, 0),
                             backgroundColor:
                                 followed === IsFollow.FOLLOW
                                     ? theme.palette.primary.light
@@ -160,7 +165,9 @@ function UserDetailHover({
                         }}
                         onClick={handleFollowClick}
                     >
-                        {followed === IsFollow.FOLLOW ? 'Follow' : 'Following'}
+                        {followed === IsFollow.FOLLOW
+                            ? t('profile.follow')
+                            : t('profile.following')}
                     </Button>
                 )}
             </Box>
@@ -171,38 +178,38 @@ function UserDetailHover({
                     marginTop: 2,
                     li: {
                         marginBottom: 2,
+                        color: theme.palette.secondary.main,
                         div: {
                             textTransform: 'uppercase',
                             fontSize: theme.typography.caption,
                             fontWeight: 700,
                         },
+                        p: {
+                            fontSize: '1rem',
+                            color: theme.palette.secondary.main,
+                        },
                     },
                 }}
             >
                 {user.bio && (
-                    <Box
-                        component="li"
-                        sx={{
-                            fontSize: '18px',
-                        }}
-                    >
+                    <Box component="li">
                         <Typography>{user.bio}</Typography>
                     </Box>
                 )}
                 {user.skillLanguages && (
                     <Box component="li">
-                        <Box>Skill Languages</Box>
+                        <Box>{t('input.skill_languages')}</Box>
                         <Typography>{user.skillLanguages}</Typography>
                     </Box>
                 )}
                 {user.work && (
                     <Box component="li">
-                        <Box>Work</Box>
+                        <Box>{t('input.work')}</Box>
                         <Typography>{user.work}</Typography>
                     </Box>
                 )}
                 <Box component="li">
-                    <Box>Date Joined</Box>
+                    <Box>{t('input.dated_join')}</Box>
                     <Typography>
                         {formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
                     </Typography>

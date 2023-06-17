@@ -1,6 +1,7 @@
+import { Status } from '@/enums'
 import { INews, INewsForm, IOptionItem, IStatus } from '@/models'
 import { AppDispatch } from '@/store'
-import { setShowModalDelete } from '@/store/common'
+import { setShowModalDelete, setShowModalPublicNews } from '@/store/common'
 import { setInitValueForm, setNews } from '@/store/news'
 import { theme } from '@/utils'
 import { Box, BoxProps, Paper, Stack, Typography, Grid } from '@mui/material'
@@ -12,6 +13,7 @@ import { Link, useNavigate } from 'react-router-dom'
 export interface IDashboardNewsItemProps extends BoxProps {
     pSetInitValuesNewsForm: (values: INewsForm) => void
     pSetShowModalDelete: (isShow: boolean) => void
+    pSetShowModalPublicNews: (isShow: boolean) => void
     pSetNews: (news: INews) => void
     news: INews
 }
@@ -20,6 +22,7 @@ function DashboardNewsItem({
     news,
     pSetInitValuesNewsForm,
     pSetShowModalDelete,
+    pSetShowModalPublicNews,
     pSetNews,
     ...rest
 }: IDashboardNewsItemProps) {
@@ -56,7 +59,12 @@ function DashboardNewsItem({
         }
 
         pSetInitValuesNewsForm(newNewsValues)
-        navigate('/update-news')
+
+        if (news.status !== Status.UNPUBLIC) {
+            navigate('/update-news')
+        } else {
+            pSetShowModalPublicNews(true)
+        }
     }
 
     return (
@@ -153,7 +161,9 @@ function DashboardNewsItem({
                             }}
                             onClick={handleSetInitValueNewsForm}
                         >
-                            {t('button.edit')}
+                            {news.status !== Status.UNPUBLIC
+                                ? t('button.edit')
+                                : t(`status.public`)}
                         </Box>
                     </Stack>
                 </Grid>
@@ -166,6 +176,8 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pSetInitValuesNewsForm: (values: INewsForm) => dispatch(setInitValueForm(values)),
         pSetShowModalDelete: (isShow: boolean) => dispatch(setShowModalDelete(isShow)),
+        pSetShowModalPublicNews: (isShow: boolean) =>
+            dispatch(setShowModalPublicNews(isShow)),
         pSetNews: (news: INews) => dispatch(setNews(news)),
     }
 }

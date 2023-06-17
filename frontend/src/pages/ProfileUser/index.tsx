@@ -133,7 +133,7 @@ function ProfileUser({
                     },
                     backgroundColor:
                         user?.bandingColor !== COLOR_WHITE
-                            ? pUser?.bandingColor
+                            ? user?.bandingColor
                             : theme.palette.primary.dark,
                 }}
             ></Box>

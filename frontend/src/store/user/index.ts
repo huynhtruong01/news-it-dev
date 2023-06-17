@@ -31,6 +31,7 @@ const userSlice = createSlice({
 export const {
     saveUserLogin,
     signout,
+    publicNews,
     deleteNewsUser,
     followNotify,
     followUser,
@@ -41,5 +42,6 @@ export const {
     unsaveNews,
     unsaveUserFiltersNews,
     addLikeComment,
+    removeLikeComment,
 } = userSlice.actions
 export default userSlice.reducer

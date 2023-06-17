@@ -1,5 +1,5 @@
 import { hashTagApi } from '@/api'
-import { COLOR_WHITE } from '@/consts'
+import { COLOR_WHITE, DEFAULT_LANGUAGES } from '@/consts'
 import { IsFollow } from '@/enums'
 import { IFollow, IHashTag, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
@@ -8,6 +8,7 @@ import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import { Box, BoxProps, Button, Paper, Stack, Typography, alpha } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
+import axios from 'axios'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
@@ -17,6 +18,7 @@ export interface ITagsDetailHeaderProps extends BoxProps {
     pGetProfile: () => Promise<PayloadAction<unknown>>
     tag: IHashTag
     pSetShowModalAuth: (isShow: boolean) => void
+    pLanguages: string
 }
 
 function TagsDetailHeader({
@@ -24,10 +26,12 @@ function TagsDetailHeader({
     pGetProfile,
     tag,
     pSetShowModalAuth,
+    pLanguages,
     ...rest
 }: ITagsDetailHeaderProps) {
     const { t } = useTranslation()
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
+    const [content, setContent] = useState<string>(tag.description as string)
 
     const color = useMemo(() => {
         return tag.color === COLOR_WHITE ? theme.palette.primary.dark : tag.color
@@ -48,6 +52,41 @@ function TagsDetailHeader({
         setFollowed(IsFollow.FOLLOW)
         return
     }, [pUser])
+
+    useEffect(() => {
+        ;(async () => {
+            try {
+                const results = await axios
+                    .post(
+                        'https://rapid-translate-multi-traduction.p.rapidapi.com/t',
+                        {
+                            from:
+                                pLanguages === DEFAULT_LANGUAGES
+                                    ? 'en'
+                                    : DEFAULT_LANGUAGES,
+                            to:
+                                pLanguages === DEFAULT_LANGUAGES
+                                    ? DEFAULT_LANGUAGES
+                                    : 'en',
+                            q: content,
+                        },
+                        {
+                            headers: {
+                                'content-type': 'application/json',
+                                'X-RapidAPI-Key':
+                                    'b58ca47cf1mshf76613c5f72fa07p17e82bjsnf62ccd71481d',
+                                'X-RapidAPI-Host':
+                                    'rapid-translate-multi-traduction.p.rapidapi.com',
+                            },
+                        }
+                    )
+                    .then((res) => res.data)
+                setContent(results[0])
+            } catch (error) {
+                throw new Error(error as string)
+            }
+        })()
+    }, [pLanguages])
 
     const handleFollowClick = async () => {
         try {
@@ -100,78 +139,113 @@ function TagsDetailHeader({
                     borderTop: `1rem solid ${color}`,
                 }}
             >
-                <Stack padding={3}>
-                    <Stack direction={'row'} justifyContent={'space-between'}>
-                        <Typography component="h1" variant="h4" fontWeight={700}>
-                            {tag.name}
-                        </Typography>
+                <Stack
+                    direction={{
+                        md: 'row',
+                        xs: 'column',
+                    }}
+                    padding={{
+                        md: 3,
+                        xs: 2,
+                    }}
+                    gap={2}
+                >
+                    {tag.iconImage && (
                         <Box
                             sx={{
-                                button: {
-                                    backgroundColor:
-                                        followed === IsFollow.FOLLOWING
-                                            ? 'transparent'
-                                            : theme.palette.primary.light,
-                                    border: `2px solid ${
-                                        followed === IsFollow.FOLLOWING
-                                            ? theme.palette.grey[500]
-                                            : theme.palette.primary.light
-                                    }`,
-                                    borderRadius: theme.spacing(0.75),
-                                    color:
-                                        followed === IsFollow.FOLLOWING
-                                            ? theme.palette.secondary.main
-                                            : theme.palette.primary.contrastText,
-                                    padding: theme.spacing(0.75, 1.75),
-                                    fontSize: theme.typography.body1,
-                                    fontWeight: 500,
-                                    transition: '.2s ease-in-out',
-                                    '&:hover': {
-                                        backgroundColor:
-                                            followed === IsFollow.FOLLOWING
-                                                ? alpha(theme.palette.grey[700], 0.05)
-                                                : theme.palette.primary.dark,
-                                        borderColor:
-                                            followed === IsFollow.FOLLOWING
-                                                ? theme.palette.grey[700]
-                                                : theme.palette.primary.dark,
-                                    },
+                                display: {
+                                    md: 'block',
+                                    xs: 'none',
+                                },
+                                img: {
+                                    width: 64,
+                                    height: 64,
                                 },
                             }}
                         >
-                            {!pUser?.id && (
-                                <Button variant="contained" onClick={handleShowModal}>
-                                    {t('profile.follow')}
-                                </Button>
-                            )}
-                            {pUser?.id &&
-                                (followed === IsFollow.FOLLOWING ? (
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleUnfollowClick}
-                                    >
-                                        {t('profile.following')}
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleFollowClick}
-                                    >
+                            <img src={tag.iconImage} alt={tag.title} />
+                        </Box>
+                    )}
+                    <Stack flex={1}>
+                        <Stack
+                            direction={'row'}
+                            justifyContent={'space-between'}
+                            alignItems={'center'}
+                        >
+                            <Typography component="h1" variant="h4" fontWeight={800}>
+                                {tag.title}
+                            </Typography>
+                            <Box
+                                sx={{
+                                    button: {
+                                        backgroundColor:
+                                            followed === IsFollow.FOLLOWING
+                                                ? 'transparent'
+                                                : theme.palette.primary.light,
+                                        border: `2px solid ${
+                                            followed === IsFollow.FOLLOWING
+                                                ? theme.palette.grey[500]
+                                                : theme.palette.primary.light
+                                        }`,
+                                        borderRadius: theme.spacing(0.75),
+                                        color:
+                                            followed === IsFollow.FOLLOWING
+                                                ? theme.palette.secondary.main
+                                                : theme.palette.primary.contrastText,
+                                        padding: theme.spacing(0.75, 1.75),
+                                        fontSize: theme.typography.body1,
+                                        fontWeight: 500,
+                                        transition: '.2s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor:
+                                                followed === IsFollow.FOLLOWING
+                                                    ? alpha(theme.palette.grey[700], 0.05)
+                                                    : theme.palette.primary.dark,
+                                            borderColor:
+                                                followed === IsFollow.FOLLOWING
+                                                    ? theme.palette.grey[700]
+                                                    : theme.palette.primary.dark,
+                                        },
+                                    },
+                                }}
+                            >
+                                {!pUser?.id && (
+                                    <Button variant="contained" onClick={handleShowModal}>
                                         {t('profile.follow')}
                                     </Button>
-                                ))}
-                        </Box>
-                    </Stack>
+                                )}
+                                {pUser?.id &&
+                                    (followed === IsFollow.FOLLOWING ? (
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleUnfollowClick}
+                                        >
+                                            {t('profile.following')}
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleFollowClick}
+                                        >
+                                            {t('profile.follow')}
+                                        </Button>
+                                    ))}
+                            </Box>
+                        </Stack>
 
-                    <Typography
-                        marginTop={3}
-                        sx={{
-                            maxWidth: '75%',
-                            color: theme.palette.secondary.main,
-                        }}
-                    >
-                        {tag.description}
-                    </Typography>
+                        <Typography
+                            marginTop={2}
+                            sx={{
+                                maxWidth: {
+                                    md: '75%',
+                                    xs: '100%',
+                                },
+                                color: theme.palette.secondary.main,
+                            }}
+                        >
+                            {content}
+                        </Typography>
+                    </Stack>
                 </Stack>
             </Box>
         </Box>
@@ -181,6 +255,7 @@ function TagsDetailHeader({
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pLanguages: state.common.languages,
     }
 }
 

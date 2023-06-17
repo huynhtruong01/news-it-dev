@@ -52,7 +52,7 @@ export function HashTagTable({
     }
 
     return (
-        <TableWrapper<IHashTag>
+        <TableWrapper
             total={total}
             listHead={tagHeaders}
             filters={filters}
@@ -67,8 +67,20 @@ export function HashTagTable({
                     onClick={() => handleSetInitValues(tag)}
                 >
                     <TableCell align="center">{tag.id}</TableCell>
-                    <TableCellImage src={tag.iconImage as string} alt={tag.name} />
-                    <TableCell align="center">{tag.name}</TableCell>
+                    <TableCellImage
+                        src={tag.iconImage as string}
+                        alt={tag.name}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            img: {
+                                width: 50,
+                                height: 50,
+                                borderRadius: 0.5,
+                            },
+                        }}
+                    />
+                    <TableCell>{tag.name}</TableCell>
                     <TableCell
                         align="left"
                         sx={{

@@ -18,13 +18,16 @@ import { ButtonForm } from '../Common'
 import { useToast } from '../../hooks'
 import { newsApi } from '../../api'
 import { connect } from 'react-redux'
-import { AppState } from '../../store'
+import { AppDispatch, AppState } from '../../store'
+import { addNews, updateNews } from '../../store/news'
 
 export interface INewsModalFormProps {
     initValues: INewsData
     open: boolean
     setOpen: Dispatch<SetStateAction<boolean>>
     pHashTagSelects: IOptionItem[]
+    pAddNews: (data: INews) => void
+    pUpdateNews: (data: INews) => void
 }
 
 const generateNewValues = (values: INewsData) => {
@@ -42,6 +45,8 @@ function NewsModalForm({
     open,
     setOpen,
     pHashTagSelects,
+    pAddNews,
+    pUpdateNews,
 }: INewsModalFormProps) {
     const { toastSuccess, toastError } = useToast()
 
@@ -137,11 +142,12 @@ function NewsModalForm({
                 newValues.coverImage = coverImg?.url
             }
 
-            await newsApi.updateNews({
+            const res = await newsApi.updateNews({
                 ...newValues,
                 hashTagIds: ids as number[],
                 id: initValues.id,
             } as INews)
+            pUpdateNews(res.data.news)
 
             toastSuccess(`Update user '${newValues?.title}' successfully.`)
         } catch (error) {
@@ -169,6 +175,7 @@ function NewsModalForm({
             }
 
             const res = await newsApi.addNews({ ...newValues, hashTagIds: ids })
+            pAddNews(res.data.news)
 
             toastSuccess(`Add user '${res.data.news.title}' successfully.`)
         } catch (error) {
@@ -324,4 +331,11 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-export default connect(mapStateToProps, null)(NewsModalForm)
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pAddNews: (data: INews) => dispatch(addNews(data)),
+        pUpdateNews: (data: INews) => dispatch(updateNews(data)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewsModalForm)

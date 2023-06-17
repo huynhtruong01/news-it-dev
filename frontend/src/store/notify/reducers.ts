@@ -99,7 +99,9 @@ export const reducers = {
         if (indexNotifies > -1) notifies.splice(indexNotifies, 1)
         if (indexNotifiesFilters > -1) notifiesFilters.splice(indexNotifiesFilters, 1)
 
-        const filtersNotifyNotRead = notifies.filter((n) => n.readUsers?.includes(userId))
+        const filtersNotifyNotRead = notifies.filter(
+            (n) => !n.readUsers?.includes(userId.toString())
+        )
 
         state.numNotifications = filtersNotifyNotRead.length
         state.total = notifies.length

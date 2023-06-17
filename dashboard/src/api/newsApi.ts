@@ -12,7 +12,7 @@ export const addNews = (data: INewsData) => {
 }
 
 export const updateNews = (data: INews) => {
-    return AxiosClient.put(`${BASE_URL}/${data.id}`, data)
+    return AxiosClient.put(`${BASE_URL}/${data.id}`, data).then((res) => res.data)
 }
 
 export const deleteNews = (id: number) => {

@@ -16,7 +16,7 @@ export const addRole = (data: IRoleData) => {
 }
 
 export const updateRole = (data: IRoleData) => {
-    return AxiosClient.put(`${BASE_URL}/${data.id}`, data)
+    return AxiosClient.put(`${BASE_URL}/${data.id}`, data).then((res) => res.data)
 }
 
 export const deleteRole = (id: number) => {

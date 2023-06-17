@@ -39,7 +39,7 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
             control={control}
             name={name}
             render={({ field: { onChange, value, onBlur } }) => (
-                <FormControl fullWidth variant="outlined" margin="normal">
+                <FormControl fullWidth variant="outlined" margin="normal" size="small">
                     <InputLabel error={!!error?.message}>{label}</InputLabel>
                     <OutlinedInput
                         type={showPassword ? 'text' : 'password'}

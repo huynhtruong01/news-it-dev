@@ -44,6 +44,8 @@ interface IListProps extends BoxProps {
 }
 
 export function ListResult({ loading, list, ...rest }: IListProps) {
+    const { t } = useTranslation()
+
     return (
         <Box
             component={Paper}
@@ -59,7 +61,7 @@ export function ListResult({ loading, list, ...rest }: IListProps) {
         >
             {loading && <ProgressLoading padding={1.5} />}
             {list.length === 0 && !loading && (
-                <EmptyList title={'No results'} noPaper padding={1.5} />
+                <EmptyList title={t('empty.no_results')} noPaper padding={1.5} />
             )}
             {!loading && list.length > 0 && (
                 <List>

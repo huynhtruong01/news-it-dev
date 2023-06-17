@@ -11,6 +11,7 @@ export const newsHeaders: readonly ITableHeader[] = [
         id: 'coverImage',
         label: 'Image',
         isSort: false,
+        align: 'left',
     },
     {
         id: 'title',

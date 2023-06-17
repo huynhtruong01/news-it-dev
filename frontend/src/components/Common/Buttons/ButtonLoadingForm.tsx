@@ -17,7 +17,7 @@ export function ButtonLoadingForm({ loading, text, ...rest }: IButtonLoadingForm
             disabled={loading}
             sx={{
                 backgroundColor: theme.palette.primary.light,
-                padding: theme.spacing(1.5),
+                padding: 1.5,
                 fontWeight: 500,
                 '&:hover': {
                     backgroundColor: theme.palette.primary.dark,

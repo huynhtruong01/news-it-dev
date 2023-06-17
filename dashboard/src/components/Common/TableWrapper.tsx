@@ -5,7 +5,7 @@ import { IFilters, IOrder, ITableHeader } from '../../models'
 import { PaginationTable } from '../Filters'
 import { TableHeader } from './TableHeader'
 
-export type ITableWrapperProps<ITableData> = {
+export type ITableWrapperProps = {
     total: number
     listHead: readonly ITableHeader[]
     filters: IFilters
@@ -13,27 +13,32 @@ export type ITableWrapperProps<ITableData> = {
     children: ReactNode
 }
 
-export function TableWrapper<ITableData>({
+export function TableWrapper({
     total,
     listHead,
     filters,
     onFiltersChange,
     children,
-}: ITableWrapperProps<ITableData>) {
+}: ITableWrapperProps) {
     const [order, setOrder] = useState<IOrder>(Order.asc)
     const [orderBy, setOrderBy] = useState<string>('createdAt')
     const [page, setPage] = useState<number>(filters.page - 1)
     const [rowsPerPage, setRowsPerPage] = useState<number>(filters.limit)
+    const [initFetch, setInitFetch] = useState<boolean>(false)
     const MAX_HEIGHT = 500
 
     useEffect(() => {
-        const newFilters = {
-            page: page + 1,
-            limit: rowsPerPage,
-            [`${orderBy}`]: order === Order.asc ? Order.ASC : Order.DESC,
-        }
+        if (initFetch) {
+            const newFilters = {
+                page: page + 1,
+                limit: rowsPerPage,
+                [`${orderBy}`]: order === Order.asc ? Order.ASC : Order.DESC,
+            }
 
-        onFiltersChange({ ...filters, ...newFilters })
+            onFiltersChange({ ...filters, ...newFilters })
+        } else {
+            setInitFetch(true)
+        }
     }, [page, rowsPerPage, order, orderBy])
 
     const handleRequestSort = (event: MouseEvent<unknown>, property: string) => {

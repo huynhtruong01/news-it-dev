@@ -4,7 +4,7 @@ import { Grid, Box } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { ArticleContainer, Sidebar } from '..'
+import { ArticleContainer, Sidebar, UserFollowing } from '..'
 import { getProfile } from '@/store/user/thunkApi'
 import { getNotifies } from '@/store/notify/thunkApi'
 import { IUser } from '@/models'
@@ -19,12 +19,7 @@ export interface IMainContentProps {
     pGetNotifies: (userId: number) => Promise<PayloadAction<unknown>>
 }
 
-function MainContent({
-    pUser,
-    // pGetAllTagsPopular,
-    pGetProfile,
-    pGetNotifies,
-}: IMainContentProps) {
+function MainContent({ pUser, pGetProfile, pGetNotifies }: IMainContentProps) {
     const { t } = useTranslation()
 
     useEffect(() => {
@@ -55,7 +50,7 @@ function MainContent({
                 <Grid
                     item
                     sx={{
-                        width: '240px',
+                        width: 240,
                         display: {
                             xs: 'none',
                             md: 'block',
@@ -67,6 +62,19 @@ function MainContent({
 
                 <Grid item xs={12} md>
                     <ArticleContainer />
+                </Grid>
+
+                <Grid
+                    item
+                    sx={{
+                        width: 300,
+                        display: {
+                            xs: 'none',
+                            md: 'block',
+                        },
+                    }}
+                >
+                    <UserFollowing user={pUser as IUser} />
                 </Grid>
             </Grid>
         </Box>

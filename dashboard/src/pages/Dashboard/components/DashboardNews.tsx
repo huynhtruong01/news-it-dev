@@ -80,7 +80,7 @@ function DashboardNews({ pNewsDashboard, ...rest }: IDashboardNewsProps) {
                                             <Box
                                                 sx={{
                                                     img: {
-                                                        width: 40,
+                                                        width: 80,
                                                         height: 40,
                                                         objectFit: 'cover',
                                                         borderRadius: theme.spacing(0.75),

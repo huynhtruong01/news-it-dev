@@ -1,3 +1,4 @@
+import { Seo } from '@/components/Common'
 import { IHashTag, INews, IUser } from '@/models'
 import {
     DashboardLeftList,
@@ -9,15 +10,13 @@ import {
 } from '@/pages/Dashboard/components'
 import { AppDispatch, AppState } from '@/store'
 import { getProfile } from '@/store/user/thunkApi'
-import { Box, Typography, Grid } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
-import { connect } from 'react-redux'
-import { Route, Routes } from 'react-router-dom'
-import { DashboardFollow } from './components/DashboardFollow'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { Seo } from '@/components/Common'
+import { connect } from 'react-redux'
+import { Route, Routes, useNavigate } from 'react-router-dom'
+import { DashboardFollow, ModalPublicNews } from '@/pages/Dashboard/components'
 
 export interface IDashboardProps {
     pUser: IUser | null
@@ -141,6 +140,7 @@ function Dashboard({ pUser, pGetProfile }: IDashboardProps) {
                     )}
                 </Grid>
             </Box>
+            <ModalPublicNews />
         </Box>
     )
 }

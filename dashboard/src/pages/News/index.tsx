@@ -16,15 +16,17 @@ import { newsApi } from '../../api'
 import { useToast } from '../../hooks'
 import { getAllHashTags } from '../../store/hashTag/thunkApi'
 import { initNewsFormValues } from '../../data'
+import { deleteNews } from '../../store/news'
 
 export interface INewsProps {
     pNews: INews[]
     pTotal: number
     pGetNews: (params: IFilters) => Promise<PayloadAction<unknown>>
     pGetHashTagSelects: () => Promise<PayloadAction<unknown>>
+    pDeleteNews: (data: number) => void
 }
 
-function News({ pNews, pTotal, pGetNews, pGetHashTagSelects }: INewsProps) {
+function News({ pNews, pTotal, pGetNews, pGetHashTagSelects, pDeleteNews }: INewsProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
@@ -58,6 +60,7 @@ function News({ pNews, pTotal, pGetNews, pGetHashTagSelects }: INewsProps) {
         try {
             if (initValues.id) {
                 await newsApi.deleteNews(initValues.id)
+                pDeleteNews(initValues.id)
                 toastSuccess(`Delete news ${initValues.title} successfully.`)
                 setInitValues(initNewsFormValues)
             }
@@ -150,6 +153,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetNews: (params: IFilters) => dispatch(getNews(params)),
         pGetHashTagSelects: () => dispatch(getAllHashTags()),
+        pDeleteNews: (data: number) => dispatch(deleteNews(data)),
     }
 }
 

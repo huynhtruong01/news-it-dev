@@ -18,7 +18,7 @@ export const addHashTag = (data: IHashTagData) => {
 }
 
 export const updateHashTag = (data: IHashTagData) => {
-    return AxiosClient.put(`${BASE_URL}/${data.id}`, data)
+    return AxiosClient.put(`${BASE_URL}/${data.id}`, data).then((res) => res.data)
 }
 
 export const deleteHashTag = (id: number) => {

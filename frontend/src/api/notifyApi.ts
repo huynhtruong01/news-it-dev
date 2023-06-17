@@ -15,6 +15,10 @@ export const newNewsNotify = (data: INotifyNewNews) => {
     return AxiosClient.post(`${BASE_URL}/new-news`, data).then((res) => res.data)
 }
 
+export const createCommentNotify = (data: INotifyData) => {
+    return AxiosClient.post(`${BASE_URL}/create-comment`, data).then((res) => res.data)
+}
+
 export const likeNotify = (data: INotifyData) => {
     return AxiosClient.post(`${BASE_URL}/like`, data).then((res) => res.data)
 }

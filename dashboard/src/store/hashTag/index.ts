@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IHashTag, IOptionItem } from './../../models'
 import { extraReducers } from './thunkApi'
+import { reducers } from './reducers'
 
 export interface IHashTagStore {
     hashTags: IHashTag[]
@@ -17,8 +18,9 @@ const initialState: IHashTagStore = {
 const hashTagSlice = createSlice({
     name: 'hashTag',
     initialState,
-    reducers: {},
+    reducers,
     extraReducers,
 })
 
+export const { addHashTag, updateHashTag, deleteHashTag } = hashTagSlice.actions
 export default hashTagSlice.reducer

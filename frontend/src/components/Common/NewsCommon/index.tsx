@@ -20,7 +20,7 @@ export function NewsList({ newsList, user, loading }: INewsListProps) {
 
     return (
         <Stack gap={2}>
-            {loading && <SkeletonNewsList />}
+            {loading && <SkeletonNewsList columns={1} noImage />}
             {!loading && newNews.length === 0 && <EmptyList title={t('empty.no_news')} />}
             {!loading &&
                 newNews.map((news) => <NewsItem key={news.id} news={news} user={user} />)}

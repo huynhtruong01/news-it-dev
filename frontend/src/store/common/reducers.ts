@@ -23,4 +23,7 @@ export const reducers = {
     setShowModalUnSaveReading(state: ICommonStore, action: PayloadAction<boolean>) {
         state.isShowModalUnSaveReading = action.payload
     },
+    setShowModalPublicNews(state: ICommonStore, action: PayloadAction<boolean>) {
+        state.isShowModalPublicNews = action.payload
+    },
 }

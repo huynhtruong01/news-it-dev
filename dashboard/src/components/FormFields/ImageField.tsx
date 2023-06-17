@@ -20,6 +20,8 @@ export type IImageFieldProps<TFormValues extends FieldValues> = {
     disabled: boolean
     initValue: string | undefined
     placeholder?: string
+    width?: number
+    height?: number
 } & BoxProps
 
 export function ImageField<TFormValues extends FieldValues = FieldValues>({
@@ -28,6 +30,8 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
     label,
     disabled,
     initValue,
+    width = 200,
+    height = 100,
     ...rest
 }: IImageFieldProps<TFormValues>) {
     const styles = useStyles()
@@ -189,8 +193,8 @@ export function ImageField<TFormValues extends FieldValues = FieldValues>({
                         >
                             <Box
                                 sx={{
-                                    width: 200,
-                                    height: 100,
+                                    width,
+                                    height,
                                     img: {
                                         height: '100%',
                                         borderRadius: theme.spacing(0.75),

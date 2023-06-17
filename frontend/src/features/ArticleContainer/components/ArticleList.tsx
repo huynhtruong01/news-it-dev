@@ -19,14 +19,14 @@ export function ArticleList({ loading, articleList }: IArticleListProps) {
 
     return (
         <Box>
-            {loading && <SkeletonNewsList />}
+            {loading && <SkeletonNewsList columns={1} />}
             {!newArticleList.length && !loading && (
                 <EmptyList title={t('empty.no_news')} />
             )}
             {!!newArticleList.length && !loading && (
                 <Grid container spacing={2}>
                     {newArticleList.map((news) => (
-                        <Grid key={news.id} item lg={6} xs={12}>
+                        <Grid key={news.id} item xs={12}>
                             <ArticleItem article={news} />
                         </Grid>
                     ))}

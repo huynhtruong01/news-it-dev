@@ -5,14 +5,19 @@ import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { rolesApi } from '../../api'
 import { useToast } from '../../hooks'
-import { IRoleData } from '../../models'
+import { IRole, IRoleData } from '../../models'
 import { ButtonForm } from '../Common'
 import { ColorField, InputField } from '../FormFields'
+import { connect } from 'react-redux'
+import { AppDispatch } from '../../store'
+import { addRole, updateRole } from '../../store/role'
 
 export interface IRoleModalFormProps {
     initValues: IRoleData
     open: boolean
     setOpen: Dispatch<SetStateAction<boolean>>
+    pAddRole: (data: IRole) => void
+    pUpdateRole: (data: IRole) => void
 }
 
 const schema = yup.object().shape({
@@ -20,7 +25,13 @@ const schema = yup.object().shape({
     color: yup.string().required('Please enter color.'),
 })
 
-export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps) {
+function RoleModalForm({
+    initValues,
+    open,
+    setOpen,
+    pAddRole,
+    pUpdateRole,
+}: IRoleModalFormProps) {
     const form = useForm<IRoleData>({
         defaultValues: initValues,
         resolver: yupResolver(schema),
@@ -47,8 +58,8 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
 
     const handleUpdate = async (values: IRoleData) => {
         try {
-            await rolesApi.updateRole({ ...values, id: initValues.id })
-
+            const res = await rolesApi.updateRole({ ...values, id: initValues.id })
+            pUpdateRole(res.data.role)
             toastSuccess(`Update role '${values.name}' successfully.`)
         } catch (error) {
             throw new Error((error as Error).message as string)
@@ -58,7 +69,7 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
     const handleAdd = async (values: IRoleData) => {
         try {
             const res = await rolesApi.addRole(values)
-
+            pAddRole(res.data.role)
             toastSuccess(`Add role '${res.data.role.name}' successfully.`)
         } catch (error) {
             throw new Error((error as Error).message as string)
@@ -142,3 +153,12 @@ export function RoleModalForm({ initValues, open, setOpen }: IRoleModalFormProps
         </Modal>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pAddRole: (data: IRole) => dispatch(addRole(data)),
+        pUpdateRole: (data: IRole) => dispatch(updateRole(data)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(RoleModalForm)

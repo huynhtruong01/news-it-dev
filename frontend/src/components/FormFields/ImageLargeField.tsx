@@ -1,4 +1,11 @@
-import { Box, BoxProps, Typography, FormLabel, FormHelperText } from '@mui/material'
+import {
+    Box,
+    BoxProps,
+    Typography,
+    FormLabel,
+    FormHelperText,
+    Stack,
+} from '@mui/material'
 import { Controller, FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import { theme, generateLinkImg } from '@/utils'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
@@ -175,6 +182,14 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                                 onChange={(e) => {
                                     if (e.target.files?.[0]) {
                                         const url = generateLinkImg(e.target.files?.[0])
+                                        setValue(
+                                            name,
+                                            e.target.files?.[0] as PathValue<
+                                                TFormValues,
+                                                Path<TFormValues>
+                                            >
+                                        )
+                                        trigger(name)
                                         onChange(e.target.files[0])
                                         setImg(url)
                                     }
@@ -185,18 +200,11 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                     )}
 
                     {img && (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 2,
-                                marginTop: 1,
-                            }}
-                        >
+                        <Stack gap={1}>
                             <Box
                                 sx={{
-                                    width: 200,
-                                    height: 100,
+                                    width: '100%',
+                                    height: 153,
                                     img: {
                                         height: '100%',
                                         borderRadius: theme.spacing(0.75),
@@ -226,7 +234,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                                     {t('button.cancel')}
                                 </Box>
                             </Box>
-                        </Box>
+                        </Stack>
                     )}
                 </Box>
             )}

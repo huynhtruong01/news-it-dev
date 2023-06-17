@@ -8,6 +8,8 @@ export interface IHashTagData {
     color?: string
     iconImage?: string
     news?: INews[]
+    numUsers: number
+    numNews: number
     slug?: string
     createdAt?: Date
     updatedAt?: Date

@@ -6,32 +6,48 @@ import * as yup from 'yup'
 import { hashTagsApi } from '../../api'
 import { SIZE_10_MB } from '../../consts'
 import { useToast } from '../../hooks'
-import { IHashTagData } from '../../models'
-import { checkSizeImg, checkTypeImg } from '../../utils'
+import { IHashTag, IHashTagData, IUploadImg } from '../../models'
+import { checkSizeImg, checkTypeImg, uploadImage } from '../../utils'
 import { ButtonForm } from '../Common'
 import { ColorField, ImageField, InputField } from '../FormFields'
+import { connect } from 'react-redux'
+import { AppDispatch } from '../../store'
+import { addHashTag, updateHashTag } from '../../store/hashTag'
 
 export interface IHashTagModalFormProps {
     initValues: IHashTagData
     open: boolean
     setOpen: Dispatch<SetStateAction<boolean>>
+    pAddHashTag: (data: IHashTag) => void
+    pUpdateHashTag: (data: IHashTag) => void
 }
 
-const schema = yup.object().shape({
-    title: yup.string().required('Please enter title.'),
-    name: yup.string().required('Please enter name.'),
-    description: yup.string().required('Please enter description.'),
-    color: yup.string().required('Please enter color.'),
-    iconImage: yup
-        .mixed<File>()
-        .test('type-img', 'Invalid type image.', (file) => checkTypeImg(file as File))
-        .test('size-img', 'Maximum 10MB.', (file) =>
-            checkSizeImg(file as File, SIZE_10_MB)
-        ),
-})
-
-export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFormProps) {
+function HashTagModalForm({
+    initValues,
+    open,
+    setOpen,
+    pAddHashTag,
+    pUpdateHashTag,
+}: IHashTagModalFormProps) {
     const { toastSuccess, toastError } = useToast()
+
+    const schema = yup.object().shape({
+        title: yup.string().required('Please enter title.'),
+        name: yup.string().required('Please enter name.'),
+        description: yup.string().required('Please enter description.'),
+        color: yup.string().required('Please enter color.'),
+        iconImage: yup
+            .mixed<File>()
+            .test('type-img', 'Invalid type image.', (file) => {
+                if (initValues.iconImage || !file) return true
+                return checkTypeImg(file as File)
+            })
+            .test('size-img', 'Maximum 10MB.', (file) => {
+                if (initValues.iconImage || !file) return true
+                return checkSizeImg(file as File, SIZE_10_MB)
+            }),
+    })
+
     const form = useForm<IHashTagData>({
         defaultValues: initValues,
         resolver: yupResolver(schema),
@@ -45,6 +61,7 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
     } = form
 
     useEffect(() => {
+        setValue('title', initValues.title)
         setValue('name', initValues.name)
         setValue('description', initValues.description)
         setValue('iconImage', initValues.iconImage)
@@ -58,7 +75,16 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
 
     const handleUpdate = async (values: IHashTagData) => {
         try {
-            await hashTagsApi.updateHashTag({ ...values, id: initValues.id as number })
+            const newValues = { ...values }
+            if (newValues.iconImage instanceof File) {
+                const { url } = (await uploadImage(newValues.iconImage)) as IUploadImg
+                newValues.iconImage = url
+            }
+            const res = await hashTagsApi.updateHashTag({
+                ...newValues,
+                id: initValues.id as number,
+            })
+            pUpdateHashTag(res.data.hashTag)
 
             toastSuccess(`Update tag '${values.name}' successfully.`)
         } catch (error) {
@@ -68,7 +94,13 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
 
     const handleAdd = async (values: IHashTagData) => {
         try {
-            const res = await hashTagsApi.addHashTag(values)
+            const newValues = { ...values }
+            if (newValues.iconImage instanceof File) {
+                const { url } = (await uploadImage(newValues.iconImage)) as IUploadImg
+                newValues.iconImage = url
+            }
+            const res = await hashTagsApi.addHashTag(newValues)
+            pAddHashTag(res.data.hashTag)
 
             toastSuccess(`Add tag '${res.data.hashTag.name}' successfully.`)
         } catch (error) {
@@ -150,6 +182,8 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
                         disabled={isSubmitting}
                         initValue={initValues.iconImage as string}
                         placeholder={'Enter cover image'}
+                        width={64}
+                        height={64}
                     />
                     <ColorField<IHashTagData>
                         form={form}
@@ -168,3 +202,12 @@ export function HashTagModalForm({ initValues, open, setOpen }: IHashTagModalFor
         </Modal>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pAddHashTag: (data: IHashTag) => dispatch(addHashTag(data)),
+        pUpdateHashTag: (data: IHashTag) => dispatch(updateHashTag(data)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(HashTagModalForm)

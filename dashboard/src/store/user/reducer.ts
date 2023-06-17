@@ -14,9 +14,17 @@ export const reducers = {
     updateUser(state: IUserStore, action: PayloadAction<IUser>) {
         const newUsers = state.users
         const index = newUsers.findIndex((u) => u.id === action.payload.id)
-        if (index > 0) {
+        if (index >= 0) {
             newUsers[index] = action.payload
             state.users = newUsers
+        }
+    },
+    deleteUser(state: IUserStore, action: PayloadAction<number>) {
+        const newHashTags = state.users
+        const index = newHashTags.findIndex((h) => h.id === action.payload)
+        if (index >= 0) {
+            newHashTags.splice(index, 1)
+            state.users = newHashTags
         }
     },
 }

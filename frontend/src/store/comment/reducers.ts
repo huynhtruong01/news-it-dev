@@ -1,5 +1,5 @@
 import { IComment, IUser } from '@/models'
-import { PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction, current } from '@reduxjs/toolkit'
 import { ICommentStore } from '.'
 
 export interface IActionComment {
@@ -57,7 +57,11 @@ export const reducers = {
                     parentComment.childrenComments as IComment[]
                 ).filter((c) => c.id !== comment.id)
                 state.comments = newComments.map((c) => {
-                    if (c.id === parentComment.id) return parentComment
+                    if (c.id === parentComment.id)
+                        return {
+                            ...parentComment,
+                            numReplyComments: (parentComment?.numReplyComments || 0) - 1,
+                        }
                     return c
                 })
             }
@@ -70,7 +74,19 @@ export const reducers = {
         const newComments = [...state.comments]
         const { comment } = action.payload
 
-        const updateComment = { ...comment }
+        const currentComment = comment.parentCommentId
+            ? newComments
+                  .find((c) => c.id === comment.parentCommentId)
+                  ?.childrenComments?.find((c) => c.id === comment.id)
+            : newComments.find((c) => c.id === comment.id)
+        const updateComment: IComment = {
+            ...current(currentComment),
+            ...comment,
+            numReplyComments: current(currentComment)?.numReplyComments,
+            replyUser: current(currentComment)?.replyUser,
+            replyUserId: current(currentComment)?.replyUserId,
+            childrenComments: current(currentComment)?.childrenComments,
+        }
 
         if (updateComment.parentCommentId) {
             const parentComment = newComments.find(
@@ -83,8 +99,6 @@ export const reducers = {
                 ) as number
 
                 if (index > -1) {
-                    // const userLikes = [...(updateComment.likes || []), user]
-                    // const numLikes = updateComment.numLikes ?? 0
                     parentComment.childrenComments = parentComment.childrenComments?.map(
                         (c) => {
                             if (c.id === updateComment.id) return { ...updateComment }
@@ -99,12 +113,8 @@ export const reducers = {
                 })
             }
         } else {
-            // const userLikes = [...((comment.likes as IUser[]) || []), user]
-            // const numLikes = comment.numLikes ?? 0
-
             const otherComments = newComments.map((c) => {
-                // if (c.id === comment.id) return { ...comment, likes: userLikes, numLikes }
-                if (c.id === comment.id) return { ...comment }
+                if (c.id === comment.id) return { ...updateComment }
                 return c
             })
             state.comments = otherComments
@@ -114,7 +124,19 @@ export const reducers = {
         const newComments = [...state.comments]
         const { comment } = action.payload
 
-        const updateComment = { ...comment }
+        const currentComment = comment.parentCommentId
+            ? newComments
+                  .find((c) => c.id === comment.parentCommentId)
+                  ?.childrenComments?.find((c) => c.id === comment.id)
+            : newComments.find((c) => c.id === comment.id)
+        const updateComment: IComment = {
+            ...current(currentComment),
+            ...comment,
+            numReplyComments: current(currentComment)?.numReplyComments,
+            replyUser: current(currentComment)?.replyUser,
+            replyUserId: current(currentComment)?.replyUserId,
+            childrenComments: current(currentComment)?.childrenComments,
+        }
 
         if (comment.parentCommentId) {
             const parentComment = newComments.find(
@@ -127,13 +149,6 @@ export const reducers = {
                 ) as number
 
                 if (index > -1) {
-                    // const userLikes = comment.likes?.filter((u) => u.id !== user.id)
-                    // const numLikes = (comment.numLikes || 0) - 1
-                    // ;(parentComment.childrenComments as IComment[])[index] = {
-                    //     ...comment,
-                    //     likes: userLikes,
-                    //     numLikes,
-                    // }
                     ;(parentComment.childrenComments as IComment[])[index] = {
                         ...updateComment,
                     }
@@ -145,13 +160,9 @@ export const reducers = {
                 })
             }
         } else {
-            // const userLikes = comment.likes?.filter((u) => u.id !== user.id)
-            // const numLikes = (comment.numLikes ?? 0) - 1
             state.comments = [
                 ...newComments.map((c) => {
-                    if (c.id === updateComment.id)
-                        // return { ...comment, likes: userLikes, numLikes }
-                        return { ...updateComment }
+                    if (c.id === updateComment.id) return { ...updateComment }
                     return c
                 }),
             ]

@@ -13,6 +13,7 @@ export interface ICommentData {
     replyUser?: IUser
     comment: string
     numLikes?: number
+    numReplyComments?: number
     likes?: IUser[]
     createdAt?: Date
     updatedAt?: Date

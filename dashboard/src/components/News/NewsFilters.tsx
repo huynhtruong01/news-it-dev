@@ -1,10 +1,10 @@
-import { IFilters, IOptionItem } from '../../models'
-import { selectStatus, selectTags } from '../../data'
-import { SelectFilter } from '../Filters'
-import { SetStateAction, Dispatch } from 'react'
-import { ALL } from '../../consts'
+import { Dispatch, SetStateAction } from 'react'
 import { connect } from 'react-redux'
+import { ALL } from '../../consts'
+import { selectStatus } from '../../data'
+import { IFilters, IOptionItem } from '../../models'
 import { AppState } from '../../store'
+import { SelectFilter } from '../Filters'
 
 export interface INewsFiltersProps {
     filters: IFilters

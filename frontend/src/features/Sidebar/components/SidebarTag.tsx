@@ -13,7 +13,7 @@ export interface ISidebarTagProps {
     pUser: IUser | null
 }
 
-function SidebarTag({ pTags, pUser }: ISidebarTagProps) {
+function SidebarTag({ pUser }: ISidebarTagProps) {
     const { t } = useTranslation()
 
     const tags = useMemo(() => {
@@ -30,7 +30,7 @@ function SidebarTag({ pTags, pUser }: ISidebarTagProps) {
                 <Typography component="h3" variant="subtitle1" fontWeight={700}>
                     {t('main_home.follow_tags')}
                 </Typography>
-                <Link to={'/tags'}>
+                <Link to={'/dashboard/tags'}>
                     <IconButton
                         sx={{
                             padding: 0.5,

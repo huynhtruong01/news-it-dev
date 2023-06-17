@@ -32,12 +32,14 @@ export function DashboardTag({ tag }: IDashboardTagProps) {
                         },
                         a: {
                             fontWeight: 600,
-                            padding: theme.spacing(1, 1.25),
-                            borderRadius: theme.spacing(0.75),
+                            padding: theme.spacing(0.75, 1),
+                            borderRadius: theme.spacing(0.65),
+                            color: alpha(theme.palette.secondary.main, 0.9),
                             transition: '.2s ease-in-out',
                             '&:hover': {
                                 boxShadow: `0 0 0 1px ${color}`,
                                 backgroundColor: alpha(color as string, 0.1),
+                                color: theme.palette.secondary.main,
                             },
                         },
                     }}

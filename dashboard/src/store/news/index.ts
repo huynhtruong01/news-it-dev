@@ -1,6 +1,7 @@
 import { INews } from './../../models'
 import { createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from './thunkApi'
+import { reducers } from './reducer'
 
 export interface INewsStore {
     news: INews[]
@@ -15,8 +16,9 @@ const initialState: INewsStore = {
 const newsSlice = createSlice({
     name: 'news',
     initialState,
-    reducers: {},
+    reducers,
     extraReducers,
 })
 
+export const { addNews, updateNews, deleteNews } = newsSlice.actions
 export default newsSlice.reducer

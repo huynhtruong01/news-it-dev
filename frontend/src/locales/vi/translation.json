@@ -4,7 +4,8 @@
         "reading_list": "Danh sách đọc",
         "tags": "Các thẻ ",
         "follow_tags": "Các thẻ theo dõi",
-        "create_news": "Tạo tin tức mới"
+        "create_news": "Tạo tin tức mới",
+        "users_following": "Những người dùng theo dõi"
     },
 
     "auth": {
@@ -33,7 +34,8 @@
         "follow": "theo dõi",
         "followers": "người theo dõi",
         "following": "người đang theo dõi",
-        "min_read": "phút đọc"
+        "min_read": "phút đọc",
+        "select_tag": "--Chọn thẻ--"
     },
 
     "news": {
@@ -81,16 +83,19 @@
         "signout": "Đăng xuất",
         "cancel": "Hủy",
         "update_news": "Cập nhập tin tức",
-        "create_news": "Tạo mới tin tức",
+        "create_news": "Tạo tin tức mới",
         "change_your_password": "Thay đổi mật khẩu của bạn",
         "confirm_email": "Xác nhận email",
         "send": "Gửi",
-        "share": "Chia sẻ"
+        "share": "Chia sẻ",
+        "read_full_news": "Xem chi tiết",
+        "public": "Đăng lên"
     },
 
     "profile": {
         "edit_profile": "Chỉnh sửa hồ sơ",
         "news_published": "tin tức đã đăng",
+        "news_published_2": "Tin tức đã đăng",
         "comments_written": "bình luận đã viết",
         "tags_followed": "thẻ được theo dõi",
         "follow": "Theo dõi",
@@ -210,7 +215,8 @@
         "please": "Vui lòng",
         "to_comment_news": "để bình luận bài viết này",
         "modal_text_auth": "Nếu bạn muốn theo dõi, bình luận, thích, lưu lại tin tức; bạn cần đăng nhập để tiếp tục.",
-        "loading_sign_up": "Đang đăng ký tài khoản của bạn..."
+        "loading_sign_up": "Đang đăng ký tài khoản của bạn...",
+        "public_news": "Công khai bài tin tức thành công"
     },
 
     "signout": {
@@ -240,7 +246,8 @@
         "no_hash_tag_follow": "Không theo dõi thẻ nào",
         "no_notifications": "Không có thông báo nào",
         "no_news_reading_list": "Không có bài tin tức nào đã lưu",
-        "no_tags": "Không có thẻ nào"
+        "no_tags": "Không có thẻ nào",
+        "no_results": "Không có kết quả nào"
     },
 
     "share_news": {
@@ -258,7 +265,8 @@
         "delete_account": "Bạn có chắc chắn muốn xóa tài khoản của bạn?",
         "delete_comment": "Bạn có chắc chắn muốn xóa bình luận này?",
         "delete_notify": "Bạn có chắc chắn muốn xóa thông báo này?",
-        "unsave_reading": "Bạn có chắc chắn không lưu bài tin tức này?"
+        "unsave_reading": "Bạn có chắc chắn không lưu bài tin tức này?",
+        "public_news": "Bạn có muốn công khai bài tin tức này không?"
     },
 
     "liked your news": "đã thích bài viết của bạn",

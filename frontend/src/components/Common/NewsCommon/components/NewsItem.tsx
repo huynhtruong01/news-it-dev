@@ -221,7 +221,7 @@ function NewsItem({
                 >
                     <Link to={`/news/${news?.slug}`}>{news?.title}</Link>
                 </Typography>
-                <HashTagList tags={news?.hashTags as IHashTag[]} />
+                {news.hashTags && <HashTagList tags={news?.hashTags as IHashTag[]} />}
 
                 {/* tablet, laptop */}
                 <Stack

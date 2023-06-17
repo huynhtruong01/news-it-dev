@@ -42,6 +42,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
                     options={handleFilters()}
                     disabled={disabled}
                     value={watch(name)}
+                    size="small"
                     filterSelectedOptions
                     onChange={(e, newValues) => {
                         onChange(newValues)

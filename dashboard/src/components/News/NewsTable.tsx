@@ -3,8 +3,15 @@ import { Box, Button, TableCell, TableRow, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { Dispatch, MouseEvent, SetStateAction, useMemo } from 'react'
 import { keyNewsInitValues, newsHeaders } from '../../data'
-import { IFilters, INews, INewsData, INewsTable, IOptionItem } from '../../models'
-import { formatDate, setNewValues } from '../../utils'
+import {
+    IFilters,
+    INews,
+    INewsData,
+    INewsTable,
+    IOptionItem,
+    IStatus,
+} from '../../models'
+import { formatDate, setNewValues, statusColor, theme } from '../../utils'
 import { TableCellImage, TableWrapper } from '../Common'
 
 export interface INewsTableProps {
@@ -61,7 +68,7 @@ export function NewsTable({
     }
 
     return (
-        <TableWrapper<INews>
+        <TableWrapper
             total={total}
             listHead={newsHeaders}
             filters={filters}
@@ -76,7 +83,19 @@ export function NewsTable({
                     onClick={() => handleSetInitValues(item)}
                 >
                     <TableCell align="center">{item.id}</TableCell>
-                    <TableCellImage src={item.coverImage as string} alt={item.title} />
+                    <TableCellImage
+                        src={item.coverImage as string}
+                        alt={item.title}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            img: {
+                                width: 100,
+                                height: 50,
+                                borderRadius: 0.5,
+                            },
+                        }}
+                    />
                     <TableCell
                         align="left"
                         sx={{
@@ -122,13 +141,22 @@ export function NewsTable({
                             ))}
                         </Box>
                     </TableCell>
-                    <TableCell
-                        align="center"
-                        sx={{
-                            textTransform: 'capitalize',
-                        }}
-                    >
-                        {item.status}
+                    <TableCell align="center">
+                        <Box
+                            sx={{
+                                textTransform: 'capitalize',
+                                backgroundColor: statusColor(item.status as IStatus)[0],
+                                color: statusColor(item.status as IStatus)[1],
+                                textAlign: 'center',
+                                fontWeight: 500,
+                                maxWidth: 80,
+                                margin: 'auto',
+                                padding: theme.spacing(0.5, 1),
+                                borderRadius: theme.spacing(0.5),
+                            }}
+                        >
+                            {item.status}
+                        </Box>
                     </TableCell>
                     <TableCell align="center">{formatDate(item.createdAt)}</TableCell>
                     <TableCell align="center">

@@ -16,6 +16,7 @@ import { CommentInput, CommentList } from '.'
 import { increaseNumComment } from '@/store/news'
 import { setShowModalAuth } from '@/store/common'
 import { NotifyType } from '@/enums'
+import { SkeletonCommentItem } from '@/components/Common/Skeleton/SkeletonCommentList/components'
 
 export interface ICommentItemProps {
     comment: IComment
@@ -125,12 +126,12 @@ function CommentItem({
             }
 
             setEdit(null)
-            setLoadingUpdate(false)
         } catch (error) {
             enqueueSnackbar((error as Error).message, {
                 variant: 'error',
             })
         }
+        setLoadingUpdate(false)
     }
 
     const handleNavReply = (userId: number, username: string): string => {
@@ -139,7 +140,7 @@ function CommentItem({
     }
 
     return (
-        <Box marginBottom={2}>
+        <Box>
             <Stack
                 direction={'row'}
                 gap={{
@@ -169,7 +170,7 @@ function CommentItem({
                 )}
 
                 <Box flex={1}>
-                    {!edit && (
+                    {!edit && !loadingUpdate && (
                         <Paper
                             elevation={1}
                             sx={{
@@ -181,7 +182,12 @@ function CommentItem({
                                 justifyContent={'space-between'}
                                 alignItems={'center'}
                             >
-                                <Stack direction={'row'} alignItems={'center'} gap={0.5}>
+                                <Stack
+                                    direction={'row'}
+                                    alignItems={'center'}
+                                    gap={0.5}
+                                    flexWrap={'wrap'}
+                                >
                                     <Typography
                                         component="span"
                                         fontWeight={500}
@@ -283,16 +289,7 @@ function CommentItem({
                         </Paper>
                     )}
 
-                    {loadingUpdate && (
-                        <Typography
-                            sx={{
-                                textAlign: 'center',
-                                color: theme.palette.primary.main,
-                            }}
-                        >
-                            Updating comment...
-                        </Typography>
-                    )}
+                    {loadingUpdate && <SkeletonCommentItem />}
 
                     {edit && !loadingUpdate && (
                         <CommentInput
@@ -317,16 +314,7 @@ function CommentItem({
                                 t={t}
                             />
                         )}
-                        {loadingReply && (
-                            <Typography
-                                sx={{
-                                    textAlign: 'center',
-                                    color: theme.palette.primary.main,
-                                }}
-                            >
-                                Reply comment...
-                            </Typography>
-                        )}
+
                         <Stack
                             direction={'row'}
                             gap={{
@@ -350,7 +338,7 @@ function CommentItem({
                                 },
                             }}
                         >
-                            {!isReply && !edit?.id && !loadingReply && (
+                            {!isReply && !edit?.id && !loadingReply && !loadingUpdate && (
                                 <>
                                     <ButtonLikeComment
                                         text={t('button.likes') as string}
@@ -359,6 +347,7 @@ function CommentItem({
                                         news={news as INews}
                                     />
                                     <ButtonIconForm
+                                        num={comment.numReplyComments}
                                         text={t('button.reply') as string}
                                         icon={RiChat1Line}
                                         onButtonClick={() =>
@@ -371,9 +360,20 @@ function CommentItem({
                     </Box>
 
                     {/* Comment Children */}
-                    <Box marginTop={comment.parentCommentId ? 0 : 2.5}>
-                        <CommentList comments={newChildrenComments} t={t} />
-                    </Box>
+                    {childrenComments && childrenComments.length > 0 && (
+                        <Box marginTop={comment.parentCommentId ? 0 : 2.5}>
+                            <CommentList
+                                comments={newChildrenComments}
+                                t={t}
+                                borderLeft={`1px solid ${alpha(
+                                    theme.palette.secondary.main,
+                                    0.075
+                                )}`}
+                                paddingLeft={1.5}
+                            />
+                        </Box>
+                    )}
+                    {loadingReply && <SkeletonCommentItem marginTop={3} />}
                 </Box>
             </Stack>
         </Box>

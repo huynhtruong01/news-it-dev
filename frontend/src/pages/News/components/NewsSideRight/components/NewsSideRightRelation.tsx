@@ -161,7 +161,7 @@ export function NewsSideRightRelation({
                                     >
                                         {/* WRITE LINK HERE */}
                                         <Link to={`/news/${news.slug}`}>
-                                            Read full news
+                                            {t('button.read_full_news')}
                                         </Link>
                                     </Box>
                                 </Box>

@@ -9,24 +9,21 @@ import {
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { navList } from '../../data'
-import { removeLS, theme } from '../../utils'
-import { authApi } from '../../api'
-import { useToast } from '../../hooks'
-import { connect } from 'react-redux'
 import { AppDispatch } from '../../store'
-import { saveUserLogin } from '../../store/user'
+import { showModalLogout } from '../../store/common'
+import { theme } from '../../utils'
 
 export interface INavBarProps {
-    pSaveUserLogin: () => void
+    pShowModalLogout: (isShow: boolean) => void
 }
 
-function NavBar({ pSaveUserLogin }: INavBarProps) {
+function NavBar({ pShowModalLogout }: INavBarProps) {
     const [navLink, setNavLink] = useState<string>('')
     const location = useLocation()
     const navigate = useNavigate()
-    const { toastSuccess, toastError } = useToast()
 
     useEffect(() => {
         const firstPath = location.pathname.split('/')[1]
@@ -38,19 +35,8 @@ function NavBar({ pSaveUserLogin }: INavBarProps) {
         navigate(link)
     }
 
-    const handleLogout = async () => {
-        try {
-            removeLS(import.meta.env.VITE_ACCESS_TOKEN_KEY)
-            removeLS(import.meta.env.VITE_ACCESS_TOKEN_KEY)
-
-            await authApi.logout()
-            pSaveUserLogin()
-            navigate('/login')
-
-            toastSuccess('Logout successfully.')
-        } catch (error) {
-            toastError((error as Error).message)
-        }
+    const handleLogout = () => {
+        pShowModalLogout(true)
     }
 
     return (
@@ -217,7 +203,7 @@ function NavBar({ pSaveUserLogin }: INavBarProps) {
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-        pSaveUserLogin: () => dispatch(saveUserLogin(null)),
+        pShowModalLogout: (isShow: boolean) => dispatch(showModalLogout(isShow)),
     }
 }
 

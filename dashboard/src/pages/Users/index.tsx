@@ -16,15 +16,17 @@ import { getAllRoles } from '../../store/role/thunkApi'
 import { theme } from '../../utils'
 import { useToast } from '../../hooks'
 import { usersApi } from '../../api'
+import { deleteUser } from '../../store/user'
 
 interface IUsersProps {
     pUsers: IUser[]
     pTotal: number
     pGetUsers: (params: IFilters) => Promise<PayloadAction<unknown>>
     pGetAllRoles: () => Promise<PayloadAction<unknown>>
+    pDeleteUser: (data: number) => void
 }
 
-function Users({ pUsers, pTotal, pGetUsers, pGetAllRoles }: IUsersProps) {
+function Users({ pUsers, pTotal, pGetUsers, pGetAllRoles, pDeleteUser }: IUsersProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
@@ -59,8 +61,9 @@ function Users({ pUsers, pTotal, pGetUsers, pGetAllRoles }: IUsersProps) {
     const handleDeleteUser = async () => {
         try {
             if (initValues.id) {
-                await usersApi.deleteUser(initValues.id)
                 toastSuccess(`Delete user ${initValues.username} successfully.`)
+                pDeleteUser(initValues.id)
+                await usersApi.deleteUser(initValues.id)
                 setInitValues(initUserFormValues)
             }
         } catch (error) {
@@ -152,6 +155,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetUsers: (params: IFilters) => dispatch(getUsers(params)),
         pGetAllRoles: () => dispatch(getAllRoles()),
+        pDeleteUser: (data: number) => dispatch(deleteUser(data)),
     }
 }
 

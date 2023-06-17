@@ -15,18 +15,20 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { useToast } from '../../hooks'
 import { hashTagsApi } from '../../api'
 import { Order } from '../../enums'
+import { deleteHashTag } from '../../store/hashTag'
 
 export interface IHashTagProps {
     pHashTags: IHashTag[]
     pTotal: number
     pGetHashTags: (params: IFilters) => Promise<PayloadAction<unknown>>
+    pDeleteHashTag: (data: number) => void
 }
 
-function HashTags({ pHashTags, pTotal, pGetHashTags }: IHashTagProps) {
+function HashTags({ pHashTags, pTotal, pGetHashTags, pDeleteHashTag }: IHashTagProps) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
-        createdAt: Order.ASC,
+        createdAt: Order.DESC,
     })
     const [open, setOpen] = useState<boolean>(false)
     const [initValues, setInitValues] = useState<IHashTagData>(initHashTagFormValues)
@@ -35,14 +37,13 @@ function HashTags({ pHashTags, pTotal, pGetHashTags }: IHashTagProps) {
 
     useEffect(() => {
         document.title = 'Hash Tags | Dashboard'
-        pGetHashTags(filters)
     }, [])
 
     useEffect(() => {
         if (open || openDelete) return
 
         pGetHashTags(filters)
-    }, [filters, open, openDelete])
+    }, [filters])
 
     const handleSearchChange = (value: string) => {
         setFilters({ ...filters, search: value })
@@ -56,8 +57,9 @@ function HashTags({ pHashTags, pTotal, pGetHashTags }: IHashTagProps) {
     const handleDeleteHashTag = async () => {
         try {
             if (initValues.id) {
-                await hashTagsApi.deleteHashTag(initValues.id)
+                pDeleteHashTag(initValues.id)
                 toastSuccess(`Delete role ${initValues.name} successfully.`)
+                await hashTagsApi.deleteHashTag(initValues.id)
                 setInitValues(initHashTagFormValues)
             }
         } catch (error) {
@@ -143,6 +145,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetHashTags: (params: IFilters) => dispatch(getHashTags(params)),
+        pDeleteHashTag: (data: number) => dispatch(deleteHashTag(data)),
     }
 }
 

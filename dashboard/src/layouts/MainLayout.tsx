@@ -8,6 +8,7 @@ import { AppDispatch, AppState } from '../store'
 import { saveUserLogin } from '../store/user'
 import { theme } from '../utils'
 import { HEIGHT_HEADER, WIDTH_NAV } from '../consts'
+import { ModalLogout } from '../components/Modals'
 
 export interface IMainLayoutProps {
     pUser: IUser | null
@@ -61,6 +62,7 @@ export function MainLayout({ pUser }: IMainLayoutProps) {
                         <Outlet />
                     </Box>
                 </Box>
+                <ModalLogout />
             </Box>
         </Box>
     )

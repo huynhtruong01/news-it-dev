@@ -26,5 +26,5 @@ const userSlice = createSlice({
     extraReducers,
 })
 
-export const { saveUserLogin, addUser, updateUser } = userSlice.actions
+export const { saveUserLogin, addUser, updateUser, deleteUser } = userSlice.actions
 export default userSlice.reducer
