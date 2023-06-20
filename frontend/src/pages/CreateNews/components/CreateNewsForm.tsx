@@ -42,14 +42,14 @@ function CreateNewsForm({
     const navigate = useNavigate()
 
     const schema = yup.object().shape({
-        title: yup.string().required('Please enter news name.'),
+        title: yup.string().required(t('error_input.error_name_news') as string),
         sapo: yup.string(),
-        readTimes: yup.number().min(1, 'At lease 1 min.'),
+        readTimes: yup.number().min(1, t('error_input.at_least_1_minute') as string),
         thumbnailImage: yup
             .mixed<File>()
             .test(
                 'is-nullable-thumbnail',
-                'Please choose news thumbnail image.',
+                `${t('error_input.error_thumbnail_image') as string}`,
                 function (file) {
                     if (pInitValuesForm.thumbnailImage) return true
                     const { thumbnailImage, coverImage } = this.parent
@@ -57,11 +57,11 @@ function CreateNewsForm({
                     if (file?.name) return true
                 }
             )
-            .test('type-img', 'Invalid type image.', (file) => {
+            .test('type-img', t('error_input.type_image') as string, (file) => {
                 if (pInitValuesForm.thumbnailImage) return true
                 return checkTypeImg(file as File)
             })
-            .test('size-img', 'Maximum 4MB.', (file) => {
+            .test('size-img', t('error_input.maximum_4') as string, (file) => {
                 if (pInitValuesForm.thumbnailImage) return true
                 return checkSizeImg(file as File, SIZE_4_MB)
             }),
@@ -69,7 +69,7 @@ function CreateNewsForm({
             .mixed<File>()
             .test(
                 'is-nullable-cover',
-                'Please choose news cover image.',
+                `${t('error_input.error_cover_image') as string}`,
                 function (file) {
                     if (pInitValuesForm.coverImage) return true
                     const { thumbnailImage, coverImage } = this.parent
@@ -77,15 +77,15 @@ function CreateNewsForm({
                     if (file?.name) return true
                 }
             )
-            .test('type-img', 'Invalid type image.', (file) => {
+            .test('type-img', t('error_input.type_image') as string, (file) => {
                 if (pInitValuesForm.coverImage) return true
                 return checkTypeImg(file as File)
             })
-            .test('size-img', 'Maximum 10MB.', (file) => {
+            .test('size-img', t('error_input.maximum_10') as string, (file) => {
                 if (pInitValuesForm.coverImage) return true
                 return checkSizeImg(file as File, SIZE_10_MB)
             }),
-        content: yup.string().required('Please enter news content.'),
+        content: yup.string().required(t('error_input.error_content_news') as string),
         hashTagOptionIds: yup.array(),
     })
 

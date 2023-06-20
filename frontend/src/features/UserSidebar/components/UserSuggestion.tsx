@@ -1,31 +1,38 @@
+import { userApi } from '@/api'
 import { IUser } from '@/models'
 import { theme } from '@/utils'
-import { Box, Typography, alpha } from '@mui/material'
-import { useMemo } from 'react'
+import { Box, BoxProps, Typography, alpha } from '@mui/material'
+import { enqueueSnackbar } from 'notistack'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-export interface IUserFollowingProps {
-    user: IUser
-}
+export type IUserSuggestionProps = BoxProps
 
-export function UserFollowing({ user }: IUserFollowingProps) {
+export function UserSuggestion({ ...rest }) {
     const { t } = useTranslation()
-    const userFollowing = useMemo(() => {
-        return user?.following?.length && user ? user.following : []
-    }, [user])
+    const [users, setUsers] = useState<IUser[]>([])
 
-    const linkUser = (u: IUser): string => {
-        return u.id === user.id ? '/profile' : `/profile/${u.username}`
-    }
+    useEffect(() => {
+        ;(async () => {
+            try {
+                const res = await userApi.suggestionUsers()
+                setUsers(res.data.users)
+            } catch (error) {
+                enqueueSnackbar((error as Error).message, {
+                    variant: 'error',
+                })
+            }
+        })()
+    }, [])
 
     return (
-        <Box>
+        <Box {...rest}>
             <Typography component="h3" variant="subtitle1" fontWeight={700}>
-                {t('main_home.users_following')}
+                {t('main_home.users_suggestion')}
             </Typography>
             <Box component="ul" marginTop={0.5}>
-                {userFollowing.map((u) => (
+                {users.map((u) => (
                     <Box
                         component={'li'}
                         key={u.id}
@@ -45,10 +52,12 @@ export function UserFollowing({ user }: IUserFollowingProps) {
 
                             a: {
                                 display: 'block',
+                                color: theme.palette.primary.main,
+                                fontWeight: 500,
                             },
                         }}
                     >
-                        <Link to={`${linkUser(u)}`}>@{u.username}</Link>
+                        <Link to={`/profile/${u.username}`}>@{u.username}</Link>
                     </Box>
                 ))}
             </Box>

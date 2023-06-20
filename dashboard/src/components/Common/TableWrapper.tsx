@@ -20,7 +20,7 @@ export function TableWrapper({
     onFiltersChange,
     children,
 }: ITableWrapperProps) {
-    const [order, setOrder] = useState<IOrder>(Order.asc)
+    const [order, setOrder] = useState<IOrder>(Order.desc)
     const [orderBy, setOrderBy] = useState<string>('createdAt')
     const [page, setPage] = useState<number>(filters.page - 1)
     const [rowsPerPage, setRowsPerPage] = useState<number>(filters.limit)
@@ -35,7 +35,7 @@ export function TableWrapper({
                 [`${orderBy}`]: order === Order.asc ? Order.ASC : Order.DESC,
             }
 
-            onFiltersChange({ ...filters, ...newFilters })
+            onFiltersChange({ ...newFilters })
         } else {
             setInitFetch(true)
         }

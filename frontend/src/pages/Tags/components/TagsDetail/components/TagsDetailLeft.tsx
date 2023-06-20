@@ -37,6 +37,12 @@ export function TagsDetailLeft({ tag, hashTagFollows }: ITagsDetailLeftProps) {
                             display: 'inline-flex',
                             padding: theme.spacing(1, 1.5),
                             fontSize: theme.typography.body2,
+                            backgroundColor: theme.palette.primary.light,
+                            fontWeight: 500,
+
+                            '&:hover': {
+                                backgroundColor: theme.palette.primary.dark,
+                            },
                         }}
                         onClick={() => navigate('/create-news')}
                     >

@@ -57,3 +57,9 @@ export interface INewsActions {
     news: INews
     user: IUser
 }
+
+export interface INewsRecommend {
+    newsId: number
+    content: string
+    lang?: string
+}

@@ -35,7 +35,7 @@ export function HashTagItem({ tag, fontText, ...rest }: IHashTagItemProps) {
                     fontSize: fontText,
 
                     span: {
-                        color: alpha(theme.palette.secondary.dark, 0.6),
+                        color: tag.color,
                     },
                 },
             }}

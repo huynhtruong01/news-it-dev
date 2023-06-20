@@ -63,7 +63,7 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
 
     const hashTags = useMemo(() => {
         const hashTagSaves =
-            pUser?.saves?.reduce((tags: IHashTag[], news) => {
+            pUserProfileFilter?.saves?.reduce((tags: IHashTag[], news) => {
                 return [...tags, ...(news.hashTags || [])]
             }, []) || []
 

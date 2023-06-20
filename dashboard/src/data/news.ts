@@ -31,7 +31,7 @@ export const newsHeaders: readonly ITableHeader[] = [
         isSort: true,
     },
     {
-        id: 'likes',
+        id: 'numLikes',
         label: 'Likes',
         isSort: true,
     },

@@ -1,4 +1,4 @@
-import { IFilters, INewsForm } from '@/models'
+import { IFilters, INewsForm, INewsRecommend } from '@/models'
 import AxiosClient from '.'
 
 const BASE_URL = '/news'
@@ -17,10 +17,8 @@ export const getNewsBySlug = (slug: string) => {
     return AxiosClient.get(`${BASE_URL}/detail/${slug}`).then((res) => res.data)
 }
 
-export const getNewsByTagIds = (params: IFilters) => {
-    return AxiosClient.get(`${BASE_URL}/recommend-news`, {
-        params,
-    }).then((res) => res.data)
+export const recommendationNews = (data: INewsRecommend) => {
+    return AxiosClient.post(`${BASE_URL}/recommend-news`, data).then((res) => res.data)
 }
 
 export const addNews = (data: INewsForm) => {

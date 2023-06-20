@@ -1,11 +1,11 @@
 import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Box, BoxProps } from '@mui/material'
-import 'highlight.js/styles/github.css'
 import { useEffect, useRef, useState } from 'react'
-import 'react-quill/dist/quill.snow.css'
 import { connect } from 'react-redux'
 import { ModalImageNews } from '.'
+import 'react-quill/dist/quill.snow.css'
+import 'highlight.js/styles/github.css'
 
 export interface INewsContentProps extends BoxProps {
     content: string
@@ -55,6 +55,14 @@ export function NewsContent({ content, ...rest }: INewsContentProps) {
                             lg: 0,
                             xs: 2,
                         },
+                        letterSpacing: '0.5px',
+                        lineHeight: '1.7 !important',
+                        fontSize: {
+                            sm: '18px',
+                            xs: '1rem',
+                        },
+                        color: '#171717',
+                        overflowWrap: 'break-word',
                         '& > p': {
                             letterSpacing: '0.5px',
                             lineHeight: '1.7 !important',
@@ -86,10 +94,16 @@ export function NewsContent({ content, ...rest }: INewsContentProps) {
                                 xs: theme.spacing(1, 0),
                             },
                         },
-                        pre: {
+                        '& pre': {
                             '&.ql-syntax': {
+                                whiteSpace: 'pre',
                                 borderRadius: theme.spacing(0.75),
                                 padding: 3,
+                                overflow: 'auto !important',
+                            },
+                            fontSize: {
+                                sm: '1rem',
+                                xs: theme.typography.body2,
                             },
                         },
                     }}

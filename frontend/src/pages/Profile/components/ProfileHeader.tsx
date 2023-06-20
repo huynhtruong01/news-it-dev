@@ -9,6 +9,7 @@ import {
     Box,
     Button,
     Divider,
+    Link,
     Paper,
     Stack,
     Typography,
@@ -65,32 +66,34 @@ export function ProfileHeader({
                             transform: 'translateX(-50%)',
                         }}
                     >
-                        <Avatar
-                            src={user.avatar as string}
-                            alt={user.username}
-                            sx={{
-                                width: {
-                                    md: 128,
-                                    xs: 68,
-                                },
-                                height: {
-                                    md: 128,
-                                    xs: 68,
-                                },
-                                border: {
-                                    md: `8px solid ${
-                                        user?.bandingColor !== COLOR_WHITE
-                                            ? user?.bandingColor
-                                            : theme.palette.primary.dark
-                                    }`,
-                                    xs: `4px solid ${
-                                        user?.bandingColor !== COLOR_WHITE
-                                            ? user?.bandingColor
-                                            : theme.palette.primary.dark
-                                    }`,
-                                },
-                            }}
-                        />
+                        <Link href={user.avatar as string} target="_blank">
+                            <Avatar
+                                src={user.avatar as string}
+                                alt={user.username}
+                                sx={{
+                                    width: {
+                                        md: 128,
+                                        xs: 68,
+                                    },
+                                    height: {
+                                        md: 128,
+                                        xs: 68,
+                                    },
+                                    border: {
+                                        md: `8px solid ${
+                                            user?.bandingColor !== COLOR_WHITE
+                                                ? user?.bandingColor
+                                                : theme.palette.primary.dark
+                                        }`,
+                                        xs: `4px solid ${
+                                            user?.bandingColor !== COLOR_WHITE
+                                                ? user?.bandingColor
+                                                : theme.palette.primary.dark
+                                        }`,
+                                    },
+                                }}
+                            />
+                        </Link>
                     </Box>
                     {isFollow ? (
                         <>
@@ -108,7 +111,7 @@ export function ProfileHeader({
                                             xs: '0.75rem',
                                         },
                                         borderRadius: theme.spacing(0.75),
-                                        padding: theme.spacing(1, 2),
+                                        padding: theme.spacing(1.5, 2),
                                         backgroundColor: theme.palette.primary.light,
                                         '&:hover': {
                                             backgroundColor: theme.palette.primary.dark,

@@ -43,7 +43,6 @@ export const convertHTMLToLowercase = (htmlString) => {
         const tag = p1.toLowerCase()
         const attributes =
             tag.match(/(?:\s+([^=\s]+)(?:(=)(?:"([^"]*)|'([^']*)'|([^>\s]+)))?)?/g) || []
-        console.log(attributes)
 
         const convertedAttributes = attributes.map((attribute) => {
             return attribute.toLowerCase()

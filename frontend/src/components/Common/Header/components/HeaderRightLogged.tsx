@@ -1,7 +1,7 @@
 import { INewsForm, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { theme } from '@/utils'
-import { Badge, Box, Button, Stack, alpha } from '@mui/material'
+import { Badge, Box, Button, Stack, Tooltip, alpha } from '@mui/material'
 import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined'
@@ -87,22 +87,24 @@ function HeaderRightLogged({
                     }}
                 >
                     <Link to={'/notifications'}>
-                        <Badge
-                            color="error"
-                            badgeContent={pNumNotifications}
-                            sx={{
-                                '& .MuiBadge-badge': {
-                                    border: `1px solid ${theme.palette.primary.contrastText}`,
-                                },
-                            }}
-                        >
-                            <NotificationsNoneOutlinedIcon
+                        <Tooltip title={t('notifications.title')}>
+                            <Badge
+                                color="error"
+                                badgeContent={pNumNotifications}
                                 sx={{
-                                    fontSize: '30px',
-                                    color: theme.palette.secondary.light,
+                                    '& .MuiBadge-badge': {
+                                        border: `1px solid ${theme.palette.primary.contrastText}`,
+                                    },
                                 }}
-                            />
-                        </Badge>
+                            >
+                                <NotificationsNoneOutlinedIcon
+                                    sx={{
+                                        fontSize: '30px',
+                                        color: theme.palette.secondary.light,
+                                    }}
+                                />
+                            </Badge>
+                        </Tooltip>
                     </Link>
                 </Box>
                 <AccountMenu />

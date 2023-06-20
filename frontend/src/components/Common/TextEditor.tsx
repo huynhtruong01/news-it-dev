@@ -21,7 +21,7 @@ export interface ITextEditorProps {
 
 const modules = {
     syntax: {
-        highlight: (text) => hljs.highlightElement(text),
+        highlight: (text) => hljs.highlightAuto(text).value,
     },
     toolbar: toolbarOptions,
 }
@@ -181,11 +181,6 @@ export function TextEditor({
     useEffect(() => {
         const quill = quillRef.current
         if (!quill) return
-
-        // replace empty p tag
-        // const html = quill.getEditor().root.innerHTML
-        // const newHtml = html.replace(/<p><\/p>/g, '')
-        // quill.getEditor().root.innerHTML = newHtml
 
         const toolbar = quill.getEditor().getModule('toolbar')
         toolbar.addHandler('image', handleImageChange)

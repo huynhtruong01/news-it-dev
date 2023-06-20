@@ -1,7 +1,6 @@
 import { newsApi } from '@/api'
 import { SkeletonRelationList } from '@/components/Common'
-import { Order, Status } from '@/enums'
-import { IFilters, INews } from '@/models'
+import { INews } from '@/models'
 import { theme } from '@/utils'
 import {
     Box,
@@ -22,12 +21,7 @@ export interface INewsSideRightRelationProps extends BoxProps {
     t: TFunction<'translation', undefined, 'translation'>
 }
 
-export function NewsSideRightRelation({
-    hashTagIds,
-    news,
-    t,
-    ...rest
-}: INewsSideRightRelationProps) {
+export function NewsSideRightRelation({ news, t, ...rest }: INewsSideRightRelationProps) {
     const isMiddleScreen = useMediaQuery('(min-width:320px)')
     const [loading, setLoading] = useState<boolean>(false)
     const [newsTagsList, setNewsTagsList] = useState<INews[]>([])
@@ -36,15 +30,11 @@ export function NewsSideRightRelation({
         ;(async () => {
             try {
                 setLoading(true)
-                const filters: IFilters = {
-                    page: 1,
-                    limit: 5,
-                    createdAt: Order.DESC,
-                    hashTagIds: hashTagIds.join(','),
-                    status: Status.PUBLIC,
-                    title: news.title,
-                }
-                const res = await newsApi.getNewsByTagIds(filters)
+                const res = await newsApi.recommendationNews({
+                    newsId: news.id,
+                    content: news.content,
+                    lang: 'vi',
+                })
 
                 const newNewsList = res.data.news.filter((n: INews) => n.id !== news.id)
                 setNewsTagsList(newNewsList)

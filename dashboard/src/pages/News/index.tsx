@@ -30,7 +30,7 @@ function News({ pNews, pTotal, pGetNews, pGetHashTagSelects, pDeleteNews }: INew
     const [filters, setFilters] = useState<IFilters>({
         limit: 5,
         page: 1,
-        createdAt: Order.ASC,
+        createdAt: Order.DESC,
     })
     const [open, setOpen] = useState<boolean>(false)
     const [openDelete, setOpenDelete] = useState<boolean>(false)

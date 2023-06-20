@@ -28,3 +28,11 @@ export const unfollowUser = (userId: number) => {
 export const getProfile = () => {
     return AxiosClient.get(`${BASE_URL}/profile`).then((res) => res.data)
 }
+
+export const suggestionUsers = () => {
+    return AxiosClient.get(`${BASE_URL}/suggestion`).then((res) => res.data)
+}
+
+export const topUsers = () => {
+    return AxiosClient.get(`${BASE_URL}/top`).then((res) => res.data)
+}

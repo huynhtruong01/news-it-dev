@@ -38,7 +38,16 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IHashTagStore>) 
     builders.addCase(
         getHashTags.fulfilled,
         (state: IHashTagStore, action: PayloadAction<IHashTagRes>) => {
+            const newHashTagSelects: IOptionItem[] = action.payload.hashTags.map(
+                (hashTag) =>
+                    ({
+                        id: hashTag.id,
+                        name: hashTag.name,
+                    } as IOptionItem)
+            )
+
             state.hashTags = action.payload.hashTags
+            state.hashTagSelects = newHashTagSelects
             state.total = action.payload.total
         }
     )
@@ -49,7 +58,7 @@ export const extraReducers = (builders: ActionReducerMapBuilder<IHashTagStore>) 
                 (hashTag) =>
                     ({
                         id: hashTag.id,
-                        name: hashTag.title,
+                        name: hashTag.name,
                     } as IOptionItem)
             )
 

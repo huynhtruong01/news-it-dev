@@ -20,7 +20,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { TFunction } from 'i18next'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 
 export interface INewsSideRightUserProps extends BoxProps {
@@ -49,6 +49,7 @@ function NewsSideRightUser({
     ...rest
 }: INewsSideRightUserProps) {
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
+    const navigate = useNavigate()
 
     const checkSelf = useCheckSelf(user as IUser)
     const linkUser = useLinkUser(user as IUser)
@@ -141,43 +142,63 @@ function NewsSideRightUser({
                             <Link to={linkUser}>{user.username}</Link>
                         </Typography>
                     </Stack>
-                    {checkSelf && (
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                padding: theme.spacing(1.5, 0),
-                                backgroundColor:
-                                    followed === IsFollow.FOLLOW
-                                        ? theme.palette.primary.light
-                                        : alpha(theme.palette.secondary.dark, 0.05),
-                                fontWeight: 500,
-                                lineHeight: 1,
-                                borderRadius: theme.spacing(0.75),
-                                color:
-                                    followed === IsFollow.FOLLOW
-                                        ? theme.palette.primary.contrastText
-                                        : theme.palette.secondary.dark,
-                                boxShadow: `0 0 1px ${
-                                    followed === IsFollow.FOLLOW
-                                        ? 'transparent'
-                                        : theme.palette.secondary.main
-                                }`,
-
-                                '&:hover': {
+                    <Box marginTop={-0.25}>
+                        {!checkSelf && (
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                sx={{
+                                    padding: theme.spacing(1.5, 0),
+                                    fontWeight: 500,
+                                    lineHeight: 1,
+                                    backgroundColor: theme.palette.primary.light,
+                                }}
+                                onClick={() => navigate('/settings/profile')}
+                            >
+                                {t('profile.edit_profile')}
+                            </Button>
+                        )}
+                        {checkSelf && (
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                sx={{
+                                    padding: theme.spacing(1.5, 0),
                                     backgroundColor:
                                         followed === IsFollow.FOLLOW
-                                            ? theme.palette.primary.dark
-                                            : alpha(theme.palette.secondary.dark, 0.1),
-                                },
-                            }}
-                            onClick={handleFollowClick}
-                        >
-                            {followed === IsFollow.FOLLOW
-                                ? t('profile.follow')
-                                : t('profile.following')}
-                        </Button>
-                    )}
+                                            ? theme.palette.primary.light
+                                            : alpha(theme.palette.secondary.dark, 0.05),
+                                    fontWeight: 500,
+                                    lineHeight: 1,
+                                    borderRadius: theme.spacing(0.75),
+                                    color:
+                                        followed === IsFollow.FOLLOW
+                                            ? theme.palette.primary.contrastText
+                                            : theme.palette.secondary.dark,
+                                    boxShadow: `0 0 1px ${
+                                        followed === IsFollow.FOLLOW
+                                            ? 'transparent'
+                                            : theme.palette.secondary.main
+                                    }`,
+
+                                    '&:hover': {
+                                        backgroundColor:
+                                            followed === IsFollow.FOLLOW
+                                                ? theme.palette.primary.dark
+                                                : alpha(
+                                                      theme.palette.secondary.dark,
+                                                      0.1
+                                                  ),
+                                    },
+                                }}
+                                onClick={handleFollowClick}
+                            >
+                                {followed === IsFollow.FOLLOW
+                                    ? t('profile.follow')
+                                    : t('profile.following')}
+                            </Button>
+                        )}
+                    </Box>
                 </Box>
 
                 <Box
@@ -190,6 +211,10 @@ function NewsSideRightUser({
                                 textTransform: 'uppercase',
                                 fontSize: theme.typography.caption,
                                 fontWeight: 700,
+                                color: theme.palette.secondary.main,
+                            },
+                            p: {
+                                color: alpha(theme.palette.secondary.main, 0.8),
                             },
                         },
                     }}

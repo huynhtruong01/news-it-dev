@@ -13,12 +13,14 @@ export interface IDashboardFollowProps extends BoxProps {
     title: string
     follows: IUser[]
     numFollows: number
+    type?: string
 }
 
 export function DashboardFollow({
     follows,
     title,
     numFollows,
+    type = 'followers',
     ...rest
 }: IDashboardFollowProps) {
     const { t } = useTranslation()
@@ -55,7 +57,15 @@ export function DashboardFollow({
                 <DashboardFollowFilters setFilters={setFilters} />
             </TitleContainerPage>
 
-            {newFollows.length === 0 && <EmptyList title={t('empty.no_user_follow')} />}
+            {newFollows.length === 0 && (
+                <EmptyList
+                    title={
+                        type === 'followers'
+                            ? t('empty.no_user_follow')
+                            : t('empty.no_user_following')
+                    }
+                />
+            )}
             <Grid container spacing={2}>
                 {newFollows.map((follow) => (
                     <Grid key={follow.id} item xs={12} sm={6} md={4}>

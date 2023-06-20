@@ -5,7 +5,9 @@
         "tags": "Các thẻ ",
         "follow_tags": "Các thẻ theo dõi",
         "create_news": "Tạo tin tức mới",
-        "users_following": "Những người dùng theo dõi"
+        "users_following": "Những người dùng đang theo dõi",
+        "users_suggestion": "Những người dùng được gợi ý",
+        "users_top": "Top người dùng"
     },
 
     "auth": {
@@ -97,7 +99,7 @@
         "news_published": "tin tức đã đăng",
         "news_published_2": "Tin tức đã đăng",
         "comments_written": "bình luận đã viết",
-        "tags_followed": "thẻ được theo dõi",
+        "tags_followed": "thẻ đang theo dõi",
         "follow": "Theo dõi",
         "following": "Đang theo dõi"
     },
@@ -183,7 +185,7 @@
         "choose_tags": "Chọn thẻ...",
         "sapo": "Nhập mở đầu cho tin tức...",
         "title": "Nhập tiêu đề cho tin tức...",
-        "drag_drop": "Kéo & Thả hoặc Chọn ảnh",
+        "drag_drop": "Chọn ảnh ở đây",
         "short_bio": "Tiểu sử ngắn..."
     },
 
@@ -240,6 +242,7 @@
     "empty": {
         "no_news": "Không có bài tin tức nào",
         "no_user_follow": "Không có người dùng nào theo dõi",
+        "no_user_following": "Không theo dõi người dùng nào",
         "no_news_created": "Không có bài tin tức nào bạn đã tạo",
         "no_news_liked": "Không có bài tin tức nào đã thích",
         "no_news_reading": "Không có bài tin tức nào đã lưu",
@@ -267,6 +270,17 @@
         "delete_notify": "Bạn có chắc chắn muốn xóa thông báo này?",
         "unsave_reading": "Bạn có chắc chắn không lưu bài tin tức này?",
         "public_news": "Bạn có muốn công khai bài tin tức này không?"
+    },
+
+    "error_input": {
+        "error_name_news": "Vui lòng nhập tên tin tức",
+        "error_thumbnail_image": "Vui lòng chọn ảnh nền",
+        "error_cover_image": "Vui lòng chọn ảnh bìa",
+        "error_content_news": "Vui lòng nhập nội dung tin tức",
+        "maximum_10": "Tối đa 10MB",
+        "maximum_4": "Tối đa 4MB",
+        "type_image": "Kiểu ",
+        "at_least_1_minute": "At least 1 min"
     },
 
     "liked your news": "đã thích bài viết của bạn",

@@ -1,16 +1,16 @@
-import { AppDispatch, AppState } from '@/store'
-import { getAllHashTagsPopular } from '@/store/hashTag/thunkApi'
-import { Grid, Box } from '@mui/material'
-import { PayloadAction } from '@reduxjs/toolkit'
-import { useEffect } from 'react'
-import { connect } from 'react-redux'
-import { ArticleContainer, Sidebar, UserFollowing } from '..'
-import { getProfile } from '@/store/user/thunkApi'
-import { getNotifies } from '@/store/notify/thunkApi'
-import { IUser } from '@/models'
-import { useTranslation } from 'react-i18next'
 import { Seo } from '@/components/Common'
 import { IMAGE_PREVIEW } from '@/consts'
+import { IUser } from '@/models'
+import { AppDispatch, AppState } from '@/store'
+import { getAllHashTagsPopular } from '@/store/hashTag/thunkApi'
+import { getNotifies } from '@/store/notify/thunkApi'
+import { getProfile } from '@/store/user/thunkApi'
+import { Box, Grid } from '@mui/material'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
+import { ArticleContainer, Sidebar, UserSidebar } from '..'
 
 export interface IMainContentProps {
     pUser: IUser | null
@@ -67,14 +67,14 @@ function MainContent({ pUser, pGetProfile, pGetNotifies }: IMainContentProps) {
                 <Grid
                     item
                     sx={{
-                        width: 300,
+                        width: 310,
                         display: {
                             xs: 'none',
                             md: 'block',
                         },
                     }}
                 >
-                    <UserFollowing user={pUser as IUser} />
+                    <UserSidebar user={pUser as IUser} />
                 </Grid>
             </Grid>
         </Box>

@@ -5,7 +5,9 @@
         "tags": "Tags",
         "follow_tags": "Tags Follow",
         "create_news": "Create News",
-        "users_following": "Users Following"
+        "users_following": "Users Following",
+        "users_suggestion": "Suggestion Users",
+        "users_top": "Top Users"
     },
 
     "auth": {
@@ -183,7 +185,7 @@
         "choose_tags": "Choose tags...",
         "sapo": "Sapo news...",
         "title": "Title news...",
-        "drag_drop": "Drag & Drop or Choose your file here",
+        "drag_drop": "Choose your file here",
         "short_bio": "A short bio..."
     },
 
@@ -225,7 +227,8 @@
 
     "empty": {
         "no_news": "No news",
-        "no_user_follow": "No user follow",
+        "no_user_follow": "No followers",
+        "no_user_following": "No following users",
         "no_news_created": "No news you created",
         "no_news_liked": "No news likes",
         "no_news_reading": "No news reading",
@@ -267,6 +270,17 @@
         "delete_notify": "Are you sure you want to delete this notify?",
         "unsave_reading": "Are you sure unsave this news?",
         "public_news": "Are you want to public this news?"
+    },
+    
+    "error_input": {
+        "error_name_news": "Please enter news name",
+        "error_thumbnail_image": "Please choose news thumbnail image",
+        "error_cover_image": "Please choose news cover image",
+        "error_content_news": "Please enter news content",
+        "maximum_10": "Maximum 10MB",
+        "maximum_4": "Maximum 4MB",
+        "type_image": "Kiểu hình ảnh chọn không hợp lệ",
+        "at_least_1_minute": "Ít nhất là 1 phút"
     },
 
     "liked your news": "liked your news",

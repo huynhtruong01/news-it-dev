@@ -133,7 +133,7 @@ export function NewsTable({
                                     component="span"
                                     key={tag.id}
                                     sx={{
-                                        fontSize: '14px',
+                                        fontSize: theme.typography.body2,
                                     }}
                                 >
                                     {tag.name}

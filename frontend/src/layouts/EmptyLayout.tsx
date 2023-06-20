@@ -1,3 +1,4 @@
+import { ModalAuth } from '@/components'
 import { HEADER_HEIGHT } from '@/consts'
 import { theme } from '@/utils'
 import { Box, BoxProps } from '@mui/material'
@@ -26,6 +27,7 @@ export function EmptyLayout({ children, ...rest }: IEmptyLayoutProps) {
             {...rest}
         >
             {children}
+            <ModalAuth />
         </Box>
     )
 }

@@ -1,17 +1,29 @@
 import { authApi } from '@/api'
+import { IUser } from '@/models'
+import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Box, Paper, Typography, alpha } from '@mui/material'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
-export function ActiveAccount() {
+export interface IActiveAccount {
+    pUser: IUser | null
+}
+
+export function ActiveAccount({ pUser }: IActiveAccount) {
     const { t } = useTranslation()
+    const navigate = useNavigate()
     const [loading, setLoading] = useState<boolean>(false)
     const params = useParams()
 
     useEffect(() => {
+        if (pUser) {
+            navigate(-1)
+            return
+        }
         if (!params.activeToken) return
         ;(async () => {
             try {
@@ -60,3 +72,11 @@ export function ActiveAccount() {
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(ActiveAccount)

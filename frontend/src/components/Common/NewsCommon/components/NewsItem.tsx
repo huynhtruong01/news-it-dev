@@ -210,7 +210,6 @@ function NewsItem({
                     variant="h5"
                     fontWeight={700}
                     sx={{
-                        marginBottom: 1.5,
                         a: {
                             '&:hover': {
                                 color: theme.palette.primary.main,
@@ -221,7 +220,14 @@ function NewsItem({
                 >
                     <Link to={`/news/${news?.slug}`}>{news?.title}</Link>
                 </Typography>
-                {news.hashTags && <HashTagList tags={news?.hashTags as IHashTag[]} />}
+                {news.hashTags && news.hashTags.length > 0 && (
+                    <HashTagList
+                        tags={news?.hashTags as IHashTag[]}
+                        sx={{
+                            marginTop: 1.5,
+                        }}
+                    />
+                )}
 
                 {/* tablet, laptop */}
                 <Stack

@@ -59,7 +59,7 @@ const useStyles = makeStyles({
 })
 
 export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
-    const isSmallScreen = useMediaQuery('(min-width:320px)')
+    const isMediumScreen = useMediaQuery('(min-width:768px)')
     const { t } = useTranslation()
     const styles = useStyles()
     const [copied, setCopied] = useState<boolean>(false)
@@ -125,7 +125,7 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleCloseMore}
-                disableScrollLock={isSmallScreen ? false : true}
+                disableScrollLock={isMediumScreen ? true : false}
                 PaperProps={{
                     elevation: 1,
                     sx: {
