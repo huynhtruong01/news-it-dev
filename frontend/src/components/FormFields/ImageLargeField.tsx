@@ -1,17 +1,17 @@
+import { generateLinkImg, theme } from '@/utils'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {
     Box,
     BoxProps,
-    Typography,
-    FormLabel,
     FormHelperText,
+    InputLabel,
     Stack,
+    Typography,
 } from '@mui/material'
-import { Controller, FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
-import { theme, generateLinkImg } from '@/utils'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { indigo, red } from '@mui/material/colors'
-import { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
+import { useEffect, useRef, useState } from 'react'
+import { Controller, FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles({
@@ -28,6 +28,7 @@ export type IImageLargeFieldProps<TFormValues extends FieldValues> = {
     disabled: boolean
     initValue: string | undefined
     placeholder?: string
+    required?: boolean
 } & BoxProps
 
 export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
@@ -36,6 +37,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
     label,
     disabled,
     initValue,
+    required = false,
     ...rest
 }: IImageLargeFieldProps<TFormValues>) {
     const { t } = useTranslation()
@@ -96,16 +98,19 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                     }}
                     {...rest}
                 >
-                    <FormLabel
+                    <InputLabel
                         error={!!error?.message}
+                        required={required}
                         sx={{
-                            display: 'inline-flex',
                             fontWeight: 500,
                             color: '#000',
+                            '.MuiFormLabel-asterisk': {
+                                color: red[500],
+                            },
                         }}
                     >
                         {label}
-                    </FormLabel>
+                    </InputLabel>
                     {!img && (
                         <Box>
                             <Box

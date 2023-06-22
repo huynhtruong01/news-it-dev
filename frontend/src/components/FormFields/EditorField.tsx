@@ -1,7 +1,8 @@
-import { Box, FormHelperText, FormLabel } from '@mui/material'
-import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
-import { theme } from '@/utils'
 import { TextEditor } from '@/components/Common'
+import { theme } from '@/utils'
+import { Box, FormHelperText, InputLabel } from '@mui/material'
+import { red } from '@mui/material/colors'
+import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 
 export type IEditorFieldProps<TFormValues extends FieldValues> = {
     form: UseFormReturn<TFormValues, any>
@@ -9,6 +10,7 @@ export type IEditorFieldProps<TFormValues extends FieldValues> = {
     label: string
     disabled: boolean
     placeholder?: string
+    required?: boolean
 }
 
 export function EditorField<TFormValues extends FieldValues = FieldValues>({
@@ -17,6 +19,7 @@ export function EditorField<TFormValues extends FieldValues = FieldValues>({
     label,
     disabled,
     placeholder,
+    required = false,
 }: IEditorFieldProps<TFormValues>) {
     const {
         control,
@@ -34,17 +37,21 @@ export function EditorField<TFormValues extends FieldValues = FieldValues>({
                         margin: theme.spacing(2, 0, 1),
                     }}
                 >
-                    <FormLabel
+                    <InputLabel
                         error={!!error?.message}
+                        required={required}
                         sx={{
-                            display: 'inline-block',
+                            display: 'block',
                             fontWeight: 500,
                             color: '#000',
                             marginBottom: 1,
+                            '.MuiFormLabel-asterisk': {
+                                color: red[500],
+                            },
                         }}
                     >
                         {label}
-                    </FormLabel>
+                    </InputLabel>
                     <TextEditor
                         value={value}
                         onChange={onChange}

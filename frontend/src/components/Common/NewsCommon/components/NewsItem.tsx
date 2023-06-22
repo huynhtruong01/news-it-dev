@@ -5,7 +5,7 @@ import { IHashTag, INews, INewsActions, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { getProfile } from '@/store/user/thunkApi'
-import { formatDate, theme } from '@/utils'
+import { formatDate, theme, timeSince } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -31,10 +31,12 @@ import { likeNews, saveNews, unlikeNews, unsaveNews } from '@/store/user'
 import { likeNewsApi } from '@/store/news/thunkApi'
 import { Socket } from 'socket.io-client'
 import { useTranslation } from 'react-i18next'
+import { DEFAULT_LANGUAGES } from '@/consts'
 
 export interface INewsItemProps {
     news: INews
     user?: IUser
+    pLanguages: string
     pUser: IUser | null
     pSocket: Socket | null
     pSetShowModalAuth: (isShow: boolean) => void
@@ -66,6 +68,7 @@ function NewsItem({
     pSaveNews,
     pUnSaveNews,
     pLikeNewsApi,
+    pLanguages,
 }: INewsItemProps) {
     const { t } = useTranslation()
     const styles = useStyles()
@@ -194,7 +197,9 @@ function NewsItem({
                             color: alpha(theme.palette.secondary.main, 0.65),
                         }}
                     >
-                        {formatDate(news?.createdAt || new Date(), "MMM DD 'YY")}
+                        {pLanguages === DEFAULT_LANGUAGES
+                            ? timeSince(news?.createdAt || new Date())
+                            : formatDate(news?.createdAt || new Date(), "MMM DD 'YY")}
                     </Box>
                 </Box>
             </Stack>
@@ -406,6 +411,7 @@ const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
         pSocket: state.socket.socket,
+        pLanguages: state.common.languages,
     }
 }
 

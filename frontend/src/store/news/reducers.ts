@@ -1,4 +1,4 @@
-import { INews, INewsForm } from '@/models'
+import { INews, INewsForm, IObjectCommon } from '@/models'
 import { INewsStore } from '@/store/news'
 import { PayloadAction } from '@reduxjs/toolkit'
 
@@ -43,5 +43,8 @@ export const reducers = {
                 numComments: (state.newsDetail.numComments as number) - 1,
             }
         }
+    },
+    setNewsReport: (state: INewsStore, action: PayloadAction<IObjectCommon | null>) => {
+        state.newsReport = action.payload
     },
 }

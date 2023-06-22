@@ -1,4 +1,4 @@
-import { SelectDashboard } from '@/enums'
+import { SelectDashboard, StatusReport } from '@/enums'
 import { NewsFilters } from '@/enums/news'
 import { IObjectCommon } from '@/models'
 
@@ -103,5 +103,27 @@ export const selectsDashboard: IObjectCommon[] = [
         name: 'dashboard.reading_list',
         value: SelectDashboard.SAVES,
         link: '/dashboard/reading-list',
+    },
+]
+export const reportList: IObjectCommon[] = [
+    {
+        id: StatusReport.RUDE_VULGAR,
+        name: 'rude',
+        value: 'Rude or vulgar',
+    },
+    {
+        id: StatusReport.HARASSMENT_OR_HATE_SPEECH,
+        name: 'harassment',
+        value: 'Harassment or hate speech',
+    },
+    {
+        id: StatusReport.SPAM_OR_COPYRIGHT_ISSUE,
+        name: 'spam',
+        value: 'Spam or copyright issue',
+    },
+    {
+        id: StatusReport.OTHER,
+        name: 'other',
+        value: 'Other',
     },
 ]

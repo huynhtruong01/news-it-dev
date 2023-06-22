@@ -67,12 +67,14 @@ export function ForgotPasswordForm({ onSetPassword }: IForgotPasswordFormProps) 
                     label={t('input.password')}
                     name="password"
                     disabled={isSubmitting}
+                    required
                 />
                 <PasswordField<IForgotPassword>
                     form={form}
                     label={t('input.confirm_password')}
                     name="confirmPassword"
                     disabled={isSubmitting}
+                    required
                 />
             </Box>
             <ButtonLoadingForm

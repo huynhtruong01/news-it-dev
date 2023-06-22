@@ -67,6 +67,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     name="username"
                     disabled={isSubmitting}
                     placeholder={'john.doe'}
+                    required
                 />
                 <Stack
                     direction={'row'}
@@ -81,6 +82,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                         name="firstName"
                         disabled={isSubmitting}
                         placeholder={'Doe'}
+                        required
                     />
                     <InputField<ISignupValues>
                         form={form}
@@ -88,6 +90,7 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                         name="lastName"
                         disabled={isSubmitting}
                         placeholder={'John'}
+                        required
                     />
                 </Stack>
                 <InputField<ISignupValues>
@@ -96,18 +99,21 @@ export function SignupForm({ onSignupSubmit }: ISignupFormProps) {
                     name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
+                    required
                 />
                 <PasswordField<ISignupValues>
                     form={form}
                     label={t('input.password')}
                     name="password"
                     disabled={isSubmitting}
+                    required
                 />
                 <PasswordField<ISignupValues>
                     form={form}
                     label={t('input.confirm_password')}
                     name="confirmPassword"
                     disabled={isSubmitting}
+                    required
                 />
             </Box>
             <ButtonLoadingForm loading={isSubmitting} text={t('auth.sign_up')} />

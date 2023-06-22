@@ -1,6 +1,9 @@
-import { INews } from '@/models'
+import { INews, IObjectCommon } from '@/models'
+import { AppDispatch } from '@/store'
+import { setNewsReport } from '@/store/news'
 import { theme } from '@/utils'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
+import FlagIcon from '@mui/icons-material/Flag'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import {
     Box,
@@ -19,22 +22,25 @@ import { green } from '@mui/material/colors'
 import { makeStyles } from '@mui/styles'
 import { MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-    FacebookShareButton,
-    WhatsappShareButton,
-    TwitterShareButton,
-    RedditShareButton,
-    TelegramShareButton,
-    FacebookIcon,
-    WhatsappIcon,
-    TelegramIcon,
-    RedditIcon,
-    TwitterIcon,
-} from 'react-share'
 import { TbShare3 } from 'react-icons/tb'
+import { connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import {
+    FacebookIcon,
+    FacebookShareButton,
+    RedditIcon,
+    RedditShareButton,
+    TelegramIcon,
+    TelegramShareButton,
+    TwitterIcon,
+    TwitterShareButton,
+    WhatsappIcon,
+    WhatsappShareButton,
+} from 'react-share'
 
 export interface IButtonMoreProps extends BoxProps {
     news: INews
+    pSetNewsReport: (value: IObjectCommon | null) => void
 }
 
 const useStyles = makeStyles({
@@ -58,13 +64,14 @@ const useStyles = makeStyles({
     },
 })
 
-export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
+function ButtonMore({ news, pSetNewsReport, ...rest }: IButtonMoreProps) {
     const isMediumScreen = useMediaQuery('(min-width:768px)')
     const { t } = useTranslation()
     const styles = useStyles()
     const [copied, setCopied] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
+    const navigate = useNavigate()
 
     const handleOpenMore = (e: MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget)
@@ -80,6 +87,14 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
         setCopied(true)
 
         await navigator.clipboard.writeText(link)
+    }
+
+    const handleReport = () => {
+        navigate('/report-abuse')
+        pSetNewsReport({
+            newsId: news.id,
+            slug: news.slug as string,
+        })
     }
 
     return (
@@ -251,7 +266,32 @@ export function ButtonMore({ news, ...rest }: IButtonMoreProps) {
                         </Stack>
                     </TelegramShareButton>
                 </MenuItem>
+                <MenuItem className={styles.shareItem}>
+                    <Box onClick={handleReport}>
+                        <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                            <Box
+                                sx={{
+                                    display: 'inline-flex',
+                                    svg: {
+                                        color: theme.palette.primary.main,
+                                    },
+                                }}
+                            >
+                                <FlagIcon />
+                            </Box>
+                            {t('share_news.report')}
+                        </Stack>
+                    </Box>
+                </MenuItem>
             </Menu>
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSetNewsReport: (value: IObjectCommon | null) => dispatch(setNewsReport(value)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(ButtonMore)

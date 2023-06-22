@@ -1,7 +1,7 @@
 import { IsFollow, Order, Status } from '@/enums'
 import { SvgIconProps, SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
-import { IHashTag, INews, IUser } from '.'
+import { IHashTag, INews, IReportStatus, IUser } from '.'
 
 export type IIcon = OverridableComponent<SvgIconTypeMap<SvgIconProps, 'svg'>> & {
     muiName?: string
@@ -13,7 +13,7 @@ export interface IObjectCommon {
 
 export interface IOptionItem {
     id: number
-    name: number | string
+    name: number | string | IReportStatus
 }
 
 export type IDebounceCallback =

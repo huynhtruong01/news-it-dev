@@ -17,6 +17,7 @@ import {
     Tags,
     ConfirmEmail,
     ConfirmEmailMessage,
+    Reports,
 } from '@/pages'
 import { AppDispatch } from '@/store'
 import { setValuesSocket } from '@/store/socket'
@@ -221,6 +222,15 @@ function App({ pSetSocket, pSetLanguages }: IAppProps) {
                     element={
                         <EmptyLayout>
                             <ProfileUser />
+                        </EmptyLayout>
+                    }
+                />
+
+                <Route
+                    path={'/report-abuse'}
+                    element={
+                        <EmptyLayout>
+                            <Reports />
                         </EmptyLayout>
                     }
                 />

@@ -2,7 +2,7 @@ import { HashTagList } from '@/components/Common'
 import { useLinkUser } from '@/hooks'
 import { INews, IUser } from '@/models'
 import { AppState } from '@/store'
-import { formatDate, theme } from '@/utils'
+import { formatDate, shortDateFormat, theme } from '@/utils'
 import {
     Avatar,
     Box,
@@ -18,13 +18,15 @@ import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { NewsAction, NewsComment, NewsContent } from '.'
+import { DEFAULT_LANGUAGES } from '@/consts'
 
 export interface INewsDetailProps extends BoxProps {
     news: INews
     pUser: IUser | null
+    pLanguages: string
 }
 
-function NewsDetail({ news, pUser, ...rest }: INewsDetailProps) {
+function NewsDetail({ news, pUser, pLanguages, ...rest }: INewsDetailProps) {
     const { t } = useTranslation()
     const { user, title, hashTags, thumbnailImage, createdAt } = news
 
@@ -111,7 +113,9 @@ function NewsDetail({ news, pUser, ...rest }: INewsDetailProps) {
                                     color={theme.palette.secondary.light}
                                 >
                                     {t('dates.posted_on')}{' '}
-                                    {formatDate(createdAt || new Date(), 'MMM DD')}
+                                    {pLanguages === DEFAULT_LANGUAGES
+                                        ? shortDateFormat(createdAt || new Date())
+                                        : formatDate(createdAt || new Date(), 'MMM DD')}
                                 </Typography>
                             </Box>
                         </Stack>
@@ -172,6 +176,7 @@ function NewsDetail({ news, pUser, ...rest }: INewsDetailProps) {
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pLanguages: state.common.languages,
     }
 }
 

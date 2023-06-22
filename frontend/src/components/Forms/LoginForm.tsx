@@ -60,12 +60,14 @@ export function LoginForm({ onLoginSubmit }: ILoginFormProps) {
                     name="emailAddress"
                     disabled={isSubmitting}
                     placeholder={'john.doe@example.com'}
+                    required
                 />
                 <PasswordField<ILoginValues>
                     form={form}
                     label={t('input.password')}
                     name="password"
                     disabled={isSubmitting}
+                    required
                 />
             </Box>
             <ButtonLoadingForm loading={isSubmitting} text={t('auth.login')} />

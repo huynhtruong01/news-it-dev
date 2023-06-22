@@ -9,6 +9,7 @@ import {
     InputLabel,
     TextField,
 } from '@mui/material'
+import { red } from '@mui/material/colors'
 import { useState } from 'react'
 import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 
@@ -17,6 +18,7 @@ export type IPasswordFieldProps<TFormValues extends FieldValues> = {
     name: Path<TFormValues>
     label: string
     disabled: boolean
+    required?: boolean
 } & BoxProps
 
 export function PasswordField<TFormValues extends FieldValues = FieldValues>({
@@ -24,6 +26,7 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
     name,
     label,
     disabled,
+    required = false,
     ...rest
 }: IPasswordFieldProps<TFormValues>) {
     const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -43,9 +46,13 @@ export function PasswordField<TFormValues extends FieldValues = FieldValues>({
                 <Box margin={theme.spacing(2, 0, 1)} width={'100%'} {...rest}>
                     <InputLabel
                         error={!!error?.message}
+                        required={required}
                         sx={{
                             fontWeight: 500,
                             color: '#000',
+                            '.MuiFormLabel-asterisk': {
+                                color: red[500],
+                            },
                         }}
                     >
                         {label}

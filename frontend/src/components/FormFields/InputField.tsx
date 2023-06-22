@@ -1,6 +1,7 @@
 import { Controller, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { TextField, TextFieldProps, InputLabel, Box } from '@mui/material'
 import { theme } from '@/utils'
+import { red } from '@mui/material/colors'
 
 export type IInputFieldProps<TFormValues extends FieldValues> = {
     form: UseFormReturn<TFormValues, any>
@@ -8,6 +9,7 @@ export type IInputFieldProps<TFormValues extends FieldValues> = {
     label: string
     placeholder?: string
     disabled: boolean
+    required?: boolean
 } & TextFieldProps
 
 export function InputField<TFormValues extends FieldValues = FieldValues>({
@@ -16,6 +18,7 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
     label,
     placeholder,
     disabled,
+    required = false,
     ...rest
 }: IInputFieldProps<TFormValues>) {
     const {
@@ -32,9 +35,13 @@ export function InputField<TFormValues extends FieldValues = FieldValues>({
                 <Box margin={theme.spacing(2, 0, 1)} width={'100%'}>
                     <InputLabel
                         error={!!error?.message}
+                        required={required}
                         sx={{
                             fontWeight: 500,
                             color: '#000',
+                            '.MuiFormLabel-asterisk': {
+                                color: red[500],
+                            },
                         }}
                     >
                         {label}

@@ -15,7 +15,7 @@ import { likeNewsApi } from '@/store/news/thunkApi'
 import { readUserNotify } from '@/store/notify'
 import { likeNews, saveNews, unlikeNews, unsaveNews } from '@/store/user'
 import { getProfile } from '@/store/user/thunkApi'
-import { theme } from '@/utils'
+import { theme, timeSince } from '@/utils'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -32,6 +32,7 @@ import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 import { NotifyAction } from '.'
+import { DEFAULT_LANGUAGES } from '@/consts'
 
 export interface INotificationItemProps {
     pUser: IUser | null
@@ -45,6 +46,7 @@ export interface INotificationItemProps {
     pUnSaveNews: (data: INews) => void
     notify: INotify
     pLikeNewsApi: (data: INewsActions) => Promise<PayloadAction<unknown>>
+    pLanguages: string
 }
 
 function NotificationItem({
@@ -58,6 +60,7 @@ function NotificationItem({
     pSaveNews,
     pUnSaveNews,
     pLikeNewsApi,
+    pLanguages,
 }: INotificationItemProps) {
     const { t } = useTranslation()
     const [liked, setLiked] = useState<boolean>(false)
@@ -216,7 +219,9 @@ function NotificationItem({
                                 color: alpha(theme.palette.secondary.main, 0.65),
                             }}
                         >
-                            {moment(notify.createdAt || new Date()).fromNow()}
+                            {pLanguages === DEFAULT_LANGUAGES
+                                ? timeSince(notify.createdAt || new Date())
+                                : moment(notify.createdAt || new Date()).fromNow()}
                         </Box>
                     </Box>
                 </Stack>
@@ -406,6 +411,7 @@ const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
         pSocket: state.socket.socket,
+        pLanguages: state.common.languages,
     }
 }
 

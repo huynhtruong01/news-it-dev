@@ -7,6 +7,7 @@ export * as newsApi from '@/api/newsApi'
 export * as commentApi from '@/api/commentApi'
 export * as notifyApi from '@/api/notifyApi'
 export * as searchHistoryApi from '@/api/searchHistoryApi'
+export * as reportApi from '@/api/reportApi'
 
 const AxiosClient = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,

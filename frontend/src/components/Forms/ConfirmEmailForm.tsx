@@ -58,6 +58,7 @@ export function ConfirmEmailForm({ onConfirmPassword }: IConfirmEmailFormProps) 
                     name="emailAddress"
                     placeholder={'john.doe@example.com'}
                     disabled={isSubmitting}
+                    required
                 />
             </Box>
             <ButtonLoadingForm loading={isSubmitting} text={t('button.send')} />

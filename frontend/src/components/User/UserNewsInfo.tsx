@@ -1,16 +1,20 @@
 import { IUser } from '@/models'
-import { formatDate, theme } from '@/utils'
+import { formatDate, shortDateFormat, theme } from '@/utils'
 import { Avatar, Box, Stack, Typography, alpha } from '@mui/material'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { UserDetailHover } from '.'
+import { connect } from 'react-redux'
+import { AppState } from '@/store'
+import { DEFAULT_LANGUAGES } from '@/consts'
 
 export interface IUserNewsInfoProps {
     user: IUser
     link: string
+    pLanguages: string
 }
 
-export function UserNewsInfo({ user, link }: IUserNewsInfoProps) {
+export function UserNewsInfo({ user, link, pLanguages }: IUserNewsInfoProps) {
     const [open, setOpen] = useState<boolean>(false)
 
     const handleHoverUser = () => {
@@ -101,10 +105,20 @@ export function UserNewsInfo({ user, link }: IUserNewsInfoProps) {
                     padding={theme.spacing(0, 0.5)}
                 >
                     <Link to={link}>
-                        {formatDate(user?.createdAt || new Date(), 'MMM DD')}
+                        {pLanguages === DEFAULT_LANGUAGES
+                            ? shortDateFormat(user?.createdAt || new Date())
+                            : formatDate(user?.createdAt || new Date(), 'MMM DD')}
                     </Link>
                 </Box>
             </Box>
         </Stack>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pLanguages: state.common.languages,
+    }
+}
+
+export default connect(mapStateToProps, null)(UserNewsInfo)

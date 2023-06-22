@@ -68,7 +68,7 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
             }, []) || []
 
         return removeDuplicated<IHashTag>(hashTagSaves as IHashTag[]) || []
-    }, [pUser])
+    }, [pUserProfileFilter])
 
     return (
         <Box>

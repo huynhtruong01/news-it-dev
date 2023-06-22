@@ -7,7 +7,8 @@
         "create_news": "Create News",
         "users_following": "Users Following",
         "users_suggestion": "Suggestion Users",
-        "users_top": "Top Users"
+        "users_top": "Top Users",
+        "report_abuse": "Report abuse"
     },
 
     "auth": {
@@ -67,7 +68,9 @@
         "send": "Send",
         "share": "Share",
         "read_full_news": "Read full news",
-        "public": "Public"
+        "public": "Public",
+        "send_feedback": "Send Feedback",
+        "back": "Back"
     },
 
     "news": {
@@ -170,7 +173,9 @@
         "delete_account": "Delete account",
         "dated_join": "Dated join",
         "banding_color": "Banding color",
-        "remember_me": "Remember me"
+        "remember_me": "Remember me",
+        "report": "Reports",
+        "message": "Message"
     },
 
     "placeholder": {
@@ -218,7 +223,13 @@
         "to_comment_news": "to comment this news",
         "modal_text_auth": "If you want to follow, comment, like, save; you need login to continue.",
         "loading_sign_up": "Registering your account...",
-        "public_news": "Public news successfully"
+        "public_news": "Public news successfully",
+        "harassment": "Harassment or hate speech",
+        "rude": "Rude or vulgar",
+        "spam": "Spam or copyright issue",
+        "inappropriate": "Inappropriate listings message/category",
+        "other": "Other",
+        "report_success": "Report news successfully"
     },
 
     "signout": {
@@ -250,7 +261,8 @@
         "update_news":"Update News",
         "settings": "Settings",
         "tags": "Tags",
-        "reading_list":"Reading List"
+        "reading_list":"Reading List",
+        "report_abuse": "Report abuse"
     },
 
     "share_news": {
@@ -258,7 +270,8 @@
         "whats_app": "Share to Whats App",
         "twitter": "Share to Twitter",
         "reddit": "Share to Reddit",
-        "telegram": "Share to Telegram"
+        "telegram": "Share to Telegram",
+        "report": "Report abuse"
     },
 
     "modal": {

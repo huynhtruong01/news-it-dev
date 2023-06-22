@@ -153,6 +153,7 @@ function CreateNewsForm({
                             label={t('input.title')}
                             disabled={isSubmitting}
                             placeholder={t('placeholder.title') as string}
+                            required
                         />
                         <InputField<INewsForm>
                             form={form}
@@ -213,6 +214,7 @@ function CreateNewsForm({
                             disabled={isSubmitting}
                             initValue={pInitValuesForm?.thumbnailImage as string}
                             placeholder={'Enter thumbnail image'}
+                            required
                         />
                         <ImageLargeField<INewsForm>
                             form={form}
@@ -221,6 +223,7 @@ function CreateNewsForm({
                             disabled={isSubmitting}
                             initValue={pInitValuesForm?.coverImage as string}
                             placeholder={'Enter cover image'}
+                            required
                         />
                     </Grid>
                 </Grid>
@@ -230,6 +233,7 @@ function CreateNewsForm({
                     label={t('input.content')}
                     disabled={isSubmitting}
                     placeholder={t('placeholder.typing_content') as string}
+                    required
                 />
             </Box>
 
