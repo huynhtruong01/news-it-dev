@@ -55,7 +55,11 @@ export function ModalImageNews({
                         md: 'auto',
                         xs: '95% !important',
                     },
-                    height: 'auto',
+                    maxWidth: {
+                        md: '60%',
+                        xs: '95%',
+                    },
+                    maxHeight: '90%',
                     borderRadius: '6px',
                 },
             }}

@@ -60,7 +60,10 @@ export const reducers = {
                     if (c.id === parentComment.id)
                         return {
                             ...parentComment,
-                            numReplyComments: (parentComment?.numReplyComments || 0) - 1,
+                            numReplyComments:
+                                (parentComment?.numReplyComments || 0) === 0
+                                    ? 0
+                                    : (parentComment?.numReplyComments || 0) - 1,
                         }
                     return c
                 })
