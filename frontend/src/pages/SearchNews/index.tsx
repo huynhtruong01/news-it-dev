@@ -1,21 +1,28 @@
 import { newsApi } from '@/api'
 import { NewsList, TitlePage } from '@/components/Common'
 import { NewsFilters, Order } from '@/enums'
-import { IFilters, INews, INewsStatus } from '@/models'
+import { IFilters, INews, INewsStatus, IUser } from '@/models'
 import { SearchNewsFilters } from '@/pages/SearchNews/components'
 import { Box, Grid } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa'
 import { useTranslation } from 'react-i18next'
+import { AppState } from '@/store'
+import { connect } from 'react-redux'
 
-export function SearchNews() {
+export interface ISearchNews {
+    pUser: IUser | null
+}
+
+function SearchNews({ pUser }: ISearchNews) {
     const { t } = useTranslation()
     const [loading, setLoading] = useState<boolean>(true)
     const [filters, setFilters] = useState<IFilters>({
         page: 1,
         limit: 100,
         createdAt: Order.DESC,
+        userId: pUser ? (pUser?.id as number) : null,
     })
     const [status, setStatus] = useState<INewsStatus>(NewsFilters.LATEST)
     const [searchParams] = useSearchParams()
@@ -100,3 +107,11 @@ export function SearchNews() {
         </Box>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
+}
+
+export default connect(mapStateToProps, null)(SearchNews)

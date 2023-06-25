@@ -7,6 +7,7 @@ export const reducers = {
         const newHashTags = state.hashTags
         newHashTags.unshift(action.payload)
         state.hashTags = newHashTags
+        state.total = state.total + 1
     },
     updateHashTag(state: IHashTagStore, action: PayloadAction<IHashTag>) {
         const newHashTags = state.hashTags
@@ -22,6 +23,7 @@ export const reducers = {
         if (index >= 0) {
             newHashTags.splice(index, 1)
             state.hashTags = newHashTags
+            state.total = state.total - 1
         }
     },
 }

@@ -73,7 +73,33 @@ function UserModalForm({
         handleSubmit,
         reset,
         setValue,
+        getValues,
+        watch,
     } = form
+
+    const roleIds = watch('roleOptionIds')
+    const admin = watch('isAdmin')
+
+    useEffect(() => {
+        const roles = getValues('roleOptionIds')
+        const checkIsAdmin = roles?.map((r) => r.id).includes(1)
+        setValue('isAdmin', !!checkIsAdmin)
+    }, [roleIds])
+
+    useEffect(() => {
+        const roles = getValues('roleOptionIds')
+        if (admin) {
+            if (!roles?.find((r) => r.id === 1)) {
+                roles?.unshift({ id: 1, name: 'admin' } as IOptionItem)
+            }
+        } else {
+            const roleAdminIdx = roles?.findIndex((r) => r.id === 1) as number
+            if (roleAdminIdx > -1) {
+                roles?.splice(roleAdminIdx, 1)
+            }
+        }
+        setValue('roleOptionIds', roles)
+    }, [admin])
 
     useEffect(() => {
         setValue('username', initValues.username)

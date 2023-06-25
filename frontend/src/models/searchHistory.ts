@@ -1,7 +1,7 @@
 import { IUser } from '.'
 
 export interface ISearchHistoryData {
-    userId: number
+    userId: number | null
     user?: IUser
     searchQuery: string
 }

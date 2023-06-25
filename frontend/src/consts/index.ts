@@ -1,3 +1,5 @@
+import { NotifyType } from '@/enums'
+
 export const IMAGE_MINE_TYPE: readonly string[] = ['image/png', 'image/jpg', 'image/jpeg']
 export const SIZE_10_MB: number = 10 * 1024 * 1024
 export const SIZE_4_MB: number = 4 * 1024 * 1024
@@ -19,3 +21,11 @@ export const IMAGE_PREVIEW =
     'https://thepracticaldev.s3.amazonaws.com/i/6hqmcjaxbgbon8ydw93z.png'
 
 export const TYPE_ACCOUNT = 'register'
+export const NOT_FOUND_URL =
+    'https://res.cloudinary.com/huynhtruong01/image/upload/v1687591824/not_found_i5wql2.png'
+
+export const INCLUDE_COMMENT_LINK = [
+    NotifyType.COMMENT,
+    NotifyType.LIKE_COMMENT,
+    NotifyType.REPLY,
+]

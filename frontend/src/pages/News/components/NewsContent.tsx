@@ -1,11 +1,11 @@
 import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Box, BoxProps } from '@mui/material'
+import 'highlight.js/styles/github.css'
 import { useEffect, useRef, useState } from 'react'
+import 'react-quill/dist/quill.snow.css'
 import { connect } from 'react-redux'
 import { ModalImageNews } from '.'
-import 'react-quill/dist/quill.snow.css'
-import 'highlight.js/styles/github.css'
 
 export interface INewsContentProps extends BoxProps {
     content: string

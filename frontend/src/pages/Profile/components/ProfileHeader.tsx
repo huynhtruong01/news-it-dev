@@ -1,9 +1,9 @@
-import { COLOR_WHITE } from '@/consts'
+import { COLOR_WHITE, DEFAULT_LANGUAGES } from '@/consts'
 import { IsFollow } from '@/enums'
 import { IFollow, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
-import { formatDate, theme } from '@/utils'
+import { formatDate, shortDateFormat, theme } from '@/utils'
 import {
     Avatar,
     Box,
@@ -20,21 +20,23 @@ import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 export interface IProfileHeaderProps {
-    pUser: IUser | null
-    pSetShowModalAuth: (isShow: boolean) => void
     user: IUser
     isFollow?: boolean
     followed?: IFollow
     onFollow?: () => Promise<void>
+    pUser: IUser | null
+    pSetShowModalAuth: (isShow: boolean) => void
+    pLanguage: string
 }
 
 export function ProfileHeader({
-    pUser,
-    pSetShowModalAuth,
     user,
     isFollow = false,
     followed,
     onFollow,
+    pUser,
+    pSetShowModalAuth,
+    pLanguage,
 }: IProfileHeaderProps) {
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -247,7 +249,9 @@ export function ProfileHeader({
                         }}
                     >
                         {t('dates.joined_on')}{' '}
-                        {formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
+                        {pLanguage === DEFAULT_LANGUAGES
+                            ? shortDateFormat(user.dateJoined || new Date())
+                            : formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
                     </Typography>
                 </Stack>
                 {user.work && (
@@ -288,6 +292,7 @@ export function ProfileHeader({
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pLanguage: state.common.languages,
     }
 }
 

@@ -136,7 +136,7 @@ function ArticleIntro({
                                 md: '-webkit-box',
                                 xs: 'none',
                             },
-                            WebkitLineClamp: 1,
+                            WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
                             marginTop: 1.5,

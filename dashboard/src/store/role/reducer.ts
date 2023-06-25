@@ -7,6 +7,7 @@ export const reducers = {
         const newRoles = state.roles
         newRoles.push(action.payload)
         state.roles = newRoles
+        state.total = state.total + 1
     },
     updateRole(state: IRoleStore, action: PayloadAction<IRole>) {
         const newRoles = state.roles
@@ -22,6 +23,7 @@ export const reducers = {
         if (index >= 0) {
             newRoles.splice(index, 1)
             state.roles = newRoles
+            state.total = state.total - 1
         }
     },
 }

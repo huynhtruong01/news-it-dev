@@ -70,7 +70,7 @@ let theme = createTheme({
                         width: '100%',
                     },
                     '@media (min-width: 1024px)': {
-                        maxWidth: 1264,
+                        maxWidth: 1280,
                     },
                 },
             },

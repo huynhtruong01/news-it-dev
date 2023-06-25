@@ -99,7 +99,7 @@ function ButtonMore({ news, pSetNewsReport, ...rest }: IButtonMoreProps) {
 
     return (
         <Box {...rest}>
-            <Tooltip title="More">
+            <Tooltip title={t('button.more')}>
                 <IconButton
                     onClick={handleOpenMore}
                     sx={{

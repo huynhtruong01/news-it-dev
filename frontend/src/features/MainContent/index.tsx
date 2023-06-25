@@ -66,8 +66,8 @@ function MainContent({ pUser, pGetProfile, pGetNotifies }: IMainContentProps) {
 
                 <Grid
                     item
+                    md={3.1}
                     sx={{
-                        width: 310,
                         display: {
                             xs: 'none',
                             md: 'block',

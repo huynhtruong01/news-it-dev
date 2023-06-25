@@ -1,6 +1,6 @@
 import debounce from 'lodash.debounce'
 import { authApi } from '../api'
-import { Status } from '../enums'
+import { Status, StatusUser } from '../enums'
 import { IDebounceCallback, IOptionItem, IStatus } from '../models'
 import { getLS } from './localStorage'
 import { grey, green, red } from '@mui/material/colors'
@@ -61,6 +61,12 @@ export const statusColor = (status: IStatus) => {
             colors.push(green[50], green[500])
             break
         case Status.UNPUBLIC:
+            colors.push(red[50], red[500])
+            break
+        case StatusUser.ACTIVE:
+            colors.push(green[50], green[500])
+            break
+        case StatusUser.INACTIVE:
             colors.push(red[50], red[500])
             break
         default:

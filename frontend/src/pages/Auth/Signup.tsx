@@ -23,7 +23,7 @@ export function Signup({ pUser }: ISignupProps) {
 
     useEffect(() => {
         if (pUser) navigate(-1)
-    }, [pUser, navigate])
+    }, [navigate])
 
     const handleSignupSubmit = async (values: ISignupValues) => {
         try {

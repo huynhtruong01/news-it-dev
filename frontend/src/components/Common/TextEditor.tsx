@@ -1,14 +1,17 @@
+import { toolbarOptions } from '@/data'
+import { AppDispatch } from '@/store'
+import { setLoadingCommon } from '@/store/common'
+import { theme, uploadImage } from '@/utils'
 import { Box } from '@mui/material'
+import { red } from '@mui/material/colors'
+import { makeStyles } from '@mui/styles'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css'
 import { useCallback, useEffect, useRef } from 'react'
 import { Noop } from 'react-hook-form'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { toolbarOptions } from '@/data'
-import { uploadImage, theme } from '@/utils'
-import { makeStyles } from '@mui/styles'
-import { red } from '@mui/material/colors'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
+import { connect } from 'react-redux'
 
 export interface ITextEditorProps {
     value: string
@@ -17,6 +20,7 @@ export interface ITextEditorProps {
     disabled: boolean
     placeholder?: string
     error?: boolean
+    pSetLoading: (isLoading: boolean) => void
 }
 
 const modules = {
@@ -141,13 +145,14 @@ const useStyles = makeStyles({
     },
 })
 
-export function TextEditor({
+function TextEditor({
     value,
     onChange,
     onBlur,
     disabled,
     placeholder = '',
     error,
+    pSetLoading,
 }: ITextEditorProps) {
     const styles = useStyles()
     const quillRef = useRef<ReactQuill | null>(null)
@@ -164,6 +169,7 @@ export function TextEditor({
 
                 if (!files) return
                 const file = files[0]
+                pSetLoading(true)
                 const photo = await uploadImage(file)
 
                 const quill = quillRef.current
@@ -171,10 +177,12 @@ export function TextEditor({
 
                 if (range !== undefined && photo?.url) {
                     quill?.getEditor().insertEmbed(range, 'image', `${photo.url}`)
+                    pSetLoading(false)
                 }
             } catch (error) {
                 throw new Error(error as string)
             }
+            pSetLoading(false)
         }
     }, [value])
 
@@ -210,3 +218,11 @@ export function TextEditor({
         </Box>
     )
 }
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSetLoading: (isLoading: boolean) => dispatch(setLoadingCommon(isLoading)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(TextEditor)

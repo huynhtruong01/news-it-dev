@@ -1,11 +1,15 @@
 import { SkeletonNewsDetail, Seo } from '@/components/Common'
-import { INews } from '@/models'
+import { Order } from '@/enums'
+import { IFilters, INews } from '@/models'
 import { NewsDetail, NewsSideLeft, NewsSideRight } from '@/pages/News/components'
 import { AppDispatch, AppState } from '@/store'
+import { getAllCommentsById } from '@/store/comment/thunkApi'
+import { setLoadingComment } from '@/store/common'
 import { resetNewsDetail } from '@/store/news'
 import { getNews } from '@/store/news/thunkApi'
 import { Box, Grid } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -16,9 +20,18 @@ export interface INewsProps {
     pNewsDetail: INews | null
     pGetNewsDetail: (slug: string) => Promise<PayloadAction<unknown>>
     pResetNewsDetail: () => void
+    pGetAllComments: (filter: IFilters) => Promise<PayloadAction<unknown>>
+    pSetLoadingComment: (isLoading: boolean) => void
 }
 
-function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsProps) {
+function News({
+    pSocket,
+    pGetNewsDetail,
+    pNewsDetail,
+    pResetNewsDetail,
+    pGetAllComments,
+    pSetLoadingComment,
+}: INewsProps) {
     const params = useParams()
     const [loading, setLoading] = useState<boolean>(true)
 
@@ -36,6 +49,29 @@ function News({ pSocket, pGetNewsDetail, pNewsDetail, pResetNewsDetail }: INewsP
             setLoading(false)
         })()
     }, [params.slug])
+
+    useEffect(() => {
+        // get all comments by news id
+        if (pNewsDetail) {
+            ;(async () => {
+                pSetLoadingComment(true)
+                try {
+                    const newFilters = {
+                        limit: 5,
+                        page: 1,
+                        createdAt: Order.DESC,
+                        newsId: pNewsDetail.id,
+                    }
+                    await pGetAllComments(newFilters as IFilters)
+                } catch (error) {
+                    enqueueSnackbar((error as Error).message, {
+                        variant: 'error',
+                    })
+                }
+                pSetLoadingComment(false)
+            })()
+        }
+    }, [pNewsDetail])
 
     useEffect(() => {
         if (!params.slug || !pSocket) return
@@ -96,6 +132,9 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGetNewsDetail: (slug: string) => dispatch(getNews(slug)),
         pResetNewsDetail: () => dispatch(resetNewsDetail()),
+        pGetAllComments: (params: IFilters) => dispatch(getAllCommentsById(params)),
+        pSetLoadingComment: (isLoading: boolean) =>
+            dispatch(setLoadingComment(isLoading)),
     }
 }
 

@@ -7,6 +7,7 @@ export const reducers = {
         const newNews = state.news
         newNews.push(action.payload)
         state.news = newNews
+        state.total = state.total + 1
     },
     updateNews(state: INewsStore, action: PayloadAction<INews>) {
         const newNews = state.news
@@ -22,6 +23,7 @@ export const reducers = {
         if (index >= 0) {
             newNews.splice(index, 1)
             state.news = newNews
+            state.total = state.total - 1
         }
     },
 }

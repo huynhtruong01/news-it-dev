@@ -94,7 +94,9 @@
         "read_full_news": "Xem chi tiết",
         "public": "Đăng lên",
         "send_feedback": "Gửi phản hồi",
-        "back": "Trở lại"
+        "back": "Trở lại",
+        "more": "Xem thêm" ,
+        "go_back": "Trở về"
     },
 
     "profile": {
@@ -229,7 +231,11 @@
         "spam": "Spam hoặc vấn đề bản quyền",
         "inappropriate": "Tin nhắn/danh mục danh sách không phù hợp",
         "other": "Khác",
-        "report_success": "Báo cáo tin tức thành công"
+        "report_success": "Báo cáo tin tức thành công",
+        "page_not_found": "Không tìm thấy trang",
+        "the_link_not_found": "Liên kết",
+        "the_link_not_found_2": "mà bạn đã ấn vào hoặc chuyển hướng",
+        "the_link_not_found_3": "có thể bị hỏng trên trang có thể đã bị xóa hoặc đổi tên."
     },
 
     "signout": {

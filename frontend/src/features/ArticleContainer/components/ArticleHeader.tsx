@@ -83,35 +83,38 @@ function ArticleHeader({
                     },
                 }}
             >
-                {articleHeader.map((item) => (
-                    <Box
-                        key={item.value}
-                        component="li"
-                        sx={{
-                            backgroundColor:
-                                status === item.value
-                                    ? theme.palette.primary.contrastText
-                                    : 'transparent',
-                            padding: theme.spacing(1, 1.25),
-                            color:
-                                status === item.value
-                                    ? theme.palette.primary.dark
-                                    : theme.palette.secondary.main,
-                            fontSize: '18px',
-                            cursor: 'pointer',
-                            borderRadius: theme.spacing(1),
-                            fontWeight: status === item.value ? 600 : 400,
+                {articleHeader.map((item) => {
+                    if (!pUser && item.value === NewsFilters.RELEVANT) return
+                    return (
+                        <Box
+                            key={item.value}
+                            component="li"
+                            sx={{
+                                backgroundColor:
+                                    status === item.value
+                                        ? theme.palette.primary.contrastText
+                                        : 'transparent',
+                                padding: theme.spacing(1, 1.25),
+                                color:
+                                    status === item.value
+                                        ? theme.palette.primary.dark
+                                        : theme.palette.secondary.main,
+                                fontSize: '18px',
+                                cursor: 'pointer',
+                                borderRadius: theme.spacing(1),
+                                fontWeight: status === item.value ? 600 : 400,
 
-                            '&:hover': {
-                                color: theme.palette.primary.main,
-                                backgroundColor: theme.palette.primary.contrastText,
-                            },
-                        }}
-                        onClick={() => handleNewsFilters(item.value as string)}
-                    >
-                        {t(item.name as string)}
-                    </Box>
-                ))}
+                                '&:hover': {
+                                    color: theme.palette.primary.main,
+                                    backgroundColor: theme.palette.primary.contrastText,
+                                },
+                            }}
+                            onClick={() => handleNewsFilters(item.value as string)}
+                        >
+                            {t(item.name as string)}
+                        </Box>
+                    )
+                })}
             </Stack>
 
             {/* Main content Select */}

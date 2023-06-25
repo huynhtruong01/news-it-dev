@@ -36,7 +36,7 @@ export interface IFilters {
     hashTagIds?: string
     newsId?: number
     isRead?: number
-    userId?: number
+    userId?: number | null
     title?: string
     type?: string
 }

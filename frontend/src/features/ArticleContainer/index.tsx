@@ -17,11 +17,13 @@ function ArticleContainer({ pUser }: IArticleContainer) {
         page: 1,
         createdAt: Order.DESC,
         hashTag: pUser?.hashTags?.map((t) => t.id).join(',') || '',
-        type: NewsFilters.RELEVANT,
+        type: pUser ? NewsFilters.RELEVANT : '',
     })
     const [newsList, setNewsList] = useState<INews[]>([])
     const [loading, setLoading] = useState<boolean>(true)
-    const [status, setStatus] = useState<INewsStatus>(NewsFilters.RELEVANT)
+    const [status, setStatus] = useState<INewsStatus>(
+        pUser ? NewsFilters.RELEVANT : NewsFilters.LATEST
+    )
     const [total, setTotal] = useState<number>(0)
 
     // FETCH ALL NEWS HERE

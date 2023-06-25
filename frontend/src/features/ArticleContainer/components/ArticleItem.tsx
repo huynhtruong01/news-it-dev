@@ -19,12 +19,21 @@ export function ArticleItem({ article }: IArticleItemProps) {
                 <Box
                     sx={{
                         maxHeight: {
-                            md: 270,
+                            md: 290,
                             sm: 320,
                             xs: 150,
                         },
                         minHeight: 150,
                         overflow: 'hidden',
+                        a: {
+                            display: 'inline-block',
+                            width: '100%',
+                            height: {
+                                md: 290,
+                                sm: 320,
+                                xs: 150,
+                            },
+                        },
 
                         img: {
                             height: '100%',

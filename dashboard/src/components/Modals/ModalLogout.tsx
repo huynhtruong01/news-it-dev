@@ -172,7 +172,7 @@ function ModalLogout({
                             }}
                             onClick={handleLogout}
                         >
-                            Delete
+                            Logout
                         </Button>
                     )}
                 </Stack>

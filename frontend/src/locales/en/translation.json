@@ -70,7 +70,9 @@
         "read_full_news": "Read full news",
         "public": "Public",
         "send_feedback": "Send Feedback",
-        "back": "Back"
+        "back": "Back",
+        "more": "More",
+        "go_back": "Go back"
     },
 
     "news": {
@@ -229,7 +231,11 @@
         "spam": "Spam or copyright issue",
         "inappropriate": "Inappropriate listings message/category",
         "other": "Other",
-        "report_success": "Report news successfully"
+        "report_success": "Report news successfully",
+        "page_not_found": "Page not found",
+        "the_link_not_found": "The link",
+        "the_link_not_found_2": "you clicked may be broken of the page ",
+        "the_link_not_found_3": "may have been removed or renamed."
     },
 
     "signout": {

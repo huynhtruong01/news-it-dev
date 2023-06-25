@@ -1,3 +1,4 @@
+import { getLs, setLs } from '@/utils'
 import {
     AxiosError,
     AxiosInstance,
@@ -5,7 +6,6 @@ import {
     InternalAxiosRequestConfig,
 } from 'axios'
 import { authApi } from '.'
-import { getLs, setLs } from '@/utils'
 
 const onRequestConfig = (config: InternalAxiosRequestConfig) => {
     if (!config.headers['Authorization']) {

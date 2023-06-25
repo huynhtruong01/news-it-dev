@@ -6,6 +6,7 @@ import {
     INews,
     INewsActions,
     INotify,
+    INotifyType,
     INotifyUpdateRead,
     IUser,
 } from '@/models'
@@ -32,7 +33,7 @@ import { connect } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 import { NotifyAction } from '.'
-import { DEFAULT_LANGUAGES } from '@/consts'
+import { DEFAULT_LANGUAGES, INCLUDE_COMMENT_LINK } from '@/consts'
 
 export interface INotificationItemProps {
     pUser: IUser | null
@@ -292,7 +293,13 @@ function NotificationItem({
                             component="span"
                             onClick={() =>
                                 handleUpdateReadNotify(
-                                    `/news/${notify.news?.slug as string}`
+                                    `/news/${notify.news?.slug as string}${
+                                        INCLUDE_COMMENT_LINK.includes(
+                                            notify.type as INotifyType
+                                        )
+                                            ? '#comments'
+                                            : ''
+                                    }`
                                 )
                             }
                         >

@@ -26,4 +26,10 @@ export const reducers = {
     setShowModalPublicNews(state: ICommonStore, action: PayloadAction<boolean>) {
         state.isShowModalPublicNews = action.payload
     },
+    setLoadingCommon(state: ICommonStore, action: PayloadAction<boolean>) {
+        state.loadingCommon = action.payload
+    },
+    setLoadingComment(state: ICommonStore, action: PayloadAction<boolean>) {
+        state.loadingComment = action.payload
+    },
 }

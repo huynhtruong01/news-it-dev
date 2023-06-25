@@ -16,6 +16,7 @@ export interface IUserFollowingProps extends BoxProps {
 export function UserFollowing({ user, ...rest }: IUserFollowingProps) {
     const { t } = useTranslation()
     const [users, setUsers] = useState<IUser[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
 
     const userFollowing = useMemo(() => {
         const newUsers = [...users].sort(
@@ -32,6 +33,7 @@ export function UserFollowing({ user, ...rest }: IUserFollowingProps) {
         if (!user) {
             ;(async () => {
                 try {
+                    setLoading(true)
                     const res = await userApi.topUsers()
                     setUsers(res.data.users)
                 } catch (error) {
@@ -39,6 +41,7 @@ export function UserFollowing({ user, ...rest }: IUserFollowingProps) {
                         variant: 'error',
                     })
                 }
+                setLoading(false)
             })()
         }
     }, [])
@@ -84,66 +87,69 @@ export function UserFollowing({ user, ...rest }: IUserFollowingProps) {
                 )}
             </Stack>
             <Box component="ul" marginTop={0.5}>
-                {userFollowing.length === 0 && (
+                {!loading && userFollowing.length === 0 && (
                     <EmptyList title={t('empty.no_user_following')} />
                 )}
-                {userFollowing.map((u) => (
-                    <Box
-                        component={'li'}
-                        key={u.id}
-                        sx={{
-                            padding: theme.spacing(1, 2),
-                            borderRadius: theme.spacing(0.75),
-                            cursor: 'pointer',
-                            color: alpha(theme.palette.secondary.main, 0.9),
+                {!loading &&
+                    userFollowing.map((u) => (
+                        <Box
+                            component={'li'}
+                            key={u.id}
+                            sx={{
+                                padding: theme.spacing(1, 2),
+                                borderRadius: theme.spacing(0.75),
+                                cursor: 'pointer',
+                                color: alpha(theme.palette.secondary.main, 0.9),
 
-                            '&:hover': {
-                                backgroundColor: '#3b49df1a',
-                                a: {
-                                    color: theme.palette.primary.main,
-                                    'span:first-of-type': {
-                                        textDecoration: 'underline',
+                                '&:hover': {
+                                    backgroundColor: '#3b49df1a',
+                                    a: {
+                                        color: theme.palette.primary.main,
+                                        'span:first-of-type': {
+                                            textDecoration: 'underline',
+                                        },
                                     },
                                 },
-                            },
 
-                            a: {
-                                display: 'block',
-                            },
-                        }}
-                    >
-                        <Link to={`${linkUser(u)}`}>
-                            <Stack
-                                direction={'row'}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                                sx={{
-                                    span: {
-                                        color: theme.palette.primary.main,
-                                        fontWeight: 500,
-                                    },
-                                }}
-                            >
-                                <Typography component="span">@{u.username}</Typography>
-                                {!user && (
-                                    <Typography
-                                        component="span"
-                                        sx={{
-                                            padding: theme.spacing(0, 1),
-                                            backgroundColor: '#3b49df1a',
-                                            borderRadius: theme.spacing(0.75),
-                                            fontSize: theme.typography.body2,
+                                a: {
+                                    display: 'block',
+                                },
+                            }}
+                        >
+                            <Link to={`${linkUser(u)}`}>
+                                <Stack
+                                    direction={'row'}
+                                    justifyContent={'space-between'}
+                                    alignItems={'center'}
+                                    sx={{
+                                        span: {
+                                            color: theme.palette.primary.main,
                                             fontWeight: 500,
-                                            color: theme.palette.primary.dark,
-                                        }}
-                                    >
-                                        {u.numFollowers}
+                                        },
+                                    }}
+                                >
+                                    <Typography component="span">
+                                        @{u.username}
                                     </Typography>
-                                )}
-                            </Stack>
-                        </Link>
-                    </Box>
-                ))}
+                                    {!user && (
+                                        <Typography
+                                            component="span"
+                                            sx={{
+                                                padding: theme.spacing(0, 1),
+                                                backgroundColor: '#3b49df1a',
+                                                borderRadius: theme.spacing(0.75),
+                                                fontSize: theme.typography.body2,
+                                                fontWeight: 500,
+                                                color: theme.palette.primary.dark,
+                                            }}
+                                        >
+                                            {u.numFollowers}
+                                        </Typography>
+                                    )}
+                                </Stack>
+                            </Link>
+                        </Box>
+                    ))}
             </Box>
         </Box>
     )

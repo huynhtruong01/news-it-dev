@@ -4,7 +4,7 @@ import { ILoginValues, ISignupValues } from '../models'
 const BASE_URL = '/auth'
 
 export const login = (data: ILoginValues) => {
-    return AxiosClient.post(`${BASE_URL}/login`, data).then((res) => res.data)
+    return AxiosClient.post(`${BASE_URL}/login-admin`, data).then((res) => res.data)
 }
 
 export const signup = (data: ISignupValues) => {

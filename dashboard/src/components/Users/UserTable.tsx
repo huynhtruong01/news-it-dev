@@ -1,11 +1,11 @@
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Button, TableCell, TableRow } from '@mui/material'
+import { Button, TableCell, TableRow, Box } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { Dispatch, MouseEvent, SetStateAction } from 'react'
 import { userHeaders } from '../../data'
-import { ActiveSelectName, RoleSelectName } from '../../enums'
+import { ActiveSelectName, RoleSelectName, StatusUser } from '../../enums'
 import { IFilters, IUser, IUserData } from '../../models'
-import { formatDate, generateOptions } from '../../utils'
+import { formatDate, generateOptions, statusColor, theme } from '../../utils'
 import { TableCellImage, TableWrapper } from '../Common'
 
 export interface IUserTableProps {
@@ -57,7 +57,7 @@ export function UserTable({
     }
 
     return (
-        <TableWrapper<IUser>
+        <TableWrapper
             total={total}
             listHead={userHeaders}
             filters={filters}
@@ -83,9 +83,26 @@ export function UserTable({
                         {user.isAdmin ? RoleSelectName.ADMIN : RoleSelectName.USER}
                     </TableCell>
                     <TableCell align="center">
-                        {user.isActive
-                            ? ActiveSelectName.ACTIVE
-                            : ActiveSelectName.INACTIVE}
+                        <Box
+                            sx={{
+                                backgroundColor: statusColor(
+                                    user.isActive
+                                        ? StatusUser.ACTIVE
+                                        : StatusUser.INACTIVE
+                                )[0],
+                                color: statusColor(
+                                    user.isActive
+                                        ? StatusUser.ACTIVE
+                                        : StatusUser.INACTIVE
+                                )[1],
+                                padding: theme.spacing(0.5, 1),
+                                borderRadius: theme.spacing(0.5),
+                            }}
+                        >
+                            {user.isActive
+                                ? ActiveSelectName.ACTIVE
+                                : ActiveSelectName.INACTIVE}
+                        </Box>
                     </TableCell>
                     <TableCell align="center">
                         <Button

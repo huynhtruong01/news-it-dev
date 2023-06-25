@@ -20,7 +20,7 @@ export type IImageFieldProps<TFormValues extends FieldValues> = {
     disabled: boolean
     initValue: string | undefined
     placeholder?: string
-    width?: number
+    width?: number | string
     height?: number
 } & BoxProps
 

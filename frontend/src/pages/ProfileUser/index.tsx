@@ -84,7 +84,13 @@ function ProfileUser({
     }, [pUser, user])
 
     const newNews = useMemo(() => {
-        return user?.news?.length ? user.news : []
+        return user?.news?.length
+            ? user.news.sort(
+                  (a, b) =>
+                      new Date(b.createdAt || Date.now()).getTime() -
+                      new Date(a.createdAt || Date.now()).getTime()
+              )
+            : []
     }, [user])
 
     const handleFollowClick = async () => {

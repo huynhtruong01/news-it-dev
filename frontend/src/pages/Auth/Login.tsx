@@ -28,7 +28,7 @@ function Login({ pUser, pSaveUserLogin }: ILoginProps) {
 
     useEffect(() => {
         if (pUser) navigate(-1)
-    }, [pUser])
+    }, [])
 
     const handleLoginSubmit = async (values: ILoginValues) => {
         try {

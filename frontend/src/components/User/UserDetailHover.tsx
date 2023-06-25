@@ -1,3 +1,4 @@
+import { DEFAULT_LANGUAGES } from '@/consts'
 import { IsFollow } from '@/enums'
 import { useCheckSelf, useLinkUser } from '@/hooks'
 import { IFollow, IFollowNotify, IUser } from '@/models'
@@ -5,7 +6,7 @@ import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { followUser, unfollowUser } from '@/store/user'
 import { followUserApi, getProfile, unfollowUserApi } from '@/store/user/thunkApi'
-import { formatDate, theme } from '@/utils'
+import { formatDate, shortDateFormat, theme } from '@/utils'
 import {
     Avatar,
     Box,
@@ -24,6 +25,7 @@ import { Link } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 
 export interface IUserDetailHoverProps extends BoxProps {
+    user: IUser
     pUser: IUser | null
     pSocket: Socket | null
     pGetProfile: () => Promise<PayloadAction<unknown>>
@@ -32,7 +34,7 @@ export interface IUserDetailHoverProps extends BoxProps {
     pUnFollowUser: (data: IUser) => void
     pFollowUserApi: (data: IFollowNotify) => Promise<PayloadAction<unknown>>
     pUnFollowUserApi: (data: IUser) => Promise<PayloadAction<unknown>>
-    user: IUser
+    pLanguage: string
 }
 
 function UserDetailHover({
@@ -44,6 +46,7 @@ function UserDetailHover({
     pUnFollowUser,
     pFollowUserApi,
     pUnFollowUserApi,
+    pLanguage,
     ...rest
 }: IUserDetailHoverProps) {
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
@@ -97,7 +100,9 @@ function UserDetailHover({
             {...rest}
             component={Paper}
             elevation={1}
-            borderTop={`2rem solid ${theme.palette.primary.dark}`}
+            borderTop={`2rem solid ${
+                user.bandingColor ? user.bandingColor : theme.palette.primary.dark
+            }`}
         >
             <Box>
                 <Stack
@@ -211,7 +216,9 @@ function UserDetailHover({
                 <Box component="li">
                     <Box>{t('input.dated_join')}</Box>
                     <Typography>
-                        {formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
+                        {pLanguage === DEFAULT_LANGUAGES
+                            ? shortDateFormat(user.dateJoined || new Date())
+                            : formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
                     </Typography>
                 </Box>
             </Box>
@@ -223,6 +230,7 @@ const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
         pSocket: state.socket.socket,
+        pLanguage: state.common.languages,
     }
 }
 

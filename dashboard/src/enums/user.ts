@@ -1,6 +1,6 @@
 export enum RoleSelectValue {
     ADMIN = 1,
-    USER = 0,
+    USER = 4,
 }
 
 export enum RoleSelectName {

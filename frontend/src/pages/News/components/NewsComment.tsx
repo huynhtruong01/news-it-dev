@@ -13,26 +13,28 @@ import { enqueueSnackbar } from 'notistack'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export interface INewsCommentProps extends BoxProps {
     news: INews
+    isLoading?: boolean
     pUser: IUser | null
     pComments: IComment[]
     pTotal: number
     pGetAllComments: (params: IFilters) => Promise<PayloadAction<unknown>>
     pGetAllCommentsLoadMore: (params: IFilters) => Promise<PayloadAction<unknown>>
     pIncreaseNumComments: () => void
+    pLoadingComment: boolean
 }
 
 function NewsComment({
     news,
     pUser,
     pComments,
-    pGetAllComments,
     pTotal,
     pGetAllCommentsLoadMore,
     pIncreaseNumComments,
+    pLoadingComment,
     ...rest
 }: INewsCommentProps) {
     const { t } = useTranslation()
@@ -44,37 +46,22 @@ function NewsComment({
     })
     const commentInputRef = useRef<HTMLInputElement | null>(null)
     const commentRef = useRef<HTMLDivElement | null>(null)
-    const [loadingComment, setLoadingComment] = useState<boolean>(true)
     const [loadMore, setLoadMore] = useState<boolean>(false)
     const [loadingCreateComment, setLoadingCreateComment] = useState<boolean>(false)
 
     const location = useLocation()
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (commentRef.current && location.hash === '#comments') {
             commentRef.current.scrollIntoView({ behavior: 'smooth' })
-
-            if (commentInputRef.current) {
-                commentInputRef.current.focus()
-            }
+            setTimeout(() => {
+                if (commentInputRef.current) {
+                    commentInputRef.current.focus()
+                }
+            }, 0)
         }
-    }, [location])
-
-    useEffect(() => {
-        // get all comments by news id
-        ;(async () => {
-            setLoadingComment(true)
-            try {
-                const newFilters = { ...filters, newsId: news.id }
-                await pGetAllComments(newFilters)
-            } catch (error) {
-                enqueueSnackbar((error as Error).message, {
-                    variant: 'error',
-                })
-            }
-            setLoadingComment(false)
-        })()
-    }, [])
+    }, [location, navigate])
 
     useEffect(() => {
         if (loadMore) {
@@ -186,8 +173,8 @@ function NewsComment({
                         }}
                     />
                 )}
-                {loadingComment && <SkeletonCommentList quantities={5} />}
-                {!loadingComment && <CommentList comments={pComments} t={t} />}
+                {pLoadingComment && <SkeletonCommentList quantities={5} />}
+                {!pLoadingComment && <CommentList comments={pComments} t={t} />}
 
                 {loadMore && <ProgressLoading />}
                 {hasLoadMore && !!commentLength && (
@@ -214,6 +201,7 @@ const mapStateToProps = (state: AppState) => {
         pUser: state.user.user,
         pComments: state.comment.comments,
         pTotal: state.comment.total,
+        pLoadingComment: state.common.loadingComment,
     }
 }
 

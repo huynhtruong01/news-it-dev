@@ -61,8 +61,8 @@ export function UserNewsInfo({ user, link, pLanguages }: IUserNewsInfoProps) {
                         cursor: 'pointer',
 
                         a: {
-                            fontWeight: 500,
-                            padding: theme.spacing(0.75, 0.5),
+                            fontWeight: 600,
+                            padding: theme.spacing(0.75, 0.5, 1),
                             borderRadius: theme.spacing(0.25),
                             transition: '.2s ease-in-out',
 
@@ -86,9 +86,9 @@ export function UserNewsInfo({ user, link, pLanguages }: IUserNewsInfoProps) {
                                     md: 'none',
                                 },
                                 position: 'absolute',
-                                top: 20,
+                                top: 15,
                                 left: 40,
-                                maxWidth: 360,
+                                maxWidth: 350,
                                 width: '100%',
                                 padding: 2,
                                 paddingTop: 0,

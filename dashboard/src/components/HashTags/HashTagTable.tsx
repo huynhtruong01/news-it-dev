@@ -68,14 +68,17 @@ export function HashTagTable({
                 >
                     <TableCell align="center">{tag.id}</TableCell>
                     <TableCellImage
+                        type="icon"
                         src={tag.iconImage as string}
                         alt={tag.name}
                         sx={{
                             display: 'flex',
                             justifyContent: 'flex-start',
                             img: {
-                                width: 50,
-                                height: 50,
+                                width: 'auto',
+                                height: 'auto',
+                                maxWidth: 80,
+                                maxHeight: 65,
                                 borderRadius: 0.5,
                             },
                         }}

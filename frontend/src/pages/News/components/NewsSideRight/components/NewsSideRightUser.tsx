@@ -1,3 +1,4 @@
+import { DEFAULT_LANGUAGES } from '@/consts'
 import { IsFollow } from '@/enums'
 import { useCheckSelf, useLinkUser } from '@/hooks'
 import { IFollow, IFollowNotify, IUser } from '@/models'
@@ -5,7 +6,7 @@ import { AppDispatch, AppState } from '@/store'
 import { setShowModalAuth } from '@/store/common'
 import { followUser, unfollowUser } from '@/store/user'
 import { followUserApi, getProfile, unfollowUserApi } from '@/store/user/thunkApi'
-import { formatDate, theme } from '@/utils'
+import { formatDate, shortDateFormat, theme } from '@/utils'
 import {
     Avatar,
     Box,
@@ -34,6 +35,7 @@ export interface INewsSideRightUserProps extends BoxProps {
     pUnFollowUser: (data: IUser) => void
     pFollowUserApi: (data: IFollowNotify) => Promise<PayloadAction<unknown>>
     pUnFollowUserApi: (data: IUser) => Promise<PayloadAction<unknown>>
+    pLanguages: string
 }
 
 function NewsSideRightUser({
@@ -46,6 +48,7 @@ function NewsSideRightUser({
     pUnFollowUser,
     pFollowUserApi,
     pUnFollowUserApi,
+    pLanguages,
     ...rest
 }: INewsSideRightUserProps) {
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
@@ -103,7 +106,9 @@ function NewsSideRightUser({
                 elevation={1}
                 width={'100%'}
                 padding={theme.spacing(0, 2, 2)}
-                borderTop={`2rem solid ${theme.palette.primary.main}`}
+                borderTop={`2rem solid ${
+                    pUser?.bandingColor ? pUser.bandingColor : theme.palette.primary.main
+                }`}
                 borderRadius={theme.spacing(0.75)}
             >
                 <Box>
@@ -240,7 +245,12 @@ function NewsSideRightUser({
                     <Box component="li">
                         <Box>{t('input.dated_join')}</Box>
                         <Typography>
-                            {formatDate(user.dateJoined || new Date(), 'MMM DD, YYYY')}
+                            {pLanguages === DEFAULT_LANGUAGES
+                                ? shortDateFormat(user.dateJoined || new Date())
+                                : formatDate(
+                                      user.dateJoined || new Date(),
+                                      'MMM DD, YYYY'
+                                  )}
                         </Typography>
                     </Box>
                 </Box>
@@ -253,6 +263,7 @@ const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
         pSocket: state.socket.socket,
+        pLanguages: state.common.languages,
     }
 }
 

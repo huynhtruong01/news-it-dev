@@ -10,3 +10,8 @@ export enum Status {
     PUBLIC = 'public',
     UNPUBLIC = 'unpublic',
 }
+
+export enum StatusUser {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive',
+}

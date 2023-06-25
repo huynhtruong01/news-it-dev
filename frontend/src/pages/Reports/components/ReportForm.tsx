@@ -53,7 +53,10 @@ function ReportForm({ pSetNewsReport, pNewsReport, pUser }: IReportFormProps) {
                 const report: IReportData = {
                     newsId: pNewsReport.newsId as number,
                     userId: pUser.id as number,
-                    reason: values.report?.value as string,
+                    reason:
+                        values.report?.id === StatusReport.OTHER
+                            ? (values.message as string)
+                            : (values.report?.value as string),
                     status: values.report?.id as IReportStatus,
                 }
                 await reportApi.createReport(report)

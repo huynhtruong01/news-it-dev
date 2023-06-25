@@ -22,13 +22,15 @@ import { FcGoogle } from 'react-icons/fc'
 import { connect } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { setLoadingCommon } from '@/store/common'
 
 export interface ISocialLoginProps {
     pGoogleLogin: (token: string) => Promise<PayloadAction<unknown>>
     pFacebookLogin: (data: IFacebookLoginParams) => Promise<PayloadAction<unknown>>
+    pSetLoading: (isLoading: boolean) => void
 }
 
-function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
+function SocialLogin({ pGoogleLogin, pFacebookLogin, pSetLoading }: ISocialLoginProps) {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
@@ -58,7 +60,9 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
     ) => {
         try {
             if ('tokenId' in response) {
+                pSetLoading(true)
                 await pGoogleLogin(response.tokenId)
+                pSetLoading(false)
                 enqueueSnackbar(t('message.login_success'), {
                     variant: 'success',
                 })
@@ -72,28 +76,28 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
         }
     }
 
-    const handleFacebookLogin = async (
-        res: ReactFacebookLoginInfo | ReactFacebookFailureResponse
-    ) => {
-        try {
-            if ('accessToken' in res && 'userID' in res) {
-                const data = {
-                    accessToken: res.accessToken,
-                    userId: res.userID,
-                }
+    // const handleFacebookLogin = async (
+    //     res: ReactFacebookLoginInfo | ReactFacebookFailureResponse
+    // ) => {
+    //     try {
+    //         if ('accessToken' in res && 'userID' in res) {
+    //             const data = {
+    //                 accessToken: res.accessToken,
+    //                 userId: res.userID,
+    //             }
 
-                await pFacebookLogin(data)
-                enqueueSnackbar('Log in successfully.', {
-                    variant: 'success',
-                })
-                navigate(-1)
-            }
-        } catch (error) {
-            enqueueSnackbar((error as Error).message, {
-                variant: 'error',
-            })
-        }
-    }
+    //             await pFacebookLogin(data)
+    //             enqueueSnackbar('Log in successfully.', {
+    //                 variant: 'success',
+    //             })
+    //             navigate(-1)
+    //         }
+    //     } catch (error) {
+    //         enqueueSnackbar((error as Error).message, {
+    //             variant: 'error',
+    //         })
+    //     }
+    // }
 
     return (
         <Box
@@ -141,7 +145,7 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
                 cookiePolicy={'single_host_origin'}
             />
 
-            <FacebookLogin
+            {/* <FacebookLogin
                 appId={import.meta.env.VITE_CLIENT_FACEBOOK_ID}
                 autoLoad={false}
                 fields="name,email,picture,first_name,last_name"
@@ -150,7 +154,7 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin }: ISocialLoginProps) {
                 cssClass="custom-facebook-login"
                 textButton={t('auth.sign_in_facebook') as string}
                 icon={<FaFacebookSquare />}
-            />
+            /> */}
         </Box>
     )
 }
@@ -159,6 +163,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
         pGoogleLogin: (token: string) => dispatch(googleLogin(token)),
         pFacebookLogin: (data: IFacebookLoginParams) => dispatch(facebookLogin(data)),
+        pSetLoading: (isLoading: boolean) => dispatch(setLoadingCommon(isLoading)),
     }
 }
 

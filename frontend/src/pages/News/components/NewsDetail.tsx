@@ -1,4 +1,5 @@
 import { HashTagList } from '@/components/Common'
+import { DEFAULT_LANGUAGES } from '@/consts'
 import { useLinkUser } from '@/hooks'
 import { INews, IUser } from '@/models'
 import { AppState } from '@/store'
@@ -18,7 +19,6 @@ import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { NewsAction, NewsComment, NewsContent } from '.'
-import { DEFAULT_LANGUAGES } from '@/consts'
 
 export interface INewsDetailProps extends BoxProps {
     news: INews

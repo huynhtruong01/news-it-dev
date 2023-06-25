@@ -50,6 +50,9 @@ export function SearchFilter({
                     value={value}
                     onChange={handleChange}
                     placeholder={placeholder}
+                    sx={{
+                        backgroundColor: '#fff',
+                    }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">

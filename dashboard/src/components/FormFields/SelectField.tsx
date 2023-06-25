@@ -33,6 +33,7 @@ export function SelectField<TFormValues extends FieldValues = FieldValues>({
                     disabled={disabled}
                     error={!!error?.message}
                     margin="normal"
+                    size="small"
                 >
                     <InputLabel error={!!error?.message}>{label}</InputLabel>
                     <Select

@@ -19,11 +19,17 @@ import {
     ConfirmEmailMessage,
     Reports,
 } from '@/pages'
-import { AppDispatch } from '@/store'
+import { AppDispatch, AppState } from '@/store'
 import { setValuesSocket } from '@/store/socket'
 import { setLanguages } from '@/store/common'
 import { getLs } from '@/utils'
-import { Header, ScrollTop, SocketClient } from '@/components/Common'
+import {
+    BackdropLoading,
+    Header,
+    NotFound,
+    ScrollTop,
+    SocketClient,
+} from '@/components/Common'
 import { MainContent } from '@/features'
 import { EmptyLayout, MainLayout } from '@/layouts'
 import { Box } from '@mui/material'
@@ -32,13 +38,15 @@ import { useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import io, { Socket } from 'socket.io-client'
+import { IUser } from '@/models'
 
 export interface IAppProps {
+    pUser: IUser | null
     pSetSocket: (socket: Socket) => void
     pSetLanguages: (lang: string) => void
 }
 
-function App({ pSetSocket, pSetLanguages }: IAppProps) {
+function App({ pSetSocket, pSetLanguages, pUser }: IAppProps) {
     const dispatch: AppDispatch = useDispatch()
 
     useEffect(() => {
@@ -79,54 +87,66 @@ function App({ pSetSocket, pSetLanguages }: IAppProps) {
                         </MainLayout>
                     }
                 />
-                <Route
-                    path={'/login'}
-                    element={
-                        <MainLayout>
-                            <Login />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/signup'}
-                    element={
-                        <MainLayout>
-                            <Signup />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/forgot-password/:token'}
-                    element={
-                        <MainLayout>
-                            <ForgotPassword />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/confirm-email'}
-                    element={
-                        <MainLayout>
-                            <ConfirmEmail />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/confirm-email-message'}
-                    element={
-                        <MainLayout>
-                            <ConfirmEmailMessage />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/active/:activeToken'}
-                    element={
-                        <MainLayout>
-                            <ActiveAccount />
-                        </MainLayout>
-                    }
-                />
+                {!pUser && (
+                    <Route
+                        path={'/login'}
+                        element={
+                            <MainLayout>
+                                <Login />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {!pUser && (
+                    <Route
+                        path={'/signup'}
+                        element={
+                            <MainLayout>
+                                <Signup />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {!pUser && (
+                    <Route
+                        path={'/forgot-password/:token'}
+                        element={
+                            <MainLayout>
+                                <ForgotPassword />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {!pUser && (
+                    <Route
+                        path={'/confirm-email'}
+                        element={
+                            <MainLayout>
+                                <ConfirmEmail />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {!pUser && (
+                    <Route
+                        path={'/confirm-email-message'}
+                        element={
+                            <MainLayout>
+                                <ConfirmEmailMessage />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {!pUser && (
+                    <Route
+                        path={'/active/:activeToken'}
+                        element={
+                            <MainLayout>
+                                <ActiveAccount />
+                            </MainLayout>
+                        }
+                    />
+                )}
                 <Route
                     path={'/news/:slug'}
                     element={
@@ -135,22 +155,26 @@ function App({ pSetSocket, pSetLanguages }: IAppProps) {
                         </MainLayout>
                     }
                 />
-                <Route
-                    path={'/settings/*'}
-                    element={
-                        <MainLayout>
-                            <Settings />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/dashboard/*'}
-                    element={
-                        <MainLayout>
-                            <Dashboard />
-                        </MainLayout>
-                    }
-                />
+                {pUser && (
+                    <Route
+                        path={'/settings/*'}
+                        element={
+                            <MainLayout>
+                                <Settings />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {pUser && (
+                    <Route
+                        path={'/dashboard/*'}
+                        element={
+                            <MainLayout>
+                                <Dashboard />
+                            </MainLayout>
+                        }
+                    />
+                )}
                 <Route
                     path={'/tags/*'}
                     element={
@@ -159,46 +183,56 @@ function App({ pSetSocket, pSetLanguages }: IAppProps) {
                         </MainLayout>
                     }
                 />
-                <Route
-                    path={'/reading-list'}
-                    element={
-                        <MainLayout>
-                            <ReadingList />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/signout-confirm'}
-                    element={
-                        <MainLayout>
-                            <Signout />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/create-news'}
-                    element={
-                        <MainLayout>
-                            <CreateNews />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/update-news'}
-                    element={
-                        <MainLayout>
-                            <CreateNews />
-                        </MainLayout>
-                    }
-                />
-                <Route
-                    path={'/notifications'}
-                    element={
-                        <MainLayout>
-                            <Notifications />
-                        </MainLayout>
-                    }
-                />
+                {pUser && (
+                    <Route
+                        path={'/reading-list'}
+                        element={
+                            <MainLayout>
+                                <ReadingList />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {pUser && (
+                    <Route
+                        path={'/signout-confirm'}
+                        element={
+                            <MainLayout>
+                                <Signout />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {pUser && (
+                    <Route
+                        path={'/create-news'}
+                        element={
+                            <MainLayout>
+                                <CreateNews />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {pUser && (
+                    <Route
+                        path={'/update-news'}
+                        element={
+                            <MainLayout>
+                                <CreateNews />
+                            </MainLayout>
+                        }
+                    />
+                )}
+                {pUser && (
+                    <Route
+                        path={'/notifications'}
+                        element={
+                            <MainLayout>
+                                <Notifications />
+                            </MainLayout>
+                        }
+                    />
+                )}
                 <Route
                     path={'/search'}
                     element={
@@ -209,14 +243,16 @@ function App({ pSetSocket, pSetLanguages }: IAppProps) {
                 />
 
                 {/* EMPTY LAYOUT */}
-                <Route
-                    path={'/profile'}
-                    element={
-                        <EmptyLayout>
-                            <Profile />
-                        </EmptyLayout>
-                    }
-                />
+                {pUser && (
+                    <Route
+                        path={'/profile'}
+                        element={
+                            <EmptyLayout>
+                                <Profile />
+                            </EmptyLayout>
+                        }
+                    />
+                )}
                 <Route
                     path={'/profile/:username'}
                     element={
@@ -226,19 +262,30 @@ function App({ pSetSocket, pSetLanguages }: IAppProps) {
                     }
                 />
 
-                <Route
-                    path={'/report-abuse'}
-                    element={
-                        <EmptyLayout>
-                            <Reports />
-                        </EmptyLayout>
-                    }
-                />
+                {pUser && (
+                    <Route
+                        path={'/report-abuse'}
+                        element={
+                            <EmptyLayout>
+                                <Reports />
+                            </EmptyLayout>
+                        }
+                    />
+                )}
+
+                <Route path="*" element={<NotFound />} />
             </Routes>
 
+            <BackdropLoading />
             <ScrollTop />
         </Box>
     )
+}
+
+const mapMapToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
@@ -248,4 +295,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(App)
+export default connect(mapMapToProps, mapDispatchToProps)(App)

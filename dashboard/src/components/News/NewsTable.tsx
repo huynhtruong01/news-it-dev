@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Box, Button, TableCell, TableRow, Typography } from '@mui/material'
+import { Box, Button, Stack, TableCell, TableRow, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { Dispatch, MouseEvent, SetStateAction, useMemo } from 'react'
+import { Dispatch, MouseEvent, SetStateAction, useMemo, useState } from 'react'
 import { keyNewsInitValues, newsHeaders } from '../../data'
 import {
     IFilters,
@@ -9,10 +9,13 @@ import {
     INewsData,
     INewsTable,
     IOptionItem,
+    IReport,
     IStatus,
 } from '../../models'
 import { formatDate, setNewValues, statusColor, theme } from '../../utils'
 import { TableCellImage, TableWrapper } from '../Common'
+import FlagIcon from '@mui/icons-material/Flag'
+import { ModalReports } from '../Modals'
 
 export interface INewsTableProps {
     news: INews[]
@@ -35,6 +38,9 @@ export function NewsTable({
     setOpenDelete,
     setNews,
 }: INewsTableProps) {
+    const [reporters, setReporters] = useState<IReport[]>([])
+    const [openReporters, setOpenReporters] = useState<boolean>(false)
+
     const newNews = useMemo(() => {
         return news.length ? news : []
     }, [news])
@@ -67,6 +73,11 @@ export function NewsTable({
         setOpenDelete(true)
     }
 
+    const handleOpenReporters = (reporters: IReport[]) => {
+        setOpenReporters(true)
+        setReporters(reporters)
+    }
+
     return (
         <TableWrapper
             total={total}
@@ -90,7 +101,7 @@ export function NewsTable({
                             display: 'flex',
                             justifyContent: 'flex-start',
                             img: {
-                                width: 100,
+                                width: 80,
                                 height: 50,
                                 borderRadius: 0.5,
                             },
@@ -160,25 +171,49 @@ export function NewsTable({
                     </TableCell>
                     <TableCell align="center">{formatDate(item.createdAt)}</TableCell>
                     <TableCell align="center">
-                        <Button
-                            variant="contained"
-                            sx={{
-                                minWidth: 'auto',
-                                backgroundColor: red[700],
+                        <Stack direction={'row'} gap={0.5}>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    minWidth: 'auto',
+                                    backgroundColor: red[700],
 
-                                '&:hover': {
-                                    backgroundColor: red[900],
-                                },
-                            }}
-                            onClick={(e) => {
-                                handleDelete(e, item)
-                            }}
-                        >
-                            <DeleteIcon fontSize="small" />
-                        </Button>
+                                    '&:hover': {
+                                        backgroundColor: red[900],
+                                    },
+                                }}
+                                onClick={(e) => {
+                                    handleDelete(e, item)
+                                }}
+                            >
+                                <DeleteIcon fontSize="small" />
+                            </Button>
+                            {/* <Button
+                                variant="contained"
+                                sx={{
+                                    minWidth: 'auto',
+                                    backgroundColor: theme.palette.primary.light,
+
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.primary.main,
+                                    },
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleOpenReporters(item.reporterNews as IReport[])
+                                }}
+                            >
+                                <FlagIcon fontSize="small" />
+                            </Button> */}
+                        </Stack>
                     </TableCell>
                 </TableRow>
             ))}
+            <ModalReports
+                open={openReporters}
+                setOpen={setOpenReporters}
+                reporters={reporters}
+            />
         </TableWrapper>
     )
 }

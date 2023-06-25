@@ -182,7 +182,7 @@ function HashTagModalForm({
                         disabled={isSubmitting}
                         initValue={initValues.iconImage as string}
                         placeholder={'Enter cover image'}
-                        width={64}
+                        width={'auto'}
                         height={64}
                     />
                     <ColorField<IHashTagData>

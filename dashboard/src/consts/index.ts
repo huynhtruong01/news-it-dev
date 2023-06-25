@@ -9,3 +9,5 @@ export const SIZE_4_MB = 4 * 1024 * 1024
 
 export const WIDTH_NAV = 250
 export const HEIGHT_HEADER = 64
+export const NO_ICON =
+    'https://res.cloudinary.com/huynhtruong01/image/upload/v1687699818/no_image_mrkior.png'

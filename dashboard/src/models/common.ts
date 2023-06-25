@@ -21,7 +21,7 @@ export interface IFilters {
     limit: number
     page: number
     isActive?: boolean
-    isAdmin?: boolean
+    isAdmin?: boolean | number
     search?: string
     createdAt?: IOrderReq
     status?: string

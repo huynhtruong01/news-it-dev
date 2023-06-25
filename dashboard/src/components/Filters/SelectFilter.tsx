@@ -50,6 +50,7 @@ export function SelectFilter({
                     onChange={handleSelectChange}
                     sx={{
                         textTransform: 'capitalize',
+                        backgroundColor: '#fff',
                     }}
                 >
                     <MenuItem

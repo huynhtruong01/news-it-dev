@@ -11,6 +11,8 @@ export interface ICommonStore {
     isShowModalDeleteNotify: boolean
     isShowModalUnSaveReading: boolean
     isShowModalPublicNews: boolean
+    loadingCommon: boolean
+    loadingComment: boolean
 }
 
 const initialState: ICommonStore = {
@@ -22,6 +24,8 @@ const initialState: ICommonStore = {
     isShowModalDeleteNotify: false,
     isShowModalUnSaveReading: false,
     isShowModalPublicNews: false,
+    loadingCommon: false,
+    loadingComment: false,
 }
 
 export const commonSlice = createSlice({
@@ -39,5 +43,7 @@ export const {
     setShowModalDeleteNotify,
     setShowModalUnSaveReading,
     setShowModalPublicNews,
+    setLoadingCommon,
+    setLoadingComment,
 } = commonSlice.actions
 export default commonSlice.reducer

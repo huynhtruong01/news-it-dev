@@ -10,6 +10,7 @@ export const reducers = {
         const newUsers = state.users
         newUsers.unshift(action.payload)
         state.users = newUsers
+        state.total = state.total + 1
     },
     updateUser(state: IUserStore, action: PayloadAction<IUser>) {
         const newUsers = state.users
@@ -25,6 +26,7 @@ export const reducers = {
         if (index >= 0) {
             newHashTags.splice(index, 1)
             state.users = newHashTags
+            state.total = state.total - 1
         }
     },
 }

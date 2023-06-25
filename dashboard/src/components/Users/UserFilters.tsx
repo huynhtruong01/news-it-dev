@@ -30,8 +30,8 @@ export function UserFilters({ filters, setFilters }: IUserFiltersProps) {
             return
         }
 
-        const newValue = value === 1 ? true : false
-        setFilters({ ...filters, isAdmin: newValue })
+        // const newValue = value === 1 ? true : false
+        setFilters({ ...filters, isAdmin: value })
     }
 
     return (

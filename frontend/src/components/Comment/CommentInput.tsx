@@ -22,7 +22,7 @@ import {
     useRef,
     useState,
 } from 'react'
-import { Mention, MentionsInput } from 'react-mentions'
+import { DataFunc, Mention, MentionsInput, SuggestionDataItem } from 'react-mentions'
 import { connect } from 'react-redux'
 
 export interface ICommentInputProps extends BoxProps {
@@ -41,6 +41,7 @@ export interface ICommentInputProps extends BoxProps {
 function CommentInput({
     initValue,
     onCommentChange,
+    commentInputRef,
     isReply = false,
     isEdit = false,
     setIsReply,
@@ -111,13 +112,18 @@ function CommentInput({
                 <Box component="form" onSubmit={handleCommentSubmit} flex={1}>
                     <Box marginBottom={1.5}>
                         <MentionsInput
+                            inputRef={commentInputRef}
                             value={value}
                             onChange={(e) => setValue(e.target.value)}
                             placeholder={t('placeholder.add_discussion') as string}
                             style={defaultInputStyle}
                             a11ySuggestionsListLabel={'Suggested mentions'}
                         >
-                            <Mention trigger="@" data={mentions} style={defaultInput} />
+                            <Mention
+                                trigger="@"
+                                data={mentions as SuggestionDataItem[] | DataFunc}
+                                style={defaultInput}
+                            />
                         </MentionsInput>
                     </Box>
                     <Stack

@@ -110,6 +110,7 @@ function HeaderSearch({ searchVal, setSearchVal, pUser, ...rest }: IHeaderSearch
                     limit: 5,
                     page: 1,
                     search: searchList,
+                    userId: pUser ? (pUser?.id as number) : null,
                 })
                 const newNews = res.data.news.map((n: IObjectCommon) => ({
                     id: n.id,
