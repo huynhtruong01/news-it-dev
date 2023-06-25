@@ -8,7 +8,6 @@ export const initNewsFormValues: INewsForm = {
     coverImage: undefined,
     thumbnailImage: undefined,
     hashTags: [],
-    readTimes: 1,
     hashTagOptionIds: [],
 }
 

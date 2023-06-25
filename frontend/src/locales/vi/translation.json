@@ -298,8 +298,9 @@
         "error_content_news": "Vui lòng nhập nội dung tin tức",
         "maximum_10": "Tối đa 10MB",
         "maximum_4": "Tối đa 4MB",
-        "type_image": "Kiểu ",
-        "at_least_1_minute": "At least 1 min"
+        "type_image": "Kiểu hình ảnh không hợp lệ",
+        "at_least_1_minute": "Ít nhất 1 phút",
+        "maximum_4_hash_tag": "Tối đa 4 hash tags"
     },
 
     "liked your news": "đã thích bài viết của bạn",

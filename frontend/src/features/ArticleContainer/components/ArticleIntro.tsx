@@ -130,15 +130,7 @@ function ArticleIntro({
                 {sapo && (
                     <Typography
                         sx={{
-                            fontSize: theme.typography.body2,
                             color: alpha(theme.palette.secondary.dark, 0.7),
-                            display: {
-                                md: '-webkit-box',
-                                xs: 'none',
-                            },
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
                             marginTop: 1.5,
                             padding: 1.5,
                             backgroundColor: alpha(theme.palette.secondary.main, 0.1),
@@ -146,7 +138,21 @@ function ArticleIntro({
                             borderLeft: `6px solid ${theme.palette.primary.main}`,
                         }}
                     >
-                        {sapo}
+                        <Typography
+                            component="span"
+                            sx={{
+                                display: {
+                                    md: '-webkit-box',
+                                    xs: 'none',
+                                },
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                                fontSize: theme.typography.body2,
+                            }}
+                        >
+                            {sapo}
+                        </Typography>
                     </Typography>
                 )}
             </Box>

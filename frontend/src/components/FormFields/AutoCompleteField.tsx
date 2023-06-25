@@ -74,6 +74,8 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
                                         backgroundColor: '#fff',
                                     },
                                 }}
+                                multiline
+                                minRows={3}
                             />
                         </Box>
                     )}

@@ -54,7 +54,8 @@ function ArticleContainer({ pUser }: IArticleContainer) {
         const handleScrollList = async () => {
             try {
                 if (
-                    window.innerHeight + window.scrollY >= document.body.scrollHeight &&
+                    window.innerHeight + window.scrollY + 5 >=
+                        document.body.scrollHeight &&
                     newsList.length <= total
                 ) {
                     setFilters((prev) => ({ ...prev, page: prev.page + 1 }))

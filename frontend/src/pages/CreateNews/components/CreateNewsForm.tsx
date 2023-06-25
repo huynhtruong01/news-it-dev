@@ -44,7 +44,6 @@ function CreateNewsForm({
     const schema = yup.object().shape({
         title: yup.string().required(t('error_input.error_name_news') as string),
         sapo: yup.string(),
-        readTimes: yup.number().min(1, t('error_input.at_least_1_minute') as string),
         thumbnailImage: yup
             .mixed<File>()
             .test(
@@ -86,7 +85,9 @@ function CreateNewsForm({
                 return checkSizeImg(file as File, SIZE_10_MB)
             }),
         content: yup.string().required(t('error_input.error_content_news') as string),
-        hashTagOptionIds: yup.array(),
+        hashTagOptionIds: yup
+            .array()
+            .max(4, t('error_input.maximum_4_hash_tag') as string),
     })
 
     useEffect(() => {
@@ -113,7 +114,6 @@ function CreateNewsForm({
         setValue('title', pInitValuesForm.title)
         setValue('sapo', pInitValuesForm.sapo)
         setValue('content', pInitValuesForm.content)
-        setValue('readTimes', pInitValuesForm.readTimes)
         setValue('hashTags', pInitValuesForm.hashTags)
         setValue('status', pInitValuesForm.status)
         setValue('coverImage', pInitValuesForm.coverImage)
@@ -164,30 +164,13 @@ function CreateNewsForm({
                             minRows={2}
                             multiline
                         />
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                gap: {
-                                    md: 2,
-                                    xs: 1,
-                                },
-                            }}
-                        >
-                            <InputField<INewsForm>
-                                type="number"
-                                form={form}
-                                name={'readTimes'}
-                                label={t('input.read_times')}
-                                disabled={isSubmitting}
-                            />
-                            <SelectField<INewsForm>
-                                form={form}
-                                name={'status'}
-                                label={t('input.status')}
-                                disabled={isSubmitting}
-                                selects={selectStatus}
-                            />
-                        </Box>
+                        <SelectField<INewsForm>
+                            form={form}
+                            name={'status'}
+                            label={t('input.status')}
+                            disabled={isSubmitting}
+                            selects={selectStatus}
+                        />
                         <AutoCompleteField<INewsForm>
                             form={form}
                             name={'hashTagOptionIds'}

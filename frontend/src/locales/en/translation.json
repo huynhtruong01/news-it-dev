@@ -298,8 +298,9 @@
         "error_content_news": "Please enter news content",
         "maximum_10": "Maximum 10MB",
         "maximum_4": "Maximum 4MB",
-        "type_image": "Kiểu hình ảnh chọn không hợp lệ",
-        "at_least_1_minute": "Ít nhất là 1 phút"
+        "type_image": "Invalid image",
+        "at_least_1_minute": "At least 1 minute", 
+        "maximum_4_hash_tag": "Maximum 4 hash tags"
     },
 
     "liked your news": "liked your news",

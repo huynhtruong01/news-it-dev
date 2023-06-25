@@ -4,7 +4,7 @@ import { INewsForm, IOptionItem, IUser } from '@/models'
 import { newsApi, notifyApi } from '@/api'
 import { enqueueSnackbar } from 'notistack'
 import { useNavigate } from 'react-router-dom'
-import { uploadImage, generateIds } from '@/utils'
+import { uploadImage, generateIds, calcReadTimes } from '@/utils'
 import { setInitValueForm } from '@/store/news'
 import { AppDispatch, AppState } from '@/store'
 import { initNewsFormValues } from '@/data'
@@ -64,8 +64,13 @@ function CreateNews({
                 )
                 newValues.coverImage = coverImg?.url
             }
+            const readTimes = calcReadTimes(values.content)
 
-            const res = await newsApi.addNews({ ...newValues, hashTagIds: ids })
+            const res = await newsApi.addNews({
+                ...newValues,
+                hashTagIds: ids,
+                readTimes,
+            })
             enqueueSnackbar(t('message.create_success'), {
                 variant: 'success',
             })
@@ -107,8 +112,9 @@ function CreateNews({
                 )
                 newValues.coverImage = coverImg?.url
             }
+            const readTimes = calcReadTimes(values.content)
 
-            await newsApi.updateNews({ ...newValues, hashTagIds: ids })
+            await newsApi.updateNews({ ...newValues, hashTagIds: ids, readTimes })
 
             enqueueSnackbar(t('message.update_success'), {
                 variant: 'success',
