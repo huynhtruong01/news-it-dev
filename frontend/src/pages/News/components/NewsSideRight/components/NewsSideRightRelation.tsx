@@ -34,6 +34,7 @@ export function NewsSideRightRelation({ news, t, ...rest }: INewsSideRightRelati
                     newsId: news.id,
                     content: news.content,
                     lang: 'vi',
+                    hashTag: news?.hashTagIds?.join(','),
                 })
 
                 const newNewsList = res.data.news.filter((n: INews) => n.id !== news.id)

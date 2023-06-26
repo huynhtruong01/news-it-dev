@@ -188,7 +188,7 @@ export function NewsTable({
                             >
                                 <DeleteIcon fontSize="small" />
                             </Button>
-                            {/* <Button
+                            <Button
                                 variant="contained"
                                 sx={{
                                     minWidth: 'auto',
@@ -204,7 +204,7 @@ export function NewsTable({
                                 }}
                             >
                                 <FlagIcon fontSize="small" />
-                            </Button> */}
+                            </Button>
                         </Stack>
                     </TableCell>
                 </TableRow>

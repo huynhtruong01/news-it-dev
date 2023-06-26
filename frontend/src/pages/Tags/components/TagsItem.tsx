@@ -1,4 +1,4 @@
-import { COLOR_WHITE } from '@/consts'
+import { COLOR_WHITE, COLOR_WHITE_2 } from '@/consts'
 import { IsFollow } from '@/enums'
 import { IFollow, IHashTag, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
@@ -32,7 +32,9 @@ function TagsItem({
     const { t } = useTranslation()
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
     const color = useMemo(() => {
-        return tag.color === COLOR_WHITE ? theme.palette.primary.dark : tag.color
+        return tag.color === COLOR_WHITE || tag.color === COLOR_WHITE_2
+            ? theme.palette.primary.dark
+            : tag.color
     }, [tag])
 
     useEffect(() => {

@@ -62,4 +62,5 @@ export interface INewsRecommend {
     newsId: number
     content: string
     lang?: string
+    hashTag?: string
 }
