@@ -1,7 +1,7 @@
 import { newsApi } from '@/api'
 import { NewsFilters, Order } from '@/enums'
 import { ArticleHeader, ArticleList } from '@/features/ArticleContainer/components'
-import { IFilters, INews, INewsStatus, IUser } from '@/models'
+import { IFilters, IHashTag, INews, INewsStatus, IUser } from '@/models'
 import { AppState } from '@/store'
 import { Box } from '@mui/material'
 import { useEffect, useState } from 'react'
@@ -9,14 +9,17 @@ import { connect } from 'react-redux'
 
 export interface IArticleContainer {
     pUser: IUser | null
+    pHashTags: IHashTag[]
 }
 
-function ArticleContainer({ pUser }: IArticleContainer) {
+function ArticleContainer({ pUser, pHashTags }: IArticleContainer) {
     const [filters, setFilters] = useState<IFilters>({
         limit: 6,
         page: 1,
         createdAt: Order.DESC,
-        hashTag: pUser?.hashTags?.map((t) => t.id).join(',') || '',
+        hashTag:
+            pUser?.hashTags?.map((t) => t.id).join(',') ||
+            pHashTags.map((h) => h.id).join(','),
         type: pUser ? NewsFilters.RELEVANT : '',
     })
     const [newsList, setNewsList] = useState<INews[]>([])
@@ -32,7 +35,10 @@ function ArticleContainer({ pUser }: IArticleContainer) {
             try {
                 if (filters.page === 1) setLoading(true)
                 const newFilters = pUser?.id
-                    ? { ...filters, userId: pUser?.id }
+                    ? {
+                          ...filters,
+                          userId: pUser?.id,
+                      }
                     : { ...filters }
 
                 const res = await newsApi.getAllNewsPublic(newFilters)
@@ -86,6 +92,7 @@ function ArticleContainer({ pUser }: IArticleContainer) {
 const mapStateToProps = (state: AppState) => {
     return {
         pUser: state.user.user,
+        pHashTags: state.hashTag.hashTags,
     }
 }
 

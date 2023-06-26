@@ -72,6 +72,7 @@ export function AutoCompleteField<TFormValues extends FieldValues = FieldValues>
                                     marginTop: 1,
                                     '.MuiInputBase-root': {
                                         backgroundColor: '#fff',
+                                        alignItems: 'flex-start',
                                     },
                                 }}
                                 multiline
