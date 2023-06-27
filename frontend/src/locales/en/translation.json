@@ -72,7 +72,8 @@
         "send_feedback": "Send Feedback",
         "back": "Back",
         "more": "More",
-        "go_back": "Go back"
+        "go_back": "Go back",
+        "delete_all_notify": "Delete all notify"
     },
 
     "news": {

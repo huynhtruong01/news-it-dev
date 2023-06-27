@@ -1,5 +1,6 @@
 import { Seo, SkeletonProfile } from '@/components/Common'
 import { COLOR_WHITE } from '@/consts'
+import { Status } from '@/enums'
 import { IUser } from '@/models'
 import {
     ProfileHeader,
@@ -36,7 +37,15 @@ function Profile({ pUser, pGetProfile }: IProfileProps) {
     }, [])
 
     const newNews = useMemo(() => {
-        return pUser?.news?.length ? pUser.news : []
+        return pUser?.news?.length
+            ? pUser.news
+                  .filter((n) => n.status !== Status.DRAFT)
+                  .sort(
+                      (a, b) =>
+                          new Date(b.createdAt || Date.now()).getTime() -
+                          new Date(a.createdAt || Date.now()).getTime()
+                  )
+            : []
     }, [pUser])
 
     return pUser ? (

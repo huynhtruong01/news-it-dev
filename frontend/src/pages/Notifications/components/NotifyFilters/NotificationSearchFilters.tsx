@@ -1,6 +1,9 @@
 import { SearchFilter } from '@/components/Filters'
 import { INotifyFilters } from '@/models'
-import { Box } from '@mui/material'
+import { theme } from '@/utils'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Button, Stack } from '@mui/material'
+import { red } from '@mui/material/colors'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -17,7 +20,9 @@ export function NotificationSearchFilters({
     }
 
     return (
-        <Box
+        <Stack
+            direction={'row'}
+            gap={2}
             width={{
                 md: 'auto',
                 xs: '100%',
@@ -32,6 +37,20 @@ export function NotificationSearchFilters({
                     xs: '100%',
                 }}
             />
-        </Box>
+            <Button
+                variant="contained"
+                startIcon={<DeleteIcon />}
+                sx={{
+                    backgroundColor: red[600],
+                    padding: theme.spacing(0, 2),
+                    fontWeight: 500,
+                    '&:hover': {
+                        backgroundColor: red[700],
+                    },
+                }}
+            >
+                {t('button.delete_all_notify')}
+            </Button>
+        </Stack>
     )
 }

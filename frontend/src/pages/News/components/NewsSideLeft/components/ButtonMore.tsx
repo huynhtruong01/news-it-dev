@@ -1,9 +1,8 @@
-import { INews, IObjectCommon } from '@/models'
-import { AppDispatch } from '@/store'
+import { INews, IObjectCommon, IUser } from '@/models'
+import { AppDispatch, AppState } from '@/store'
 import { setNewsReport } from '@/store/news'
 import { theme } from '@/utils'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
-import FlagIcon from '@mui/icons-material/Flag'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import {
     Box,
@@ -18,7 +17,7 @@ import {
     alpha,
     useMediaQuery,
 } from '@mui/material'
-import { green } from '@mui/material/colors'
+import { green, red } from '@mui/material/colors'
 import { makeStyles } from '@mui/styles'
 import { MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -41,6 +40,7 @@ import {
 export interface IButtonMoreProps extends BoxProps {
     news: INews
     pSetNewsReport: (value: IObjectCommon | null) => void
+    pUser: IUser | null
 }
 
 const useStyles = makeStyles({
@@ -64,7 +64,7 @@ const useStyles = makeStyles({
     },
 })
 
-function ButtonMore({ news, pSetNewsReport, ...rest }: IButtonMoreProps) {
+function ButtonMore({ news, pSetNewsReport, pUser, ...rest }: IButtonMoreProps) {
     const isMediumScreen = useMediaQuery('(min-width:768px)')
     const { t } = useTranslation()
     const styles = useStyles()
@@ -266,26 +266,33 @@ function ButtonMore({ news, pSetNewsReport, ...rest }: IButtonMoreProps) {
                         </Stack>
                     </TelegramShareButton>
                 </MenuItem>
-                <MenuItem className={styles.shareItem}>
-                    <Box onClick={handleReport}>
-                        <Stack direction={'row'} alignItems={'center'} gap={1.5}>
-                            <Box
-                                sx={{
-                                    display: 'inline-flex',
-                                    svg: {
-                                        color: theme.palette.primary.main,
-                                    },
-                                }}
-                            >
-                                <FlagIcon />
-                            </Box>
+                {pUser && (
+                    <MenuItem
+                        sx={{
+                            color: red[500],
+                            backgroundColor: red[50],
+                            border: `1px solid ${red[500]}`,
+                            transition: '.2s ease-in-out',
+
+                            '&:hover': {
+                                backgroundColor: red[100],
+                            },
+                        }}
+                    >
+                        <Box onClick={handleReport} width={'100%'} textAlign={'center'}>
                             {t('share_news.report')}
-                        </Stack>
-                    </Box>
-                </MenuItem>
+                        </Box>
+                    </MenuItem>
+                )}
             </Menu>
         </Box>
     )
+}
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pUser: state.user.user,
+    }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
@@ -294,4 +301,4 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(ButtonMore)
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonMore)

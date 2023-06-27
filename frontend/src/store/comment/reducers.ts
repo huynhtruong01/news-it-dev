@@ -20,7 +20,10 @@ export const reducers = {
         const newComments = [...state.comments]
         const index = newComments.findIndex((comment) => comment.id === action.payload.id)
         if (index > -1) {
-            newComments[index] = action.payload
+            newComments[index] = {
+                ...action.payload,
+                numReplyComments: (newComments[index].numReplyComments || 0) + 1,
+            }
             state.comments = newComments
         }
     },

@@ -1,19 +1,7 @@
 import { DEFAULT_LANGUAGES } from '@/consts'
 import {
-    ActiveAccount,
-    CreateNews,
-    Dashboard,
     ForgotPassword,
-    Login,
-    News,
-    Notifications,
-    Profile,
-    ProfileUser,
-    ReadingList,
-    SearchNews,
-    Settings,
     Signout,
-    Signup,
     Tags,
     ConfirmEmail,
     ConfirmEmailMessage,
@@ -34,11 +22,24 @@ import { MainContent } from '@/features'
 import { EmptyLayout, MainLayout } from '@/layouts'
 import { Box } from '@mui/material'
 import i18next from 'i18next'
-import { useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import io, { Socket } from 'socket.io-client'
 import { IUser } from '@/models'
+
+const Login = lazy(() => import('@/pages/Auth/Login'))
+const ActiveAccount = lazy(() => import('@/pages/ActiveAccount'))
+const CreateNews = lazy(() => import('@/pages/CreateNews'))
+const Dashboard = lazy(() => import('@/pages/Dashboard'))
+const News = lazy(() => import('@/pages/News'))
+const Notifications = lazy(() => import('@/pages/Notifications'))
+const Profile = lazy(() => import('@/pages/Profile'))
+const ProfileUser = lazy(() => import('@/pages/ProfileUser'))
+const SearchNews = lazy(() => import('@/pages/SearchNews'))
+const ReadingList = lazy(() => import('@/pages/ReadingList'))
+const Settings = lazy(() => import('@/pages/Settings'))
+const Signup = lazy(() => import('@/pages/Auth/Signup'))
 
 export interface IAppProps {
     pUser: IUser | null
@@ -82,98 +83,178 @@ function App({ pSetSocket, pSetLanguages, pUser }: IAppProps) {
                 <Route
                     path={'/'}
                     element={
-                        <MainLayout>
-                            <MainContent />
-                        </MainLayout>
+                        <Suspense fallback={<BackdropLoading />}>
+                            <MainLayout>
+                                <MainContent />
+                            </MainLayout>
+                        </Suspense>
                     }
                 />
                 {!pUser && (
-                    <Route
-                        path={'/login'}
-                        element={
-                            <MainLayout>
-                                <Login />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {!pUser && (
-                    <Route
-                        path={'/signup'}
-                        element={
-                            <MainLayout>
-                                <Signup />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {!pUser && (
-                    <Route
-                        path={'/forgot-password/:token'}
-                        element={
-                            <MainLayout>
-                                <ForgotPassword />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {!pUser && (
-                    <Route
-                        path={'/confirm-email'}
-                        element={
-                            <MainLayout>
-                                <ConfirmEmail />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {!pUser && (
-                    <Route
-                        path={'/confirm-email-message'}
-                        element={
-                            <MainLayout>
-                                <ConfirmEmailMessage />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {!pUser && (
-                    <Route
-                        path={'/active/:activeToken'}
-                        element={
-                            <MainLayout>
-                                <ActiveAccount />
-                            </MainLayout>
-                        }
-                    />
+                    <>
+                        <Route
+                            path={'/login'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <Login />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/signup'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <Signup />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/forgot-password/:token'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <ForgotPassword />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/confirm-email'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <ConfirmEmail />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/confirm-email-message'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <ConfirmEmailMessage />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/active/:activeToken'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <ActiveAccount />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                    </>
                 )}
                 <Route
                     path={'/news/:slug'}
                     element={
-                        <MainLayout>
-                            <News />
-                        </MainLayout>
+                        <Suspense fallback={<BackdropLoading />}>
+                            <MainLayout>
+                                <News />
+                            </MainLayout>
+                        </Suspense>
                     }
                 />
                 {pUser && (
-                    <Route
-                        path={'/settings/*'}
-                        element={
-                            <MainLayout>
-                                <Settings />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {pUser && (
-                    <Route
-                        path={'/dashboard/*'}
-                        element={
-                            <MainLayout>
-                                <Dashboard />
-                            </MainLayout>
-                        }
-                    />
+                    <>
+                        <Route
+                            path={'/settings/*'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <Settings />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/dashboard/*'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <Dashboard />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/reading-list'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <ReadingList />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/signout-confirm'}
+                            element={
+                                <MainLayout>
+                                    <Signout />
+                                </MainLayout>
+                            }
+                        />
+                        <Route
+                            path={'/create-news'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <CreateNews />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/update-news'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <CreateNews />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/notifications'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <MainLayout>
+                                        <Notifications />
+                                    </MainLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/profile'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <EmptyLayout>
+                                        <Profile />
+                                    </EmptyLayout>
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path={'/report-abuse'}
+                            element={
+                                <Suspense fallback={<BackdropLoading />}>
+                                    <EmptyLayout>
+                                        <Reports />
+                                    </EmptyLayout>
+                                </Suspense>
+                            }
+                        />
+                    </>
                 )}
                 <Route
                     path={'/tags/*'}
@@ -183,56 +264,6 @@ function App({ pSetSocket, pSetLanguages, pUser }: IAppProps) {
                         </MainLayout>
                     }
                 />
-                {pUser && (
-                    <Route
-                        path={'/reading-list'}
-                        element={
-                            <MainLayout>
-                                <ReadingList />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {pUser && (
-                    <Route
-                        path={'/signout-confirm'}
-                        element={
-                            <MainLayout>
-                                <Signout />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {pUser && (
-                    <Route
-                        path={'/create-news'}
-                        element={
-                            <MainLayout>
-                                <CreateNews />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {pUser && (
-                    <Route
-                        path={'/update-news'}
-                        element={
-                            <MainLayout>
-                                <CreateNews />
-                            </MainLayout>
-                        }
-                    />
-                )}
-                {pUser && (
-                    <Route
-                        path={'/notifications'}
-                        element={
-                            <MainLayout>
-                                <Notifications />
-                            </MainLayout>
-                        }
-                    />
-                )}
                 <Route
                     path={'/search'}
                     element={
@@ -243,35 +274,16 @@ function App({ pSetSocket, pSetLanguages, pUser }: IAppProps) {
                 />
 
                 {/* EMPTY LAYOUT */}
-                {pUser && (
-                    <Route
-                        path={'/profile'}
-                        element={
-                            <EmptyLayout>
-                                <Profile />
-                            </EmptyLayout>
-                        }
-                    />
-                )}
                 <Route
                     path={'/profile/:username'}
                     element={
-                        <EmptyLayout>
-                            <ProfileUser />
-                        </EmptyLayout>
+                        <Suspense fallback={<BackdropLoading />}>
+                            <EmptyLayout>
+                                <ProfileUser />
+                            </EmptyLayout>
+                        </Suspense>
                     }
                 />
-
-                {pUser && (
-                    <Route
-                        path={'/report-abuse'}
-                        element={
-                            <EmptyLayout>
-                                <Reports />
-                            </EmptyLayout>
-                        }
-                    />
-                )}
 
                 <Route path="*" element={<NotFound />} />
             </Routes>

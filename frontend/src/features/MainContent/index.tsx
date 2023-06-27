@@ -25,8 +25,6 @@ function MainContent({ pUser, pGetProfile, pGetNotifies }: IMainContentProps) {
     useEffect(() => {
         ;(async () => {
             try {
-                // await pGetAllTagsPopular()
-
                 if (pUser?.id) {
                     await pGetProfile()
                     await pGetNotifies(pUser?.id as number)

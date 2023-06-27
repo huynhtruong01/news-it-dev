@@ -1,5 +1,5 @@
 import { hashTagApi } from '@/api'
-import { COLOR_WHITE, DEFAULT_LANGUAGES } from '@/consts'
+import { COLOR_WHITE } from '@/consts'
 import { IsFollow } from '@/enums'
 import { IFollow, IHashTag, IUser } from '@/models'
 import { AppDispatch, AppState } from '@/store'
@@ -8,7 +8,6 @@ import { getProfile } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import { Box, BoxProps, Button, Paper, Stack, Typography, alpha } from '@mui/material'
 import { PayloadAction } from '@reduxjs/toolkit'
-import axios from 'axios'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
@@ -26,12 +25,10 @@ function TagsDetailHeader({
     pGetProfile,
     tag,
     pSetShowModalAuth,
-    pLanguages,
     ...rest
 }: ITagsDetailHeaderProps) {
     const { t } = useTranslation()
     const [followed, setFollowed] = useState<IFollow>(IsFollow.FOLLOW)
-    const [content, setContent] = useState<string>(tag.description as string)
 
     const color = useMemo(() => {
         return tag.color === COLOR_WHITE ? theme.palette.primary.dark : tag.color
@@ -52,41 +49,6 @@ function TagsDetailHeader({
         setFollowed(IsFollow.FOLLOW)
         return
     }, [pUser])
-
-    useEffect(() => {
-        ;(async () => {
-            try {
-                const results = await axios
-                    .post(
-                        'https://rapid-translate-multi-traduction.p.rapidapi.com/t',
-                        {
-                            from:
-                                pLanguages === DEFAULT_LANGUAGES
-                                    ? 'en'
-                                    : DEFAULT_LANGUAGES,
-                            to:
-                                pLanguages === DEFAULT_LANGUAGES
-                                    ? DEFAULT_LANGUAGES
-                                    : 'en',
-                            q: content,
-                        },
-                        {
-                            headers: {
-                                'content-type': 'application/json',
-                                'X-RapidAPI-Key':
-                                    'b58ca47cf1mshf76613c5f72fa07p17e82bjsnf62ccd71481d',
-                                'X-RapidAPI-Host':
-                                    'rapid-translate-multi-traduction.p.rapidapi.com',
-                            },
-                        }
-                    )
-                    .then((res) => res.data)
-                setContent(results[0])
-            } catch (error) {
-                throw new Error(error as string)
-            }
-        })()
-    }, [pLanguages])
 
     const handleFollowClick = async () => {
         try {
@@ -243,7 +205,7 @@ function TagsDetailHeader({
                                 color: theme.palette.secondary.main,
                             }}
                         >
-                            {content}
+                            {tag.description}
                         </Typography>
                     </Stack>
                 </Stack>

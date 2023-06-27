@@ -17,9 +17,6 @@ function ArticleContainer({ pUser, pHashTags }: IArticleContainer) {
         limit: 6,
         page: 1,
         createdAt: Order.DESC,
-        hashTag:
-            pUser?.hashTags?.map((t) => t.id).join(',') ||
-            pHashTags.map((h) => h.id).join(','),
         type: pUser ? NewsFilters.RELEVANT : '',
     })
     const [newsList, setNewsList] = useState<INews[]>([])
@@ -38,6 +35,9 @@ function ArticleContainer({ pUser, pHashTags }: IArticleContainer) {
                     ? {
                           ...filters,
                           userId: pUser?.id,
+                          hashTag:
+                              pUser?.hashTags?.map((t) => t.id).join(',') ||
+                              pHashTags.map((h) => h.id).join(','),
                       }
                     : { ...filters }
 

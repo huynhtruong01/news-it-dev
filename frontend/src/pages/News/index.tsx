@@ -71,7 +71,7 @@ function News({
                 pSetLoadingComment(false)
             })()
         }
-    }, [pNewsDetail])
+    }, [])
 
     useEffect(() => {
         if (!params.slug || !pSocket) return

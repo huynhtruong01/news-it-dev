@@ -1,59 +1,21 @@
+import { COLOR_WHITE } from '@/consts'
 import { IHashTag } from '@/models'
+import { AppState } from '@/store'
 import { theme } from '@/utils'
 import { Box, Paper, Typography, alpha } from '@mui/material'
-import { Link } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
-import { COLOR_WHITE, DEFAULT_LANGUAGES } from '@/consts'
+import { useMemo } from 'react'
 import { connect } from 'react-redux'
-import { AppState } from '@/store'
-import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 export interface IDashboardTagProps {
     tag: IHashTag
     pLanguage: string
 }
 
-function DashboardTag({ tag, pLanguage }: IDashboardTagProps) {
-    const [desc, setDesc] = useState<string>(tag.description as string)
-
+function DashboardTag({ tag }: IDashboardTagProps) {
     const color = useMemo(() => {
         return tag.color === COLOR_WHITE ? theme.palette.primary.dark : tag.color
     }, [tag])
-
-    useEffect(() => {
-        ;(async () => {
-            try {
-                const results = await axios
-                    .post(
-                        'https://rapid-translate-multi-traduction.p.rapidapi.com/t',
-                        {
-                            from:
-                                pLanguage === DEFAULT_LANGUAGES
-                                    ? 'en'
-                                    : DEFAULT_LANGUAGES,
-                            to:
-                                pLanguage === DEFAULT_LANGUAGES
-                                    ? DEFAULT_LANGUAGES
-                                    : 'en',
-                            q: tag.description,
-                        },
-                        {
-                            headers: {
-                                'content-type': 'application/json',
-                                'X-RapidAPI-Key':
-                                    'b58ca47cf1mshf76613c5f72fa07p17e82bjsnf62ccd71481d',
-                                'X-RapidAPI-Host':
-                                    'rapid-translate-multi-traduction.p.rapidapi.com',
-                            },
-                        }
-                    )
-                    .then((res) => res.data)
-                setDesc(results[0])
-            } catch (error) {
-                throw new Error(error as string)
-            }
-        })()
-    }, [pLanguage])
 
     return (
         <Box
@@ -101,7 +63,7 @@ function DashboardTag({ tag, pLanguage }: IDashboardTagProps) {
                         color: theme.palette.grey[700],
                     }}
                 >
-                    {desc}
+                    {tag.description}
                 </Typography>
             </Box>
         </Box>

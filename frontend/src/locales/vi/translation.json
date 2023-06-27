@@ -96,7 +96,8 @@
         "send_feedback": "Gửi phản hồi",
         "back": "Trở lại",
         "more": "Xem thêm" ,
-        "go_back": "Trở về"
+        "go_back": "Trở về",
+        "delete_all_notify": "Xóa hết thông báo"
     },
 
     "profile": {
@@ -149,7 +150,7 @@
 
     "input": {
         "title": "Tiêu đề",
-        "sapo": "Mở đâu",
+        "sapo": "Mở đầu",
         "read_times": "Thời gian đọc",
         "status": "Trạng thái",
         "tags": "Thẻ",

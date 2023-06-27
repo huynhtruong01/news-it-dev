@@ -42,3 +42,7 @@ export const readUsersNotify = (notifyId: number) => {
 export const deleteNotify = (notifyId: number) => {
     return AxiosClient.delete(`${BASE_URL}/${notifyId}`)
 }
+
+export const deleteAllNotify = () => {
+    return AxiosClient.delete(`${BASE_URL}`)
+}

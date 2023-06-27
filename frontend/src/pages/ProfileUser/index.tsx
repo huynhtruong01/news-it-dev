@@ -1,7 +1,7 @@
 import { userApi } from '@/api'
 import { Seo, SkeletonProfile } from '@/components/Common'
 import { COLOR_WHITE } from '@/consts'
-import { IsFollow } from '@/enums'
+import { IsFollow, Status } from '@/enums'
 import { IFollow, IFollowNotify, IUser } from '@/models'
 import {
     ProfileHeader,
@@ -85,11 +85,13 @@ function ProfileUser({
 
     const newNews = useMemo(() => {
         return user?.news?.length
-            ? user.news.sort(
-                  (a, b) =>
-                      new Date(b.createdAt || Date.now()).getTime() -
-                      new Date(a.createdAt || Date.now()).getTime()
-              )
+            ? user.news
+                  .filter((n) => n.status !== Status.DRAFT)
+                  .sort(
+                      (a, b) =>
+                          new Date(b.createdAt || Date.now()).getTime() -
+                          new Date(a.createdAt || Date.now()).getTime()
+                  )
             : []
     }, [user])
 
