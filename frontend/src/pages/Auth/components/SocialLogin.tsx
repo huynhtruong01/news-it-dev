@@ -1,6 +1,7 @@
 import { SIGNOUT_NAV } from '@/consts'
 import { IFacebookLoginParams } from '@/models'
 import { AppDispatch } from '@/store'
+import { setLoadingCommon } from '@/store/common'
 import { facebookLogin, googleLogin } from '@/store/user/thunkApi'
 import { theme } from '@/utils'
 import { Box, Button, alpha } from '@mui/material'
@@ -8,21 +9,15 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { gapi } from 'gapi-script'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect } from 'react'
-import FacebookLogin, {
-    ReactFacebookFailureResponse,
-    ReactFacebookLoginInfo,
-} from 'react-facebook-login'
 import {
     GoogleLogin,
     GoogleLoginResponse,
     GoogleLoginResponseOffline,
 } from 'react-google-login'
-import { FaFacebookSquare } from 'react-icons/fa'
+import { useTranslation } from 'react-i18next'
 import { FcGoogle } from 'react-icons/fc'
 import { connect } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { setLoadingCommon } from '@/store/common'
 
 export interface ISocialLoginProps {
     pGoogleLogin: (token: string) => Promise<PayloadAction<unknown>>
@@ -30,7 +25,7 @@ export interface ISocialLoginProps {
     pSetLoading: (isLoading: boolean) => void
 }
 
-function SocialLogin({ pGoogleLogin, pFacebookLogin, pSetLoading }: ISocialLoginProps) {
+function SocialLogin({ pGoogleLogin, pSetLoading }: ISocialLoginProps) {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
@@ -75,29 +70,6 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin, pSetLoading }: ISocialLogin
             })
         }
     }
-
-    // const handleFacebookLogin = async (
-    //     res: ReactFacebookLoginInfo | ReactFacebookFailureResponse
-    // ) => {
-    //     try {
-    //         if ('accessToken' in res && 'userID' in res) {
-    //             const data = {
-    //                 accessToken: res.accessToken,
-    //                 userId: res.userID,
-    //             }
-
-    //             await pFacebookLogin(data)
-    //             enqueueSnackbar('Log in successfully.', {
-    //                 variant: 'success',
-    //             })
-    //             navigate(-1)
-    //         }
-    //     } catch (error) {
-    //         enqueueSnackbar((error as Error).message, {
-    //             variant: 'error',
-    //         })
-    //     }
-    // }
 
     return (
         <Box
@@ -144,17 +116,6 @@ function SocialLogin({ pGoogleLogin, pFacebookLogin, pSetLoading }: ISocialLogin
                 onSuccess={handleGoogleLogin}
                 cookiePolicy={'single_host_origin'}
             />
-
-            {/* <FacebookLogin
-                appId={import.meta.env.VITE_CLIENT_FACEBOOK_ID}
-                autoLoad={false}
-                fields="name,email,picture,first_name,last_name"
-                scope="public_profile,user_friends"
-                callback={handleFacebookLogin}
-                cssClass="custom-facebook-login"
-                textButton={t('auth.sign_in_facebook') as string}
-                icon={<FaFacebookSquare />}
-            /> */}
         </Box>
     )
 }

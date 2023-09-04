@@ -183,7 +183,7 @@ export function ImageLargeField<TFormValues extends FieldValues = FieldValues>({
                                 ref={ref}
                                 type="file"
                                 id={name}
-                                accept={'image/*'}
+                                accept={'.png, .jpg, .jpeg'}
                                 onChange={(e) => {
                                     if (e.target.files?.[0]) {
                                         const url = generateLinkImg(e.target.files?.[0])

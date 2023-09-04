@@ -31,17 +31,24 @@ function ArticleContainer({ pUser, pHashTags }: IArticleContainer) {
         ;(async () => {
             try {
                 if (filters.page === 1) setLoading(true)
-                const newFilters = pUser?.id
+                const newFilters =
+                    filters.hashTag || filters.type === NewsFilters.RELEVANT
+                        ? {
+                              ...filters,
+                              userId: pUser?.id,
+                              hashTag:
+                                  pUser?.hashTags?.map((t) => t.id).join(',') ||
+                                  pHashTags.map((h) => h.id).join(','),
+                          }
+                        : { ...filters }
+                const covertNewFilters = pUser?.id
                     ? {
-                          ...filters,
+                          ...newFilters,
                           userId: pUser?.id,
-                          hashTag:
-                              pUser?.hashTags?.map((t) => t.id).join(',') ||
-                              pHashTags.map((h) => h.id).join(','),
                       }
                     : { ...filters }
 
-                const res = await newsApi.getAllNewsPublic(newFilters)
+                const res = await newsApi.getAllNewsPublic(covertNewFilters)
                 if (filters.page === 1) {
                     setNewsList(res.data.news)
                 } else {

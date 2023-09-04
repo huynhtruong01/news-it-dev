@@ -9,6 +9,7 @@ const router = express.Router()
  *   name: HashTags
  *   description: The hash tags managing API
  */
+router.route('/').post(hashTagController.createHashTag)
 
 router.route('/get-all').get(hashTagController.getAll)
 
@@ -48,10 +49,8 @@ router.route('/get-all').get(hashTagController.getAll)
  *         description: Server Error
  */
 
-router
-    .route('/')
-    .get(hashTagController.getAllHashTag)
-    .post(hashTagController.createHashTag)
+router.route('/').get(hashTagController.getAllHashTag)
+// .post(hashTagController.createHashTag)
 
 /**
  * @openapi

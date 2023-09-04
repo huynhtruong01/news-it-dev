@@ -10,6 +10,7 @@ const router = express.Router()
  *   description: The role managing API
  */
 
+router.route('/').post(roleController.createRole)
 router.use(authMiddleware.getUser, authMiddleware.rolePermission)
 
 /**
@@ -115,7 +116,7 @@ router.use(authMiddleware.getUser, authMiddleware.rolePermission)
  */
 
 router.route('/get-all').get(roleController.getAll)
-router.route('/').get(roleController.getAllRoles).post(roleController.createRole)
+router.route('/').get(roleController.getAllRoles)
 router
     .route('/:roleId')
     .get(roleController.getRole)

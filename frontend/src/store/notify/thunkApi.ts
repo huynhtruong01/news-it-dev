@@ -16,9 +16,13 @@ import { INotifyStore } from '.'
 
 export const createNotify = createAsyncThunk(
     'notify/createNotify',
-    async (data: INotifyData) => {
-        const result = await notifyApi.createNotify(data)
-        return result.data.notify
+    async (data: INotifyData, { rejectWithValue }) => {
+        try {
+            const result = await notifyApi.createNotify(data)
+            return result.data.notify
+        } catch (error) {
+            return rejectWithValue(error)
+        }
     }
 )
 
@@ -51,20 +55,24 @@ export const readUsersNotify = createAsyncThunk(
 )
 
 export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) => {
-    builders.addCase(
-        createNotify.fulfilled,
-        (state: INotifyStore, action: PayloadAction<INotify>) => {
-            const newNotifications = [...state.notifications]
-            const newNotificationsFilters = [...state.notificationsFilter]
-            newNotifications.unshift(action.payload)
-            newNotificationsFilters.unshift(action.payload)
+    builders
+        .addCase(
+            createNotify.fulfilled,
+            (state: INotifyStore, action: PayloadAction<INotify>) => {
+                const newNotifications = [...state.notifications]
+                const newNotificationsFilters = [...state.notificationsFilter]
+                newNotifications.unshift(action.payload)
+                newNotificationsFilters.unshift(action.payload)
 
-            state.notifications = newNotifications
-            state.notificationsFilter = newNotificationsFilters
-            state.numNotifications = state.numNotifications + 1
-            state.total = newNotificationsFilters.length
-        }
-    )
+                state.notifications = newNotifications
+                state.notificationsFilter = newNotificationsFilters
+                state.numNotifications = state.numNotifications + 1
+                state.total = newNotificationsFilters.length
+            }
+        )
+        .addCase(createNotify.rejected, (state, action: PayloadAction<any>) => {
+            throw new Error(action.payload.message as string)
+        })
 
     builders.addCase(
         getNotifies.fulfilled,
@@ -79,13 +87,17 @@ export const extraReducers = (builders: ActionReducerMapBuilder<INotifyStore>) =
         }
     )
 
-    builders.addCase(
-        getNotifiesFilters.fulfilled,
-        (state: INotifyStore, action: PayloadAction<INotifyRes>) => {
-            state.notificationsFilter = action.payload.notifies
-            state.totalFilter = action.payload.total
-        }
-    )
+    builders
+        .addCase(
+            getNotifiesFilters.fulfilled,
+            (state: INotifyStore, action: PayloadAction<INotifyRes>) => {
+                state.notificationsFilter = action.payload.notifies
+                state.totalFilter = action.payload.total
+            }
+        )
+        .addCase(getNotifiesFilters.rejected, (state, action: PayloadAction<any>) => {
+            throw new Error(action.payload.message as string)
+        })
 
     builders.addCase(
         readUsersNotify.fulfilled,

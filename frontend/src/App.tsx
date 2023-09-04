@@ -83,11 +83,11 @@ function App({ pSetSocket, pSetLanguages, pUser }: IAppProps) {
                 <Route
                     path={'/'}
                     element={
-                        <Suspense fallback={<BackdropLoading />}>
-                            <MainLayout>
-                                <MainContent />
-                            </MainLayout>
-                        </Suspense>
+                        // <Suspense fallback={<BackdropLoading />}>
+                        <MainLayout>
+                            <MainContent />
+                        </MainLayout>
+                        // </Suspense>
                     }
                 />
                 {!pUser && (

@@ -7,8 +7,8 @@ export interface ISkeletonTextProps {
 export function SkeletonText({ quantities = 3 }: ISkeletonTextProps) {
     return (
         <Stack gap={0.5}>
-            {Array.from(new Array(quantities)).map((item) => (
-                <Skeleton key={item} variant="text" height={28} />
+            {Array.from(new Array(quantities)).map((_, idx) => (
+                <Skeleton key={idx} variant="text" height={28} />
             ))}
         </Stack>
     )

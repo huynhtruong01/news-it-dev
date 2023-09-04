@@ -59,9 +59,9 @@ class NewsService {
             const excludeIds = Array.from(new Set([...likes, ...saves]))
 
             if (query.hashTag || query.type === NewsFilters.RELEVANT) {
-                const hashTagIds = (query.hashTag as string)
-                    .split(',')
-                    .map((h) => Number(h))
+                const hashTagIds = query.hashTag
+                    ? (query.hashTag as string).split(',').map((h) => Number(h))
+                    : []
                 const queryBuilder = this.newsRepository
                     .createQueryBuilder('news')
                     .leftJoinAndSelect('news.user', 'user')
@@ -76,48 +76,10 @@ class NewsService {
                     })
                 }
 
-                if (userId) {
-                    const searchHistories = await searchHistoryService.getAllByUserId(
-                        Number(userId)
-                    )
-                    const searchQueries = searchHistories
-                        .map((s) => s.searchQuery.toLowerCase().split(' '))
-                        .flat()
-                    const searchKeys = Array.from(new Set([...searchQueries]))
-
-                    if (searchKeys.length > 0) {
-                        const conditions = searchKeys
-                            .filter((k) => !!k)
-                            .map((k) => k.toLowerCase())
-
-                        queryBuilder.andWhere(
-                            conditions
-                                .map((key) => {
-                                    return key.split(' ').join('_')
-                                })
-                                .map((keyword) => {
-                                    return `LOWER(REPLACE(news.title, ".", "")) LIKE :${keyword}`
-                                })
-                                .join(' OR '),
-                            conditions.reduce((params, keyword) => {
-                                const key = keyword.split(' ').join('_')
-                                return {
-                                    ...params,
-                                    [key]: `%${keyword.split('_').join(' ')}%`,
-                                }
-                            }, {})
-                        )
-                    }
-                }
-
                 if (hashTagIds.length > 0) {
-                    queryBuilder.where(
-                        'hashTag.id IN (:...hashTagIds) AND news.id NOT IN (:...newsIds)',
-                        {
-                            hashTagIds,
-                            newsIds: excludeIds,
-                        }
-                    )
+                    queryBuilder.andWhere('hashTag.id IN (:...hashTagIds)', {
+                        hashTagIds,
+                    })
                 }
 
                 const [news, count] = await queryBuilder
