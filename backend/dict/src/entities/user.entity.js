@@ -544,7 +544,6 @@ __decorate([
     (0, typeorm_1.Column)({
         type: 'simple-array',
     }),
-    (0, typeorm_1.Index)('idx_roleIds', ['roleIds']),
     __metadata("design:type", Array)
 ], User.prototype, "roleIds", void 0);
 __decorate([
