@@ -64,8 +64,8 @@ class NewsService {
                 const excludeIds = Array.from(new Set([...likes, ...saves]));
                 if (query.hashTag || query.type === enums_1.NewsFilters.RELEVANT) {
                     const hashTagIds = query.hashTag
-                        .split(',')
-                        .map((h) => Number(h));
+                        ? query.hashTag.split(',').map((h) => Number(h))
+                        : [];
                     const queryBuilder = this.newsRepository
                         .createQueryBuilder('news')
                         .leftJoinAndSelect('news.user', 'user')
@@ -78,33 +78,9 @@ class NewsService {
                             excludeIds,
                         });
                     }
-                    if (userId) {
-                        const searchHistories = yield _1.searchHistoryService.getAllByUserId(Number(userId));
-                        const searchQueries = searchHistories
-                            .map((s) => s.searchQuery.toLowerCase().split(' '))
-                            .flat();
-                        const searchKeys = Array.from(new Set([...searchQueries]));
-                        if (searchKeys.length > 0) {
-                            const conditions = searchKeys
-                                .filter((k) => !!k)
-                                .map((k) => k.toLowerCase());
-                            queryBuilder.andWhere(conditions
-                                .map((key) => {
-                                return key.split(' ').join('_');
-                            })
-                                .map((keyword) => {
-                                return `LOWER(REPLACE(news.title, ".", "")) LIKE :${keyword}`;
-                            })
-                                .join(' OR '), conditions.reduce((params, keyword) => {
-                                const key = keyword.split(' ').join('_');
-                                return Object.assign(Object.assign({}, params), { [key]: `%${keyword.split('_').join(' ')}%` });
-                            }, {}));
-                        }
-                    }
                     if (hashTagIds.length > 0) {
-                        queryBuilder.where('hashTag.id IN (:...hashTagIds) AND news.id NOT IN (:...newsIds)', {
+                        queryBuilder.andWhere('hashTag.id IN (:...hashTagIds)', {
                             hashTagIds,
-                            newsIds: excludeIds,
                         });
                     }
                     const [news, count] = yield queryBuilder

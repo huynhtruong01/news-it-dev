@@ -18,6 +18,7 @@ const createUserData = (data) => {
     user.emailAddress = data.emailAddress;
     user.password = data.password;
     user.dateJoined = new Date();
+    user.roleIds = [2];
     user.isAdmin = data.isAdmin ? data.isAdmin : false;
     user.bandingColor = data.bandingColor ? data.bandingColor : consts_1.DEFAULT_COLOR;
     user.avatar = !data.avatar ? consts_1.AVATAR : data.avatar;

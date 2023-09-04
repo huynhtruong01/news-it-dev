@@ -13,6 +13,7 @@ const router = express_1.default.Router();
  *   name: Roles
  *   description: The role managing API
  */
+router.route('/').post(controllers_1.roleController.createRole);
 router.use(middlewares_1.authMiddleware.getUser, middlewares_1.authMiddleware.rolePermission);
 /**
  * @openapi
@@ -112,7 +113,7 @@ router.use(middlewares_1.authMiddleware.getUser, middlewares_1.authMiddleware.ro
  *         description: Server Error
  */
 router.route('/get-all').get(controllers_1.roleController.getAll);
-router.route('/').get(controllers_1.roleController.getAllRoles).post(controllers_1.roleController.createRole);
+router.route('/').get(controllers_1.roleController.getAllRoles);
 router
     .route('/:roleId')
     .get(controllers_1.roleController.getRole)

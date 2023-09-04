@@ -8,7 +8,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon src/server.ts",
         "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-        "start": "nodemon --max-old-space-size=8192 dict/server.js"
+        "start": "nodemon --max-old-space-size=8192 dict/src/server.js"
     },
     "dependencies": {
         "bcrypt": "^5.1.0",

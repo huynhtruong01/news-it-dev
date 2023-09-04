@@ -13,6 +13,7 @@ const router = express_1.default.Router();
  *   name: HashTags
  *   description: The hash tags managing API
  */
+router.route('/').post(controllers_1.hashTagController.createHashTag);
 router.route('/get-all').get(controllers_1.hashTagController.getAll);
 /**
  * @openapi
@@ -48,10 +49,8 @@ router.route('/get-all').get(controllers_1.hashTagController.getAll);
  *       500:
  *         description: Server Error
  */
-router
-    .route('/')
-    .get(controllers_1.hashTagController.getAllHashTag)
-    .post(controllers_1.hashTagController.createHashTag);
+router.route('/').get(controllers_1.hashTagController.getAllHashTag);
+// .post(hashTagController.createHashTag)
 /**
  * @openapi
  * /api/v1/hashTags/name/{hashTagName}:
