@@ -21,17 +21,10 @@ export interface IProfileFilters {
     filters: IFiltersUserNews
 }
 
-export const getProfile = createAsyncThunk(
-    'user/getProfile',
-    async (_: any, { rejectWithValue }) => {
-        try {
-            const result = await userApi.getProfile()
-            return result.data.user
-        } catch (error) {
-            return rejectWithValue(error)
-        }
-    }
-)
+export const getProfile = createAsyncThunk('user/getProfile', async () => {
+    const result = await userApi.getProfile()
+    return result.data.user
+})
 
 export const getProfileFilters = createAsyncThunk(
     'user/getProfileFilters',
