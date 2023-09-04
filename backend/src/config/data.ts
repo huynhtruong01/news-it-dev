@@ -22,14 +22,10 @@ export const AppDataSource = new DataSource({
     type: 'mysql',
     host: process.env.DB_HOST,
     port: Number(process.env.PORT),
+    url: process.env.DB_URL,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    // host: '127.0.0.1',
-    // port: 3306,
-    // username: 'root',
-    // password: '',
-    // database: 'news_app',
     entities: [
         User,
         News,
@@ -43,6 +39,5 @@ export const AppDataSource = new DataSource({
         UserSave,
         Report,
     ],
-    // url: process.env.DB_URL,
     synchronize: true,
 })

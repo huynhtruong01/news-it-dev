@@ -486,8 +486,7 @@ export class User extends BaseEntity {
     @Column({
         type: 'simple-array',
     })
-    @Index('idx_roleIds', ['roleIds'])
-    roleIds?: number[]
+    roleIds: number[]
 
     @CreateDateColumn()
     @Index('idx_createdAt', ['createdAt'])
