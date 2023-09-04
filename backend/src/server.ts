@@ -8,6 +8,7 @@ import routes from '@/routes'
 import { createServer } from 'http'
 import { Server, Socket } from 'socket.io'
 import { SocketServer } from '@/config'
+import { swaggerDocs } from '@/utils'
 const app = express()
 dotenv.config({
     path: './.env',
@@ -36,12 +37,22 @@ AppDataSource.initialize().then(() => {
     app.use(cookieParser())
     app.use(express.urlencoded({ extended: true, limit: '10mb' }))
     app.use(morgan('dev'))
-    app.use(cors())
+    app.use(
+        cors({
+            origin: [
+                process.env.HOST_DASHBOARD as string,
+                process.env.HOST_FRONTEND as string,
+                process.env.HOST_MAIN_NEWS as string,
+                process.env.HOST_DASHBOARD_NEWS as string,
+            ],
+        })
+    )
 
     app.use('/api/v1', routes)
 
-    const port = process.env.PORT
+    const port = Number(process.env.PORT)
     http.listen(port, () => {
+        swaggerDocs(app, port)
         console.log(`Server is running, port ${port}`)
     })
 })

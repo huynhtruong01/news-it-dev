@@ -19,8 +19,15 @@ class HashTagService {
         id: number,
         hashTagId: number
     ): Promise<ICheckHashTag | void> {
-        const self = await userService.getById(id)
-        const hashTag = await this.getById(hashTagId)
+        const self = await userService.getByIdHashTag(id)
+        const hashTag = await this.hashTagRepository.findOne({
+            where: {
+                id: hashTagId,
+            },
+            relations: {
+                users: true,
+            },
+        })
 
         if (!self || !hashTag) return
 
@@ -38,7 +45,7 @@ class HashTagService {
     }
 
     // check name hash tag exits?
-    async checkNameHashTag(name: string): Promise<boolean> {
+    async checkNameHashTag(name: string): Promise<null | HashTag> {
         try {
             const hashTag = await this.hashTagRepository.findOne({
                 where: {
@@ -46,9 +53,9 @@ class HashTagService {
                 },
             })
 
-            if (hashTag) return true
+            if (hashTag) return hashTag
 
-            return false
+            return null
         } catch (error) {
             throw new Error(error as string)
         }
@@ -135,6 +142,24 @@ class HashTagService {
         }
     }
 
+    async getIdNoRelation(id: number) {
+        try {
+            const hashTags = await this.hashTagRepository
+                .createQueryBuilder('hashTag')
+                .leftJoinAndSelect('hashTag.users', 'users')
+                .where('hashTag.id = hashTagId', {
+                    hashTagId: id,
+                })
+                .getOne()
+
+            if (!hashTags) return null
+
+            return hashTags
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     async create(data: HashTag): Promise<HashTag> {
         try {
             const hashTag = createHashTag(data)
@@ -178,6 +203,7 @@ class HashTagService {
                     status: NewsStatus.PUBLIC,
                 })
                 .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('news.likes', 'likes')
                 .leftJoinAndSelect('news.hashTags', 'hashTags')
                 .getOne()
 
@@ -207,6 +233,8 @@ class HashTagService {
                 ...hashTag,
                 name: data.name || hashTag.name,
                 description: data.description || hashTag.description,
+                iconImage: data.iconImage || hashTag.iconImage,
+                color: data.color || hashTag.color,
                 slug: data.slug || hashTag.slug,
             })
 
@@ -268,20 +296,23 @@ class HashTagService {
             const { user, hashTag } = checkHashTags
 
             // check hash tags of user include hash tag id
-            if (this.checkFollows(user.hashTags, hashTagId))
-                throw new Error(`'${user.username}' is following '${hashTag.name}'.`)
-            if (this.checkFollows(hashTag.users, id))
-                throw new Error(`'${hashTag.name}' has follower '${user.username}'.`)
+            // if (!this.checkFollows(user.hashTags, hashTagId))
+            //     throw new Error(`'${user.username}' is following '${hashTag.name}'.`)
+            // if (!this.checkFollows(hashTag.users, id))
+            //     throw new Error(`'${hashTag.name}' has follower '${user.username}'.`)
 
-            // add hashTagId into hashTags of User
-            user.hashTags?.push(hashTag)
-            const newUser = (await userService.updateAll(id, user)) as User
+            const hasHashTag = await user.hashTags?.find((h) => h.id === hashTagId)
+            if (!hasHashTag) {
+                // add hashTagId into hashTags of User
+                user.hashTags?.push(hashTag)
+                const newUser = (await userService.updateAll(id, user, true)) as User
 
-            // add id into users of HashTag
-            hashTag.users?.push(newUser)
-            await this.hashTagRepository.save(hashTag)
+                // add id into users of HashTag
+                hashTag.users?.push(newUser)
+                await this.hashTagRepository.save(hashTag)
 
-            return newUser
+                return newUser
+            }
         } catch (error) {
             throw new Error(error as string)
         }
@@ -297,14 +328,14 @@ class HashTagService {
             const { user, hashTag } = checkHashTags
 
             // check hash tags of user include hash tag id
-            if (!this.checkFollows(user.hashTags, hashTagId))
-                throw new Error(
-                    `'${user.username}' is not following ${hashTag.name} to unfollow.`
-                )
-            if (!this.checkFollows(hashTag.users, id))
-                throw new Error(
-                    `'${hashTag.name}' doesn't have follower '${user.username}'.`
-                )
+            // if (!this.checkFollows(user.hashTags, hashTagId))
+            //     throw new Error(
+            //         `'${user.username}' is not following ${hashTag.name} to unfollow.`
+            //     )
+            // if (!this.checkFollows(hashTag.users, id))
+            //     throw new Error(
+            //         `'${hashTag.name}' doesn't have follower '${user.username}'.`
+            //     )
 
             // remove hashTagId into hashTags of User
             const idx = user.hashTags?.findIndex(
@@ -312,7 +343,7 @@ class HashTagService {
             )
             if (typeof idx === 'number' && idx >= 0) {
                 user.hashTags?.splice(idx, 1)
-                await userService.updateAll(id, user)
+                await userService.updateAll(id, user, true)
             }
 
             // remove user id into users of HashTag

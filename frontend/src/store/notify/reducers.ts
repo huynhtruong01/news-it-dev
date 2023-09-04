@@ -111,4 +111,11 @@ export const reducers = {
     setNotify: (state: INotifyStore, action: PayloadAction<INotify | null>) => {
         state.notify = action.payload
     },
+    resetNotifies: (state: INotifyStore) => {
+        state.notifications = []
+        state.notificationsFilter = []
+        state.numNotifications = 0
+        state.total = 0
+        state.totalFilter = 0
+    },
 }

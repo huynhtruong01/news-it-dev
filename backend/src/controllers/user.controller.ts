@@ -3,6 +3,7 @@ import { IObjectCommon, RequestUser } from '@/models'
 import { userService, authService } from '@/services'
 import { Request, Response } from 'express'
 import { StatusText } from '../enums/common.enum'
+import { User } from '@/entities'
 
 class UserController {
     async getAllUser(req: RequestUser, res: Response) {
@@ -16,6 +17,55 @@ class UserController {
                 data: {
                     users,
                     total: count,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // get all user suggestion (GET)
+    async getAllUserSuggestion(req: RequestUser, res: Response) {
+        try {
+            const users = await userService.getAllSuggestion(req.user as User)
+
+            res.status(200).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    users,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    // get top users
+    async getTopUsers(req: Request, res: Response) {
+        try {
+            const users = await userService.getTopFollowers()
+            const newUser = users.map((u) => ({
+                id: u.id,
+                username: u.username,
+                lastName: u.lastName,
+                firstName: u.firstName,
+                numFollowers: u.numFollowers,
+            }))
+
+            res.status(200).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    users: newUser,
                 },
             })
         } catch (error) {
@@ -56,10 +106,10 @@ class UserController {
         }
     }
 
-    // get by username
+    // get by username (GET)
     async getUserByUsername(req: Request, res: Response) {
         try {
-            const user = await userService.getByUsername(req.params.userName)
+            const user = await userService.getByUsername(req.params.userName, true)
             if (!user) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,

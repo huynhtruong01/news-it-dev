@@ -62,13 +62,15 @@ function ReadingList({ pUser, pUserProfileFilter, pGetProfile }: IReadingListPro
     }, [pUserProfileFilter])
 
     const hashTags = useMemo(() => {
-        const hashTagSaves =
-            pUserProfileFilter?.saves?.reduce((tags: IHashTag[], news) => {
-                return [...tags, ...(news.hashTags || [])]
-            }, []) || []
+        if (pUser) {
+            const hashTagSaves =
+                pUser?.saves?.reduce((tags: IHashTag[], news) => {
+                    return [...tags, ...(news.hashTags || [])]
+                }, []) || []
 
-        return removeDuplicated<IHashTag>(hashTagSaves as IHashTag[]) || []
-    }, [pUserProfileFilter])
+            return removeDuplicated<IHashTag>(hashTagSaves as IHashTag[]) || []
+        }
+    }, [pUser])
 
     return (
         <Box>

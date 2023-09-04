@@ -97,7 +97,8 @@
         "back": "Trở lại",
         "more": "Xem thêm" ,
         "go_back": "Trở về",
-        "delete_all_notify": "Xóa hết thông báo"
+        "delete_all_notify": "Xóa hết thông báo",
+        "delete_all": "Xóa hết"
     },
 
     "profile": {
@@ -289,7 +290,8 @@
         "delete_comment": "Bạn có chắc chắn muốn xóa bình luận này?",
         "delete_notify": "Bạn có chắc chắn muốn xóa thông báo này?",
         "unsave_reading": "Bạn có chắc chắn không lưu bài tin tức này?",
-        "public_news": "Bạn có muốn công khai bài tin tức này không?"
+        "public_news": "Bạn có muốn công khai bài tin tức này không?",
+        "delete_all_notify": "Bạn có muốn xóa tất cả các thông báo?"
     },
 
     "error_input": {

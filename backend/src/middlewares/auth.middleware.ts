@@ -1,3 +1,4 @@
+import { ROLES } from '@/consts'
 import { Results, StatusCode, StatusText } from '@/enums'
 import { RequestUser } from '@/models'
 import { authService, userService } from '@/services'
@@ -33,7 +34,7 @@ class AuthMiddleware {
             const decode = authService.verifyToken(token)
 
             // check user
-            const user = await userService.getById(Number(decode.id))
+            const user = await userService.getByIdNoRelations(Number(decode.id))
             if (!user) {
                 res.status(StatusCode.UNAUTHORIZED).json({
                     results: Results.ERROR,
@@ -60,6 +61,31 @@ class AuthMiddleware {
                     message: (error as Error).message,
                 })
             }
+        }
+    }
+
+    async rolePermission(req: RequestUser, res: Response, next: NextFunction) {
+        try {
+            const user = await authService.getByEmail(req.body.emailAddress)
+
+            const checkAdmin = user?.roles
+                .map((r) => r.id)
+                .find((id) => ROLES.includes(id))
+            if (checkAdmin) {
+                next()
+            } else {
+                res.status(403).json({
+                    results: Results.ERROR,
+                    status: StatusText.ERROR,
+                    message: "You don't have permission",
+                })
+            }
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
         }
     }
 }

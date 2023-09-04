@@ -1,3 +1,3 @@
 export * from '@/pages/Notifications/components/NotifyFilters/NotificationNavFilters'
 export * from '@/pages/Notifications/components/NotifyFilters/NotificationPaginationFilters'
-export * from '@/pages/Notifications/components/NotifyFilters/NotificationSearchFilters'
+export { default as NotificationSearchFilters } from '@/pages/Notifications/components/NotifyFilters/NotificationSearchFilters'

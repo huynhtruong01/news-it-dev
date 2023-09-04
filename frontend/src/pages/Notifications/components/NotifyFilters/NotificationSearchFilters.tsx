@@ -1,22 +1,33 @@
 import { SearchFilter } from '@/components/Filters'
 import { INotifyFilters } from '@/models'
+import { AppDispatch, AppState } from '@/store'
+import { setShowModalDeleteAllNotify } from '@/store/common'
 import { theme } from '@/utils'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Button, Stack } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
 
 export interface INotificationSearchFiltersProps {
     setFilters: Dispatch<SetStateAction<INotifyFilters>>
+    pSetShowDeleteAllNotify: (isShow: boolean) => void
+    pNumNotifies: number
 }
 
-export function NotificationSearchFilters({
+function NotificationSearchFilters({
     setFilters,
+    pSetShowDeleteAllNotify,
+    pNumNotifies,
 }: INotificationSearchFiltersProps) {
     const { t } = useTranslation()
     const handleSearchNotify = (value: string) => {
         setFilters((prev) => ({ ...prev, page: 1, search: !value ? '' : value }))
+    }
+
+    const handleShowModal = () => {
+        pSetShowDeleteAllNotify(true)
     }
 
     return (
@@ -48,9 +59,26 @@ export function NotificationSearchFilters({
                         backgroundColor: red[700],
                     },
                 }}
+                onClick={handleShowModal}
+                disabled={!pNumNotifies}
             >
                 {t('button.delete_all_notify')}
             </Button>
         </Stack>
     )
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        pNumNotifies: state.notify.numNotifications,
+    }
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+    return {
+        pSetShowDeleteAllNotify: (isShow: boolean) =>
+            dispatch(setShowModalDeleteAllNotify(isShow)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationSearchFilters)

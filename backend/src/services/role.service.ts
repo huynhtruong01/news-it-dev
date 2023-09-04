@@ -124,6 +124,8 @@ class RoleService {
                 ...role,
                 name: data.name,
                 slug,
+                description: data.description,
+                color: data.color,
             })
 
             return newRole

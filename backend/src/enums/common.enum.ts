@@ -39,3 +39,15 @@ export enum Order {
     ASC = 'ASC',
     DESC = 'DESC',
 }
+
+export enum NewsFilters {
+    TOP = 'top',
+    LATEST = 'latest',
+    RELEVANT = 'relevant',
+}
+
+export enum TypeAuth {
+    GOOGLE = 'google',
+    FACEBOOK = 'facebook',
+    EMAIL = 'email',
+}

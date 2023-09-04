@@ -35,5 +35,6 @@ export const {
     deleteNotify,
     setNotificationFilters,
     setNotify,
+    resetNotifies,
 } = notifySlice.actions
 export default notifySlice.reducer

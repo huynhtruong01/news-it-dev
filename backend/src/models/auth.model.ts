@@ -22,7 +22,11 @@ export interface IGooglePayload {
 export interface IFacebookPayload {
     email: string
     name: string
-    picture: any
+    picture: {
+        data: {
+            url: string
+        }
+    }
     first_name: string
     last_name: string
 }

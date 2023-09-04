@@ -51,15 +51,19 @@ class CommonService {
 
             const newsLikesCount = await this.newsRepository
                 .createQueryBuilder('news')
-                .select('SUM(news.numLikes) AS numLikes')
-                .getRawOne()
+                .leftJoinAndSelect('news.likes', 'likes')
+                .getMany()
+
+            const totalLikes = newsLikesCount.reduce((total, news) => {
+                return news.numLikes + total
+            }, 0)
 
             return {
                 numUser: userCount,
                 numRole: roleCount,
                 numHashTag: hashTagCount,
                 numNews: newsCount,
-                numLikes: parseInt(newsLikesCount.numLikes),
+                numLikes: totalLikes,
             }
         } catch (error) {
             throw new Error(error as string)

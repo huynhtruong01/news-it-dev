@@ -2,6 +2,7 @@ import { Seo, TitleContainerPage, TitlePage } from '@/components/Common'
 import { ALL } from '@/consts'
 import { INotify, INotifyFilters, ISetNotifications, IUser } from '@/models'
 import {
+    ModalDeleteAllNotify,
     NotificationList,
     NotificationNavFilters,
     NotificationSearchFilters,
@@ -108,6 +109,7 @@ export function Notifications({
             </Box>
 
             <ModalDeleteNotify />
+            <ModalDeleteAllNotify hasNotifies={!!pNotifications.length} />
         </>
     )
 }

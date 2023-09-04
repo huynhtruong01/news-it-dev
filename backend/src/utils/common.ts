@@ -1,7 +1,19 @@
-import { AVATAR, MAX_AGE_REFRESH_TOKEN } from '@/consts'
-import { HashTag, News, Role, User, Comment, Notify } from '@/entities'
-import { NewsStatus } from '@/enums'
-import { INotifyData } from '@/models'
+import { AVATAR, DEFAULT_COLOR, MAX_AGE_REFRESH_TOKEN } from '@/consts'
+import {
+    HashTag,
+    News,
+    Role,
+    User,
+    Comment,
+    Notify,
+    UserSearchHistory,
+    UserLike,
+    UserSave,
+    Report,
+    UserFollow,
+} from '@/entities'
+import { NewsStatus, NotifyType, StatusReport } from '@/enums'
+import { INotifyData, IUserFollowerData, IUserLikeData, IUserSaveData } from '@/models'
 import { CookieOptions } from 'express'
 
 export const convertMentionToHtml = (text: string) => {
@@ -19,8 +31,8 @@ export const createUserData = (data: User): User => {
     user.emailAddress = data.emailAddress
     user.password = data.password
     user.dateJoined = new Date()
-    user.isAdmin = data.isAdmin
-    user.bandingColor = data.bandingColor ? data.bandingColor : '#ffffff'
+    user.isAdmin = data.isAdmin ? data.isAdmin : false
+    user.bandingColor = data.bandingColor ? data.bandingColor : DEFAULT_COLOR
     user.avatar = !data.avatar ? AVATAR : data.avatar
     user.type = data.type ? data.type : 'register'
 
@@ -30,7 +42,7 @@ export const createUserData = (data: User): User => {
 export const createRoleData = (data: Role): Role => {
     const role = new Role()
     role.name = data.name
-    role.description = data.description
+    role.description = data.description || ''
     role.color = data.color
 
     return role
@@ -42,7 +54,7 @@ export const createHashTag = (data: HashTag): HashTag => {
     hashTag.title = data.title
     hashTag.description = data.description || ''
     hashTag.color = data.color
-    hashTag.iconImage = data.iconImage
+    hashTag.iconImage = data.iconImage || ''
 
     return hashTag
 }
@@ -80,8 +92,75 @@ export const createNotify = (data: INotifyData): Notify => {
     notify.recipients = (data.recipients as User[])?.length > 0 ? data.recipients : []
     notify.readUsers = data.readUsers ? data.readUsers : []
     notify.text = data.text || ''
+    notify.commentText = data.commentText ? data.commentText : ''
+    notify.type = data.type ? data.type : NotifyType.DEFAULT
 
     return notify
+}
+
+export const createSearchHistory = (data: UserSearchHistory) => {
+    const searchHistory = new UserSearchHistory()
+    searchHistory.userId = data.userId
+    searchHistory.searchQuery = data.searchQuery
+
+    return searchHistory
+}
+
+export const createUserLike = (data: IUserLikeData) => {
+    const userLike = new UserLike()
+    userLike.userId = data.userId
+    userLike.newsId = data.newsId
+    if (data.user) {
+        userLike.user = data.user
+    }
+    if (data.news) {
+        userLike.news = data.news
+    }
+
+    return userLike
+}
+
+export const createUserSave = (data: IUserSaveData) => {
+    const userLike = new UserSave()
+    userLike.userId = data.userId
+    userLike.newsId = data.newsId
+    if (data.user) {
+        userLike.user = data.user
+    }
+    if (data.news) {
+        userLike.news = data.news
+    }
+
+    return userLike
+}
+
+export const createReport = (data: Report) => {
+    const report = new Report()
+    report.userId = data.userId
+    report.newsId = data.newsId
+    report.reason = data.reason || ''
+    report.status = data.status || StatusReport.OTHER
+    if (data.reporter) {
+        report.reporter = data.reporter
+    }
+    if (data.reportNews) {
+        report.reportNews = data.reportNews
+    }
+
+    return report
+}
+
+export const createUserFollow = (data: IUserFollowerData) => {
+    const follow = new UserFollow()
+    follow.userId = data.userId
+    follow.followerId = data.followerId
+    if (data.user) {
+        follow.user = data.user
+    }
+    if (data.user) {
+        follow.follower = data.follower
+    }
+    return follow
 }
 
 export const optionCookies = (options?: CookieOptions): CookieOptions => {

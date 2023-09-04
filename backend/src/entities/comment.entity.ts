@@ -11,9 +11,80 @@ import {
     ManyToMany,
     JoinTable,
     Index,
+    AfterLoad,
 } from 'typeorm'
 import { News } from '@/entities/news.entity'
 import { User } from '@/entities/user.entity'
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Comment:
+ *       type: object
+ *       required:
+ *          - userId
+ *          - newsId
+ *          - comment
+ *       properties:
+ *          userId:
+ *              type: integer
+ *          replyUserId:
+ *              type: integer
+ *          newsId:
+ *              type: integer
+ *          parentCommentId:
+ *              oneOf:
+ *                  - type: integer
+ *                  - type: null
+ *              nullable: true
+ *          comment:
+ *              type: string
+ *     CommentRes:
+ *       type: object
+ *       properties:
+ *          id:
+ *              type: integer
+ *          userId:
+ *              type: integer
+ *          replyUserId:
+ *              type: integer
+ *          newsId:
+ *              type: integer
+ *          parentCommentId:
+ *              oneOf:
+ *                  - type: integer
+ *                  - type: null
+ *              nullable: true
+ *          comment:
+ *              type: string
+ *          numLikes:
+ *              type: integer
+ *          numReplyComments:
+ *              type: integer
+ *          parentComment:
+ *              $ref: '#/components/schemas/CommentRes'
+ *          childrenComments:
+ *              type: array
+ *              items:
+ *                  $ref: '#/components/schemas/CommentRes'
+ *          news:
+ *              $ref: '#/components/schemas/NewsRes'
+ *          user:
+ *              $ref: '#/components/schemas/UserRes'
+ *          replyUser:
+ *              $ref: '#/components/schemas/UserRes'
+ *          likes:
+ *              type: array
+ *              items:
+ *                  $ref: '#/components/schemas/UserRes'
+ *          slug:
+ *              type: string
+ *          createdAt:
+ *              type: string
+ *          updatedAt:
+ *              type: string
+ */
 
 @Entity('comments')
 export class Comment extends BaseEntity {
@@ -49,7 +120,8 @@ export class Comment extends BaseEntity {
     parentComment?: Comment
 
     @OneToMany(() => Comment, (comment) => comment.parentComment, {
-        onDelete: 'CASCADE',
+        cascade: true,
+        eager: true,
     })
     childrenComments?: Comment[]
 
@@ -75,7 +147,8 @@ export class Comment extends BaseEntity {
     replyUser?: User
 
     @Column({
-        type: 'text',
+        type: 'varchar',
+        length: 255,
     })
     @Index()
     comment: string
@@ -87,9 +160,17 @@ export class Comment extends BaseEntity {
     @Index()
     numLikes: number
 
+    @Column({
+        type: 'int',
+        default: 0,
+    })
+    @Index()
+    numReplyComments: number
+
     // like comment
     @ManyToMany(() => User, (user) => user.commentLikes, {
         onDelete: 'CASCADE',
+        eager: true,
     })
     @JoinTable({
         name: 'user_comment_likes',
@@ -99,7 +180,8 @@ export class Comment extends BaseEntity {
     likes?: User[]
 
     @Column({
-        type: 'text',
+        type: 'varchar',
+        length: 255,
     })
     @Index()
     slug: string
@@ -109,4 +191,14 @@ export class Comment extends BaseEntity {
 
     @UpdateDateColumn()
     updatedAt: string
+
+    @AfterLoad()
+    countUsers() {
+        this.numLikes = this.likes ? this.likes.length : 0
+    }
+
+    @AfterLoad()
+    countReplyComments() {
+        this.numReplyComments = this.childrenComments ? this.childrenComments.length : 0
+    }
 }

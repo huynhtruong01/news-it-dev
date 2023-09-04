@@ -3,6 +3,7 @@ import { Order } from '@/enums'
 import { IFilters, INews } from '@/models'
 import { NewsDetail, NewsSideLeft, NewsSideRight } from '@/pages/News/components'
 import { AppDispatch, AppState } from '@/store'
+import { setComment } from '@/store/comment'
 import { getAllCommentsById } from '@/store/comment/thunkApi'
 import { setLoadingComment } from '@/store/common'
 import { resetNewsDetail } from '@/store/news'
@@ -22,6 +23,7 @@ export interface INewsProps {
     pResetNewsDetail: () => void
     pGetAllComments: (filter: IFilters) => Promise<PayloadAction<unknown>>
     pSetLoadingComment: (isLoading: boolean) => void
+    pSetComments: () => void
 }
 
 function News({
@@ -31,13 +33,14 @@ function News({
     pResetNewsDetail,
     pGetAllComments,
     pSetLoadingComment,
+    pSetComments,
 }: INewsProps) {
     const params = useParams()
     const [loading, setLoading] = useState<boolean>(true)
+    const [firstFetch, setFirstFetch] = useState<boolean>(false)
 
     // FETCH NEWS DETAIL
     useEffect(() => {
-        pResetNewsDetail()
         if (!params.slug) return
         ;(async () => {
             try {
@@ -48,12 +51,17 @@ function News({
             }
             setLoading(false)
         })()
+
+        return () => {
+            pResetNewsDetail()
+        }
     }, [params.slug])
 
     useEffect(() => {
         // get all comments by news id
-        if (pNewsDetail) {
+        if (pNewsDetail && !firstFetch) {
             ;(async () => {
+                pSetComments()
                 pSetLoadingComment(true)
                 try {
                     const newFilters = {
@@ -63,6 +71,7 @@ function News({
                         newsId: pNewsDetail.id,
                     }
                     await pGetAllComments(newFilters as IFilters)
+                    setFirstFetch(true)
                 } catch (error) {
                     enqueueSnackbar((error as Error).message, {
                         variant: 'error',
@@ -71,7 +80,7 @@ function News({
                 pSetLoadingComment(false)
             })()
         }
-    }, [])
+    }, [pNewsDetail])
 
     useEffect(() => {
         if (!params.slug || !pSocket) return
@@ -135,6 +144,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         pGetAllComments: (params: IFilters) => dispatch(getAllCommentsById(params)),
         pSetLoadingComment: (isLoading: boolean) =>
             dispatch(setLoadingComment(isLoading)),
+        pSetComments: () => dispatch(setComment(null)),
     }
 }
 

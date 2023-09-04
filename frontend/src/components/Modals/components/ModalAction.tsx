@@ -9,6 +9,8 @@ export interface IModalActionProps extends StackProps {
     onDelete: (() => Promise<void>) | (() => void)
     loading?: boolean
     isCallApi?: boolean
+    text?: string
+    disabled?: boolean
 }
 
 export function ModalAction({
@@ -16,6 +18,8 @@ export function ModalAction({
     onDelete,
     loading = false,
     isCallApi = false,
+    text = 'button.delete',
+    disabled = false,
     ...rest
 }: IModalActionProps) {
     const { t } = useTranslation()
@@ -66,7 +70,7 @@ export function ModalAction({
                     }}
                     onClick={onDelete}
                 >
-                    {t('button.delete')}
+                    {t(text)}
                 </LoadingButton>
             ) : (
                 <Button
@@ -80,9 +84,10 @@ export function ModalAction({
                             backgroundColor: red[700],
                         },
                     }}
+                    disabled={disabled}
                     onClick={onDelete}
                 >
-                    {t('button.delete')}
+                    {t(text)}
                 </Button>
             )}
         </Stack>

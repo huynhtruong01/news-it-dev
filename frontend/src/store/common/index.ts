@@ -9,6 +9,7 @@ export interface ICommonStore {
     isShowModalDeleteComment: boolean
     isShowModalDeleteAccount: boolean
     isShowModalDeleteNotify: boolean
+    isShowModalDeleteAllNotify: boolean
     isShowModalUnSaveReading: boolean
     isShowModalPublicNews: boolean
     loadingCommon: boolean
@@ -22,6 +23,7 @@ const initialState: ICommonStore = {
     isShowModalDeleteComment: false,
     isShowModalDeleteAccount: false,
     isShowModalDeleteNotify: false,
+    isShowModalDeleteAllNotify: false,
     isShowModalUnSaveReading: false,
     isShowModalPublicNews: false,
     loadingCommon: false,
@@ -41,6 +43,7 @@ export const {
     setShowModalDeleteAccount,
     setLanguages,
     setShowModalDeleteNotify,
+    setShowModalDeleteAllNotify,
     setShowModalUnSaveReading,
     setShowModalPublicNews,
     setLoadingCommon,

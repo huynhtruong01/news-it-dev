@@ -1,22 +1,26 @@
 import { AppDataSource } from '@/config'
-import { relationNewsData } from '@/data'
-import { News, User } from '@/entities'
-import { NewsStatus, Order } from '@/enums'
+import { News, User, UserLike, UserSave } from '@/entities'
+import { NewsFilters, NewsStatus, Order, Status } from '@/enums'
 import { INewsRes, IObjectCommon, IOrder } from '@/models'
+import { io } from '@/server'
 import { commonService } from '@/services/common.service'
 import { hashTagService } from '@/services/hashTag.service'
 import {
     createNews,
-    filtersQuery,
+    createUserLike,
+    createUserSave,
     paginationQuery,
-    searchQuery,
-    sortQuery,
+    recommenderNews,
 } from '@/utils'
-import { io } from 'server'
-import { userService } from '.'
+import { searchHistoryService, userService } from '.'
 
 class NewsService {
-    constructor(private newsRepository = AppDataSource.getRepository(News)) {}
+    constructor(
+        private newsRepository = AppDataSource.getRepository(News),
+        private userRepository = AppDataSource.getRepository(User),
+        private userLikeRepository = AppDataSource.getRepository(UserLike),
+        private userSaveRepository = AppDataSource.getRepository(UserSave)
+    ) {}
 
     // ------------------- CHECK ------------------------
     checkUserExitsInLikes(likes: User[] = [], userId: number) {
@@ -29,38 +33,134 @@ class NewsService {
         return newLikeUserIds.includes(userId)
     }
 
-    async getAllByConditional(query: IObjectCommon): Promise<INewsRes> {
+    async getAllByConditional(query: IObjectCommon, userId?: number): Promise<INewsRes> {
         try {
             const pagination = paginationQuery(query)
+            const user = (await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.newsLikes', 'likes')
+                .leftJoinAndSelect('user.saves', 'saves')
+                .where('user.id = :userId', {
+                    userId,
+                })
+                .getOne()) as User
+            const likes = user
+                ? (user.newsLikes?.map((u) => {
+                      if (u.newsId) return u.newsId
+                      return 0
+                  }) as number[])
+                : []
+            const saves = user
+                ? (user.saves?.map((u) => {
+                      if (u.newsId) return u.newsId
+                      return 0
+                  }) as number[])
+                : []
+            const excludeIds = Array.from(new Set([...likes, ...saves]))
 
-            if (query.hashTag) {
-                const hashTagIds = (query.hashTag as string).split(',')
-                const [news, count] = await this.newsRepository
+            if (query.hashTag || query.type === NewsFilters.RELEVANT) {
+                const hashTagIds = (query.hashTag as string)
+                    .split(',')
+                    .map((h) => Number(h))
+                const queryBuilder = this.newsRepository
                     .createQueryBuilder('news')
                     .leftJoinAndSelect('news.user', 'user')
                     .leftJoinAndSelect('news.hashTags', 'hashTag')
-                    .where('news.status = :status', { status: NewsStatus.PUBLIC })
-                    .andWhere('hashTag.id IN (:...hashTagIds)', {
-                        hashTagIds,
+                    .leftJoinAndSelect('news.likes', 'likes')
+                    .leftJoinAndSelect('news.comments', 'comments')
+                    .leftJoinAndSelect('news.saveUsers', 'saves')
+
+                if (excludeIds.length > 0) {
+                    queryBuilder.where('news.id NOT IN (:...excludeIds)', {
+                        excludeIds,
                     })
-                    .orderBy('news.createdAt', Order.DESC)
-                    .skip(pagination.skip)
+                }
+
+                if (userId) {
+                    const searchHistories = await searchHistoryService.getAllByUserId(
+                        Number(userId)
+                    )
+                    const searchQueries = searchHistories
+                        .map((s) => s.searchQuery.toLowerCase().split(' '))
+                        .flat()
+                    const searchKeys = Array.from(new Set([...searchQueries]))
+
+                    if (searchKeys.length > 0) {
+                        const conditions = searchKeys
+                            .filter((k) => !!k)
+                            .map((k) => k.toLowerCase())
+
+                        queryBuilder.andWhere(
+                            conditions
+                                .map((key) => {
+                                    return key.split(' ').join('_')
+                                })
+                                .map((keyword) => {
+                                    return `LOWER(REPLACE(news.title, ".", "")) LIKE :${keyword}`
+                                })
+                                .join(' OR '),
+                            conditions.reduce((params, keyword) => {
+                                const key = keyword.split(' ').join('_')
+                                return {
+                                    ...params,
+                                    [key]: `%${keyword.split('_').join(' ')}%`,
+                                }
+                            }, {})
+                        )
+                    }
+                }
+
+                if (hashTagIds.length > 0) {
+                    queryBuilder.where(
+                        'hashTag.id IN (:...hashTagIds) AND news.id NOT IN (:...newsIds)',
+                        {
+                            hashTagIds,
+                            newsIds: excludeIds,
+                        }
+                    )
+                }
+
+                const [news, count] = await queryBuilder
+                    .andWhere('news.status = :status', {
+                        status: NewsStatus.PUBLIC,
+                    })
                     .take(pagination.take)
+                    .skip(pagination.skip)
                     .getManyAndCount()
 
                 return [news, count]
             }
 
-            if (query.search && (query.search as string).split(' ').length >= 2) {
+            if (query.search && (query.search as string).split(' ').length > 0) {
                 const conditions = (query.search as string)
                     .split(' ')
-                    .map((k) => k.toLowerCase())
+                    .filter((k) => !!k)
+                    .map((k) => k.toLowerCase().split(' ').join('_'))
 
-                const [news, count] = await this.newsRepository
+                const queryBuilder = this.newsRepository
                     .createQueryBuilder('news')
                     .leftJoinAndSelect('news.user', 'user')
                     .leftJoinAndSelect('news.hashTags', 'hashTag')
-                    .where('news.status = :status', { status: NewsStatus.PUBLIC })
+                    .leftJoinAndSelect('news.likes', 'likes')
+                    .leftJoinAndSelect('news.comments', 'comments')
+                    .leftJoinAndSelect('news.saveUsers', 'saves')
+                    .where('news.status = :status', {
+                        status: NewsStatus.PUBLIC,
+                    })
+
+                if (excludeIds.length > 0) {
+                    queryBuilder.andWhere('news.id NOT IN (:...excludeIds)', {
+                        excludeIds,
+                    })
+                }
+
+                if (query.numLikes) {
+                    queryBuilder.orderBy('news.numLikes', Status.DESC)
+                } else {
+                    queryBuilder.orderBy('news.createdAt', Status.DESC)
+                }
+
+                const [news, count] = await queryBuilder
                     .andWhere(
                         conditions
                             .map((keyword) => {
@@ -68,10 +168,13 @@ class NewsService {
                             })
                             .join(' OR '),
                         conditions.reduce((params, keyword) => {
-                            return { ...params, [keyword]: `%${keyword}%` }
+                            return {
+                                ...params,
+                                [keyword]: `%${keyword.split('_').join(' ')}%`,
+                            }
                         }, {})
                     )
-                    .orderBy('news.createdAt', Order.DESC)
+                    .orderBy('news.numLikes', Order.DESC)
                     .skip(pagination.skip)
                     .take(pagination.take)
                     .getManyAndCount()
@@ -79,22 +182,34 @@ class NewsService {
                 return [news, count]
             }
 
-            const newFiltersQuery = filtersQuery(query)
-            const newSortQuery = sortQuery(query)
-            const titleSearchQuery = searchQuery(query, 'title')
-
-            const [news, count] = await this.newsRepository.findAndCount({
-                order: {
-                    ...newSortQuery,
-                },
-                where: {
-                    ...titleSearchQuery,
-                    ...newFiltersQuery,
+            // const [news, count] = await this.getAll(query)
+            const queryBuilder = this.newsRepository
+                .createQueryBuilder('news')
+                .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('news.hashTags', 'hashTag')
+                .leftJoinAndSelect('news.likes', 'likes')
+                .leftJoinAndSelect('news.comments', 'comments')
+                .leftJoinAndSelect('news.saveUsers', 'saves')
+                .where('news.status = :status', {
                     status: NewsStatus.PUBLIC,
-                },
-                ...pagination,
-                relations: relationNewsData,
-            })
+                })
+
+            if (excludeIds.length > 0) {
+                queryBuilder.andWhere('news.id NOT IN (:...excludeIds)', {
+                    excludeIds,
+                })
+            }
+
+            if (query.numLikes) {
+                queryBuilder.orderBy('news.numLikes', Order.DESC)
+            } else {
+                queryBuilder.orderBy('news.createdAt', Order.DESC)
+            }
+
+            const [news, count] = await queryBuilder
+                .take(pagination.take)
+                .skip(pagination.skip)
+                .getManyAndCount()
 
             return [news, count]
         } catch (error) {
@@ -102,12 +217,46 @@ class NewsService {
         }
     }
 
+    // search by queries
+    async getAllBySearchQueries(userId: number) {
+        try {
+            const searchHistories = await searchHistoryService.getAllByUserId(
+                Number(userId)
+            )
+            const getSearchQueries = searchHistories.map((s) => s.searchQuery)
+            const conditions = getSearchQueries.map((k) =>
+                k.toLowerCase().split(' ').join('_')
+            )
+            const [news, count] = await this.newsRepository
+                .createQueryBuilder('news')
+                .where(
+                    conditions
+                        .map((keyword) => {
+                            return `LOWER(news.title) LIKE :${keyword}`
+                        })
+                        .join(' OR '),
+                    conditions.reduce((params, keyword) => {
+                        return {
+                            ...params,
+                            [keyword]: `%${keyword.split('_').join(' ')}%`,
+                        }
+                    }, {})
+                )
+                .getManyAndCount()
+
+            return [news, count]
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // check image
     checkImage(thumbnailImage?: string, coverImage?: string) {
         if (!thumbnailImage) throw new Error('Missing thumbnail image.')
         if (!coverImage) throw new Error('Missing cover image.')
     }
 
-    // QUERY
+    // get all
     async getAll(query: IObjectCommon): Promise<INewsRes> {
         try {
             const { take, skip } = paginationQuery(query)
@@ -126,23 +275,25 @@ class NewsService {
                 .leftJoinAndSelect('userNews.hashTags', 'newsHashTags')
                 .leftJoinAndSelect('user.followers', 'userFollowers')
                 .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .leftJoinAndSelect('news.reporterNews', 'reportNews')
+                .leftJoinAndSelect('reportNews.reporter', 'reporter')
                 .take(take)
                 .skip(skip)
                 .orderBy('news.createdAt', (query.createdAt as IOrder) || Order.DESC)
 
-            if (query.readTimes) {
+            if (query?.readTimes) {
                 queryBuilder.orderBy('news.readTimes', query.readTimes as IOrder)
             }
 
-            if (query.newsLikes) {
-                queryBuilder.orderBy('news.newsLikes', query.newsLikes as IOrder)
+            if (query?.numLikes) {
+                queryBuilder.orderBy('news.numLikes', query.numLikes as IOrder)
             }
 
-            if (query.newsViews) {
+            if (query?.newsViews) {
                 queryBuilder.orderBy('news.newsViews', query.newsViews as IOrder)
             }
 
-            if (query.search) {
+            if (query?.search) {
                 queryBuilder.andWhere(
                     conditionsSearch
                         .map((keyword) => {
@@ -156,9 +307,12 @@ class NewsService {
             }
 
             if (query.hashTag) {
-                queryBuilder.andWhere(':hashTag IN (news.hashTagIds)', {
-                    hashTag: query.hashTag.toString(),
-                })
+                queryBuilder.andWhere(
+                    'FIND_IN_SET(:hashTag, CAST(news.hashTagIds AS CHAR)) > 0',
+                    {
+                        hashTag: query.hashTag.toString(),
+                    }
+                )
             }
 
             if (query.status) {
@@ -175,20 +329,28 @@ class NewsService {
         }
     }
 
-    // get news by hash tag ids
-    async getAllByTagIds(query: IObjectCommon): Promise<News[]> {
+    // get news by recommend
+    async getAllByRecommend(query: IObjectCommon): Promise<News[]> {
         try {
-            const news = await this.newsRepository
+            const hashTagIds = (query.hashTag as string)?.split(',')
+            const news = await this.newsRepository.findOne({
+                where: {
+                    id: query.newsId as number,
+                },
+            })
+            const newsList = await this.newsRepository
                 .createQueryBuilder('news')
-                .where('hashTagIds IN (:...hashTagIdsQuery)')
-                .andWhere('news.status = :status', { status: query.status })
-                .orderBy('news.createdAt', query.createdAt as IOrder)
-                .setParameter('hashTagIdsQuery', query.hashTagIds as number[])
-                .skip((+query.page - 1) * +query.limit)
-                .take(+query.limit)
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .where('news.id != :newsId', { newsId: query.newsId })
+                .andWhere('hashTags.id IN (:...hashTagIds)', { hashTagIds })
+                .orderBy('news.createdAt', Order.DESC)
                 .getMany()
 
-            return news
+            const newNews = recommenderNews(news?.title as string, newsList)
+                .filter((n) => n.similarity >= 0.55)
+                .map((n) => n.news)
+
+            return newNews
         } catch (error) {
             throw new Error(error as string)
         }
@@ -200,7 +362,7 @@ class NewsService {
             const news = createNews(data)
 
             // add hash tags array
-            if (data.hashTagIds.length > 0) {
+            if (data.hashTagIds?.length > 0) {
                 news.hashTags = await hashTagService.getAllByIds(data.hashTagIds)
             } else {
                 news.hashTags = []
@@ -208,11 +370,6 @@ class NewsService {
 
             // create slug
             news.slug = commonService.generateSlug(news.title)
-            const user = await userService.getById(data.userId)
-
-            if (user) {
-                await userService.updateAll(user.id, user)
-            }
 
             const newNews = await this.newsRepository.save(news)
             return newNews
@@ -233,6 +390,7 @@ class NewsService {
                 .leftJoinAndSelect('user.followers', 'followers')
                 .leftJoinAndSelect('newsUser.hashTags', 'hashTagsNewsUser')
                 .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .leftJoinAndSelect('news.comments', 'comments')
                 .where('news.id = :newsId', { newsId: id })
                 .getOne()
             if (!news) return null
@@ -260,6 +418,23 @@ class NewsService {
         }
     }
 
+    // get by id no relations
+    async getByIdNoRelations(id: number) {
+        try {
+            const news = await this.newsRepository
+                .createQueryBuilder('news')
+                .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .where('news.id = :newsId', { newsId: id })
+                .getOne()
+            if (!news) return null
+
+            return news
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     // get by :slug
     async getBySlug(slug: string): Promise<News | null> {
         try {
@@ -272,6 +447,7 @@ class NewsService {
                 .leftJoinAndSelect('user.followers', 'followers')
                 .leftJoinAndSelect('newsUser.hashTags', 'hashTagsNewsUser')
                 .leftJoinAndSelect('news.hashTags', 'hashTags')
+                .leftJoinAndSelect('news.comments', 'comments')
                 .where('news.slug = :slug', { slug })
                 .getOne()
             if (!news) return null
@@ -293,13 +469,20 @@ class NewsService {
             })
             if (!news) return null
 
+            // update hash tags array
+            if (data.hashTagIds?.length > 0) {
+                news.hashTags = await hashTagService.getAllByIds(data.hashTagIds)
+            } else {
+                news.hashTags = []
+            }
+
             // generate new slug
-            if (data.title) {
+            if (data.title !== news.title) {
                 data.slug = commonService.generateSlug(data.title)
             }
 
             // check both thumnail image and cover image is empty
-            this.checkImage(data.thumbnailImage, data.coverImage)
+            // this.checkImage(data.thumbnailImage, data.coverImage)
 
             const newNews = await this.newsRepository.save({
                 ...news,
@@ -311,6 +494,7 @@ class NewsService {
                 thumbnailImage: data.thumbnailImage || news.thumbnailImage,
                 coverImage: data.coverImage || news.coverImage,
                 readTimes: data.readTimes || news.readTimes,
+                hashTagIds: data.hashTagIds.length ? data.hashTagIds : [],
                 slug: data.slug || news.slug,
             })
 
@@ -320,8 +504,26 @@ class NewsService {
         }
     }
 
+    // increase nums
+    async increaseNums(id: number, key: string) {
+        try {
+            const news = await this.newsRepository
+                .createQueryBuilder('news')
+                .where('news.id = :newsId', {
+                    newsId: id,
+                })
+                .getOne()
+            if (news) {
+                const nums = news[key as keyof typeof news] as number
+                return await this.newsRepository.save({ ...news, [key]: nums + 1 })
+            }
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     // update all
-    async updateAll(id: number, data: News): Promise<News | null> {
+    async updateAll(id: number, data: News, notCheck = false): Promise<News | null> {
         try {
             // check news exits
             const news = await this.newsRepository.findOne({
@@ -337,7 +539,9 @@ class NewsService {
             }
 
             // check both thumnail image and cover image is empty
-            this.checkImage(data.thumbnailImage, data.coverImage)
+            if (!notCheck) {
+                this.checkImage(data.thumbnailImage, data.coverImage)
+            }
 
             const newNews = await this.newsRepository.save({
                 ...news,
@@ -358,11 +562,9 @@ class NewsService {
                     id,
                 },
             })
-            const user = await userService.getById(userId)
+            const user = await userService.getByIdNoRelations(userId)
             if (!news || !user) return null
 
-            user.newsCount = user.newsCount - 1
-            await userService.updateAll(userId, user)
             await this.newsRepository.delete(id)
 
             return news
@@ -391,55 +593,61 @@ class NewsService {
     // like news
     async like(newsId: number, user: User): Promise<News | null> {
         try {
-            const news = await this.getById(newsId)
-            if (!news) throw new Error('Not found this news to like.')
+            const news = (await this.getByIdNoRelations(newsId)) as News
+            const existingUserLike = await this.userLikeRepository.findOne({
+                where: {
+                    user: {
+                        id: user.id,
+                    },
+                    news: {
+                        id: news.id,
+                    },
+                },
+            })
 
-            // check user liked
-            if (this.checkUserExitsInLikes(news.likes, user.id))
-                throw new Error(`User '${user.username}' liked to '${news.title}' news.`)
+            if (existingUserLike) {
+                throw new Error(`user ${user.username} liked this news`)
+            }
+            const data = {
+                userId: user.id,
+                newsId: news.id,
+                user,
+                news,
+            }
 
-            const newUser = (await userService.updateAll(
-                user.id,
-                { ...user, numNewsLike: user.numNewsLike + 1 } as User,
-                true
-            )) as User
-            // add user into likes
-            news.likes?.push(newUser)
-            news.numLikes++
+            const userLike = createUserLike(data)
+            await this.userLikeRepository.save(userLike)
+            const newNews = (await this.getById(newsId)) as News
 
-            const newNews = await this.updateAll(newsId, news)
-            io.to(newNews?.slug as string).emit('likeNews', { ...news, ...newNews })
-
-            return newNews
+            io.to(news?.slug as string).emit('likeNews', newNews)
+            return news
         } catch (error) {
             throw new Error(error as string)
         }
     }
 
     // dislike news
-    async dislike(newsId: number, user: User): Promise<News | null> {
+    async unlike(newsId: number, user: User): Promise<News | null> {
         try {
-            const news = await this.getById(newsId)
+            const news = await this.newsRepository
+                .createQueryBuilder('news')
+                .where('news.id = :newsId', { newsId })
+                .getOne()
             if (!news) throw new Error('Not found this news to unlike.')
 
-            const idx = news.likes?.findIndex((user) => user.id === user.id)
-            if (typeof idx === 'number' && idx >= 0) {
-                news.likes?.splice(idx, 1)
-                news.numLikes--
-                if (news.numLikes < 0) news.numLikes = 0
+            const userLike = await this.userLikeRepository.findOne({
+                where: { user: { id: user.id }, news: { id: newsId } },
+            })
 
-                await userService.updateAll(
-                    user.id,
-                    { ...user, numNewsLike: user.numNewsLike - 1 } as User,
-                    true
-                )
-                const newNews = await this.updateAll(newsId, news)
-
-                io.to(newNews?.slug as string).emit('unlikeNews', newNews)
-                return newNews
+            if (!userLike) {
+                throw new Error(`user ${user.username} doesn't like this news`)
             }
 
-            throw new Error(`User '${user.username}' doesn't like.`)
+            await userLike.remove()
+
+            const newNews = (await this.getById(newsId)) as News
+            io.to(newNews?.slug as string).emit('unlikeNews', newNews)
+            return newNews
         } catch (error) {
             throw new Error(error as string)
         }
@@ -448,27 +656,32 @@ class NewsService {
     // save
     async save(newsId: number, user: User): Promise<News | null> {
         try {
-            const news = await this.getById(newsId)
-            if (!news) throw new Error('Not found this news to save.')
+            const news = (await this.getByIdNoRelations(newsId)) as News
+            const existingUserSave = await this.userSaveRepository.findOne({
+                where: {
+                    user: {
+                        id: user.id,
+                    },
+                    news: {
+                        id: news.id,
+                    },
+                },
+            })
+            if (existingUserSave) {
+                throw new Error(`user ${user.username} saved this news`)
+            }
+            const data = {
+                userId: user.id,
+                newsId: news.id,
+                user,
+                news,
+            }
 
-            if (this.checkUserExitsInSaves(news.saveUsers, user.id))
-                throw new Error(`'${news.title}' has been exits in your saves.`)
+            const userLike = createUserSave(data)
+            await this.userSaveRepository.save(userLike)
+            const newNews = (await this.getById(newsId)) as News
 
-            const newUser = (await userService.updateAll(
-                user.id,
-                {
-                    ...user,
-                    numNewsSaves: user.numNewsSaves + 1,
-                } as User,
-                true
-            )) as User
-
-            news.saveUsers?.push(newUser)
-            news.numSaves++
-
-            const newNews = await this.updateAll(newsId, news)
             io.to(newNews?.slug as string).emit('saveNews', newNews)
-
             return newNews
         } catch (error) {
             throw new Error(error as string)
@@ -478,31 +691,25 @@ class NewsService {
     // unsave
     async unsave(newsId: number, user: User): Promise<News | null> {
         try {
-            const news = await this.getById(newsId)
-            if (!news) throw new Error('Not found this news to save.')
+            const news = await this.newsRepository
+                .createQueryBuilder('news')
+                .where('news.id = :newsId', { newsId })
+                .getOne()
+            if (!news) throw new Error('Not found this news to unlike.')
 
-            if (!this.checkUserExitsInSaves(news.saveUsers, user.id))
-                throw new Error(`'${news.title}' news doesn't save.`)
+            const userSave = await this.userSaveRepository.findOne({
+                where: { user: { id: user.id }, news: { id: newsId } },
+            })
 
-            const idx = news.saveUsers?.findIndex((userSave) => userSave.id === user.id)
-            if (typeof idx === 'number' && idx >= 0) {
-                news.saveUsers?.splice(idx, 1)
-                if (news.numSaves > 0) news.numSaves--
-                ;(await userService.updateAll(
-                    user.id,
-                    {
-                        ...user,
-                        numNewsSaves: user.numNewsSaves - 1,
-                    } as User,
-                    true
-                )) as User
-
-                const newNews = await this.updateAll(newsId, news)
-                io.to(newNews?.slug as string).emit('unsaveNews', newNews)
-                return newNews
+            if (!userSave) {
+                throw new Error(`user ${user.username} doesn't save this news`)
             }
 
-            throw new Error(`Not found '${user.username}' to unsave.`)
+            await userSave.remove()
+
+            const newNews = (await this.getById(newsId)) as News
+            io.to(newNews?.slug as string).emit('unsaveNews', newNews)
+            return newNews
         } catch (error) {
             throw new Error(error as string)
         }

@@ -6,10 +6,13 @@ import { Response } from 'express'
 // check name hash tag
 const checkDuplicateName = async (
     name: string,
-    res: Response
+    res: Response,
+    id?: number
 ): Promise<boolean | null> => {
     const checkName = await hashTagService.checkNameHashTag(name)
+
     if (checkName) {
+        if (checkName.id === id) return true
         res.status(StatusCode.BAD_REQUEST).json({
             results: Results.ERROR,
             status: StatusText.FAILED,
@@ -150,7 +153,14 @@ class HashTagController {
     // update (PUT)
     async updateHashTag(req: RequestUser, res: Response) {
         try {
-            if (!(await checkDuplicateName(req.body.name, res))) return
+            if (
+                !(await checkDuplicateName(
+                    req.body.name,
+                    res,
+                    Number(req.params.hashTagId)
+                ))
+            )
+                return
 
             const newHashTag = await hashTagService.update(req.body)
             if (!newHashTag) {

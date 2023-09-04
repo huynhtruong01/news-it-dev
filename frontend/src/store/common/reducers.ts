@@ -20,6 +20,9 @@ export const reducers = {
     setShowModalDeleteNotify(state: ICommonStore, action: PayloadAction<boolean>) {
         state.isShowModalDeleteNotify = action.payload
     },
+    setShowModalDeleteAllNotify(state: ICommonStore, action: PayloadAction<boolean>) {
+        state.isShowModalDeleteAllNotify = action.payload
+    },
     setShowModalUnSaveReading(state: ICommonStore, action: PayloadAction<boolean>) {
         state.isShowModalUnSaveReading = action.payload
     },

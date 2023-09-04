@@ -7,6 +7,8 @@ import newsRouter from '@/routes/news.route'
 import commentRouter from '@/routes/comment.route'
 import notifyRouter from '@/routes/notify.route'
 import commonRouter from '@/routes/common.route'
+import searchHistoryRouter from '@/routes/searchHistory.route'
+import reportRouter from '@/routes/report.route'
 const router = express.Router()
 
 const routes = [
@@ -15,9 +17,11 @@ const routes = [
     router.use('/auth', authRouter),
     router.use('/roles', roleRouter),
     router.use('/hash-tags', hashTagRouter),
-    router.use('/news', newsRouter),
     router.use('/comments', commentRouter),
+    router.use('/news', newsRouter),
     router.use('/notifies', notifyRouter),
+    router.use('/search-history', searchHistoryRouter),
+    router.use('/reports', reportRouter),
 ]
 
 export default routes

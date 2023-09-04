@@ -1,13 +1,11 @@
 import { AppDataSource, sendEmail } from '@/config'
 import { MAX_AGE_ACCESS_TOKEN, TYPE_REGISTER } from '@/consts'
 import { User } from '@/entities'
-import { Results, StatusCode, StatusText } from '@/enums'
+import { Results, StatusCode, StatusText, TypeAuth } from '@/enums'
 import { IFacebookPayload, IGooglePayload, RequestUser } from '@/models'
 import { authService, commonService, userService } from '@/services'
 import { Request, Response } from 'express'
 import { OAuth2Client } from 'google-auth-library'
-const fetch = (...args: Parameters<typeof import('node-fetch')['default']>) =>
-    import('node-fetch').then(({ default: fetch }) => fetch(...args))
 
 const client = new OAuth2Client(`${process.env.CLIENT_ID}`)
 // const CLIENT_URL = `${process.env.BASE_URL}`
@@ -96,7 +94,7 @@ class AuthController {
             if (emailAddress) {
                 const token = encodeURIComponent(activeToken).split('.').join('_')
                 const url = `${process.env.BASE_URL}/active/${token}`
-                await sendEmail(emailAddress, url, 'Verify your email address.')
+                await sendEmail(emailAddress, url, 'Xác nhận email của bạn')
             }
 
             res.status(StatusCode.SUCCESS).json({
@@ -195,7 +193,16 @@ class AuthController {
                 res.status(StatusCode.BAD_REQUEST).json({
                     results: Results.ERROR,
                     status: StatusText.FAILED,
-                    message: 'Wrong email.',
+                    message: 'Wrong email',
+                })
+                return
+            }
+
+            if (user.type !== TYPE_REGISTER) {
+                res.status(StatusCode.ERROR).json({
+                    results: Results.ERROR,
+                    status: StatusText.FAILED,
+                    message: 'Not found this user login by email',
                 })
                 return
             }
@@ -370,6 +377,16 @@ class AuthController {
 
             const user = await authService.getByEmail(email)
 
+            if (user && user.type !== TypeAuth.GOOGLE) {
+                res.status(StatusCode.ERROR).json({
+                    results: Results.ERROR,
+                    status: StatusText.ERROR,
+                    message:
+                        'You has been register this email by register email or facebook',
+                })
+                return
+            }
+
             if (user) {
                 await loginUser(user, password, res)
             } else {
@@ -409,6 +426,15 @@ class AuthController {
             const password = email
 
             const user = await authService.getByEmail(email)
+            if (user && user.type !== 'facebook') {
+                res.status(StatusCode.ERROR).json({
+                    results: Results.ERROR,
+                    status: StatusText.ERROR,
+                    message:
+                        'You has been register this email by register email or google',
+                })
+                return
+            }
 
             if (user) {
                 loginUser(user, password, res)
@@ -425,19 +451,6 @@ class AuthController {
                 }
                 registerUser(dataUser as User, res)
             }
-        } catch (error) {
-            res.status(StatusCode.ERROR).json({
-                results: Results.ERROR,
-                status: StatusText.ERROR,
-                message: (error as Error).message,
-            })
-        }
-    }
-
-    // github login
-    async githubLogin(req: Request, res: Response) {
-        try {
-            const { code } = req.body
         } catch (error) {
             res.status(StatusCode.ERROR).json({
                 results: Results.ERROR,
@@ -479,7 +492,7 @@ class AuthController {
             const hashPassword = await commonService.hashPassword(confirmPassword)
             user.password = hashPassword
 
-            const newUser = await userService.update(user.id, user)
+            const newUser = await userService.updateAll(user.id, user)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
@@ -626,10 +639,15 @@ class AuthController {
                 return
             }
 
-            const accessToken = authService.signAccessToken(user.id)
+            const accessToken = authService.signForgotPassword(user.id)
             const token = encodeURIComponent(accessToken).replaceAll('.', '_')
             const url = `${process.env.BASE_URL}/forgot-password/${token}`
-            await sendEmail(emailAddress, url, 'Forgot password')
+            await sendEmail(
+                emailAddress,
+                url,
+                'Quên mật khẩu',
+                'Xác nhận email thành công. Vui lòng nhấn nút hoặc nhấn vào đường link để cài lại mật khẩu'
+            )
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
@@ -665,7 +683,7 @@ class AuthController {
             const token = bearer.split('.')[1]
             const decode = authService.verifyTokenBuffer(token)
 
-            const user = await userService.getByIdNoRelation(Number(decode.id))
+            const user = await userService.getByIdHashTag(Number(decode.id))
             if (!user) {
                 res.status(StatusCode.NOT_FOUND).json({
                     results: Results.ERROR,

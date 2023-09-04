@@ -1,3 +1,4 @@
+import { User } from '@/entities'
 import { Results, StatusCode, StatusText } from '@/enums'
 import { IObjectCommon, RequestUser } from '@/models'
 import { commentService } from '@/services'
@@ -31,7 +32,7 @@ class CommentController {
     // create comment (POST)
     async createComment(req: RequestUser, res: Response) {
         try {
-            const comment = await commentService.create(req.body)
+            const comment = await commentService.create(req.body, req?.user as User)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
@@ -51,7 +52,7 @@ class CommentController {
 
     async replyComment(req: RequestUser, res: Response) {
         try {
-            const comment = await commentService.reply(req.body)
+            const comment = await commentService.reply(req.body, req.user as User)
 
             if (!comment) {
                 res.status(StatusCode.NOT_FOUND).json({
@@ -168,7 +169,7 @@ class CommentController {
         try {
             const comment = await commentService.like(
                 Number(req.params.commentId),
-                Number(req.user?.id)
+                req.user as User
             )
 
             if (!comment) {
@@ -201,7 +202,7 @@ class CommentController {
         try {
             const comment = await commentService.unlike(
                 Number(req.params.commentId),
-                Number(req.user?.id)
+                req.user as User
             )
 
             if (!comment) {

@@ -1,4 +1,13 @@
 import { News, User } from '@/entities'
+import { NotifyType } from '@/enums'
+
+export type INotifyType =
+    | NotifyType.COMMENT
+    | NotifyType.FOLLOW
+    | NotifyType.LIKE
+    | NotifyType.LIKE_COMMENT
+    | NotifyType.REPLY
+    | NotifyType.DEFAULT
 
 export interface INotifyData {
     userId: number
@@ -8,4 +17,6 @@ export interface INotifyData {
     recipients?: User[]
     readUsers?: (number | string)[]
     text: string
+    commentText?: string
+    type?: INotifyType
 }

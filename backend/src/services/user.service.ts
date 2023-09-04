@@ -1,11 +1,16 @@
 import { AppDataSource } from '@/config'
-import { User } from '@/entities'
+import { News, User, UserFollow, UserSave } from '@/entities'
 import { Order } from '@/enums'
 import { IObjectCommon, IOrder, IUserRes } from '@/models'
 import { authService } from '@/services/auth.service'
 import { commonService } from '@/services/common.service'
 import { roleService } from '@/services/role.service'
-import { createUserData, paginationQuery } from '@/utils'
+import {
+    createUserData,
+    createUserFollow,
+    paginationQuery,
+    recommenderUsers,
+} from '@/utils'
 
 interface ICheckUser {
     user: User
@@ -13,12 +18,27 @@ interface ICheckUser {
 }
 
 class UserService {
-    constructor(private userRepository = AppDataSource.getRepository(User)) {}
+    constructor(
+        private userRepository = AppDataSource.getRepository(User),
+        private userFollowRepository = AppDataSource.getRepository(UserFollow)
+    ) {}
 
     // ----------------- CHECK --------------------------
     async checkIdAndUserId(id: number, userId: number): Promise<void | ICheckUser> {
-        const self = await this.getById(id)
-        const user = await this.getById(userId)
+        const self = await this.userRepository
+            .createQueryBuilder('user')
+            .leftJoinAndSelect('user.following', 'following')
+            .where('user.id = :userId', {
+                userId: id,
+            })
+            .getOne()
+        const user = await this.userRepository
+            .createQueryBuilder('user')
+            .leftJoinAndSelect('user.followers', 'followers')
+            .where('user.id = :userId', {
+                userId,
+            })
+            .getOne()
 
         if (!self || !user) return
 
@@ -46,14 +66,16 @@ class UserService {
                 .createQueryBuilder('user')
                 .leftJoinAndSelect('user.roles', 'roles')
                 .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('followers.user', 'followersUser')
                 .leftJoinAndSelect('user.following', 'following')
+                .leftJoinAndSelect('following.follower', 'userFollowing')
                 .leftJoinAndSelect('user.hashTags', 'hashTags')
                 .leftJoinAndSelect('user.news', 'news')
                 .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
                 .leftJoinAndSelect('user.newsLikes', 'newsLikes')
-                .leftJoinAndSelect('newsLikes.user', 'newsLikesUser')
+                .leftJoinAndSelect('newsLikes.news', 'newsLikesUser')
                 .leftJoinAndSelect('user.saves', 'saves')
-                .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
+                .leftJoinAndSelect('saves.news', 'newsSaves')
                 .leftJoinAndSelect('user.comments', 'comments')
                 .leftJoinAndSelect('user.commentLikes', 'commentLikes')
                 .orderBy('user.createdAt', (query.createdAt as IOrder) || Order.DESC)
@@ -84,14 +106,77 @@ class UserService {
             }
 
             if (query.isAdmin) {
-                queryBuilder
-                    .andWhere('user.isAdmin = :isAdmin')
-                    .setParameter('isAdmin', query.isAdmin === 'true' ? 1 : 0)
+                queryBuilder.andWhere('roles.id = :roleId', { roleId: query.isAdmin })
+                // .setParameter('isAdmin', query.isAdmin === 'true' ? 1 : 0)
             }
 
             const [users, count] = await queryBuilder.getManyAndCount()
 
             return [users, count]
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get all user suggestion
+    async getAllSuggestion(user: User): Promise<User[]> {
+        try {
+            // 1. get all user not in following
+            const self = await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.following', 'following')
+                .leftJoinAndSelect('following.follower', 'follower')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('user.saves', 'saves')
+                .leftJoinAndSelect('user.comments', 'comments')
+                .leftJoinAndSelect('user.news', 'news')
+                .leftJoinAndSelect('user.newsLikes', 'newsLikes')
+                .where('user.id = :userId', {
+                    userId: user.id,
+                })
+                .getOne()
+            if (!self) return []
+
+            const followingIds = self.following?.map((u) => u.followerId) as number[]
+
+            const queryBuilder = this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.newsLikes', 'newsLikes')
+                .where('user.id != :userId', {
+                    userId: self.id,
+                })
+
+            if (followingIds.length) {
+                queryBuilder.andWhere('user.id NOT IN (:...followingIds)', {
+                    followingIds,
+                })
+            }
+            const users = await queryBuilder.getMany()
+
+            const similarityUsers = recommenderUsers(self, users)
+                .filter((u) => u.score >= 0.5)
+                .sort((a, b) => b.score - a.score)
+                .map((u) => u.user)
+
+            return similarityUsers
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get top user
+    async getTopFollowers(): Promise<User[]> {
+        try {
+            const users = await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .orderBy('user.numFollowers', Order.DESC)
+                .skip(0)
+                .take(8)
+                .getMany()
+            const newUser = users.filter((u) => u.numFollowers > 0)
+
+            return newUser
         } catch (error) {
             throw new Error(error as string)
         }
@@ -123,39 +208,63 @@ class UserService {
     // get by id
     async getById(id: number): Promise<User | null> {
         try {
-            const user = await this.userRepository
+            const queryBuilder = this.userRepository
                 .createQueryBuilder('user')
-                .leftJoinAndSelect('user.roles', 'roles')
                 .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('followers.user', 'followersUser')
                 .leftJoinAndSelect('user.following', 'following')
+                .leftJoinAndSelect('following.follower', 'userFollowing')
                 .leftJoinAndSelect('user.hashTags', 'hashTags')
                 .leftJoinAndSelect('user.news', 'news')
+                .leftJoinAndSelect('news.likes', 'likesNews')
                 .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
                 .leftJoinAndSelect('user.newsLikes', 'newsLikes')
-                .leftJoinAndSelect('newsLikes.hashTags', 'hashTagsNewsLikes')
-                .leftJoinAndSelect('newsLikes.user', 'usersNewsLikes')
+                .leftJoinAndSelect('newsLikes.news', 'newsNewsLikes')
+                .leftJoinAndSelect('newsNewsLikes.user', 'newsLikesUser')
+                .leftJoinAndSelect('newsNewsLikes.likes', 'likes')
                 .leftJoinAndSelect('user.saves', 'saves')
-                .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
-                .leftJoinAndSelect('saves.user', 'usersSaves')
-                .leftJoinAndSelect('user.comments', 'comments')
-                .leftJoinAndSelect('user.commentLikes', 'commentLikes')
+                .leftJoinAndSelect('saves.news', 'newsSaves')
+                .leftJoinAndSelect('newsSaves.likes', 'saveLikes')
+                .leftJoinAndSelect('newsSaves.user', 'saveUser')
+                .leftJoinAndSelect('newsSaves.hashTags', 'saveUserHashTags')
+                .leftJoinAndSelect('user.searchHistory', 'searchHistory')
+
+            const user = await queryBuilder
                 .where('user.id = :userId', { userId: id })
                 .getOne()
+
             if (!user) return null
 
-            return user
+            const newUser = {
+                ...user,
+                following: user?.following?.map((u) => ({
+                    ...(u.follower as User),
+                })),
+                followers: user?.followers?.map((u) => ({
+                    ...(u.user as User),
+                })),
+                newsLikes: user?.newsLikes?.map((u) => ({
+                    ...(u.news as News),
+                })),
+                saves: user?.saves?.map((u) => ({
+                    ...(u.news as News),
+                })),
+            } as User
+
+            return newUser
         } catch (error) {
             throw new Error(error as string)
         }
     }
 
-    async getByIdNoRelations(id: number): Promise<User | null> {
+    async getByIdSaves(id: number): Promise<User | null> {
         try {
             const user = await this.userRepository
                 .createQueryBuilder('user')
                 .leftJoinAndSelect('user.saves', 'saves')
-                .leftJoinAndSelect('saves.hashTags', 'hashTags')
-                .leftJoinAndSelect('saves.user', 'userSave')
+                .leftJoinAndSelect('saves.news', 'newsSave')
+                .leftJoinAndSelect('newsSave.hashTags', 'newsSaveHashTags')
+                .leftJoinAndSelect('newsSave.user', 'newsSaveUser')
                 .where('user.id = :userId', { userId: id })
                 .getOne()
             if (!user) return null
@@ -185,20 +294,27 @@ class UserService {
     // get by username
     async getByUsername(username: string, noRelations = false): Promise<User | null> {
         try {
-            const queryBuilder = this.userRepository.createQueryBuilder('user')
+            const queryBuilder = this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.news', 'news')
+                .leftJoinAndSelect('news.likes', 'likes')
+                .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
+                .leftJoinAndSelect('user.hashTags', 'hashTags')
+                .leftJoinAndSelect('user.followers', 'followers')
+                .leftJoinAndSelect('user.following', 'following')
 
             if (!noRelations) {
                 queryBuilder
                     .leftJoinAndSelect('user.roles', 'roles')
-                    .leftJoinAndSelect('user.followers', 'followers')
-                    .leftJoinAndSelect('user.following', 'following')
-                    .leftJoinAndSelect('user.hashTags', 'hashTags')
-                    .leftJoinAndSelect('user.news', 'news')
-                    .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
                     .leftJoinAndSelect('user.newsLikes', 'newsLikes')
-                    .leftJoinAndSelect('newsLikes.hashTags', 'hashTagsNewsLikes')
+                    .leftJoinAndSelect('newsLikes.news', 'newsNewsLikes')
+                    .leftJoinAndSelect('newsNewsLikes.hashTags', 'newsLikesHashTags')
+                    .leftJoinAndSelect('newsNewsLikes.user', 'newsLikesUser')
+                    .leftJoinAndSelect('newsNewsLikes.likes', 'likes')
                     .leftJoinAndSelect('user.saves', 'saves')
-                    .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
+                    .leftJoinAndSelect('saves.news', 'newsSaves')
+                    .leftJoinAndSelect('newsSaves.likes', 'saveLikes')
+                    .leftJoinAndSelect('newsSaves.user', 'saveUser')
                     .leftJoinAndSelect('user.comments', 'comments')
                     .leftJoinAndSelect('user.commentLikes', 'commentLikes')
             }
@@ -217,10 +333,10 @@ class UserService {
     // get user by filter saves
     async getFilterSaves(id: number, filters: IObjectCommon): Promise<User | null> {
         try {
-            const user = await this.getByIdNoRelations(id)
+            const user = await this.getByIdSaves(id)
             if (!user) return null
 
-            const newNews = user.saves?.filter((n) => {
+            const newNews = user.saves?.filter((userSave) => {
                 const search =
                     filters.search === '' || !filters.search
                         ? true
@@ -228,10 +344,12 @@ class UserService {
                               .toLowerCase()
                               .split(' ')
                               .filter((x) => !!x)
-                              .some((w) => n.title.toLowerCase().includes(w))
+                              .some((w) =>
+                                  userSave.news?.title?.toLowerCase().includes(w)
+                              )
                 if (!filters.tag) return search
 
-                const hasIncludeTag = n.hashTags?.some(
+                const hasIncludeTag = userSave.news?.hashTags?.some(
                     (tag) =>
                         tag.name.toLowerCase() === (filters.tag as string).toLowerCase()
                 )
@@ -239,7 +357,12 @@ class UserService {
                 return search && hasIncludeTag
             })
 
-            user.saves = newNews
+            user.saves = newNews?.map(
+                (userSave) =>
+                    ({
+                        ...userSave.news,
+                    } as UserSave)
+            )
 
             return user
         } catch (error) {
@@ -264,15 +387,35 @@ class UserService {
         }
     }
 
-    // get by email
-    async getByIdNoRelation(id: number) {
+    // get by id for hash tag
+    async getByIdHashTag(id: number) {
         try {
-            const user = await this.userRepository.findOne({
-                where: {
-                    id,
-                },
-            })
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .leftJoinAndSelect('user.hashTags', 'hashTags')
+                .where('user.id = :userId', { userId: id })
+                .getOne()
 
+            if (!user) return null
+
+            return user
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // get by id no relation
+    async getByIdNoRelations(id: number, hasRole = false) {
+        try {
+            const queryBuilder = this.userRepository
+                .createQueryBuilder('user')
+                .where('user.id = :userId', { userId: id })
+
+            if (hasRole) {
+                queryBuilder.leftJoinAndSelect('user.roles', 'role')
+            }
+
+            const user = await queryBuilder.getOne()
             if (!user) return null
 
             return user
@@ -310,6 +453,9 @@ class UserService {
                 data.slug = commonService.generateSlug(data.username)
             }
 
+            const roles = await roleService.getAllRolesById(data.roleIds || [])
+            user.roles = roles
+
             const newUser = await this.userRepository.save({
                 ...user,
                 username: data.username,
@@ -324,6 +470,8 @@ class UserService {
                 work: data.work || user.work,
                 slug: data.slug || user.slug,
                 avatar: data.avatar || user.avatar,
+                bandingColor: data.bandingColor || user.bandingColor,
+                isAdmin: data.isAdmin || user.isAdmin,
             })
 
             return newUser
@@ -339,11 +487,10 @@ class UserService {
         noCheckUsername = false
     ): Promise<User | null> {
         try {
-            const user = await this.userRepository.findOne({
-                where: {
-                    id: userId,
-                },
-            })
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .where('user.id = :userId', { userId })
+                .getOne()
             if (!user) return null
 
             if (!noCheckUsername) {
@@ -378,6 +525,17 @@ class UserService {
         }
     }
 
+    // save user
+    async saveUser(user: User) {
+        try {
+            const newUser = await this.userRepository.save(user)
+            return newUser
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // count news
     async countNews(user: User) {
         try {
             const newUser = user
@@ -392,11 +550,12 @@ class UserService {
     // delete
     async delete(id: number): Promise<User | null> {
         try {
-            const user = await this.userRepository.findOne({
-                where: {
-                    id,
-                },
-            })
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .where('user.id = :userId', {
+                    userId: id,
+                })
+                .getOne()
 
             if (!user) return null
 
@@ -407,10 +566,10 @@ class UserService {
         }
     }
 
-    // TODO: edit profile
+    // edit profile
     async updateProfile(userId: number, data: User) {
         try {
-            const user = await this.getById(userId)
+            const user = await this.getByIdNoRelations(userId)
             if (!user) throw new Error('Not found this user to update profile.')
 
             const newUser = await this.update(userId, data)
@@ -423,30 +582,41 @@ class UserService {
     // follow
     async follow(id: number, userId: number): Promise<User | unknown> {
         try {
-            // check id and userId
-            const checkUsers = await this.checkIdAndUserId(id, userId)
-            if (!checkUsers) throw new Error('Unauthorized or this user is not exits.')
-            const { user, userFollower } = checkUsers
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .where('user.id = :userId', {
+                    userId: id,
+                })
+                .getOne()
 
-            // check following include userId
-            if (this.checkFollows(user.following, userId))
-                throw new Error(`'${user.username}' is following.`)
-            if (this.checkFollows(userFollower.followers, id))
-                throw new Error(
-                    `'${userFollower.username}' has follower '${user.username}'.`
-                )
+            const userFollow = await this.userRepository
+                .createQueryBuilder('follower')
+                .where('follower.id = :followerId', {
+                    followerId: userId,
+                })
+                .getOne()
 
-            // add userId into following
-            user.following?.push(userFollower)
-            user.numFollowing = user.numFollowing + 1
-            const newUser = await this.userRepository.save(user)
+            if (!user || !userFollow) {
+                throw new Error('User or user to follow not found')
+            }
 
-            // add id into follower of this userId
-            userFollower.followers?.push(newUser)
-            userFollower.numFollowers = userFollower.numFollowers + 1
-            await this.userRepository.save(userFollower)
+            const existingFollow = await this.userFollowRepository.findOne({
+                where: { user: { id: user.id }, follower: { id: userFollow.id } },
+            })
 
-            return newUser
+            if (existingFollow) {
+                throw new Error('User is already being followed')
+            }
+
+            const follower = createUserFollow({
+                userId: id,
+                followerId: userId,
+                user,
+                follower: userFollow,
+            })
+
+            const newFollower = await this.userFollowRepository.save(follower)
+            return newFollower
         } catch (error) {
             throw new Error(error as string)
         }
@@ -455,42 +625,34 @@ class UserService {
     // unfollow
     async unfollow(id: number, userId: number): Promise<User | unknown> {
         try {
-            // check id and userId
-            const checkUsers = await this.checkIdAndUserId(id, userId)
-            if (!checkUsers) throw new Error('Unauthorized or this user is not exits.')
-            const { user, userFollower } = checkUsers
+            const user = await this.userRepository
+                .createQueryBuilder('user')
+                .where('user.id = :userId', {
+                    userId: id,
+                })
+                .getOne()
 
-            // check following include userId
-            if (!this.checkFollows(user.following, userId))
-                throw new Error(`'${user.username}' isn't following to unfollowing.`)
-            if (!this.checkFollows(userFollower.followers, id))
-                throw new Error(
-                    `'${userFollower.username}' doesn't have follower '${user.username} to unfollow'.`
-                )
+            const userFollow = await this.userRepository
+                .createQueryBuilder('follower')
+                .where('follower.id = :followerId', {
+                    followerId: userId,
+                })
+                .getOne()
 
-            let newUser: null | User = null
-
-            // remove userId into following
-            const idx = user.following?.findIndex((follow) => follow.id === userId)
-            user.numFollowing = user.numFollowing === 0 ? 0 : user.numFollowing - 1
-            if (typeof idx === 'number' && idx >= 0) {
-                user.following?.splice(idx, 1)
-                const updateUser = await this.userRepository.save(user)
-                newUser = updateUser
+            if (!user || !userFollow) {
+                throw new Error('User or user to unfollow not found')
             }
 
-            // remove id into follower of this userId
-            const idxUser = userFollower.followers?.findIndex(
-                (follow) => follow.id === id
-            )
-            userFollower.numFollowers =
-                userFollower.numFollowers === 0 ? 0 : userFollower.numFollowers - 1
-            if (typeof idxUser === 'number' && idxUser >= 0) {
-                userFollower.followers?.splice(idxUser, 1)
-                await this.userRepository.save(userFollower)
+            const follow = await this.userFollowRepository.findOne({
+                where: { user: { id: user.id }, follower: { id: userFollow.id } },
+            })
+
+            if (!follow) {
+                throw new Error('User is not being followed')
             }
 
-            return newUser
+            await this.userFollowRepository.remove(follow)
+            return follow
         } catch (error) {
             throw new Error(error as string)
         }

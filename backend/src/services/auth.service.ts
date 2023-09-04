@@ -43,16 +43,6 @@ class AuthService {
             const user = await this.userRepository
                 .createQueryBuilder('user')
                 .leftJoinAndSelect('user.roles', 'roles')
-                .leftJoinAndSelect('user.followers', 'followers')
-                .leftJoinAndSelect('user.following', 'following')
-                .leftJoinAndSelect('user.hashTags', 'hashTags')
-                .leftJoinAndSelect('user.news', 'news')
-                .leftJoinAndSelect('news.hashTags', 'hashTagsNews')
-                .leftJoinAndSelect('user.newsLikes', 'newsLikes')
-                .leftJoinAndSelect('newsLikes.hashTags', 'hashTagsNewsLikes')
-                .leftJoinAndSelect('user.saves', 'saves')
-                .leftJoinAndSelect('saves.hashTags', 'hashTagsSaves')
-                .leftJoinAndSelect('user.comments', 'comments')
                 .where('user.emailAddress = :emailAddress', {
                     emailAddress,
                 })
@@ -83,6 +73,13 @@ class AuthService {
     // sign active token
     signActiveToken(user: User) {
         return jwt.sign({ newUser: user }, process.env.JWT_SECRET as string, {
+            expiresIn: process.env.JWT_ACTIVE_EXPIRES,
+        })
+    }
+
+    // sign forgot password
+    signForgotPassword(id: number) {
+        return jwt.sign({ id }, process.env.JWT_SECRET as string, {
             expiresIn: process.env.JWT_ACTIVE_EXPIRES,
         })
     }

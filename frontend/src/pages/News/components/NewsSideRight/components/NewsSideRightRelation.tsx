@@ -32,8 +32,6 @@ export function NewsSideRightRelation({ news, t, ...rest }: INewsSideRightRelati
                 setLoading(true)
                 const res = await newsApi.recommendationNews({
                     newsId: news.id,
-                    content: news.content,
-                    lang: 'vi',
                     hashTag: news?.hashTagIds?.join(','),
                 })
 
@@ -125,9 +123,12 @@ export function NewsSideRightRelation({ news, t, ...rest }: INewsSideRightRelati
                                     <Typography
                                         sx={{
                                             display: {
-                                                lg: 'block',
+                                                md: '-webkit-box',
                                                 xs: 'none',
                                             },
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: 'hidden',
                                             fontWeight: 400,
                                             marginTop: 0.75,
 

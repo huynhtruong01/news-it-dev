@@ -1,3 +1,4 @@
+import { SelectFilter } from '@/components/Filters'
 import { ALL } from '@/consts'
 import { notifyFilters } from '@/data'
 import { INotifyFilters, INotifyRead } from '@/models'
@@ -5,7 +6,6 @@ import { theme } from '@/utils'
 import { Box, Stack, alpha } from '@mui/material'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SelectFilter } from '@/components/Filters'
 
 export interface INotificationNavFiltersProps {
     filters: INotifyFilters

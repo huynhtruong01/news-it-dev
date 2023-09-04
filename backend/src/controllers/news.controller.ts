@@ -1,10 +1,7 @@
-import { sendEmail } from '@/config'
-import { User } from '@/entities'
-import { NewsStatus, Results, StatusCode, StatusText } from '@/enums'
+import { Results, StatusCode, StatusText } from '@/enums'
 import { IObjectCommon, RequestUser } from '@/models'
-import { newsService, notifyService, userService } from '@/services'
+import { newsService } from '@/services'
 import { Request, Response } from 'express'
-import { io } from 'server'
 
 // ---------------- CHECK -------------------------
 const checkNewsId = (newsId: number, res: Response): boolean => {
@@ -24,8 +21,34 @@ class NewsController {
     // get all news public (GET)
     async getAllNewsPublic(req: Request, res: Response) {
         try {
+            const { userId, ...rest } = req.query as IObjectCommon
+
             const [news, count] = await newsService.getAllByConditional(
-                req.query as IObjectCommon
+                rest as IObjectCommon,
+                userId as number
+            )
+
+            res.status(StatusCode.SUCCESS).json({
+                results: Results.SUCCESS,
+                status: StatusText.SUCCESS,
+                data: {
+                    news,
+                    total: count,
+                },
+            })
+        } catch (error) {
+            res.status(StatusCode.ERROR).json({
+                results: Results.ERROR,
+                status: StatusText.ERROR,
+                message: (error as Error).message,
+            })
+        }
+    }
+
+    async getAllNewsByQueriesSearch(req: RequestUser, res: Response) {
+        try {
+            const [news, count] = await newsService.getAllBySearchQueries(
+                Number(req.user?.id)
             )
 
             res.status(StatusCode.SUCCESS).json({
@@ -68,15 +91,12 @@ class NewsController {
         }
     }
 
-    // get news by hash tag ids
-    async getNewsByHashTagIds(req: RequestUser, res: Response) {
+    // get news recommend
+    async getNewsRecommend(req: RequestUser, res: Response) {
         try {
-            const query = req.query as IObjectCommon
-            query.hashTagIds = (query.hashTagIds as string)
-                .split(',')
-                .map((t) => Number(t))
+            const query = req.body as IObjectCommon
 
-            const news = await newsService.getAllByTagIds(query)
+            const news = await newsService.getAllByRecommend(query)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,
@@ -155,51 +175,25 @@ class NewsController {
     // create (POST)
     async createNews(req: RequestUser, res: Response) {
         try {
-            // check user
-            const user = await userService.getById(Number(req.user?.id))
-            if (!user) {
-                res.status(StatusCode.NOT_FOUND).json({
-                    results: Results.ERROR,
-                    status: StatusText.FAILED,
-                    message: 'Not found this user to create news.',
-                })
-                return
-            }
+            // check hash tag ids
+            // const checkHashTags = hashTagService.checkHashTagIds(req.body.hashTagIds)
+            // if (!checkHashTags) {
+            //     res.status(StatusCode.BAD_REQUEST).json({
+            //         results: Results.ERROR,
+            //         status: StatusText.FAILED,
+            //         message: 'Missing hash tags or invalid type.',
+            //     })
+            //     return
+            // }
 
             // count news
-            await userService.countNews(user)
+            // await userService.countNews(req.user as User)
 
             // create news
             const newNews = await newsService.create({
                 ...req.body,
                 userId: req.user?.id,
             })
-
-            const notify = {
-                userId: user.id,
-                newsId: newNews.id,
-                text: 'add new news',
-                user,
-                news: newNews,
-                recipients: user.followers,
-                readUsers: [],
-            }
-
-            if (
-                newNews.status === NewsStatus.PUBLIC &&
-                (user.followers as User[]).length > 0
-            ) {
-                const newNotify = await notifyService.create(notify)
-                if (newNotify) {
-                    for (const u of (user.followers as User[]) || []) {
-                        io.to(u.id.toString()).emit('notifyNews', newNotify)
-                    }
-                }
-
-                const emails = user.followers?.map((u) => u.emailAddress)
-                const url = `${process.env.HOST_FRONTEND}/news/${newNews.slug}`
-                await sendEmail(emails as string[], url, 'Read new news')
-            }
 
             res.status(StatusCode.CREATED).json({
                 results: Results.SUCCESS,
@@ -276,7 +270,7 @@ class NewsController {
         }
     }
 
-    // TODO: count news view when user access that news (GET)
+    // count news view when user access that news (GET)
     async countViewsNews(req: RequestUser, res: Response) {
         try {
             if (req.params.newsId) {
@@ -339,7 +333,7 @@ class NewsController {
             const { newsId } = req.params
             if (!checkNewsId(Number(newsId), res) || !req.user?.id) return
 
-            const news = await newsService.dislike(Number(newsId), req.user)
+            const news = await newsService.unlike(Number(newsId), req.user)
 
             res.status(StatusCode.SUCCESS).json({
                 results: Results.SUCCESS,

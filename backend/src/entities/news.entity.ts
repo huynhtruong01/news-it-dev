@@ -11,13 +11,122 @@ import {
     JoinTable,
     OneToMany,
     Index,
+    AfterLoad,
 } from 'typeorm'
-import { User } from '@/entities/user.entity'
-import { HashTag } from '@/entities/hashTag.entity'
+import { User, HashTag, Comment, Notify, UserLike, UserSave, Report } from '@/entities'
 import { NewsStatus } from '@/enums'
 import { INewsStatus } from '@/models'
-import { Comment } from './comment.entity'
-import { Notify } from './notify.entity'
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     News:
+ *       type: object
+ *       required:
+ *        - userId
+ *        - title
+ *        - content
+ *        - thumbnailImage
+ *        - coverImage
+ *        - readTimes
+ *       properties:
+ *         title:
+ *           type: string
+ *         sapo:
+ *           type: string
+ *         content:
+ *           type: string
+ *         thumbnailImage:
+ *           type: number
+ *         coverImage:
+ *           type: string
+ *         newsViews:
+ *           type: integer
+ *         numLikes:
+ *           type: integer
+ *         numComments:
+ *           type: integer
+ *         numSaves:
+ *           type: integer
+ *         numReport:
+ *           type: integer
+ *         status:
+ *           type: string
+ *         readTimes:
+ *           type: integer
+ *         slug:
+ *           type: string
+ *         hashTagIds:
+ *           type: array
+ *           items:
+ *              type: number
+ *     NewsRes:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         title:
+ *           type: string
+ *         sapo:
+ *           type: string
+ *         content:
+ *           type: string
+ *         thumbnailImage:
+ *           type: string
+ *         coverImage:
+ *           type: string
+ *         newsViews:
+ *           type: integer
+ *         numLikes:
+ *           type: integer
+ *         numComments:
+ *           type: integer
+ *         numSaves:
+ *           type: integer
+ *         numReport:
+ *           type: integer
+ *         status:
+ *           type: string
+ *         readTimes:
+ *           type: integer
+ *         slug:
+ *           type: string
+ *         hashTagIds:
+ *           type: array
+ *           items:
+ *              type: number
+ *         createdAt:
+ *           type: string
+ *         updatedAt:
+ *           type: string
+ *         likes:
+ *           type: array
+ *           items:
+ *              $ref: '#/components/schemas/UserLike'
+ *         hashTags:
+ *           type: array
+ *           items:
+ *              $ref: '#/components/schemas/HashTag'
+ *         saveUsers:
+ *           type: array
+ *           items:
+ *              $ref: '#/components/schemas/User'
+ *         comments:
+ *           type: array
+ *           items:
+ *              $ref: '#/components/schemas/Comment'
+ *         notifications:
+ *           type: array
+ *           items:
+ *              $ref: '#/components/schemas/Notify'
+ *         reporterNews:
+ *           type: array
+ *           items:
+ *              $ref: '#/components/schemas/Report'
+ *         user:
+ *           $ref: '#/components/schemas/User'
+ */
 
 @Entity('news')
 export class News extends BaseEntity {
@@ -31,12 +140,14 @@ export class News extends BaseEntity {
     userId: number
 
     @Column({
-        type: 'text',
+        type: 'varchar',
+        length: 255,
     })
     title: string
 
     @Column({
-        type: 'text',
+        type: 'varchar',
+        length: 255,
         default: '',
     })
     sapo?: string
@@ -74,25 +185,22 @@ export class News extends BaseEntity {
     @Index()
     numSaves: number
 
-    @ManyToMany(() => User, (user) => user.newsLikes, {
-        onDelete: 'CASCADE',
+    @Column({
+        type: 'int',
+        default: 0,
     })
-    @JoinTable({
-        name: 'users_news_likes_news',
-        joinColumn: { name: 'newsId', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
-    })
-    likes?: User[]
+    @Index()
+    numReport: number
 
-    @ManyToMany(() => User, (user) => user.saves, {
+    @OneToMany(() => UserLike, (userLike) => userLike.news, {
         onDelete: 'CASCADE',
     })
-    @JoinTable({
-        name: 'users_saves_news',
-        joinColumn: { name: 'newsId', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
+    likes?: UserLike[]
+
+    @OneToMany(() => UserSave, (userSave) => userSave.news, {
+        onDelete: 'CASCADE',
     })
-    saveUsers?: User[]
+    saveUsers?: UserSave[]
 
     @Column({
         type: 'enum',
@@ -102,12 +210,14 @@ export class News extends BaseEntity {
     status: INewsStatus
 
     @Column({
-        type: 'text',
+        type: 'varchar',
+        length: 255,
     })
     thumbnailImage: string
 
     @Column({
-        type: 'text',
+        type: 'varchar',
+        length: 255,
     })
     coverImage: string
 
@@ -141,6 +251,9 @@ export class News extends BaseEntity {
     })
     notifications?: Notify[]
 
+    @OneToMany(() => Report, (report) => report.reportNews)
+    reporterNews: Report[]
+
     @Column({
         type: 'int',
     })
@@ -148,7 +261,8 @@ export class News extends BaseEntity {
     readTimes: number
 
     @Column({
-        type: 'text',
+        type: 'varchar',
+        length: 255,
     })
     slug: string
 
@@ -162,4 +276,24 @@ export class News extends BaseEntity {
 
     @UpdateDateColumn()
     updatedAt: string
+
+    @AfterLoad()
+    countSaves() {
+        this.numSaves = this.saveUsers ? this.saveUsers.length : 0
+    }
+
+    @AfterLoad()
+    countLikes() {
+        this.numLikes = this.likes ? this.likes.length : 0
+    }
+
+    @AfterLoad()
+    countComments() {
+        this.numComments = this.comments ? this.comments.length : 0
+    }
+
+    @AfterLoad()
+    countReport() {
+        this.numReport = this.reporterNews ? this.reporterNews.length : 0
+    }
 }

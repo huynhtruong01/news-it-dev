@@ -5,7 +5,7 @@ import { Order } from '@/enums'
 import { INotifyData, IObjectCommon } from '@/models'
 import { userService } from '@/services'
 import { createNotify, paginationQuery } from '@/utils'
-import { io } from 'server'
+import { io } from '@/server'
 
 class NotifyService {
     constructor(private notifyRepository = AppDataSource.getRepository(Notify)) {}
@@ -167,10 +167,27 @@ class NotifyService {
         }
     }
 
+    // get by id no relation
+    async getByIdNoRelations(id: number) {
+        try {
+            const notify = await this.notifyRepository
+                .createQueryBuilder('notify')
+                .where('notify.id = :notifyId', { notifyId: id })
+                .getOne()
+
+            if (!notify) return null
+
+            return notify
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
     // push id read users
     async readUsers(id: number, userId: number) {
         try {
-            const notify = await this.getById(id)
+            const notify = await this.getByIdNoRelations(id)
+
             if (!notify) return null
 
             notify.readUsers?.push(userId)
@@ -184,7 +201,11 @@ class NotifyService {
     // delete by newsId
     async delete(id: number, userId: number) {
         try {
-            const notify = await this.getByUserId(id)
+            const notify = await this.notifyRepository
+                .createQueryBuilder('notify')
+                .leftJoinAndSelect('notify.recipients', 'recipients')
+                .where('notify.id = :notifyId', { notifyId: id })
+                .getOne()
             if (!notify) return null
 
             const indexRead = notify.readUsers?.findIndex(
@@ -199,6 +220,26 @@ class NotifyService {
 
             await this.notifyRepository.save({ ...notify })
             return notify
+        } catch (error) {
+            throw new Error(error as string)
+        }
+    }
+
+    // delete by userId
+    async deleteAll(userId: number) {
+        try {
+            const notifies = await this.notifyRepository
+                .createQueryBuilder('notify')
+                .leftJoinAndSelect('notify.recipients', 'recipients')
+                .where('recipients.id = :userId', { userId })
+                .getMany()
+            const newNotifies = notifies.map((notify) => {
+                const newRecipients = notify?.recipients?.filter((u) => u.id !== userId)
+                notify.recipients = newRecipients
+                return notify
+            })
+
+            await this.notifyRepository.save(newNotifies)
         } catch (error) {
             throw new Error(error as string)
         }
