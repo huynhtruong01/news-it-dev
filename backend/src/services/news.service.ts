@@ -58,23 +58,26 @@ class NewsService {
                 : []
             const excludeIds = Array.from(new Set([...likes, ...saves]))
 
+            const queryBuilder = this.newsRepository
+                .createQueryBuilder('news')
+                .leftJoinAndSelect('news.user', 'user')
+                .leftJoinAndSelect('news.hashTags', 'hashTag')
+                .leftJoinAndSelect('news.likes', 'likes')
+                .leftJoinAndSelect('news.comments', 'comments')
+                .leftJoinAndSelect('news.saveUsers', 'saves')
+                .where('news.status = :status', {
+                    status: NewsStatus.PUBLIC,
+                })
+            if (excludeIds.length > 0) {
+                queryBuilder.andWhere('news.id NOT IN (:...excludeIds)', {
+                    excludeIds,
+                })
+            }
+
             if (query.hashTag || query.type === NewsFilters.RELEVANT) {
                 const hashTagIds = query.hashTag
                     ? (query.hashTag as string).split(',').map((h) => Number(h))
                     : []
-                const queryBuilder = this.newsRepository
-                    .createQueryBuilder('news')
-                    .leftJoinAndSelect('news.user', 'user')
-                    .leftJoinAndSelect('news.hashTags', 'hashTag')
-                    .leftJoinAndSelect('news.likes', 'likes')
-                    .leftJoinAndSelect('news.comments', 'comments')
-                    .leftJoinAndSelect('news.saveUsers', 'saves')
-
-                if (excludeIds.length > 0) {
-                    queryBuilder.where('news.id NOT IN (:...excludeIds)', {
-                        excludeIds,
-                    })
-                }
 
                 if (hashTagIds.length > 0) {
                     queryBuilder.andWhere('hashTag.id IN (:...hashTagIds)', {
@@ -83,9 +86,6 @@ class NewsService {
                 }
 
                 const [news, count] = await queryBuilder
-                    .andWhere('news.status = :status', {
-                        status: NewsStatus.PUBLIC,
-                    })
                     .take(pagination.take)
                     .skip(pagination.skip)
                     .getManyAndCount()
@@ -98,23 +98,6 @@ class NewsService {
                     .split(' ')
                     .filter((k) => !!k)
                     .map((k) => k.toLowerCase().split(' ').join('_'))
-
-                const queryBuilder = this.newsRepository
-                    .createQueryBuilder('news')
-                    .leftJoinAndSelect('news.user', 'user')
-                    .leftJoinAndSelect('news.hashTags', 'hashTag')
-                    .leftJoinAndSelect('news.likes', 'likes')
-                    .leftJoinAndSelect('news.comments', 'comments')
-                    .leftJoinAndSelect('news.saveUsers', 'saves')
-                    .where('news.status = :status', {
-                        status: NewsStatus.PUBLIC,
-                    })
-
-                if (excludeIds.length > 0) {
-                    queryBuilder.andWhere('news.id NOT IN (:...excludeIds)', {
-                        excludeIds,
-                    })
-                }
 
                 if (query.numLikes) {
                     queryBuilder.orderBy('news.numLikes', Status.DESC)
@@ -142,24 +125,6 @@ class NewsService {
                     .getManyAndCount()
 
                 return [news, count]
-            }
-
-            // const [news, count] = await this.getAll(query)
-            const queryBuilder = this.newsRepository
-                .createQueryBuilder('news')
-                .leftJoinAndSelect('news.user', 'user')
-                .leftJoinAndSelect('news.hashTags', 'hashTag')
-                .leftJoinAndSelect('news.likes', 'likes')
-                .leftJoinAndSelect('news.comments', 'comments')
-                .leftJoinAndSelect('news.saveUsers', 'saves')
-                .where('news.status = :status', {
-                    status: NewsStatus.PUBLIC,
-                })
-
-            if (excludeIds.length > 0) {
-                queryBuilder.andWhere('news.id NOT IN (:...excludeIds)', {
-                    excludeIds,
-                })
             }
 
             if (query.numLikes) {

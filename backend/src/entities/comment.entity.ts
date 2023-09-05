@@ -179,13 +179,6 @@ export class Comment extends BaseEntity {
     })
     likes?: User[]
 
-    @Column({
-        type: 'varchar',
-        length: 255,
-    })
-    @Index()
-    slug: string
-
     @CreateDateColumn()
     createdAt: string
 

@@ -3,7 +3,7 @@ import { Comment, News, User } from '@/entities'
 import { Order } from '@/enums'
 import { ICommentRes, IObjectCommon, IOrder } from '@/models'
 import { io } from '@/server'
-import { commonService, newsService, userService } from '@/services'
+import { newsService, userService } from '@/services'
 import { createComment, paginationQuery } from '@/utils'
 
 class CommentService {
@@ -59,10 +59,6 @@ class CommentService {
             const comment = createComment(data)
 
             comment.user = user
-
-            // create slug
-            const slug = commonService.generateSlug(comment.comment)
-            comment.slug = slug
 
             comment.childrenComments = []
             comment.likes = []
